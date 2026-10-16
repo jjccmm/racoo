@@ -1,0 +1,291 @@
+{
+  "$defs": {
+    "Audio": {
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "duration_seconds": {
+          "exclusiveMinimum": 0,
+          "title": "Duration Seconds",
+          "type": "number"
+        }
+      },
+      "required": [
+        "url",
+        "sha256",
+        "duration_seconds"
+      ],
+      "title": "Audio",
+      "type": "object"
+    },
+    "Segment": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,127}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Text",
+          "type": "string"
+        },
+        "start_seconds": {
+          "minimum": 0,
+          "title": "Start Seconds",
+          "type": "number"
+        },
+        "end_seconds": {
+          "minimum": 0,
+          "title": "End Seconds",
+          "type": "number"
+        },
+        "token_points": {
+          "items": {
+            "$ref": "#/$defs/TokenPoint"
+          },
+          "title": "Token Points",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "start_seconds",
+        "end_seconds"
+      ],
+      "title": "Segment",
+      "type": "object"
+    },
+    "Source": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "rss",
+            "supplemental",
+            "synthetic"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "key": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Key",
+          "type": "string"
+        },
+        "reference_url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Reference Url",
+          "type": "string"
+        },
+        "guid": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Guid"
+        },
+        "guid_aliases": {
+          "items": {
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "title": "Guid Aliases",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "key",
+        "reference_url"
+      ],
+      "title": "Source",
+      "type": "object"
+    },
+    "TokenPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Text",
+          "type": "string"
+        },
+        "at_seconds": {
+          "minimum": 0,
+          "title": "At Seconds",
+          "type": "number"
+        }
+      },
+      "required": [
+        "text",
+        "at_seconds"
+      ],
+      "title": "TokenPoint",
+      "type": "object"
+    },
+    "Transcription": {
+      "additionalProperties": false,
+      "properties": {
+        "model_id": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Model Id",
+          "type": "string"
+        },
+        "model_revision": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Model Revision",
+          "type": "string"
+        },
+        "export_revision": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Export Revision",
+          "type": "string"
+        },
+        "processed_at": {
+          "format": "date-time",
+          "title": "Processed At",
+          "type": "string"
+        },
+        "runtime_versions": {
+          "minProperties": 1,
+          "patternProperties": {
+            "\\S": {
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            }
+          },
+          "propertyNames": {
+            "minLength": 1
+          },
+          "title": "Runtime Versions",
+          "type": "object"
+        }
+      },
+      "required": [
+        "model_id",
+        "model_revision",
+        "export_revision",
+        "processed_at",
+        "runtime_versions"
+      ],
+      "title": "Transcription",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "podcast_id": {
+      "pattern": "^[a-z0-9][a-z0-9_-]{0,127}$",
+      "title": "Podcast Id",
+      "type": "string"
+    },
+    "episode_id": {
+      "pattern": "^[a-z0-9][a-z0-9_-]{0,127}$",
+      "title": "Episode Id",
+      "type": "string"
+    },
+    "source": {
+      "$ref": "#/$defs/Source"
+    },
+    "title": {
+      "minLength": 1,
+      "pattern": "\\S",
+      "title": "Title",
+      "type": "string"
+    },
+    "published_at": {
+      "format": "date-time",
+      "title": "Published At",
+      "type": "string"
+    },
+    "episode_number": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Episode Number"
+    },
+    "webpage_url": {
+      "anyOf": [
+        {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Webpage Url"
+    },
+    "audio": {
+      "$ref": "#/$defs/Audio"
+    },
+    "transcription": {
+      "$ref": "#/$defs/Transcription"
+    },
+    "segments": {
+      "items": {
+        "$ref": "#/$defs/Segment"
+      },
+      "title": "Segments",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "podcast_id",
+    "episode_id",
+    "source",
+    "title",
+    "published_at",
+    "audio",
+    "transcription",
+    "segments"
+  ],
+  "title": "Episode",
+  "type": "object"
+}

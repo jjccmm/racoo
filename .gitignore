@@ -1,0 +1,27 @@
+# Python environments, caches, and test output
+.venv/
+.uv-cache/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# JavaScript dependencies and generated builds
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+
+# Transient processing artifacts; normalized JSON stays tracked
+.cache/
+.ipynb_checkpoints/
+
+# Local credentials
+.env
+.env.*
+!.env.example

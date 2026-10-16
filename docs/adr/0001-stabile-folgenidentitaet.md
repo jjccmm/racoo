@@ -1,0 +1,3 @@
+# Dauerhafte Folgenidentität trotz wechselnder Quellen
+
+Eine historische Folge kann zunächst aus einer einzeln geprüften Zusatzquelle stammen und später mit neuer GUID im Publisherfeed erscheinen. Die einmal vergebene Episoden-ID bleibt bestehen; bestätigte weitere GUIDs werden derselben Folge als Alias zugeordnet, nachdem die Identität geprüft wurde. Eine neue ID pro Quelle würde zwar die Ableitung aus der aktuellen RSS-GUID vereinfachen, aber veröffentlichte Links brechen und dieselbe Folge in Suche und Statistik doppelt erscheinen lassen. Titel oder Folgennummer allein belegen keine Identität.
