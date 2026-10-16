@@ -18,3 +18,7 @@
 - [ ] Annotate one reference passage near the beginning, middle, and end of each selected episode: fifteen exact-audio reference times in total.
 - [ ] Make query/reference records and their reviewed state unambiguous and reusable by the public acceptance workflow without versioning heavy audio.
 - [ ] Leave the checkpoint ready-for-human until real reference review is supplied; generated examples or guessed times do not satisfy it.
+
+## Comments
+
+2026-10-16: The user requested candidate preparation and confirmed that independent references remain pending. Prepared a [candidate inventory](../../../docs/pilot/candidate-inventory.md) and [machine-readable manifest](../../../data/podcast-ufo/pilot-candidates.json), tied to the dated live catalog snapshot. All five candidate audio files were downloaded completely, SHA-256 hashed and measured with FFprobe. Heavy audio remains ignored. Selection confirmation, subjective audio review, ten independent queries and fifteen annotated times remain pending; this ticket stays ready-for-human.
