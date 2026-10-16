@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 **Spec coverage:** User stories 21, 26, 28, 44, 45, 47, 49 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 
