@@ -1,4 +1,6 @@
 export type Segment = { id: string; text: string; start_seconds: number; end_seconds: number };
+export type Occurrence = { id: string; seconds: number; terms: string[]; nearbyTerms: string[] };
+export type Passage = Segment & { occurrences: Occurrence[] };
 export type Identity = { episodeId: string; publishedAt: string };
 type SearchIndex = { moduleUrl: string; episodes: Record<string, Identity> };
 export type SearchRequest = SearchIndex & { terms: string[]; offset: number };
@@ -8,7 +10,10 @@ export type SearchResult = Identity & {
   matchedTerms: string[];
   positionsByTerm: Record<string, number[]>;
   rankSum: number;
-  passages: Segment[];
+  passages: Passage[];
+  audioUrl: string;
+  durationSeconds: number;
+  webpageUrl: string;
 };
 export type SearchPage = { results: SearchResult[]; total: number; terms: string[] };
 export type SearchSession = { initial: SearchPage; loadMore(): Promise<SearchPage> };
@@ -75,5 +80,22 @@ export async function searchEpisodes(query: string, signal: AbortSignal): Promis
       offset += page.results.length;
       return page;
     },
+  };
+}
+
+export async function loadEpisode(episodeId: string, signal: AbortSignal) {
+  const index = await loadIndex(signal);
+  const identity = Object.values(index.episodes).find((item) => item.episodeId === episodeId);
+  if (!identity) return undefined;
+  const response = await fetch(new URL(`episodes/${encodeURIComponent(episodeId)}.json`, index.moduleUrl), { signal });
+  if (!response.ok) throw new Error(`Folge nicht erreichbar (${response.status})`);
+  const episode = await response.json();
+  if (episode.episode_id !== identity.episodeId || episode.published_at !== identity.publishedAt) {
+    throw new Error('Suchindex und Folgendetails stimmen nicht überein');
+  }
+  return episode as {
+    episode_id: string; title: string; published_at: string; audio: { url: string; duration_seconds: number };
+    webpage_url?: string; source: { reference_url: string };
+    segments: (Segment & { token_points?: { text: string; at_seconds: number }[] })[];
   };
 }

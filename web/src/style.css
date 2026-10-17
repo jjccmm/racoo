@@ -25,6 +25,14 @@ button { background: #215d4d; color: white; border: 1px solid #215d4d; cursor: p
 input:focus-visible, button:focus-visible { outline: 3px solid #286c58; outline-offset: 3px; }
 [role="alert"] { color: #8e2b22; }
 .example + .example { margin-top: 20px; }
+.passage { border-top: 1px solid #e1e7e3; padding-top: 4px; }
+.occurrences, .player-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.occurrences button { background: #e7efeb; color: #174b3d; border-color: #a7c1b5; font-size: .9rem; }
+.player { position: sticky; bottom: 0; z-index: 2; margin: 28px -8px 0; padding: 16px 20px; border: 1px solid #b9c9c4; border-radius: 12px; background: #fff; box-shadow: 0 4px 24px #182f3b20; }
+.player h2, .player p { margin: 4px 0 10px; }
+.player audio { width: 100%; }
+.player-controls { margin-top: 10px; }
+.player-controls a { color: #215d4d; font-weight: 700; }
 @media (max-width: 640px) { main { padding: 32px 20px; } .steps { grid-template-columns: 1fr; gap: 12px; } .example { padding: 18px; } }
 .word-suggestions { display: flex; flex-wrap: wrap; gap: .5rem; padding: 0; list-style: none; }
 .stopword-control { display: flex; align-items: center; gap: .5rem; margin-top: 1rem; }
