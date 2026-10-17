@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "podcast_id": "synthetic-podcast",
+  "episode_id": "coverage-single-10",
+  "source": {
+    "kind": "synthetic",
+    "key": "coverage-single-10",
+    "reference_url": "https://example.org/coverage-single-10",
+    "guid_aliases": []
+  },
+  "title": "Einzelne Katze 10",
+  "published_at": "2024-01-01T12:00:00Z",
+  "audio": {
+    "url": "https://example.org/fixture.mp3",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "duration_seconds": 90
+  },
+  "transcription": {
+    "model_id": "synthetic-fixture-no-asr",
+    "model_revision": "fixture-v1",
+    "export_revision": "fixture-v1",
+    "processed_at": "2026-10-17T12:00:00Z",
+    "runtime_versions": {
+      "fixture": "1"
+    }
+  },
+  "segments": [
+    {
+      "id": "passage",
+      "text": "Signal Katzen.",
+      "start_seconds": 20,
+      "end_seconds": 45,
+      "token_points": []
+    }
+  ]
+}
