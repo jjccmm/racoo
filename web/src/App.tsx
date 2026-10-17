@@ -1,5 +1,6 @@
 import { useRef, useState, type SubmitEvent } from 'react';
 import { searchEpisode, type SearchResult } from './search';
+import { Stats } from './Stats';
 
 type SearchState =
   | { kind: 'empty' | 'loading' | 'none' | 'error' }
@@ -61,6 +62,7 @@ export function App() {
           </p>)}
         </article>)}
       </section>}
+      <Stats />
     </main>
   );
 }

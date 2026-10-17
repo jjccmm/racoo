@@ -10,7 +10,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from podcast_words import catalog
+from podcast_words import analysis, catalog
 from podcast_words.contracts import Episode
 
 
@@ -64,17 +64,22 @@ def main(argv: list[str] | None = None) -> int:
     commands.add_parser("doctor", help="Check Python and FFmpeg without loading models")
     validation = commands.add_parser("validate", help="Validate episode JSON files offline")
     validation.add_argument("paths", type=Path, nargs="+")
-    schema = commands.add_parser("schema", help="Print or save the structural episode JSON Schema")
+    schema = commands.add_parser("schema", help="Print or save a structural JSON Schema")
+    schema.add_argument("--kind", choices=["episode", "analysis"], default="episode")
     schema.add_argument("--output", type=Path)
     catalog.add_parser(commands)
+    analysis.add_parser(commands)
     arguments = parser.parse_args(argv)
+    if arguments.command == "analyze":
+        return analysis.run(arguments)
     if arguments.command == "catalog":
         return catalog.run(arguments)
     if arguments.command == "doctor":
         return doctor()
     if arguments.command == "validate":
         return validate(arguments.paths)
-    content = json.dumps(Episode.model_json_schema(), indent=2, ensure_ascii=False) + "\n"
+    model = analysis.Analysis if arguments.kind == "analysis" else Episode
+    content = json.dumps(model.model_json_schema(), indent=2, ensure_ascii=False) + "\n"
     if arguments.output:
         arguments.output.parent.mkdir(parents=True, exist_ok=True)
         arguments.output.write_text(content, encoding="utf-8", newline="\n")

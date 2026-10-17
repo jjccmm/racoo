@@ -1,0 +1,39 @@
+# Grundformanalyse
+
+`podcast-words analyze` verarbeitet validierte Episoden, ohne Audio zu laden oder ASR aufzurufen. Eine Korpusdatei enthält eine JSON-Liste von Episodenpfaden relativ zu dieser Datei, beispielsweise [den synthetischen Suchkorpus](../tests/fixtures/search-corpus.json).
+
+## Modell gezielt installieren
+
+spaCy ist als optionales Extra exakt auf 3.8.16 gesperrt. `de_core_news_lg` ist im Analysevertrag auf 3.8.0 festgelegt. Die [Modellmetadaten](https://raw.githubusercontent.com/explosion/spacy-models/master/meta/de_core_news_lg-3.8.0.json) verlangen spaCy `>=3.8.0,<3.9.0`. Das große Modell wird ausdrücklich separat installiert und gehört weder zu Git noch zum normalen Offline-Check:
+
+```powershell
+$env:UV_CACHE_DIR = Join-Path $PWD '.uv-cache'
+uv sync --frozen --extra analysis
+uv pip install --python .venv/Scripts/python.exe --no-deps https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.8.0/de_core_news_lg-3.8.0-py3-none-any.whl
+uv run --frozen --extra analysis python scripts/check_analysis_model.py --output .cache/spacy-model-report.json
+```
+
+Unter Linux `.venv/bin/python` verwenden. Nach einem erneuten `uv sync`, das zusätzliche Pakete entfernt, das Modell gegebenenfalls erneut installieren. Es findet kein automatischer Modelldownload statt. Der Adapter weist eine andere spaCy- oder Modellversion zurück.
+
+Der explizite Integrationstest verwendet den öffentlichen Analysebefehl und den unabhängig ausgezählten Text „Die Hunde laufen. Ein Hund läuft!“. Erwartet werden sechs Gesamtwörter: `der: 1`, `hund: 2`, `laufen: 2`, `ein: 1`; `der` und `ein` sind Stoppwörter. Der [aufgezeichnete Nachweis](research/evidence/spacy-analysis-2026-10-17.json) stammt aus einem echten Modelllauf. Die [gespeicherten synthetischen Beispielanalysen](../tests/fixtures/analysis/synthetic-episode-001.json) wurden ebenfalls mit diesem Modell erzeugt. Die zweite Prüffolge enthält genau 256 zusätzliche `Hund`-Tokens als expliziten Überlauf-Prüffall.
+
+## Analysieren und wiederverwenden
+
+```powershell
+uv run --frozen --extra analysis podcast-words analyze --episodes tests/fixtures/search-corpus.json --output data/synthetic-podcast/analyses --publish .cache/statistics
+uv run --frozen podcast-words analyze --episodes tests/fixtures/search-corpus.json --output tests/fixtures/analysis --cache-only --publish .cache/statistics
+```
+
+`--output` speichert pro stabiler Episoden-ID eine versionierbare Analyse mit Schemaversion, Modell-/spaCy-/Analyseversion, Prüfsumme der tatsächlich konsumierten Segmenttexte, Gesamtwörtern und sparsamen Lemmazahlen samt Stoppwortkennzeichen. Der Python-Vertrag in `src/podcast_words/analysis.py` und [sein Schemaexport](../schemas/analysis-v1.schema.json) prüfen unter anderem positive Ganzzahlen, kleingeschriebene Lemmata und die Summe aller Zählungen. Originalepisoden werden nicht verändert. Alle alphabetischen Tokens einschließlich Stoppwörtern zählen; Satzzeichen und Ziffern zählen nicht. spaCy verarbeitet die Segmenttexte in ihrer gespeicherten Reihenfolge.
+
+Unveränderte konsumierte Texte und Einstellungen verwenden die gespeicherte Analyse. Titel, Datum, Audioherkunft und Zeitmarken verändern die Zählung nicht; die öffentliche Katalogansicht übernimmt dennoch aktuelle Metadaten. Geänderter Segmenttext, `--analysis-version` oder Modellkonfiguration machen die Analyse ungültig. `--cache-only` meldet fehlende, ungültige oder veraltete Analysen als Fehler und lädt niemals spaCy. Ein normaler Analyselauf berechnet ausschließlich betroffene Analysen neu. ASR und vorhandene Transkripte sind davon unabhängig.
+
+## Veröffentlichte Dateien und Browser
+
+`--publish` erzeugt einen Katalog, das Vokabular und genau 64 sparsame Zähldateien unter `counts/00.json` bis `counts/63.json`. Jede Vokabularzeile nennt ihre Datei. Ein Lemma wird über SHA-256 seines UTF-8-Texts modulo 64 zugeordnet. Die Zähldateien enthalten ausschließlich positive Paare `[Episoden-ID, Anzahl]`; ein fehlendes Paar für eine bekannte Folge bedeutet null. Normale Ganzzahlen erhalten Werte über 255. Alle Dateien tragen denselben aus dem Datenstand abgeleiteten `publicationId`.
+
+Der Vite-Build ruft denselben Analysebefehl mit `--cache-only` auf. `PODCAST_WORDS_EPISODES` wählt denselben Korpus wie die Suche; `PODCAST_WORDS_ANALYSES` wählt das Analyseverzeichnis. Standardmäßig dienen die versionierten synthetischen Prüfdaten. Ein veralteter Cache bricht den Build ab. Die erzeugten Dateien unter `web/dist/stats/` werden nicht versioniert.
+
+Die Wortstatistik lädt zunächst nur Katalog und Vokabular und zeigt höchstens zehn Vorschläge. Stoppwörter bleiben standardmäßig ausgeblendet; der Schalter ändert keine Gesamtzählung. Nach Auswahl wird die zuständige Zähldatei geladen. Nicht erfolgreiche Abrufe und widersprüchliche Datenstände sind sichtbare Fehler, keine Nullzählungen. Alle Datenpfade berücksichtigen Vites Basispfad. Mehrfachauswahl, normierter Verlauf und neue Wörter folgen im nächsten Statistik-Ticket; dieser erste Schnitt zeigt exakte absolute Zahlen pro Folge.
+
+Die regulären Tests ersetzen ausschließlich die Ausgabe der externen spaCy-Bibliothek durch festgelegte Tokens und prüfen den öffentlichen CLI-/Artefaktpfad. Die Browserfälle prüfen den tatsächlichen Produktionsbuild mit den real erzeugten Beispielanalysen. Der separate Modellnachweis ersetzt keine Qualitätsprüfung realer Pilottranskripte.

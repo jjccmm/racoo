@@ -26,3 +26,9 @@ input:focus-visible, button:focus-visible { outline: 3px solid #286c58; outline-
 [role="alert"] { color: #8e2b22; }
 .example + .example { margin-top: 20px; }
 @media (max-width: 640px) { main { padding: 32px 20px; } .steps { grid-template-columns: 1fr; gap: 12px; } .example { padding: 18px; } }
+.word-suggestions { display: flex; flex-wrap: wrap; gap: .5rem; padding: 0; list-style: none; }
+.stopword-control { display: flex; align-items: center; gap: .5rem; margin-top: 1rem; }
+.stopword-control input { width: auto; }
+.counts-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: .65rem; text-align: left; border-bottom: 1px solid #a7b9ba; }

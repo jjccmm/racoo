@@ -20,7 +20,9 @@
     "model_revision": "fixture-v1",
     "export_revision": "fixture-v1",
     "processed_at": "2026-10-16T12:00:00Z",
-    "runtime_versions": { "fixture": "1" }
+    "runtime_versions": {
+      "fixture": "1"
+    }
   },
   "segments": [
     {
@@ -35,6 +37,13 @@
       "text": "Später laufen die Gäste nach Hause.",
       "start_seconds": 70,
       "end_seconds": 75,
+      "token_points": []
+    },
+    {
+      "id": "segment-counts",
+      "text": "Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund.",
+      "start_seconds": 76,
+      "end_seconds": 89,
       "token_points": []
     }
   ]

@@ -94,4 +94,6 @@ Beim schreibgeschützten Audit am 16. Oktober 2026 waren uv 0.10.9, Node 22.19.0
 
 Die öffentlichen Befehle für Feedimport, Quellenlücken und geprüfte GUID-Aliase stehen in der [Kataloganleitung](catalog.md). Der [datierte Inventarbericht](research/catalog-inventory-2026-10-17.md) trennt den Live-Quellennachweis von den Offline-Prüfungen und einer späteren Transkription.
 
+Die [Grundformanalyse](analysis.md) beschreibt das optionale spaCy-Extra, die getrennte Installation des festgelegten deutschen Modells und den expliziten Modellnachweis. Normale Webbuilds verwenden validierte gespeicherte Analysen und laden kein Modell. Eigene Korpora werden für Suche und Statistik gemeinsam über `PODCAST_WORDS_EPISODES` ausgewählt; `PODCAST_WORDS_ANALYSES` verweist auf ihre gespeicherten Analysen.
+
 Bei einer beabsichtigten Abhängigkeitsänderung Manifest und Lockfile gemeinsam aktualisieren und den relevanten Check ausführen. ASR, spaCy, deren Modelle, Recharts und Pagefind werden mit dem jeweils zugehörigen Funktionsnachweis integriert und validiert. Sie sind keine versteckten Downloads des Starters. Die nächsten Aufgaben stehen in `TASKS.md`.

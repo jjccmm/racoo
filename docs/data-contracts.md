@@ -10,4 +10,6 @@ Die kontrollierten Sucheingaben stehen in [der Korpusliste](../tests/fixtures/se
 
 Bei einer Vertragsänderung Modell, Schema, Produzenten/Verbraucher und relevante Prüfdaten gemeinsam aktualisieren. Abwärtsinkompatible Änderungen benötigen eine neue Schemaversion und einen bewusst geplanten Übergang. Den Schemaexport über `podcast-words schema --output schemas/episode-v1.schema.json` aktualisieren; der Test auf Übereinstimmung erkennt einen veralteten Export.
 
+Die getrennte [Grundformanalyse](analysis.md) verwendet den Python-Vertrag `Analysis` in `src/podcast_words/analysis.py`. Den strukturellen Export mit `podcast-words schema --kind analysis --output schemas/analysis-v1.schema.json` aktualisieren. Gespeicherte Analysen werden vor Wiederverwendung vollständig validiert; konsumierte Segmenttexte und Analysekonfiguration bestimmen ihre Gültigkeit. Episoden-JSON und sein Schema bleiben davon unabhängig.
+
 Der separate [Folgenkatalog](catalog.md) in `src/podcast_words/catalog.py` speichert Quellen, Metadaten und ausdrückliche Quellenlücken. Sein struktureller Export ist [catalog-v1.schema.json](../schemas/catalog-v1.schema.json). `catalog show` prüft zusätzlich eindeutige Folgen-/Quellenidentitäten, katalogweit eindeutige GUIDs und belegte GUID-Aliase. Ein Katalogeintrag ersetzt kein validiertes Episoden-JSON und keine Transkription.

@@ -6,6 +6,9 @@ readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = ["pydantic>=2.12,<3"]
 
+[project.optional-dependencies]
+analysis = ["spacy==3.8.16"]
+
 [project.scripts]
 podcast-words = "podcast_words.cli:main"
 

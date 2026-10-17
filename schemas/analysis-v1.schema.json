@@ -1,0 +1,110 @@
+{
+  "$defs": {
+    "LemmaCount": {
+      "additionalProperties": false,
+      "properties": {
+        "count": {
+          "exclusiveMinimum": 0,
+          "title": "Count",
+          "type": "integer"
+        },
+        "stopword": {
+          "title": "Stopword",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "count",
+        "stopword"
+      ],
+      "title": "LemmaCount",
+      "type": "object"
+    },
+    "Settings": {
+      "additionalProperties": false,
+      "properties": {
+        "analysis_version": {
+          "default": "1",
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Analysis Version",
+          "type": "string"
+        },
+        "spacy_version": {
+          "const": "3.8.16",
+          "default": "3.8.16",
+          "title": "Spacy Version",
+          "type": "string"
+        },
+        "model_name": {
+          "const": "de_core_news_lg",
+          "default": "de_core_news_lg",
+          "title": "Model Name",
+          "type": "string"
+        },
+        "model_version": {
+          "const": "3.8.0",
+          "default": "3.8.0",
+          "title": "Model Version",
+          "type": "string"
+        }
+      },
+      "title": "Settings",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "podcast_id": {
+      "pattern": "^[a-z0-9][a-z0-9_-]{0,127}$",
+      "title": "Podcast Id",
+      "type": "string"
+    },
+    "episode_id": {
+      "pattern": "^[a-z0-9][a-z0-9_-]{0,127}$",
+      "title": "Episode Id",
+      "type": "string"
+    },
+    "input_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Input Sha256",
+      "type": "string"
+    },
+    "settings": {
+      "$ref": "#/$defs/Settings"
+    },
+    "total_words": {
+      "minimum": 0,
+      "title": "Total Words",
+      "type": "integer"
+    },
+    "lemmas": {
+      "patternProperties": {
+        "\\S": {
+          "$ref": "#/$defs/LemmaCount"
+        }
+      },
+      "propertyNames": {
+        "minLength": 1
+      },
+      "title": "Lemmas",
+      "type": "object"
+    }
+  },
+  "required": [
+    "podcast_id",
+    "episode_id",
+    "input_sha256",
+    "settings",
+    "total_words",
+    "lemmas"
+  ],
+  "title": "Analysis",
+  "type": "object"
+}
