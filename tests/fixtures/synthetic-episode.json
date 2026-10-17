@@ -29,6 +29,7 @@
       "start_seconds": 10,
       "end_seconds": 15,
       "token_points": [
+        { "text": " ", "at_seconds": 10 },
         { "text": "Eimer", "at_seconds": 10.5 },
         { "text": "Münzen", "at_seconds": 12 }
       ]

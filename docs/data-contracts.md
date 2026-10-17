@@ -10,4 +10,8 @@ Die kontrollierten Sucheingaben stehen in [der Korpusliste](../tests/fixtures/se
 
 Bei einer Vertragsänderung Modell, Schema, Produzenten/Verbraucher und relevante Prüfdaten gemeinsam aktualisieren. Abwärtsinkompatible Änderungen benötigen eine neue Schemaversion und einen bewusst geplanten Übergang. Den Schemaexport über `podcast-words schema --output schemas/episode-v1.schema.json` aktualisieren; der Test auf Übereinstimmung erkennt einen veralteten Export.
 
+Der CPU-Produzent ergänzt abwärtskompatibel `export_id`, `execution_providers` (tatsächliche Anbieter je ORT-Session) und `configuration` (Quantisierung, VAD, Decodierung und Zeitbezug) in `transcription`. Bestehende V1-Prüfdaten bleiben gültig; echte neue ASR-Ergebnisse füllen diese Felder. `runtime_versions` enthält weiterhin Paketstände. [ASR](asr.md) dokumentiert die gesperrte Konfiguration und die ausdrücklich nicht attestierte genaue Export-zu-Upstream-Commitzuordnung.
+
+Native Tokenpunkte dürfen nichtleeren Whitespace als Tokentext enthalten: Der gepinnte Parakeet-Decoder gibt solche Tokens tatsächlich aus. Sie werden unverändert erhalten. Segmenttexte benötigen weiterhin mindestens ein Nicht-Whitespace-Zeichen. Die synthetische Prüfdatenfolge enthält zur Darstellung dieser Unterscheidung einen Whitespace-Tokenpunkt.
+
 Der separate [Folgenkatalog](catalog.md) in `src/podcast_words/catalog.py` speichert Quellen, Metadaten und ausdrückliche Quellenlücken. Sein struktureller Export ist [catalog-v1.schema.json](../schemas/catalog-v1.schema.json). `catalog show` prüft zusätzlich eindeutige Folgen-/Quellenidentitäten, katalogweit eindeutige GUIDs und belegte GUID-Aliase. Ein Katalogeintrag ersetzt kein validiertes Episoden-JSON und keine Transkription.

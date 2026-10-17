@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-17",
+  "episode_id": "ep-5764a1149f18a8f68698fb45bb405264",
+  "metadata": "docs/research/evidence/ufo537-asr-input.json",
+  "input_audio_sha256": "d7f924479192f60229b5ba800227f640bb18a73527e360cc909f3657839327cf",
+  "input_audio_ffprobe_duration_seconds": 4343.215313,
+  "decoded_duration_seconds": 4343.222875,
+  "elapsed_seconds": 797.015,
+  "processed_at": "2026-10-17T07:03:54.426260Z",
+  "segments": 938,
+  "native_token_points": 25108,
+  "native_whitespace_token_points": 26,
+  "first_segment_start_seconds": 2.496,
+  "last_segment_end_seconds": 4340.224,
+  "output": "data/podcast-ufo/episodes/ep-5764a1149f18a8f68698fb45bb405264.json",
+  "output_sha256": "b30300ae860ec402982eb72c891b4030bd2b4c8a67ca91d4796efc1e6dd76e30",
+  "output_bytes": 2251589,
+  "semantic_validation": "passed",
+  "execution_providers": {
+    "encoder": ["CPUExecutionProvider"],
+    "decoder_joint": ["CPUExecutionProvider"],
+    "vad": ["CPUExecutionProvider"]
+  },
+  "runtime_versions": {
+    "python": "3.12.9",
+    "onnx-asr": "0.12.0",
+    "onnxruntime": "1.27.0",
+    "numpy": "2.5.4",
+    "huggingface-hub": "2.2.0",
+    "podcast-words": "0.1.0",
+    "ffmpeg": "7.1.1-full_build-www.gyan.dev"
+  },
+  "host": {
+    "os": "Windows-10-10.0.19045-SP0",
+    "cpu": "Intel Xeon E3-1240 v5 @ 3.50GHz",
+    "logical_cpus": 8,
+    "ort_intra_op_threads": 4,
+    "concurrent_work": "offline checks and short real excerpt experiments"
+  },
+  "cache_state": "exact audio already downloaded; pinned model files cached; model session creation included",
+  "model_revision_role": "Selected upstream metadata revision; exporter does not attest its exact upstream commit linkage",
+  "quality_scope": "complete real CPU inference and semantic validation; independent human listening and pilot quality gates pending"
+}
