@@ -1,0 +1,241 @@
+{
+  "date": "2026-10-17",
+  "script": "scripts/prove_asr_offset.py",
+  "scope": "Real CPU recognition of synthetic derived excerpts; no human quality references",
+  "experiments": [
+    {
+      "ok": false,
+      "comparison_status": "inconclusive-segmentation",
+      "source_sha256": "d7f924479192f60229b5ba800227f640bb18a73527e360cc909f3657839327cf",
+      "source_excerpt_start_seconds": 180.0,
+      "source_excerpt_duration_seconds": 20.0,
+      "known_silence_prefix_seconds": 60,
+      "same_native_tokens": false,
+      "same_segment_count": false,
+      "base_segment_count": 2,
+      "prefixed_segment_count": 3,
+      "native_token_count": 137,
+      "prefixed_native_token_count": 137,
+      "compared_unchanged_native_points": 0,
+      "changed_native_sequences": 0,
+      "maximum_shift_error_seconds": null,
+      "maximum_boundary_shift_error_seconds": null,
+      "base_audio_sha256": "9d49609799b251b2195789557ab400f72e984843ad9af7de465f8a5a8d9e60ee",
+      "shifted_audio_sha256": "902bae100d8a1f9ab41303bc0cbb1a7350b676f0db11c01d0f5b0b095b1b6297",
+      "base_first_point": [
+        " Unter",
+        0.08
+      ],
+      "shifted_first_point": [
+        " Unter",
+        60.08
+      ],
+      "runs": [],
+      "quality_scope": "known synthetic time shift; no independent human listening reference",
+      "base_execution_providers": {
+        "encoder": [
+          "CPUExecutionProvider"
+        ],
+        "decoder_joint": [
+          "CPUExecutionProvider"
+        ],
+        "vad": [
+          "CPUExecutionProvider"
+        ]
+      },
+      "prefixed_execution_providers": {
+        "encoder": [
+          "CPUExecutionProvider"
+        ],
+        "decoder_joint": [
+          "CPUExecutionProvider"
+        ],
+        "vad": [
+          "CPUExecutionProvider"
+        ]
+      }
+    },
+    {
+      "ok": true,
+      "comparison_status": "passed",
+      "source_sha256": "d7f924479192f60229b5ba800227f640bb18a73527e360cc909f3657839327cf",
+      "source_excerpt_start_seconds": 2100.0,
+      "source_excerpt_duration_seconds": 20.0,
+      "known_silence_prefix_seconds": 60,
+      "same_native_tokens": false,
+      "same_segment_count": true,
+      "base_segment_count": 8,
+      "prefixed_segment_count": 8,
+      "native_token_count": 110,
+      "prefixed_native_token_count": 109,
+      "compared_unchanged_native_points": 95,
+      "changed_native_sequences": 1,
+      "maximum_shift_error_seconds": 1.4210854715202004e-14,
+      "maximum_boundary_shift_error_seconds": 0.03200000000000358,
+      "base_audio_sha256": "dd8be2504dea049de41fd429198d5407f91c03f0e4030a98da8e974f84cf9a52",
+      "shifted_audio_sha256": "75c02da18fd1b9bc91f4b9141a1972ae8404f40d690207496cd1b2bdc48bb4b4",
+      "base_first_point": [
+        " Be",
+        0.32
+      ],
+      "shifted_first_point": [
+        " bei",
+        60.32
+      ],
+      "runs": [
+        {
+          "ok": true,
+          "episode_id": "base",
+          "output": ".cache\\asr\\offset-proof-middle\\base-episode.json",
+          "elapsed_seconds": 18.812,
+          "audio_seconds": 20.0,
+          "segments": 8,
+          "execution_providers": {
+            "encoder": [
+              "CPUExecutionProvider"
+            ],
+            "decoder_joint": [
+              "CPUExecutionProvider"
+            ],
+            "vad": [
+              "CPUExecutionProvider"
+            ]
+          }
+        },
+        {
+          "ok": true,
+          "episode_id": "shifted",
+          "output": ".cache\\asr\\offset-proof-middle\\shifted-episode.json",
+          "elapsed_seconds": 17.047,
+          "audio_seconds": 80.0,
+          "segments": 8,
+          "execution_providers": {
+            "encoder": [
+              "CPUExecutionProvider"
+            ],
+            "decoder_joint": [
+              "CPUExecutionProvider"
+            ],
+            "vad": [
+              "CPUExecutionProvider"
+            ]
+          }
+        }
+      ],
+      "quality_scope": "known synthetic time shift; no independent human listening reference",
+      "base_execution_providers": {
+        "encoder": [
+          "CPUExecutionProvider"
+        ],
+        "decoder_joint": [
+          "CPUExecutionProvider"
+        ],
+        "vad": [
+          "CPUExecutionProvider"
+        ]
+      },
+      "prefixed_execution_providers": {
+        "encoder": [
+          "CPUExecutionProvider"
+        ],
+        "decoder_joint": [
+          "CPUExecutionProvider"
+        ],
+        "vad": [
+          "CPUExecutionProvider"
+        ]
+      }
+    },
+    {
+      "ok": true,
+      "comparison_status": "passed",
+      "source_sha256": "d7f924479192f60229b5ba800227f640bb18a73527e360cc909f3657839327cf",
+      "source_excerpt_start_seconds": 4200.0,
+      "source_excerpt_duration_seconds": 20.0,
+      "known_silence_prefix_seconds": 60,
+      "same_native_tokens": true,
+      "same_segment_count": true,
+      "base_segment_count": 5,
+      "prefixed_segment_count": 5,
+      "native_token_count": 131,
+      "prefixed_native_token_count": 131,
+      "compared_unchanged_native_points": 131,
+      "changed_native_sequences": 0,
+      "maximum_shift_error_seconds": 1.4210854715202004e-14,
+      "maximum_boundary_shift_error_seconds": 7.105427357601002e-15,
+      "base_audio_sha256": "913b2c4881e6010909906a6d68fee7ffbd1d7ad9a71ee9f76783d6cf22ed0bc8",
+      "shifted_audio_sha256": "3be1678ec346c8ad7bec037701e5a8d1fe8f424f96c2c3d1b42fcf37b5332b54",
+      "base_first_point": [
+        " Wir",
+        0.096
+      ],
+      "shifted_first_point": [
+        " Wir",
+        60.096
+      ],
+      "runs": [
+        {
+          "ok": true,
+          "episode_id": "base",
+          "output": ".cache\\asr\\offset-proof-end\\base-episode.json",
+          "elapsed_seconds": 16.344,
+          "audio_seconds": 20.0,
+          "segments": 5,
+          "execution_providers": {
+            "encoder": [
+              "CPUExecutionProvider"
+            ],
+            "decoder_joint": [
+              "CPUExecutionProvider"
+            ],
+            "vad": [
+              "CPUExecutionProvider"
+            ]
+          }
+        },
+        {
+          "ok": true,
+          "episode_id": "shifted",
+          "output": ".cache\\asr\\offset-proof-end\\shifted-episode.json",
+          "elapsed_seconds": 19.0,
+          "audio_seconds": 80.0,
+          "segments": 5,
+          "execution_providers": {
+            "encoder": [
+              "CPUExecutionProvider"
+            ],
+            "decoder_joint": [
+              "CPUExecutionProvider"
+            ],
+            "vad": [
+              "CPUExecutionProvider"
+            ]
+          }
+        }
+      ],
+      "quality_scope": "known synthetic time shift; no independent human listening reference",
+      "base_execution_providers": {
+        "encoder": [
+          "CPUExecutionProvider"
+        ],
+        "decoder_joint": [
+          "CPUExecutionProvider"
+        ],
+        "vad": [
+          "CPUExecutionProvider"
+        ]
+      },
+      "prefixed_execution_providers": {
+        "encoder": [
+          "CPUExecutionProvider"
+        ],
+        "decoder_joint": [
+          "CPUExecutionProvider"
+        ],
+        "vad": [
+          "CPUExecutionProvider"
+        ]
+      }
+    }
+  ]
+}

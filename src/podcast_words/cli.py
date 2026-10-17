@@ -34,7 +34,7 @@ def doctor() -> int:
                 "executable": sys.executable,
                 "ffmpeg": ffmpeg,
                 "ffmpeg_version": ffmpeg_version,
-                "asr": "not installed or tested by this check",
+                "asr": "not loaded or tested by this check",
             },
             indent=2,
         )
@@ -67,6 +67,11 @@ def main(argv: list[str] | None = None) -> int:
     schema = commands.add_parser("schema", help="Print or save a structural JSON Schema")
     schema.add_argument("--kind", choices=["episode", "analysis"], default="episode")
     schema.add_argument("--output", type=Path)
+    transcription = commands.add_parser("transcribe", help="Transcribe identified audio on CPU")
+    transcription.add_argument("--metadata", type=Path, required=True)
+    transcription.add_argument("--output", type=Path, required=True)
+    transcription.add_argument("--audio-file", type=Path)
+    transcription.add_argument("--cache-dir", type=Path, default=Path(".cache/asr"))
     catalog.add_parser(commands)
     analysis.add_parser(commands)
     arguments = parser.parse_args(argv)
@@ -78,6 +83,12 @@ def main(argv: list[str] | None = None) -> int:
         return doctor()
     if arguments.command == "validate":
         return validate(arguments.paths)
+    if arguments.command == "transcribe":
+        from podcast_words.transcribe import transcribe_command
+
+        return transcribe_command(
+            arguments.metadata, arguments.output, arguments.cache_dir, arguments.audio_file
+        )
     model = analysis.Analysis if arguments.kind == "analysis" else Episode
     content = json.dumps(model.model_json_schema(), indent=2, ensure_ascii=False) + "\n"
     if arguments.output:
