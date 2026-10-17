@@ -1,5 +1,7 @@
 # V3: Öffentlicher Feed und statische Stichwortsuche
 
+Nachtrag vom 17. Oktober 2026: Der [implementierte Katalog und erneute Live-Nachweis](catalog-inventory-2026-10-17.md) erhalten alle 537 Feed-Einträge. Für Folge 37 wurde inzwischen die rohe Wayback-MP3 vollständig abgerufen und mit FFprobe geprüft; die vorherige Quellenlücke ist für diese Archivfassung geschlossen. Die folgenden ursprünglichen Beobachtungen bleiben als Recherchehistorie erhalten.
+
 Stand: 16. Oktober 2026. Recherchenotiz für die Planung; keine Appimplementierung.
 
 ## Festgelegte Ausgangslage

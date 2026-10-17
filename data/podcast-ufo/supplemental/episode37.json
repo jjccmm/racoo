@@ -1,0 +1,8 @@
+{
+  "source_key": "historical-ufo037",
+  "title": "UFO037 (archivierte Audiofassung mit Luke Mockridge)",
+  "episode_number": 37,
+  "reference_url": "https://web.archive.org/web/20200616130443/https://podcast-ufo.fail/wp-content/uploads/ufo37_fertig.mp3",
+  "audio_url": "https://web.archive.org/web/20200616130443id_/https://podcast-ufo.fail/wp-content/uploads/ufo37_fertig.mp3",
+  "evidence": "Vollständiger HTTP-GET am 16.10.2026: 179888758 Bytes audio/mpeg, SHA-256 0fe922d9af143454d59881e485c4580cfec96ab17d2c77b95c6323dbde799956. FFprobe erkennt MP3, 5617.423878 s, 44100 Hz stereo; eingebettetes Album DAS PODCAST UFO und Künstler Stefan Titze, Luke Mockridge und Florentin Will. FFmpeg dekodiert die ersten zehn Sekunden ohne Fehler. Historische Publisheradresse ufo37_fertig.mp3 und eingebettete Metadaten belegen diese Zuordnung; Veröffentlichungsdatum ist nicht primär belegt und bleibt offen. Details: docs/research/evidence/episode37-audio-verification-2026-10-16.json. Die HTML-Wiedergabeseite allein gilt nicht als Audionachweis. Keine Transkription durchgeführt."
+}

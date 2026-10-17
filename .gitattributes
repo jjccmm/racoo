@@ -8,3 +8,5 @@
 *.mp3 binary
 *.wav binary
 *.onnx binary
+# Publisher snapshots retain their original bytes, whitespace and line endings.
+data/*/snapshots/*.xml binary

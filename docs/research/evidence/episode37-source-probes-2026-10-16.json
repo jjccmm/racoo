@@ -1,0 +1,38 @@
+[
+  {
+    "requested_url": "https://podcast-ufo.fail/wp-content/uploads/ufo37_fertig.mp3",
+    "checked_at": "2026-10-16T21:42:52.367744+00:00",
+    "method": "GET",
+    "range": "bytes=0-65535",
+    "error_type": "URLError",
+    "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1010)>"
+  },
+  {
+    "requested_url": "https://web.archive.org/web/20201113201409/https://podcast-ufo.fail/wp-content/uploads/ufo37_fertig.mp3",
+    "checked_at": "2026-10-16T21:42:52.772516+00:00",
+    "method": "GET",
+    "range": "bytes=0-65535",
+    "status": 200,
+    "resolved_url": "https://web.archive.org/web/20200616130443/http://podcast-ufo.fail/wp-content/uploads/ufo37_fertig.mp3",
+    "content_type": "text/html",
+    "content_length": null,
+    "bytes_checked": 9080,
+    "prefix_sha256": "bcd13e6e20260be720449bdd2829047726b5bc2fb0b06eeff7df86f1b5b53f30",
+    "first_bytes_hex": "3c21444f43545950452068746d6c3e0a",
+    "audio_signature": false
+  },
+  {
+    "requested_url": "https://web.archive.org/web/20200616130443id_/https://podcast-ufo.fail/wp-content/uploads/ufo37_fertig.mp3",
+    "checked_at": "2026-10-16T21:42:56.219462+00:00",
+    "method": "GET",
+    "range": "bytes=0-65535",
+    "status": 206,
+    "resolved_url": "https://web.archive.org/web/20200616130443id_/https://podcast-ufo.fail/wp-content/uploads/ufo37_fertig.mp3",
+    "content_type": "audio/mpeg",
+    "content_length": "65536",
+    "bytes_checked": 65536,
+    "prefix_sha256": "a5a46ab2e328eb8b74accf5fdb0543b031c6db5bd086e52a7d7e9d91157b53fa",
+    "first_bytes_hex": "4944330200000008007054535300000d",
+    "audio_signature": true
+  }
+]

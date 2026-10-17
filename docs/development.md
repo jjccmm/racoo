@@ -74,4 +74,6 @@ Beim schreibgeschützten Audit am 16. Oktober 2026 waren uv 0.10.9, Node 22.19.0
 
 ## Abhängigkeiten und nächste Arbeiten
 
+Die öffentlichen Befehle für Feedimport, Quellenlücken und geprüfte GUID-Aliase stehen in der [Kataloganleitung](catalog.md). Der [datierte Inventarbericht](research/catalog-inventory-2026-10-17.md) trennt den Live-Quellennachweis von den Offline-Prüfungen und einer späteren Transkription.
+
 Bei einer beabsichtigten Abhängigkeitsänderung Manifest und Lockfile gemeinsam aktualisieren und den relevanten Check ausführen. ASR, spaCy, deren Modelle, Recharts und Pagefind werden mit dem jeweils zugehörigen Funktionsnachweis integriert und validiert. Sie sind keine versteckten Downloads des Starters. Die nächsten Aufgaben stehen in `TASKS.md`.

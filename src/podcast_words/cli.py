@@ -10,6 +10,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
+from podcast_words import catalog
 from podcast_words.contracts import Episode
 
 
@@ -65,7 +66,10 @@ def main(argv: list[str] | None = None) -> int:
     validation.add_argument("paths", type=Path, nargs="+")
     schema = commands.add_parser("schema", help="Print or save the structural episode JSON Schema")
     schema.add_argument("--output", type=Path)
+    catalog.add_parser(commands)
     arguments = parser.parse_args(argv)
+    if arguments.command == "catalog":
+        return catalog.run(arguments)
     if arguments.command == "doctor":
         return doctor()
     if arguments.command == "validate":
