@@ -18,6 +18,43 @@ test('finds a remembered word in the real built transcript index', async ({ page
   await expect(result).toContainText('0:10');
 });
 
+test('the visible publication, search mapping and statistics share one stable identity', async ({ page }) => {
+  await page.goto('./');
+  await expect(page.getByLabel('Veröffentlichungsstand')).toContainText('synthetic-podcast · 17 Folgen');
+  const envelope = await page.evaluate(async () => {
+    const publication = await (await fetch('publication.json')).json();
+    const search = await (await fetch('search/manifest.json')).json();
+    const mapping = await (await fetch(`search/${search.indexId}/episodes.json`)).json();
+    const statistics = await (await fetch('stats/manifest.json')).json();
+    const catalog = await (await fetch('stats/catalog.json')).json();
+    return { publication, search, mapping, statistics, catalog };
+  });
+  expect(envelope.publication.state).toBe('synthetic-fixture');
+  expect(envelope.publication.archiveComplete).toBe(false);
+  expect(envelope.search.publicationId).toBe(envelope.publication.publicationId);
+  expect(envelope.mapping.publicationId).toBe(envelope.publication.publicationId);
+  expect(envelope.statistics.publicationId).toBe(envelope.publication.publicationId);
+  expect(envelope.catalog.publicationId).toBe(envelope.publication.publicationId);
+  expect(Object.values(envelope.mapping.episodes as Record<string, { episodeId: string }>).map(({ episodeId }) => episodeId).sort())
+    .toEqual(envelope.publication.episodeIds);
+});
+
+test('a mismatched publication identity is an explicit search error with no automatic retry', async ({ page }) => {
+  let requests = 0;
+  await page.route('**/publication.json', (route) => {
+    requests += 1;
+    return route.fulfill({ json: { schemaVersion: 1, publicationId: 'a'.repeat(64), podcastId: 'synthetic-podcast', state: 'synthetic-fixture', archiveComplete: false, episodeCount: 17, episodeIds: [], searchIndexId: 'b'.repeat(64), statisticsId: 'c'.repeat(64), preparationId: null } });
+  });
+  await page.goto('./');
+  await expect(page.getByRole('alert')).toContainText('Veröffentlichungsstand konnte nicht geladen werden');
+  const initialRequests = requests;
+  await page.getByRole('textbox', { name: 'Stichwort' }).fill('Münzen');
+  await page.getByRole('button', { name: 'Suchen', exact: true }).click();
+  await expect(page.getByRole('alert').last()).toContainText('Die Suche konnte nicht geladen werden');
+  await page.waitForTimeout(250);
+  expect(requests).toBe(initialRequests + 1);
+});
+
 test('the index maps every candidate to stable identity and date before fragment loads', async ({ page }) => {
   const fragments: string[] = [];
   page.on('request', (request) => {

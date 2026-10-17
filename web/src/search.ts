@@ -1,3 +1,5 @@
+import { loadPublication } from './publication';
+
 export type Segment = { id: string; text: string; start_seconds: number; end_seconds: number };
 export type Occurrence = { id: string; seconds: number; terms: string[]; nearbyTerms: string[] };
 export type Passage = Segment & { occurrences: Occurrence[] };
@@ -27,11 +29,13 @@ async function json(url: string, signal: AbortSignal) {
 }
 
 async function loadIndex(signal: AbortSignal): Promise<SearchIndex> {
+  const publication = await loadPublication(signal);
   const manifest = await json(`${base}search/manifest.json`, signal);
-  if (!/^[a-f0-9]{64}$/.test(manifest.indexId)) throw new Error('Ungültiger Suchstand');
+  if (!/^[a-f0-9]{64}$/.test(manifest.indexId) || manifest.publicationId !== publication.publicationId
+      || manifest.indexId !== publication.searchIndexId || manifest.podcastId !== publication.podcastId) throw new Error('Ungültiger Suchstand');
   const directory = `${base}search/${manifest.indexId}/`;
   const mapping = await json(`${directory}episodes.json`, signal);
-  if (mapping.indexId !== manifest.indexId) throw new Error('Suchindex und Folgenzuordnung stimmen nicht überein');
+  if (mapping.indexId !== manifest.indexId || mapping.publicationId !== publication.publicationId) throw new Error('Suchindex und Folgenzuordnung stimmen nicht überein');
   const moduleUrl = new URL(`${directory}pagefind.js`, window.location.href).href;
   return { moduleUrl, episodes: mapping.episodes };
 }

@@ -51,6 +51,20 @@ npm.cmd --prefix web run preview
 
 `npm.cmd --prefix web run test:browser` prüft einen bereits erzeugten Build mit Playwright und startet dafür selbst einen lokalen Preview auf Port 4179. `PW_PORT` wählt bei Bedarf einen anderen Port. Der Web-Check baut zuerst neu und führt diese Browserprüfungen aus. `PW_BASE_PATH=/podcast_words_v3/` erlaubt dieselben Prüfungen gegen einen zuvor mit diesem Basispfad gebauten Stand. Ein laufender anderer Preview wird nicht stillschweigend wiederverwendet.
 
+## Ausgewählte Veröffentlichung
+
+Die öffentliche CLI bereitet aus einer expliziten JSON-Liste relativer Transkriptpfade eine ausgewählte, validierte Veröffentlichungsquelle vor. Katalogänderungen aktualisieren öffentliche Metadaten, ohne erkannten Text oder Zeiten zu ändern; gültige Analysen werden wiederverwendet. Die Vorbereitung liest keine ASR-Modelle:
+
+```powershell
+$env:UV_CACHE_DIR = 'C:/Users/User/Code/podcast_words_v3/.uv-cache'
+uv run --frozen podcast-words publish --catalog data/podcast-ufo/catalog.json --episodes .cache/selected-episodes.json --analyses data/podcast-ufo/analyses --output .cache/publication
+$env:PODCAST_WORDS_PUBLICATION_SOURCE = '.cache/publication'
+npm.cmd --prefix web run build
+Remove-Item Env:PODCAST_WORDS_PUBLICATION_SOURCE
+```
+
+`selected-episodes.json` enthält die vom Operator gewählten Dateipfade relativ zu seiner Ablage. Der Vite-Build verwendet diese eine Quelle für Suchindex, Episodenrecords, Katalog und Statistiken und stoppt bei abweichenden Podcast-, Episoden-, Titel-, Datums- oder Statistikständen. `dist/publication.json` bindet den ausgewählten Pilotstatus, stabile Folgen-IDs, Pagefind-Index und Statistiken; dieselbe Veröffentlichungs-ID steht in Suchzuordnung und Statistikdateien. Der Fixture-Build kennzeichnet sich als `synthetic-fixture`. Ab 800 MB wird gewarnt, über 1 GB der Build abgelehnt. Veröffentlichungsquellen und Build-Ergebnisse bleiben ignoriert.
+
 ## Suchindex mit kontrollierten Eingaben
 
 Der Vite-Build validiert die in [search-corpus.json](../tests/fixtures/search-corpus.json) aufgeführten Episodendateien zuerst durch dieselbe Python-CLI. `PODCAST_WORDS_EPISODES` kann auf eine andere JSON-Liste zeigen; deren Dateipfade gelten relativ zur Liste, der Listenpfad relativ zum Repositoryroot. Pro Build ist genau ein Podcast zulässig. Pagefind 1.5.2 erzeugt pro Folge ein virtuelles deutsches Dokument mit Segmentankern und App-URL. Titel und übrige Metadaten bleiben außerhalb des lexikalischen Indexes, weil diese Pagefind-Version auch Metadaten durchsucht.
