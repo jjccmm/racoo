@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { cp, mkdir } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import type { Plugin, ResolvedConfig } from 'vite';
 
@@ -8,8 +9,15 @@ export function statistics(): Plugin {
     name: 'podcast-words-statistics',
     apply: 'build',
     configResolved(resolved) { config = resolved; },
-    closeBundle() {
+    async closeBundle() {
       const root = path.resolve(config.root, '..');
+      const destination = path.resolve(config.root, config.build.outDir, 'stats');
+      if (process.env.PODCAST_WORDS_PUBLICATION_SOURCE) {
+        await mkdir(destination, { recursive: true });
+        await cp(path.resolve(root, process.env.PODCAST_WORDS_PUBLICATION_SOURCE, 'stats'), destination, { recursive: true });
+        console.log('Validated saved analyses reused from the selected publication source');
+        return;
+      }
       const result = spawnSync('uv', ['run', '--frozen', 'podcast-words', 'analyze',
         '--episodes', path.resolve(root, process.env.PODCAST_WORDS_EPISODES ?? 'tests/fixtures/search-corpus.json'),
         '--output', path.resolve(root, process.env.PODCAST_WORDS_ANALYSES ?? 'tests/fixtures/analysis'),

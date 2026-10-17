@@ -19,10 +19,12 @@ test('a visitor sees pilot and per-episode vocabulary totals in stable chronolog
 });
 
 test('a zero-word episode remains visible with zero counts', async ({ page }) => {
+  await page.goto('./');
+  const publicationId = await page.evaluate(async () => (await (await fetch('publication.json')).json()).publicationId);
   await page.route('**/stats/catalog.json', (route) => route.fulfill({
     json: {
       schemaVersion: 1,
-      publicationId: 'a'.repeat(64),
+      publicationId,
       summary: { episodeCount: 1, totalWords: 0, distinctWords: 0, newWords: 0 },
       episodes: [{
         episodeId: 'zero-word', title: 'Nur Satzzeichen', publishedAt: '2024-01-01T12:00:00Z',
@@ -30,7 +32,6 @@ test('a zero-word episode remains visible with zero counts', async ({ page }) =>
       }],
     },
   }));
-  await page.goto('./');
   await page.getByRole('button', { name: 'Wortentwicklung öffnen' }).click();
   const summary = page.getByRole('region', { name: 'Gesamtwörter und Wortschatz' });
   await expect(summary.locator('dd')).toHaveText(['0', '0', '0']);

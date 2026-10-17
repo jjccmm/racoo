@@ -1,4 +1,5 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useRef, useState } from 'react';
+import { loadPublication } from './publication';
 
 const Frequency = lazy(() => import('./Frequency').then((module) => ({ default: module.Frequency })));
 
@@ -16,23 +17,28 @@ async function read(file: string, publicationId?: string) {
 }
 
 export function Stats() {
+  const generation = useRef(0);
   const [data, setData] = useState<Data>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
   async function open() {
+    const current = ++generation.current;
     setLoading(true);
     setError(false);
     try {
+      const publication = await loadPublication();
       const manifest = await read('manifest.json');
+      if (manifest.publicationId !== publication.publicationId || manifest.statisticsId !== publication.statisticsId
+          || manifest.podcastId !== publication.podcastId) throw new Error('Mismatched publication');
       const [vocabulary, catalog] = await Promise.all([
         read('vocabulary.json', manifest.publicationId), read('catalog.json', manifest.publicationId),
       ]);
-      setData({ publicationId: manifest.publicationId, words: vocabulary.words, episodes: catalog.episodes });
+      if (current === generation.current) setData({ publicationId: manifest.publicationId, words: vocabulary.words, episodes: catalog.episodes });
     } catch {
-      setError(true);
+      if (current === generation.current) setError(true);
     } finally {
-      setLoading(false);
+      if (current === generation.current) setLoading(false);
     }
   }
 

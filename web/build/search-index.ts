@@ -31,7 +31,13 @@ export function searchIndex(): Plugin {
     configResolved(resolved) { config = resolved; },
     async closeBundle() {
       const root = path.resolve(config.root, '..');
-      const corpusPath = path.resolve(root, process.env.PODCAST_WORDS_EPISODES ?? 'tests/fixtures/search-corpus.json');
+      if (process.env.PODCAST_WORDS_PUBLICATION_SOURCE && process.env.PODCAST_WORDS_EPISODES) {
+        throw new Error('Choose either PODCAST_WORDS_PUBLICATION_SOURCE or PODCAST_WORDS_EPISODES');
+      }
+      const source = process.env.PODCAST_WORDS_PUBLICATION_SOURCE;
+      const corpusPath = source
+        ? path.resolve(root, source, 'episodes.json')
+        : path.resolve(root, process.env.PODCAST_WORDS_EPISODES ?? 'tests/fixtures/search-corpus.json');
       const corpus: string[] = JSON.parse(await readFile(corpusPath, 'utf8'));
       const episodePaths = corpus.map((file) => path.resolve(path.dirname(corpusPath), file));
       if (!episodePaths.length) throw new Error('The search corpus must contain episodes');

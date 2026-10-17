@@ -35,6 +35,17 @@ Katalog-Metadaten- und Konfigurationsabweichungen eines gespeicherten Ergebnisse
 
 `transcription.input_revision` enthält die SHA-256-Prüfsumme der verarbeiteten Audio-Bytes. `configuration_revision` bindet Modell-, Export-, VAD-, Quantisierungs-, Anbieter-, Laufzeit- und Dekodiereinstellungen. `transcript_revision` bindet geordnete Segmente, Audio-Prüfsumme und Konfigurationsrevision. Diese Werte erlauben nachfolgenden Analyse- und Veröffentlichungsschritten, verbrauchte Inhalte zu vergleichen. Metadatenänderungen sind davon getrennt.
 
+## Übertragene Ergebnisse sicher importieren
+
+Ergebnisse aus einem anderen Lauf, etwa aus einer Colab-Sitzung, lassen sich ohne erneute ASR-Verarbeitung übernehmen. Das Notebook legt die Folgen-JSONs unter `/content/drive/MyDrive/podcast-words-v3/episodes` ab. Nach dem Lauf diese JSON-Dateien in das lokale Transferverzeichnis herunterladen oder kopieren; `--catalog` verweist auf den lokal verifizierten Katalog. Der Import gleicht nicht automatisch zwei Katalogdateien zusammen.
+
+```powershell
+uv run --frozen podcast-words import-results --catalog data/podcast-ufo/catalog.json --input-dir .cache/transfer/episodes --output-dir data/podcast-ufo/episodes
+```
+
+Der Import prüft jede Episodendatei gegen den lokalen Katalog, einschließlich stabiler ID und ausschließlich dort verifizierter GUID-Aliase. Er verlangt ein semantisch gültiges, abgeschlossenes Ergebnis mit Audio-Prüfsumme, Modell-, Export- und Laufzeitangaben. Gleiche vorhandene Erkennungsergebnisse werden übersprungen. Ein abweichender Transkripttext, Audioinhalt oder eine abweichende Verarbeitungskonfiguration wird als Konflikt ausgegeben; die gespeicherte Datei bleibt erhalten. Abweichende Titel- und Folgemetadaten werden gesondert gemeldet und ersetzen keine Erkennung.
+
+Die JSON-Ausgabe nennt für jede Eingabedatei den Status und die verbrauchten Audio-, Konfigurations- und Transkriptfingerabdrücke. Bei Fehlern oder Konflikten ist der Exitstatus 1. Schema-v1-Ergebnisse ohne die optionalen Revisionsfelder älterer Verarbeitungsstände bleiben importierbar, wenn ihre vollständigen ASR-Provenienzfelder vorliegen; der Bericht kennzeichnet diese Legacy-Provenienz ausdrücklich. Teilweise vorhandene oder widersprüchliche Revisionen werden abgewiesen. Der Befehl lädt weder Audio noch Modelle und startet keine Erkennung.
 ## Gesperrte Konfiguration
 
 - Python 3.12, `onnx-asr==0.12.0`, `onnxruntime==1.27.0`; alle transitiven Paketstände stehen in `uv.lock`.
