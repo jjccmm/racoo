@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "podcast_id": "synthetic-podcast",
+  "episode_id": "synthetic-episode-002",
+  "source": {
+    "kind": "synthetic",
+    "key": "search-fixture-002",
+    "reference_url": "https://example.org/synthetic-episode-002",
+    "guid_aliases": []
+  },
+  "title": "Titelgeheimnis — zweite synthetische Folge",
+  "published_at": "2026-10-15T12:00:00Z",
+  "audio": {
+    "url": "https://example.org/synthetic-audio-002.mp3",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "duration_seconds": 90
+  },
+  "transcription": {
+    "model_id": "synthetic-fixture-no-asr",
+    "model_revision": "fixture-v1",
+    "export_revision": "fixture-v1",
+    "processed_at": "2026-10-16T12:00:00Z",
+    "runtime_versions": { "fixture": "1" }
+  },
+  "segments": [
+    {
+      "id": "segment-first",
+      "text": "Wir tragen einen Eimer über die Straße.",
+      "start_seconds": 5,
+      "end_seconds": 9,
+      "token_points": []
+    },
+    {
+      "id": "segment-last",
+      "text": "Später laufen die Gäste nach Hause.",
+      "start_seconds": 70,
+      "end_seconds": 75,
+      "token_points": []
+    }
+  ]
+}

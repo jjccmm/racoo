@@ -16,6 +16,7 @@ PowerShell:
 $env:UV_CACHE_DIR = Join-Path $PWD '.uv-cache'
 uv sync --locked
 npm.cmd --prefix web ci --cache .cache/npm
+npm.cmd --prefix web run browser:install
 uv run --frozen python scripts/check.py
 ```
 
@@ -25,12 +26,13 @@ Linux:
 export UV_CACHE_DIR="$PWD/.uv-cache"
 uv sync --locked
 npm --prefix web ci --cache .cache/npm
+npm --prefix web run browser:install
 uv run --frozen python scripts/check.py
 ```
 
-Der gemeinsame Check läuft ohne Audio-, Modell- oder GPU-Zugriff. Er prüft Python-Lint und Format, die Datenvertragsgrenzen, die kleine Beispieldatei, Dokumentationslinks und Notebooksyntax sowie Web-Lint, TypeScript und Produktionsbuilds am Root- und Projektpfad. Die Teilbefehle stehen in `pyproject.toml`, `web/package.json` und `scripts/check.py`.
+Der gemeinsame Check läuft ohne Audio-, Modell- oder GPU-Zugriff. Er prüft Python-Lint und Format, die Datenvertragsgrenzen, die kleinen Beispieldateien, Dokumentationslinks und Notebooksyntax sowie Web-Lint, TypeScript, Produktionsbuilds am Root- und Projektpfad und echte Chromium-Suchen am gebauten Root-Pfad. Die Teilbefehle stehen in `pyproject.toml`, `web/package.json` und `scripts/check.py`.
 
-Installationen benötigen einmalig Zugang zu PyPI und npm. Nach der ersten Installation wurden `uv sync --locked --offline` und ein npm-CI-Lauf mit lokalem Cache und `--offline` erfolgreich geprüft. Ein frischer Rechner ohne gefüllten Cache benötigt weiterhin Netzwerkzugriff.
+Installationen benötigen einmalig Zugang zu PyPI, npm und dem Playwright-Browserdownload. `browser:install` installiert den zu Playwright 1.64.1 gehörenden Chromium-Headless-Shell-Browser; die Routineprüfungen verwenden anschließend den installierten Browser offline. Linux-CI installiert dessen Systembibliotheken zusätzlich mit `npx playwright install --with-deps chromium --only-shell`. Nach der ersten Installation wurden `uv sync --locked --offline` und ein npm-CI-Lauf mit lokalem Cache und `--offline` erfolgreich geprüft. Ein frischer Rechner ohne gefüllten Cache benötigt weiterhin Netzwerkzugriff.
 
 ## Lokal arbeiten
 
@@ -40,7 +42,22 @@ uv run --frozen podcast-words validate tests/fixtures/synthetic-episode.json
 npm.cmd --prefix web run dev
 ```
 
-Der Entwicklungsserver bindet ausschließlich an `127.0.0.1`, standardmäßig Port 5173. Unter Linux `npm` statt `npm.cmd` verwenden. Mit Strg+C beenden. Die App zeigt ausdrücklich synthetische Daten; sie enthält noch keine echte Suche oder Audiowiedergabe.
+Der Entwicklungsserver bindet ausschließlich an `127.0.0.1`, standardmäßig Port 5173. Unter Linux `npm` statt `npm.cmd` verwenden. Mit Strg+C beenden. Die App zeigt ausdrücklich synthetische Daten; Audiowiedergabe folgt später. Für die echte Suche den Produktionsbuild mit seinem generierten Index verwenden:
+
+```powershell
+npm.cmd --prefix web run build
+npm.cmd --prefix web run preview
+```
+
+`npm.cmd --prefix web run test:browser` prüft einen bereits erzeugten Build mit Playwright und startet dafür selbst einen lokalen Preview auf Port 4179. `PW_PORT` wählt bei Bedarf einen anderen Port. Der Web-Check baut zuerst neu und führt diese Browserprüfungen aus. `PW_BASE_PATH=/podcast_words_v3/` erlaubt dieselben Prüfungen gegen einen zuvor mit diesem Basispfad gebauten Stand. Ein laufender anderer Preview wird nicht stillschweigend wiederverwendet.
+
+## Suchindex mit kontrollierten Eingaben
+
+Der Vite-Build validiert die in [search-corpus.json](../tests/fixtures/search-corpus.json) aufgeführten Episodendateien zuerst durch dieselbe Python-CLI. `PODCAST_WORDS_EPISODES` kann auf eine andere JSON-Liste zeigen; deren Dateipfade gelten relativ zur Liste, der Listenpfad relativ zum Repositoryroot. Pro Build ist genau ein Podcast zulässig. Pagefind 1.5.2 erzeugt pro Folge ein virtuelles deutsches Dokument mit Segmentankern und App-URL. Titel und übrige Metadaten bleiben außerhalb des lexikalischen Indexes, weil diese Pagefind-Version auch Metadaten durchsucht.
+
+Unter `dist/search/manifest.json` steht der Indexstand. Ein SHA-256-Verzeichnis bindet Pagefind-Dateien, kompakte Such-ID→Episoden-ID/Datum-Zuordnung und ursprüngliche Episodendateien zusammen. Der Browser liest die Zuordnung vor den Ergebnisdetails; weder der Seitenstart noch eine erfolglose Suche lädt Episodenfragmente oder Transkripte. Der Buildadapter liest die von der gesperrten Pagefind-Version erzeugten Fragmentdateien und prüft deren Signatur sowie die vollständige Zuordnung. Ein Paketwechsel benötigt einen erneuten Browsernachweis dieses Formats.
+
+Die Suche läuft in einem eigenen Worker. Er meldet auch von Pagefind intern abgefangene Abruffehler, statt sie als Nulltreffer auszugeben. Ein bewusster neuer Suchlauf verwendet einen frischen Worker und kann dadurch nach einem fehlgeschlagenen Chunk erneut laden. Automatische Wiederholungen gibt es nicht. Fundstellen verwenden kopierte Rohpositionen und die Pagefind-Anker, zeigen den Originalsegmenttext und dessen Beginn auf der Episodenzeitachse. Die Browserprüfungen belegen Wortformen, Zeitmarken, Metadatenabgrenzung, separate Abfragepositionen und Fehler/Wiederholung. Mehrwort-Rangfolge, zusätzliche Ergebnisladungen, Wiedergabe und die echte Pilotqualität sind spätere Nachweise.
 
 `doctor` kontrolliert Python und ein ausführbares FFmpeg. Bei fehlendem oder nicht ausführbarem FFmpeg liefert er einen Fehlerstatus. Ein erfolgreicher Aufruf ist kein ASR- oder GPU-Nachweis. Der reguläre Offline-Check benötigt FFmpeg noch nicht; die spätere Audioverarbeitung benötigt es.
 
