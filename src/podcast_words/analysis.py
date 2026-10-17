@@ -83,8 +83,11 @@ def publish(directory: Path, episodes: list[Episode], analyses: dict[str, Analys
     words: dict[str, dict] = {}
     shards: list[dict[str, list]] = [{} for _ in range(64)]
     catalog = []
+    seen_lemmas: set[str] = set()
     for episode in ordered:
         analysis = analyses[episode.episode_id]
+        new_words = set(analysis.lemmas) - seen_lemmas
+        seen_lemmas.update(analysis.lemmas)
         catalog.append(
             {
                 "episodeId": episode.episode_id,
@@ -92,6 +95,7 @@ def publish(directory: Path, episodes: list[Episode], analyses: dict[str, Analys
                 "publishedAt": episode.published_at.isoformat(),
                 "totalWords": analysis.total_words,
                 "distinctWords": len(analysis.lemmas),
+                "newWords": len(new_words),
             }
         )
         for lemma, item in sorted(analysis.lemmas.items()):
@@ -122,7 +126,19 @@ def publish(directory: Path, episodes: list[Episode], analyses: dict[str, Analys
         )
     ).hexdigest()
     envelope = {"schemaVersion": 1, "publicationId": publication_id}
-    write_json(directory / "catalog.json", {**envelope, "episodes": catalog})
+    write_json(
+        directory / "catalog.json",
+        {
+            **envelope,
+            "summary": {
+                "episodeCount": len(ordered),
+                "totalWords": sum(analysis.total_words for analysis in analyses.values()),
+                "distinctWords": len(words),
+                "newWords": sum(episode["newWords"] for episode in catalog),
+            },
+            "episodes": catalog,
+        },
+    )
     write_json(directory / "vocabulary.json", {**envelope, "words": vocabulary})
     for index, counts in enumerate(shards):
         write_json(directory / f"counts/{index:02d}.json", {**envelope, "counts": counts})
