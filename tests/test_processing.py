@@ -276,6 +276,85 @@ def test_process_selected_episode_is_durable_skipped_on_resume_and_explicitly_re
         assert json.loads(initial_output)["results"][0]["status"] == "completed"
 
 
+def test_process_rejects_stale_or_partial_revisions_without_marking_completion(tmp_path, capsys):
+    fixture = Path(__file__).parent / "fixtures" / "synthetic-episode.json"
+    original = json.loads(fixture.read_bytes())
+    original["podcast_id"] = "fixture-podcast"
+    original["episode_id"] = "episode-one"
+    original["source"] = {
+        "kind": "rss",
+        "key": "guid-one",
+        "guid": "guid-one",
+        "guid_aliases": [],
+        "reference_url": "https://example.org/episode",
+    }
+
+    mutations = {
+        "stale-input": {
+            "input_revision": "0" * 64,
+            "configuration_revision": "1" * 64,
+            "transcript_revision": "2" * 64,
+        },
+        "stale-transcript": {
+            "input_revision": original["audio"]["sha256"],
+            "configuration_revision": "1" * 64,
+            "transcript_revision": "2" * 64,
+        },
+        "partial": {
+            "input_revision": original["audio"]["sha256"],
+            "configuration_revision": None,
+            "transcript_revision": None,
+        },
+    }
+
+    for name, revisions in mutations.items():
+        catalog_path = tmp_path / f"{name}-catalog.json"
+        output = tmp_path / f"{name}-episodes"
+        make_catalog(catalog_path, "https://audio.example/episode.wav")
+        catalog_data = json.loads(catalog_path.read_bytes())
+        catalog_data["episodes"][0]["processing_status"] = "completed"
+        catalog_path.write_text(json.dumps(catalog_data), encoding="utf-8")
+        saved = json.loads(json.dumps(original))
+        saved["transcription"].update(revisions)
+        destination = output / "episode-one.json"
+        destination.parent.mkdir()
+        destination.write_text(json.dumps(saved), encoding="utf-8")
+        previous = destination.read_bytes()
+
+        assert run(catalog_path, output, tmp_path / "cache", "episode-one") == 1
+        report = json.loads(capsys.readouterr().out)
+        assert report["results"][0]["status"] == "conflict"
+        assert destination.read_bytes() == previous
+        assert json.loads(catalog_path.read_bytes())["episodes"][0]["processing_status"] == "failed"
+
+
+def test_process_skips_complete_legacy_provenance_with_diagnostic(tmp_path, capsys):
+    fixture = Path(__file__).parent / "fixtures" / "synthetic-episode.json"
+    saved = json.loads(fixture.read_bytes())
+    saved["podcast_id"] = "fixture-podcast"
+    saved["episode_id"] = "episode-one"
+    saved["source"] = {
+        "kind": "rss",
+        "key": "guid-one",
+        "guid": "guid-one",
+        "guid_aliases": [],
+        "reference_url": "https://example.org/episode",
+    }
+    for name in ("input_revision", "configuration_revision", "transcript_revision"):
+        saved["transcription"].pop(name, None)
+    catalog_path = tmp_path / "catalog.json"
+    output = tmp_path / "episodes"
+    make_catalog(catalog_path, "https://audio.example/episode.wav")
+    destination = output / "episode-one.json"
+    destination.parent.mkdir()
+    destination.write_text(json.dumps(saved), encoding="utf-8")
+
+    assert run(catalog_path, output, tmp_path / "cache", "episode-one") == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["results"][0]["status"] == "skipped"
+    assert report["results"][0]["legacy_provenance"] == "complete-without-revision-fields"
+
+
 def test_process_reports_foreign_valid_transcript_as_conflict_without_replacing_it(
     tmp_path, capsys
 ):

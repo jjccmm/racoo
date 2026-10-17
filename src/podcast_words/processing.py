@@ -1,10 +1,7 @@
 """Resume selected catalog episodes through the public offline processing command."""
 
-import hashlib
 import json
-import os
 import platform
-import tempfile
 from importlib.metadata import version
 from pathlib import Path
 
@@ -12,30 +9,9 @@ from pydantic import ValidationError
 
 from podcast_words.catalog import Catalog, CatalogEpisode
 from podcast_words.contracts import Episode
+from podcast_words.json_io import write_json
+from podcast_words.revisions import digest, validate_completed_episode
 from podcast_words.transcribe import EpisodeInput
-
-
-def digest(value: object) -> str:
-    encoded = json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
-    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
-
-
-def write_json(path: Path, value: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            mode="w", encoding="utf-8", newline="\n", dir=path.parent, delete=False
-        ) as stream:
-            temporary = Path(stream.name)
-            json.dump(value, stream, indent=2, ensure_ascii=False)
-            stream.write("\n")
-            stream.flush()
-            os.fsync(stream.fileno())
-        os.replace(temporary, path)
-    finally:
-        if temporary is not None:
-            temporary.unlink(missing_ok=True)
 
 
 def configuration_revision() -> str:
@@ -218,6 +194,25 @@ def process(arguments) -> int:
                 )
                 results.append(result)
                 continue
+            legacy_provenance = None
+            if previous is not None and not arguments.retranscribe:
+                try:
+                    _saved_revisions, legacy_provenance = validate_completed_episode(previous)
+                except ValueError as error:
+                    entry.processing_status = "failed"
+                    write_json(arguments.catalog, catalog.model_dump(mode="json"))
+                    result.update(
+                        {
+                            "status": "conflict",
+                            "output": str(destination),
+                            "error": (
+                                f"saved episode provenance is invalid and was preserved: {error}; "
+                                "review it, then use --retranscribe to replace it explicitly"
+                            ),
+                        }
+                    )
+                    results.append(result)
+                    continue
             if previous is not None and not arguments.retranscribe:
                 result.update(
                     {
@@ -227,6 +222,8 @@ def process(arguments) -> int:
                         "output": str(destination),
                     }
                 )
+                if legacy_provenance:
+                    result["legacy_provenance"] = legacy_provenance
                 entry.processing_status = "completed"
                 write_json(arguments.catalog, catalog.model_dump(mode="json"))
                 results.append(result)
@@ -242,22 +239,11 @@ def process(arguments) -> int:
             transcript = with_revisions(transcript, config_revision)
             # Validate the bytes as read back from the temporary file before the
             # atomic replace can make them visible as a completed artifact.
-            content = transcript.model_dump_json(indent=2) + "\n"
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            temporary = None
-            try:
-                with tempfile.NamedTemporaryFile(
-                    mode="w", encoding="utf-8", newline="\n", dir=destination.parent, delete=False
-                ) as stream:
-                    temporary = Path(stream.name)
-                    stream.write(content)
-                    stream.flush()
-                    os.fsync(stream.fileno())
-                Episode.model_validate_json(temporary.read_bytes())
-                os.replace(temporary, destination)
-            finally:
-                if temporary is not None:
-                    temporary.unlink(missing_ok=True)
+            write_json(
+                destination,
+                transcript.model_dump(mode="json"),
+                validate=lambda content: Episode.model_validate_json(content),
+            )
             entry.processing_status = "completed"
             write_json(arguments.catalog, catalog.model_dump(mode="json"))
             result.update({"status": "completed", "output": str(destination)})

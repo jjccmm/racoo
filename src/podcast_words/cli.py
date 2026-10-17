@@ -12,6 +12,7 @@ from pydantic import ValidationError
 
 from podcast_words import analysis, catalog
 from podcast_words.contracts import Episode
+from podcast_words.revisions import validate_compatible_processing
 
 
 def doctor() -> int:
@@ -42,9 +43,10 @@ def doctor() -> int:
     return 0 if ready else 1
 
 
-def validate(paths: list[Path]) -> int:
+def validate(paths: list[Path], *, compatible_processing: bool = False) -> int:
     failed = False
     results = []
+    episodes = []
     for path in paths:
         try:
             episode = Episode.model_validate_json(path.read_bytes())
@@ -53,6 +55,13 @@ def validate(paths: list[Path]) -> int:
             results.append({"path": str(path), "ok": False, "error": str(error)})
         else:
             results.append({"path": str(path), "ok": True, "episode_id": episode.episode_id})
+            episodes.append(episode)
+    if compatible_processing and not failed:
+        try:
+            validate_compatible_processing(episodes)
+        except ValueError as error:
+            failed = True
+            results.append({"ok": False, "error": str(error)})
     print(json.dumps(results, indent=2, ensure_ascii=True))
     return 1 if failed else 0
 
@@ -63,6 +72,7 @@ def main(argv: list[str] | None = None) -> int:
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("doctor", help="Check Python and FFmpeg without loading models")
     validation = commands.add_parser("validate", help="Validate episode JSON files offline")
+    validation.add_argument("--compatible-processing", action="store_true")
     validation.add_argument("paths", type=Path, nargs="+")
     schema = commands.add_parser("schema", help="Print or save a structural JSON Schema")
     schema.add_argument("--kind", choices=["episode", "analysis"], default="episode")
@@ -104,7 +114,7 @@ def main(argv: list[str] | None = None) -> int:
     if arguments.command == "doctor":
         return doctor()
     if arguments.command == "validate":
-        return validate(arguments.paths)
+        return validate(arguments.paths, compatible_processing=arguments.compatible_processing)
     if arguments.command == "transcribe":
         from podcast_words.transcribe import transcribe_command
 
