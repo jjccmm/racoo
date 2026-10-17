@@ -2,7 +2,7 @@
 
 Die Reihenfolge setzt [PLAN.md](PLAN.md) um. Ein Haken bedeutet einen erbrachten Nachweis; ein vorhandener Entwurf allein genügt nicht.
 
-Der [Fünf-Folgen-Pilot](.scratch/podcast-words-pilot/spec.md) wartet als `ready-for-human` auf den echten Colab-/Drive-Nachweis und die unabhängigen Pilotreferenzen; die beiden öffentlichen Testgrenzen sind bestätigt. Die [18 Einzeltickets](.scratch/podcast-words-pilot/ticket-index.md) enthalten die bestätigten Arbeitspakete und Abhängigkeiten. Der aktuelle Ausführungsstand steht jeweils im Ticket.
+Der [Fünf-Folgen-Pilot](.scratch/podcast-words-pilot/spec.md) wartet als `ready-for-human` auf den echten Colab-/Drive-Nachweis und die unabhängigen Pilotreferenzen; die beiden öffentlichen Testgrenzen sind bestätigt. Die [Ticketübersicht](.scratch/podcast-words-pilot/ticket-index.md) enthält die 18 bestätigten Pilotarbeitspakete und die ergänzende Laufzeituntersuchung in Ticket 19. Der aktuelle Ausführungsstand und die Abhängigkeiten stehen jeweils im Ticket.
 
 ## Workspace
 

@@ -20,6 +20,7 @@ The [parent spec](spec.md) defines the confirmed behavior and test boundaries. T
 16. [16: Review the pilot's search and timestamp accuracy](issues/16-review-passage-quality-gates.md)
 17. [17: Measure the real pilot on a mobile profile](issues/17-measure-mobile-search-performance.md)
 18. [18: Report pilot readiness without bypassing its gates](issues/18-pilot-readiness-report.md)
+19. [19: Explain UFO537 Colab GPU and Windows CPU runtime difference](issues/19-investigate-colab-gpu-runtime.md)
 
 Start only ready-for-agent work whose blockers are resolved. Keep human review and real runtime evidence explicit; a prepared procedure or fixture result does not satisfy an unperformed live check.
 
