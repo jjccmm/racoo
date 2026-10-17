@@ -1,6 +1,6 @@
 # Podcast Words V3: five-episode pilot
 
-**Status:** ready-for-agent
+**Status:** ready-for-human
 
 **Category:** enhancement
 
@@ -218,3 +218,9 @@ The repository uses a local Markdown tracker with the default triage vocabulary.
 ## Comments
 
 2026-10-17: Implementation uses `integration/podcast-words-pilot` and isolated ticket worktrees. After usage-limit interruptions, the user requested smaller subagent models to reduce token use. Subsequent subagent runs explicitly use `gpt-6-luna` with high reasoning effort and context pointers. Earlier runs inherited the coordinator's model and effort without explicit overrides; their resolved model/effort values were not exposed by the agent tools. Individual tickets remain authoritative for execution status and evidence.
+
+2026-10-17: The available implementation frontier is integrated on `integration/podcast-words-pilot`: tickets 01–09, 11, 12 and 14 are resolved. Ticket 10's notebook/runtime preparation is integrated but remains `ready-for-human`, alongside ticket 13. The next required work is an actual compatible Colab GPU/Drive run with checkpoint/resume and timing evidence, plus confirmation of the five candidates and ten independent queries/fifteen reference times. Tickets 15–18 remain blocked by those requirements. The spec is now `ready-for-human`, not resolved; archive processing and public deployment remain outside this work.
+
+The [interim review](interim-review.md) compares the original baseline through `52a986b`; its two Spec defects and one Standards judgment call were fixed and integrated through `f24a253`. Both original reviewers rechecked their respective fixes and found no remaining consequential issue in those paths. Integrated verification: 70 Python tests, lint/format, documentation/notebook checks, web lint and both production builds passed. The 35 browser cases at each path were previously passed by the unchanged UI; the fixes preserved the root publication ID. The existing real UFO537 CPU artifact also passed the new legacy-resume path with an explicit diagnostic and unchanged SHA-256, without recognition or downloads.
+
+All newly assigned/reused smaller agents used `gpt-6-luna` at high effort. Only the main Git worktree remains registered; ticket branches and the mobile screenshot under `.cache/artifacts/` are retained. Source/build worktree files were removed, while Windows permissions prevented removal of some ignored pytest/temp caches under `.cache/worktrees/`. Model/audio caches were preserved outside removed worktrees.

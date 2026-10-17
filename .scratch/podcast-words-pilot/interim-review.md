@@ -40,3 +40,9 @@ No scope creep was found. This interim review does not mark the entire pilot com
 Checks used the synchronized main `.venv` with `UV_PROJECT_ENVIRONMENT` pointing to that environment, shared `UV_CACHE_DIR`, `UV_NO_SYNC=1` for nested Vite CLI calls, and `PYTHONPATH` pointing at this worktree's `src`. npm dependencies were installed offline into the worktree using the shared npm cache.
 
 After integration as merge `21621ff`, the main worktree passed the 70-test Python suite, Ruff check/format, the workspace checker (43 Markdown files and Colab cell syntax), web lint, and root and project-prefix production builds. The root build retained publication ID `0f1f4e865a8d`, matching the prior validated output. No browser rerun was needed because these changes do not modify UI code; hosted Actions and deployment remain unclaimed.
+
+## Targeted re-review and handoff
+
+Both original reviewers rechecked the integrated fixes at `f24a253`. Standards confirmed that shared atomic persistence addresses the judgment call; Spec confirmed both provenance and custom-corpus compatibility defects are resolved. Neither found a new consequential issue in those targeted paths. This is an interim review, not final pilot acceptance.
+
+The existing real UFO537 CPU artifact was also resumed through the corrected public CLI: `skipped`, `complete-without-revision-fields`, no metadata mismatch, and unchanged SHA-256 `b30300ae860ec402982eb72c891b4030bd2b4c8a67ca91d4796efc1e6dd76e30`. No ASR or download occurred. Tickets 10 and 13 require operator/reviewer work before the dependent pilot-production and acceptance tickets may proceed.
