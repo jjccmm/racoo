@@ -30,5 +30,9 @@ input:focus-visible, button:focus-visible { outline: 3px solid #286c58; outline-
 .stopword-control { display: flex; align-items: center; gap: .5rem; margin-top: 1rem; }
 .stopword-control input { width: auto; }
 .counts-scroll { overflow-x: auto; }
+.vocabulary-totals { display: flex; flex-wrap: wrap; gap: 1rem 2rem; }
+.vocabulary-totals div { min-width: 180px; }
+.vocabulary-totals dt { color: #52616a; font-size: .9rem; }
+.vocabulary-totals dd { margin: 0; font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: .65rem; text-align: left; border-bottom: 1px solid #a7b9ba; }
