@@ -4,7 +4,7 @@
 
 **Blocked by:** 09: Resume selected episode processing without losing work.
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 **Spec coverage:** User stories 37, 38, 39, 40, 41, 52 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 

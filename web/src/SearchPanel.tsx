@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState, type SubmitEvent } from 'react';
-import { searchEpisodes, type SearchPage, type SearchSession } from './search';
+import { loadEpisode, searchEpisodes, type Occurrence, type SearchPage, type SearchResult, type SearchSession } from './search';
 
 type State =
   | { kind: 'empty' | 'loading' | 'none' | 'error' }
   | { kind: 'results'; page: SearchPage; more: 'idle' | 'loading' | 'error' };
+type PlayerEpisode = Pick<SearchResult, 'episodeId' | 'title' | 'publishedAt' | 'audioUrl' | 'durationSeconds' | 'webpageUrl'>;
+type EpisodeRecord = Awaited<ReturnType<typeof loadEpisode>>;
 
 function time(seconds: number) {
   return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
@@ -12,9 +14,56 @@ function time(seconds: number) {
 export function SearchPanel() {
   const [query, setQuery] = useState('');
   const [state, setState] = useState<State>({ kind: 'empty' });
+  const [player, setPlayer] = useState<PlayerEpisode | null>(null);
+  const [targetTime, setTargetTime] = useState(0);
+  const [playRequested, setPlayRequested] = useState(false);
+  const [mediaError, setMediaError] = useState(false);
+  const [directState, setDirectState] = useState<'idle' | 'loading' | 'unknown' | 'error'>(() =>
+    new URLSearchParams(window.location.search).has('episode') ? 'loading' : 'idle',
+  );
   const active = useRef<AbortController | null>(null);
   const session = useRef<SearchSession | null>(null);
+  const audio = useRef<HTMLAudioElement | null>(null);
+  const appliedTimeline = useRef('');
   useEffect(() => () => active.current?.abort(), []);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const episodeId = url.searchParams.get('episode');
+    if (!episodeId) return;
+    const controller = new AbortController();
+    active.current?.abort();
+    active.current = controller;
+    loadEpisode(episodeId, controller.signal).then((episode) => {
+      if (controller.signal.aborted) return;
+      if (!episode) { setDirectState('unknown'); return; }
+      setPlayer(playerFrom(episode));
+      setTargetTime(clamp(Number(url.searchParams.get('t') ?? 0), episode.audio.duration_seconds));
+      setDirectState('idle');
+    }).catch(() => { if (!controller.signal.aborted) setDirectState('error'); });
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    const media = audio.current;
+    if (!player || !media) return;
+    const key = `${player.episodeId}:${targetTime}`;
+    if (appliedTimeline.current === key) return;
+    const syncTimeline = () => {
+      media.currentTime = clamp(playRequested ? targetTime - 5 : targetTime, player.durationSeconds);
+      appliedTimeline.current = key;
+      if (playRequested) {
+        void media.play().catch(() => setMediaError(true));
+        setPlayRequested(false);
+      }
+    };
+    if (media.readyState >= HTMLMediaElement.HAVE_METADATA) syncTimeline();
+    else {
+      media.addEventListener('loadedmetadata', syncTimeline, { once: true });
+      media.load();
+    }
+    return () => media.removeEventListener('loadedmetadata', syncTimeline);
+  }, [player, targetTime, playRequested]);
 
   async function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -47,6 +96,24 @@ export function SearchPanel() {
     }
   }
 
+  function choose(episode: PlayerEpisode, occurrence: Occurrence) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('episode', episode.episodeId);
+    url.searchParams.set('t', String(Math.round(occurrence.seconds)));
+    window.history.replaceState(null, '', url);
+    setMediaError(false);
+    setTargetTime(occurrence.seconds);
+    appliedTimeline.current = '';
+    setPlayer(episode);
+    setPlayRequested(true);
+  }
+
+  function nudge(seconds: number) {
+    if (!audio.current || !player) return;
+    audio.current.currentTime = clamp(audio.current.currentTime + seconds, player.durationSeconds);
+  }
+
+  const directEpisode = directState === 'unknown' ? 'unknown' : directState === 'error' ? 'error' : null;
   return <>
     <form onSubmit={submit} role="search">
       <label htmlFor="query">Stichwort oder mehrere Stichwörter</label>
@@ -61,21 +128,64 @@ export function SearchPanel() {
       {state.kind === 'loading' && 'Suche läuft …'}
       {state.kind === 'none' && 'Keine passende Folge gefunden.'}
       {state.kind === 'results' && `${state.page.results.length} von ${state.page.total} passenden Folgen geladen.`}
+      {directState === 'loading' && 'Geteilte Folge wird geladen …'}
+      {directEpisode === 'unknown' && 'Diese Episoden-ID ist im aktuellen Suchstand unbekannt.'}
     </p>
+    {directEpisode === 'error' && <p role="alert">Die geteilte Folge konnte nicht geladen werden. Bitte die Suche erneut versuchen.</p>}
     {state.kind === 'error' && <p role="alert">Die Suche konnte nicht geladen werden. Mit „Suchen“ bewusst erneut versuchen.</p>}
     {state.kind === 'results' && <section aria-label="Suchergebnisse">
-      {state.page.results.map((result) => <article key={result.episodeId} className="example">
-        <h2>{result.title}</h2>
-        <p><time dateTime={result.publishedAt}>{new Date(result.publishedAt).toLocaleDateString('de-DE', { timeZone: 'UTC' })}</time> · {result.matchedTerms.length}/{state.page.terms.length} Stichwörter{result.matchedTerms.length < state.page.terms.length ? ' · Teilabdeckung' : ''}</p>
-        <p>Gefunden: {result.matchedTerms.join(', ')}</p>
-        {result.passages.map((passage) => <p key={passage.id}>
-          <span className="timestamp" aria-label="Episodenzeit">{time(passage.start_seconds)}</span>{passage.text}
-        </p>)}
-      </article>)}
+      {state.page.results.map((result) => <Result key={result.episodeId} result={result} totalTerms={state.page.terms.length} onChoose={choose} />)}
       {state.more === 'error' && <p role="alert">Weitere Folgen konnten nicht geladen werden. Die bisherigen Ergebnisse bleiben sichtbar.</p>}
       {state.page.results.length < state.page.total && <button type="button" onClick={more} disabled={state.more === 'loading'}>
         {state.more === 'loading' ? 'Weitere Folgen werden geladen …' : 'Weitere Folgen laden'}
       </button>}
     </section>}
+    {player && <section className="player" aria-label="Gemeinsamer Audioplayer">
+      <h2>Wiedergabe: {player.title}</h2>
+      <p>{time(targetTime)} · Transkript und Sprungzeit beziehen sich auf die verarbeitete Audiofassung.</p>
+      <audio ref={audio} src={player.audioUrl} controls preload="metadata" onError={() => setMediaError(true)} />
+      <div className="player-controls">
+        <button type="button" onClick={() => nudge(-10)}>10 Sekunden zurück</button>
+        <button type="button" onClick={() => nudge(10)}>10 Sekunden vor</button>
+        <a href={shareHref(player.episodeId, targetTime)}>Fundstelle teilen</a>
+      </div>
+      {mediaError && <p role="alert">Audio nicht verfügbar. <a href={player.webpageUrl} target="_blank" rel="noreferrer">Zur Episodenseite</a></p>}
+    </section>}
   </>;
+}
+
+function playerFrom(episode: NonNullable<EpisodeRecord>): PlayerEpisode {
+  return {
+    episodeId: episode.episode_id, title: episode.title, publishedAt: episode.published_at,
+    audioUrl: episode.audio.url, durationSeconds: episode.audio.duration_seconds,
+    webpageUrl: episode.webpage_url ?? episode.source.reference_url,
+  };
+}
+
+function clamp(seconds: number, duration: number) {
+  return Number.isFinite(seconds) ? Math.max(0, Math.min(duration, seconds)) : 0;
+}
+
+function shareHref(episodeId: string, seconds: number) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('episode', episodeId);
+  url.searchParams.set('t', String(Math.round(seconds)));
+  return `${url.pathname}${url.search}`;
+}
+
+function Result({ result, totalTerms, onChoose }: { result: SearchResult; totalTerms: number; onChoose(episode: PlayerEpisode, occurrence: Occurrence): void }) {
+  return <article className="example">
+    <h2>{result.title}</h2>
+    <p><time dateTime={result.publishedAt}>{new Date(result.publishedAt).toLocaleDateString('de-DE', { timeZone: 'UTC' })}</time> · {result.matchedTerms.length}/{totalTerms} Stichwörter{result.matchedTerms.length < totalTerms ? ' · Teilabdeckung' : ''}</p>
+    <p>Gefunden: {result.matchedTerms.join(', ')}</p>
+    {result.passages.map((passage) => <div className="passage" key={passage.id}>
+      <p><span className="timestamp" aria-label="Episodenzeit">{time(passage.start_seconds)}</span>{passage.text}</p>
+      <div className="occurrences" aria-label={`Fundstellen in ${passage.id}`}>
+        {passage.occurrences.map((occurrence) => <button key={occurrence.id} type="button" onClick={() => onChoose(result, occurrence)}>
+          Anhören ab {time(occurrence.seconds)} · {occurrence.terms.join(', ')}
+          {occurrence.nearbyTerms.length > occurrence.terms.length ? ` · ${occurrence.nearbyTerms.length} Stichwörter in der Nähe` : ''}
+        </button>)}
+      </div>
+    </div>)}
+  </article>;
 }
