@@ -21,4 +21,4 @@
 ## Comments
 
 - Implemented the built-site passage and player behavior on `pilot/05-passages`. Browser cases use the real Pagefind build and a controlled valid WAV media source. Repeated hits, term proximity, successive segments, late token-point seek, direct links without autoplay, unknown identities, bounded controls, and unavailable audio/source links are covered.
-- Verification on this branch: `npm.cmd run typecheck`, `npm.cmd run lint`, production build, and the full Playwright browser suite passed 27/27 at both `/` and `/podcast_words_v3/`. The final merge into the integration branch remains pending.
+- After merging integration `68d3ecd`, `uv run --frozen python scripts/check.py` passed with scoped pytest basetemp: 49 Python tests, lint/format, workspace/data validation, root build, and 29/29 browser tests. A separate `/podcast_words_v3/` build and browser run also passed 29/29. The ticket remains claimed pending integration acceptance.
