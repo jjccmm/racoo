@@ -14,7 +14,8 @@
 
 ## Known observations
 
-- The operator reports approximately 36 minutes on Colab GPU for UFO537 Festival. Its timing boundaries, cache state, GPU allocation and executed-provider evidence have not yet been supplied.
+- The operator reports approximately 36 minutes for the entire Colab processing/checkpoint cell for UFO537 Festival. It starts while the cell copies the Drive catalog into the VM and includes cold audio/model work, profiling and Drive checkpoint copies; dependency setup in the earlier bootstrap cell is excluded. Individual stage timings and exact cache-hit details were not recorded.
+- The operator-supplied report proves execution on a Tesla T4 with both CUDA and CPU model nodes. Its per-session counts and runtime facts are summarized in `docs/research/evidence/colab-gpu-ufo537-2026-10-17.json`. Three raw ORT profile files were reported as roughly 700 MB each on Drive; they are not present in this workspace for duration or transfer analysis.
 - The recorded Windows CPU run took 797.015 seconds (13 minutes 17 seconds) for 4343.222875 seconds of decoded audio. Audio and model weights were already cached; the measured command included model-session construction and decoding. Other checks and excerpt experiments were running concurrently, so this is not an isolated benchmark.
 - The earlier notebook bootstrap error was caused by the wrong repository branch on the Colab server and has been identified separately from this performance question.
 
@@ -38,3 +39,7 @@ Deliver measurement support, real-run evidence and an explanation. Retain the se
 ## Comments
 
 2026-10-17: Created from the operator's approved request for one investigation ticket. The reported GPU duration is an observation to explain, not a verified like-for-like benchmark or an established root cause. Publication of this ticket does not start live processing or change any parent acceptance state.
+
+2026-10-17: The operator supplied a completed Colab report for UFO537 Festival. It proves executed CUDA and CPU model nodes on a Tesla T4, but contains no elapsed stage timings, audio checksum or repository commit. The original roughly 36-minute boundary is now known to be the entire processing/checkpoint cell: it includes catalog copying, cold audio/model work, inference profiling and Drive copies, while excluding the earlier uv setup. The operator reports three raw profile files of approximately 700 MB each on Drive; the files were not supplied locally. The unmodified report is identified by SHA-256 in `docs/research/evidence/colab-gpu-ufo537-2026-10-17.json`.
+
+2026-10-17: Added per-stage measurements to the shared CLI, explicit profile-on/off selection, and a single-episode `--audio-file` input for exact-byte forced reruns. Added a separate Colab benchmark cell for a cold run and warm profile-on/off repeats. Fixture tests confirm forced reprocessing, profile-off evidence labeling, profile-on node summaries, and rejection of one audio file assigned to multiple episode IDs. Comparable CPU/GPU timing and bottleneck diagnosis remain open.

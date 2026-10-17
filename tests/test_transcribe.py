@@ -62,6 +62,7 @@ def test_transcribe_preserves_identity_original_audio_and_times_after_a_pause(
     )
     monkeypatch.setattr(huggingface_hub, "snapshot_download", lambda *args, **kwargs: str(tmp_path))
     destination = tmp_path / "episode.json"
+    run_report = tmp_path / "benchmark" / "run.json"
 
     assert (
         main(
@@ -75,6 +76,8 @@ def test_transcribe_preserves_identity_original_audio_and_times_after_a_pause(
                 str(destination),
                 "--cache-dir",
                 str(tmp_path / "cache"),
+                "--run-report",
+                str(run_report),
             ]
         )
         == 0
@@ -91,6 +94,15 @@ def test_transcribe_preserves_identity_original_audio_and_times_after_a_pause(
     assert len({segment.id for segment in episode.segments}) == 2
     assert episode.transcription.execution_providers["encoder"] == ["CPUExecutionProvider"]
     assert report["ok"] is True
+    measurements = report["runtime_measurements"]
+    assert measurements["episode"]["audio_download"]["status"] == "provided-local-file"
+    assert measurements["episode"]["decode"]["elapsed_seconds"] >= 0
+    assert measurements["episode"]["inference"]["elapsed_seconds"] >= 0
+    assert measurements["episode"]["validation_and_serialization"]["elapsed_seconds"] >= 0
+    assert measurements["model"]["encoder_decoder_session_initialization"]["elapsed_seconds"] >= 0
+    assert measurements["model"]["vad_session_initialization"]["elapsed_seconds"] >= 0
+    assert run_report.is_file()
+    assert json.loads(run_report.read_bytes()) == measurements
     assert main(["validate", str(destination)]) == 0
 
 

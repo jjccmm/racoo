@@ -116,12 +116,12 @@ def install_external_recognizer(monkeypatch, tmp_path, *, interrupt=False, execu
                             {"cat": "Node", "args": {"provider": "CUDAExecutionProvider"}},
                             {"cat": "Node", "args": {"provider": "CUDAExecutionProvider"}},
                         ]
-                        if execute_cuda
+                        if execute_cuda and gpu_requested
                         else []
                     ),
                     {"cat": "Node", "args": {"provider": "CPUExecutionProvider"}},
                 ]
-                if gpu_requested and name == "encoder"
+                if name == "encoder"
                 else []
             )
             profile.write_text(json.dumps(events), encoding="utf-8")
@@ -179,6 +179,13 @@ def test_process_gpu_profile_records_executed_nodes_and_keeps_partial_cpu_fallba
         profile = report["execution_profile"]
         assert profile["model_node_events"]["CUDAExecutionProvider"] == 2
         assert profile["model_node_events"]["CPUExecutionProvider"] == 1
+        assert report["runtime_measurements"]["profile"]["execution_proof"] == (
+            "executed-ort-node-events"
+        )
+        assert (
+            report["runtime_measurements"]["episodes"][0]["episode"]["inference"]["execution_proof"]
+            == "pending-profile"
+        )
         transcript = json.loads((output / "episode-one.json").read_bytes())
         assert transcript["transcription"]["execution_providers"]["encoder"] == [
             "CUDAExecutionProvider",
@@ -197,7 +204,17 @@ def test_process_gpu_profile_records_executed_nodes_and_keeps_partial_cpu_fallba
         )
 
 
-def run(catalog, output, cache, *episode_ids, retranscribe=False):
+def run(
+    catalog,
+    output,
+    cache,
+    *episode_ids,
+    retranscribe=False,
+    run_report=None,
+    no_profile=False,
+    profile=False,
+    audio_file=None,
+):
     args = [
         "process",
         "--catalog",
@@ -211,6 +228,14 @@ def run(catalog, output, cache, *episode_ids, retranscribe=False):
         args.extend(["--episode-id", episode_id])
     if retranscribe:
         args.append("--retranscribe")
+    if run_report:
+        args.extend(["--run-report", str(run_report)])
+    if no_profile:
+        args.append("--no-profile")
+    if profile:
+        args.append("--profile")
+    if audio_file:
+        args.extend(["--audio-file", str(audio_file)])
     return main(args)
 
 
@@ -274,6 +299,132 @@ def test_process_selected_episode_is_durable_skipped_on_resume_and_explicitly_re
         assert replacement["segments"] == first["segments"]
         assert json.loads(capsys.readouterr().out)["results"][0]["status"] == "completed"
         assert json.loads(initial_output)["results"][0]["status"] == "completed"
+
+
+def test_forced_process_benchmark_executes_audio_and_marks_profile_off_unproven(
+    tmp_path, monkeypatch, capsys
+):
+    audio = wave_bytes()
+    audio_path = tmp_path / "matched-audio.wav"
+    audio_path.write_bytes(audio)
+    catalog_path = tmp_path / "catalog.json"
+    output = tmp_path / "episodes"
+    cache = tmp_path / "cache"
+    run_report = tmp_path / "benchmark" / "run.json"
+    profile_report = tmp_path / "benchmark" / "profiled-run.json"
+    recognition_calls = []
+    with audio_server(audio) as (audio_url, _response):
+        make_catalog(catalog_path, audio_url)
+        install_external_recognizer(monkeypatch, tmp_path)
+        original_model = onnx_asr.load_model
+
+        def counted_model(*args, **kwargs):
+            model = original_model(*args, **kwargs)
+            original_recognize = model.with_vad
+
+            def with_vad(*vad_args, **vad_kwargs):
+                recognizer = original_recognize(*vad_args, **vad_kwargs)
+                timestamped = recognizer.with_timestamps
+
+                def with_timestamps():
+                    result = timestamped()
+                    recognize = result.recognize
+
+                    def recognize_and_count(*recognize_args, **recognize_kwargs):
+                        recognition_calls.append(1)
+                        return recognize(*recognize_args, **recognize_kwargs)
+
+                    return SimpleNamespace(recognize=recognize_and_count)
+
+                return SimpleNamespace(with_timestamps=with_timestamps)
+
+            model.with_vad = with_vad
+            return model
+
+        monkeypatch.setattr(onnx_asr, "load_model", counted_model)
+        assert run(catalog_path, output, cache, "episode-one") == 0
+        capsys.readouterr()
+        calls_before_benchmark = len(recognition_calls)
+        assert (
+            run(
+                catalog_path,
+                output,
+                cache,
+                "episode-one",
+                retranscribe=True,
+                no_profile=True,
+                audio_file=audio_path,
+                run_report=run_report,
+            )
+            == 0
+        )
+        report = json.loads(capsys.readouterr().out)
+        assert (
+            run(
+                catalog_path,
+                output,
+                cache,
+                "episode-one",
+                retranscribe=True,
+                profile=True,
+                audio_file=audio_path,
+                run_report=profile_report,
+            )
+            == 0
+        )
+        profiled = json.loads(capsys.readouterr().out)
+
+    assert len(recognition_calls) > calls_before_benchmark
+    assert report["results"][0]["status"] == "completed"
+    measurements = report["runtime_measurements"]
+    assert measurements["inference_runs"] == 1
+    assert measurements["skipped_runs"] == 0
+    assert measurements["profile"]["status"] == "disabled"
+    assert measurements["profile"]["execution_proof"] == "unavailable-profile-disabled"
+    assert measurements["episodes"][0]["episode"]["audio_download"]["status"] == (
+        "provided-local-file"
+    )
+    assert json.loads(run_report.read_bytes()) == measurements
+    profiled_measurements = profiled["runtime_measurements"]
+    assert profiled_measurements["profile"]["status"] == "captured"
+    assert profiled_measurements["profile"]["execution_proof"] == "executed-ort-node-events"
+    assert profiled_measurements["profile"]["model_node_events"]["CPUExecutionProvider"] == 1
+    assert json.loads(profile_report.read_bytes()) == profiled_measurements
+
+
+def test_process_rejects_one_audio_file_for_multiple_episode_identities(
+    tmp_path, monkeypatch, capsys
+):
+    audio_path = tmp_path / "audio.wav"
+    audio_path.write_bytes(wave_bytes())
+    catalog_path = tmp_path / "catalog.json"
+    output = tmp_path / "episodes"
+    with audio_server(wave_bytes()) as (audio_url, _response):
+        make_catalog(catalog_path, audio_url)
+        original_catalog = catalog_path.read_bytes()
+        recognizer_started = False
+
+        def should_not_initialize(*_args, **_kwargs):
+            nonlocal recognizer_started
+            recognizer_started = True
+            raise AssertionError("preflight must reject before ASR setup")
+
+        monkeypatch.setattr(onnx_asr, "load_model", should_not_initialize)
+        assert (
+            run(
+                catalog_path,
+                output,
+                tmp_path / "cache",
+                "episode-one",
+                "episode-two",
+                audio_file=audio_path,
+            )
+            == 1
+        )
+    assert json.loads(capsys.readouterr().out)["ok"] is False
+    assert not recognizer_started
+    assert not output.exists()
+    assert catalog_path.read_bytes() == original_catalog
 
 
 def test_process_rejects_stale_or_partial_revisions_without_marking_completion(tmp_path, capsys):

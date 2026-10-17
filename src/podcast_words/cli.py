@@ -82,6 +82,10 @@ def main(argv: list[str] | None = None) -> int:
     transcription.add_argument("--output", type=Path, required=True)
     transcription.add_argument("--audio-file", type=Path)
     transcription.add_argument("--cache-dir", type=Path, default=Path(".cache/asr"))
+    transcription.add_argument("--run-report", type=Path)
+    transcribe_profile = transcription.add_mutually_exclusive_group()
+    transcribe_profile.add_argument("--profile", action="store_true")
+    transcribe_profile.add_argument("--no-profile", action="store_true")
     processing = commands.add_parser(
         "process", help="Process an explicit selection of catalog episodes and resume safely"
     )
@@ -90,6 +94,11 @@ def main(argv: list[str] | None = None) -> int:
     processing.add_argument("--output-dir", type=Path, required=True)
     processing.add_argument("--cache-dir", type=Path, default=Path(".cache/asr"))
     processing.add_argument("--retranscribe", action="store_true")
+    processing.add_argument("--run-report", type=Path)
+    process_profile = processing.add_mutually_exclusive_group()
+    process_profile.add_argument("--profile", action="store_true")
+    process_profile.add_argument("--no-profile", action="store_true")
+    processing.add_argument("--audio-file", type=Path)
     publication = commands.add_parser(
         "publish", help="Prepare one validated, selected static publication source"
     )
@@ -104,6 +113,11 @@ def main(argv: list[str] | None = None) -> int:
     result_import.add_argument("--catalog", type=Path, required=True)
     result_import.add_argument("--input-dir", type=Path, required=True)
     result_import.add_argument("--output-dir", type=Path, required=True)
+    profiles = commands.add_parser(
+        "profile-summary", help="Summarize existing ONNX Runtime profile JSON files"
+    )
+    profiles.add_argument("--profile", action="append", default=[], metavar="SESSION=PATH")
+    profiles.add_argument("--output", type=Path)
     catalog.add_parser(commands)
     analysis.add_parser(commands)
     arguments = parser.parse_args(argv)
@@ -119,7 +133,14 @@ def main(argv: list[str] | None = None) -> int:
         from podcast_words.transcribe import transcribe_command
 
         return transcribe_command(
-            arguments.metadata, arguments.output, arguments.cache_dir, arguments.audio_file
+            arguments.metadata,
+            arguments.output,
+            arguments.cache_dir,
+            arguments.audio_file,
+            run_report=arguments.run_report,
+            profile_enabled=(
+                False if arguments.no_profile else True if arguments.profile else None
+            ),
         )
     if arguments.command == "process":
         from podcast_words.processing import process
@@ -133,6 +154,10 @@ def main(argv: list[str] | None = None) -> int:
         from podcast_words.result_import import import_results
 
         return import_results(arguments)
+    if arguments.command == "profile-summary":
+        from podcast_words.profile_summary import profile_summary
+
+        return profile_summary(arguments)
     model = analysis.Analysis if arguments.kind == "analysis" else Episode
     content = json.dumps(model.model_json_schema(), indent=2, ensure_ascii=False) + "\n"
     if arguments.output:
