@@ -1,0 +1,219 @@
+{
+  "status": "candidate-inventory",
+  "podcast_id": "podcast-ufo",
+  "catalog_snapshot": {
+    "fetched_at": "2026-10-16T21:38:06.959680Z",
+    "requested_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+    "resolved_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+    "sha256": "9a6fb8b0807438637b28932bbd473afae33bb1b1ef9e45aff03875e24a7d0715",
+    "path": "snapshots/20261016T213806959680Z-9a6fb8b08074.xml",
+    "item_count": 537
+  },
+  "episodes": [
+    {
+      "episode_id": "ep-5764a1149f18a8f68698fb45bb405264",
+      "title": "UFO537 Festival",
+      "published_at": "2026-10-10T12:04:00Z",
+      "source": {
+        "kind": "rss",
+        "key": "6ac88caf39599f7c565b9745",
+        "reference_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+        "guid": "6ac88caf39599f7c565b9745",
+        "guid_aliases": []
+      },
+      "audio_url": "https://sphinx.acast.com/p/acast/s/podcast-ufo/e/6ac88caf39599f7c565b9745/media.mp3",
+      "audio_sha256": "d7f924479192f60229b5ba800227f640bb18a73527e360cc909f3657839327cf",
+      "audio_bytes": 69491703,
+      "duration_seconds": 4343.215313,
+      "rationale": "Aktuelle Feedfolge",
+      "review_status": "pending-human-review",
+      "reference_times": [
+        {
+          "region": "beginning",
+          "at_seconds": null,
+          "passage": null,
+          "reviewed_by": null
+        },
+        {
+          "region": "middle",
+          "at_seconds": null,
+          "passage": null,
+          "reviewed_by": null
+        },
+        {
+          "region": "end",
+          "at_seconds": null,
+          "passage": null,
+          "reviewed_by": null
+        }
+      ],
+      "queries": [],
+      "audio_cache": ".cache/pilot-candidate-audio/ep-5764a1149f18a8f68698fb45bb405264.mp3"
+    },
+    {
+      "episode_id": "ep-5f478c2c998d108b9c1a08d27898a417",
+      "title": "UFO Experiment (KI-generiert)",
+      "published_at": "2026-03-11T13:00:00Z",
+      "source": {
+        "kind": "rss",
+        "key": "69b14793bba705d7aa0b2ac4",
+        "reference_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+        "guid": "69b14793bba705d7aa0b2ac4",
+        "guid_aliases": []
+      },
+      "audio_url": "https://sphinx.acast.com/p/acast/s/podcast-ufo/e/69b14793bba705d7aa0b2ac4/media.mp3",
+      "audio_sha256": "81157768beafb4dff2b61ef60c8a5b5f12e063e8e34649104904a31705ce84a6",
+      "audio_bytes": 24263652,
+      "duration_seconds": 1516.460375,
+      "rationale": "Sonderfolge ohne angezeigte Folgennummer",
+      "review_status": "pending-human-review",
+      "reference_times": [
+        {
+          "region": "beginning",
+          "at_seconds": null,
+          "passage": null,
+          "reviewed_by": null
+        },
+        {
+          "region": "middle",
+          "at_seconds": null,
+          "passage": null,
+          "reviewed_by": null
+        },
+        {
+          "region": "end",
+          "at_seconds": null,
+          "passage": null,
+          "reviewed_by": null
+        }
+      ],
+      "queries": [],
+      "audio_cache": ".cache/pilot-candidate-audio/ep-5f478c2c998d108b9c1a08d27898a417.mp3"
+    },
+    {
+      "episode_id": "ep-4e22f6d5c692e3e62564621fdcd8bcb2",
+      "title": "UFO300 Moll",
+      "published_at": "2022-03-12T13:09:27Z",
+      "source": {
+        "kind": "rss",
+        "key": "6228c3f19c5fda001285dc0f",
+        "reference_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+        "guid": "6228c3f19c5fda001285dc0f",
+        "guid_aliases": []
+      },
+      "audio_url": "https://sphinx.acast.com/p/acast/s/podcast-ufo/e/6228c3f19c5fda001285dc0f/media.mp3",
+      "audio_sha256": "be304885c12413ea317640962792c920812f8f40a0e3c08290cd02b65c983bd1",
+      "audio_bytes": 68066248,
+      "duration_seconds": 4254.123875,
+      "rationale": "Mittlerer Archivzeitraum",
+      "review_status": "pending-human-review",
+      "reference_times": [
+        {
+          "region": "beginning",
+          "at_seconds": null,
+          "passage": null,
+          "reviewed_by": null
+        },
+        {
+          "region": "middle",
+          "at_seconds": null,
+          "passage": null,
+          "reviewed_by": null
+        },
+        {
+          "region": "end",
+          "at_seconds": null,
+          "passage": null,
+          "reviewed_by": null
+        }
+      ],
+      "queries": [],
+      "audio_cache": ".cache/pilot-candidate-audio/ep-4e22f6d5c692e3e62564621fdcd8bcb2.mp3"
+    },
+    {
+      "episode_id": "ep-8c3cf057f4cd494721dc22b56ae5ddfc",
+      "title": "UGO081 Freestyle Karate",
+      "published_at": "2016-11-28T10:16:35Z",
+      "source": {
+        "kind": "rss",
+        "key": "http://podcast-ufo.fail/?p=348",
+        "reference_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+        "guid": "http://podcast-ufo.fail/?p=348",
+        "guid_aliases": []
+      },
+      "audio_url": "https://sphinx.acast.com/podcast-ufo/ugo081freestylekarate/media.mp3",
+      "audio_sha256": "6dcbb051f63ff423d66a28c241d82d11b7f7997cd8a33cbfaa8e83da91acfff4",
+      "audio_bytes": 49590899,
+      "duration_seconds": 3099.413688,
+      "rationale": "Abweichendes UGO-Titelpraefix",
+      "review_status": "pending-human-review",
+      "reference_times": [
+        {
+          "region": "beginning",
+          "at_seconds": null,
+          "passage": null,
+          "reviewed_by": null
+        },
+        {
+          "region": "middle",
+          "at_seconds": null,
+          "passage": null,
+          "reviewed_by": null
+        },
+        {
+          "region": "end",
+          "at_seconds": null,
+          "passage": null,
+          "reviewed_by": null
+        }
+      ],
+      "queries": [],
+      "audio_cache": ".cache/pilot-candidate-audio/ep-8c3cf057f4cd494721dc22b56ae5ddfc.mp3"
+    },
+    {
+      "episode_id": "ep-9fc90dc95a4e7c5633f4c62489665cf2",
+      "title": "UFO001 Prolog",
+      "published_at": "2015-10-07T22:20:27Z",
+      "source": {
+        "kind": "rss",
+        "key": "http://podcast-ufo.fail/?p=12",
+        "reference_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+        "guid": "http://podcast-ufo.fail/?p=12",
+        "guid_aliases": []
+      },
+      "audio_url": "https://sphinx.acast.com/podcast-ufo/ufo001prolog/media.mp3",
+      "audio_sha256": "98c0c8733640553c34bbb2ff970671bbae590e9aef46d4c34d101372217c77f2",
+      "audio_bytes": 57784297,
+      "duration_seconds": 3611.50025,
+      "rationale": "Fruehe Archivaufnahme",
+      "review_status": "pending-human-review",
+      "reference_times": [
+        {
+          "region": "beginning",
+          "at_seconds": null,
+          "passage": null,
+          "reviewed_by": null
+        },
+        {
+          "region": "middle",
+          "at_seconds": null,
+          "passage": null,
+          "reviewed_by": null
+        },
+        {
+          "region": "end",
+          "at_seconds": null,
+          "passage": null,
+          "reviewed_by": null
+        }
+      ],
+      "queries": [],
+      "audio_cache": ".cache/pilot-candidate-audio/ep-9fc90dc95a4e7c5633f4c62489665cf2.mp3"
+    }
+  ],
+  "schema_version": 1,
+  "references_reviewed": false,
+  "selection_confirmed": false,
+  "verified_at": "2026-10-16",
+  "note": "Candidates verified by complete audio download and FFprobe. Human selection, ten independent queries and fifteen reference times remain pending."
+}
