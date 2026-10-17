@@ -99,7 +99,7 @@ Beim schreibgeschützten Audit am 16. Oktober 2026 waren uv 0.10.9, Node 22.19.0
   $env:UV_CACHE_DIR = Join-Path $PWD '.uv-cache'
   ```
 
-- Die eingeschränkte Agentumgebung verweigert unter Umständen auch für eigene Prozesse `taskkill`. Playwright 1.64.1 verwendet dieses Windows-Werkzeug zum Beenden seines Preview-Prozessbaums und wartet nach bestandenen Tests weiter, wenn die Berechtigung fehlt. Beim integrierten Check am 17. Oktober 2026 wurden alle zwölf Browserfälle bestanden; nach einer gezielten freigegebenen Bereinigung ausschließlich des anhand PID, Eltern-PID und Port geprüften Preview-Baums endete derselbe Gesamtcheck mit Status 0. Browserchecks in dieser Agentumgebung benötigen daher passende Prozessberechtigungen.
+- Playwright 1.64.1 verwendet unter Windows `taskkill`, um seinen Preview-Prozessbaum zu beenden. Browserchecks in dieser Agentumgebung benötigen die passenden Prozessberechtigungen; der gemeinsame Check kann Port 4214 über `PW_PORT` erhalten. Am 17. Oktober 2026 bestanden alle 35 Chromium-Fälle auf dem gebauten Root-Pfad sowie erneut auf dem Projektpfad. Der vollständige Offline-Check umfasste außerdem 67 Python-Tests.
 - Die vorhandene GTX 1050 Ti hat 4 GiB Speicher und Treiber 576.02. Das ist kein Nachweis für Kompatibilität mit aktuellen ONNX-GPU-Paketen; siehe [Runtime-Recherche](research/runtime-and-search-contracts.md).
 - Das lokale Git-Repository ist auf `main` initialisiert. Es wurde kein Remote angelegt oder konfiguriert. Der eingeschränkte Agent läuft unter einer anderen Windows-SID als der Ordnerbesitzer. Falls Git deshalb „dubious ownership“ meldet, nur für den konkreten Aufruf den geprüften Repositorypfad übergeben, ohne globale Einstellungen zu ändern:
 
