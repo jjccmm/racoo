@@ -4,7 +4,7 @@
 
 **Blocked by:** 06: Generate and inspect exact Grundform counts.
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 **Spec coverage:** User stories 21, 22, 23, 24, 25, 28, 30 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 
