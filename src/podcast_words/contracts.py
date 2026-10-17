@@ -53,6 +53,11 @@ class Transcription(Contract):
     export_id: Text | None = None
     execution_providers: dict[Text, list[Text]] = Field(default_factory=dict)
     configuration: dict[Text, Text] = Field(default_factory=dict)
+    input_revision: Annotated[str, StringConstraints(pattern=r"^[a-f0-9]{64}$")] | None = None
+    configuration_revision: Annotated[str, StringConstraints(pattern=r"^[a-f0-9]{64}$")] | None = (
+        None
+    )
+    transcript_revision: Annotated[str, StringConstraints(pattern=r"^[a-f0-9]{64}$")] | None = None
 
 
 class TokenPoint(Contract):

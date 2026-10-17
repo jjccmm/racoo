@@ -15,9 +15,25 @@ uv run --frozen podcast-words validate data/podcast-ufo/episodes/EPISODEN-ID.jso
 
 `--audio-file PFAD` verwendet bereits heruntergeladene Originalbytes derselben Quelle. Damit lassen sich dieselbe Werbefassung und Prüfsumme wiederverwenden. Der Operator muss die Zuordnung zur angegebenen Quelle sicherstellen. Ausschnitte sind keine vollständigen Folgen. `--cache-dir` liegt standardmäßig unter `.cache/asr`; Audio, Modelle und temporäre WAV-Dateien bleiben untracked. Die WAV-Dateien werden nach dem Lauf entfernt.
 
-Ohne lokale Datei lädt der Befehl Audio mit höchstens drei Versuchen, 30 Sekunden Socket-Timeout und 600 Sekunden Gesamtdauer je Versuch. FFmpeg decodiert die gesamte Timeline zu mono PCM16 mit 16 kHz; sein Timeout beträgt 900 Sekunden. SHA-256 bezieht sich auf die unveränderten Eingabebytes, die Dauer auf die decodierte Timeline. Ein vorhandenes Ausgabeziel wird mit Fehler erhalten. Das Schreiben unterbruchsicherer Checkpoints und die Wiederaufnahme mehrerer Folgen gehören zum nachfolgenden Workflow-Ticket 09.
+Ohne lokale Datei lädt der Befehl Audio mit höchstens drei Versuchen, 30 Sekunden Socket-Timeout und 600 Sekunden Gesamtdauer je Versuch. FFmpeg decodiert die gesamte Timeline zu mono PCM16 mit 16 kHz; sein Timeout beträgt 900 Sekunden. SHA-256 bezieht sich auf die unveränderten Eingabebytes, die Dauer auf die decodierte Timeline. Ein vorhandenes Ausgabeziel wird mit Fehler erhalten. Mehrfolgen- und Fortsetzungsabläufe verwenden den unten beschriebenen `process`-Befehl.
 
 Erfolg und Fehler liefern JSON-Diagnostik und einen passenden Exitstatus. Das Ergebnis wird erst nach vollständiger semantischer Episodenvalidierung geschrieben. `Transcriber` hält ein Modell für mehrere Aufrufe im selben Prozess geladen. Der normale Offline-Check lädt keine Modellgewichte oder Audios und verwendet ausschließlich externe Modellfixtures.
+
+## Ausgewählte Folgen verarbeiten und fortsetzen
+
+Der gemeinsame Katalogbefehl verarbeitet nur die ausdrücklich genannten stabilen Folgen-IDs. Er liest Titel, Quelle, Datum und erste Audio-Enclosure aus dem Katalog und speichert pro Folge eine validierte Datei:
+
+```powershell
+uv run --frozen podcast-words process --catalog data/podcast-ufo/catalog.json --episode-id ep-ERSTE_ID --episode-id ep-ZWEITE_ID --output-dir data/podcast-ufo/episodes
+```
+
+Ein erneuter Aufruf mit derselben Auswahl ist die Fortsetzung. Vollständig validierte vorhandene Dateien werden übersprungen; unvollständige oder ungültige Dateien bleiben retrybar. Das Modell wird nur geladen, wenn mindestens eine ausgewählte Folge wirklich transkribiert werden muss, und eine Modellinstanz verarbeitet dann die ganze Auswahl. Audio-Downloads verwenden weiterhin höchstens drei begrenzte Versuche. Fehler werden je Folge ausgegeben; der Befehl liefert Exitstatus 1 bei Verarbeitungsfehlern und 130 bei einer Unterbrechung.
+
+Die Episodendatei wird zuerst in eine temporäre Datei im Zielordner geschrieben, erneut vollständig validiert und atomar eingesetzt. Erst danach erhält der Katalog den Zustand `completed`. Ein Abbruch oder Fehler lässt keine Teil-Ausgabe als fertig gelten. Bei einem erneuten Lauf wird die erhaltene vollständige Datei erkannt und nicht noch einmal transkribiert.
+
+Katalog-Metadaten- und Konfigurationsabweichungen eines gespeicherten Ergebnisses erscheinen in der JSON-Diagnose. Sie lösen keine neue Erkennung aus; erkannter Text und Zeiten bleiben wie transkribiert erhalten. Eine Folge wird nur mit ihrer expliziten ID und `--retranscribe` neu erkannt. Auch dann ersetzt die neue Datei eine vorhandene gültige Datei erst nach erfolgreicher Erkennung und Validierung.
+
+`transcription.input_revision` enthält die SHA-256-Prüfsumme der verarbeiteten Audio-Bytes. `configuration_revision` bindet Modell-, Export-, VAD-, Quantisierungs-, Anbieter-, Laufzeit- und Dekodiereinstellungen. `transcript_revision` bindet geordnete Segmente, Audio-Prüfsumme und Konfigurationsrevision. Diese Werte erlauben nachfolgenden Analyse- und Veröffentlichungsschritten, verbrauchte Inhalte zu vergleichen. Metadatenänderungen sind davon getrennt.
 
 ## Gesperrte Konfiguration
 
