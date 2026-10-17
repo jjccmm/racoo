@@ -4,7 +4,7 @@
 
 **Blocked by:** 03: Find a known passage using a real Pagefind index.
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 **Spec coverage:** User stories 1, 2, 3, 4, 5, 6, 7, 9, 13, 14, 30, 49 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 

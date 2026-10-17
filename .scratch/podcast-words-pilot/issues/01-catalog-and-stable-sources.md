@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** claimed
+**Status:** resolved
 
 **Spec coverage:** User stories 31, 32, 33, 34, 35 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 
@@ -30,3 +30,10 @@ Implemented on `pilot/01-catalog`, incorporating integration tip `fb33d63`. Stat
 - Folge 37: complete raw Wayback MP3 retrieval returned 179,888,758 bytes matching Content-Length, SHA-256 `0fe922d9af143454d59881e485c4580cfec96ab17d2c77b95c6323dbde799956`. FFprobe identifies 5617.423878 seconds, stereo 44.1 kHz and matching embedded podcast/artist metadata; FFmpeg decoded the first ten seconds successfully. The ordinary HTML wrapper was explicitly rejected. Evidence is versioned; audio is ignored. Publication date remains unknown rather than guessed.
 - `uv run --frozen python scripts/check.py` passed on Windows/Python 3.12.9: Ruff lint/format, all 38 Python tests, Markdown links/notebook syntax, episode validation, TypeScript, ESLint and project-prefix/root builds. Offline npm CI and `git diff --check` passed.
 - Scope limits: this ticket performs no ASR inference, full listening, full-file decode, Colab/GPU run or pilot reference judgment. It does not claim a transcribed archive or verify all 537 feed audio files. These limits do not block the completed catalog criteria.
+
+### Integrated verification — 17 October 2026
+
+- Merged `pilot/01-catalog` at `1e4b19f030479a9fc1321572639420a38f125a1b` into `integration/podcast-words-pilot` with merge commit `9a4dc97a2af59df27b3b602da030d3ec6e5ec1db`, following the search integration `eb78ed9014fcbefa0ad75035ed3df047c3220708`.
+- The combined integrated `uv run --frozen python scripts/check.py` passed Ruff lint/format, all 38 Python tests, Markdown/notebook checks, episode validation, project-prefix and root builds, ESLint/TypeScript and all 12 real Chromium search checks. The integrated XML snapshot bytes retain their recorded SHA-256 `9a6fb8b0807438637b28932bbd473afae33bb1b1ef9e45aff03875e24a7d0715`.
+- The full check exited 0 after scoped elevated cleanup of its own preview tree: this host's sandbox denied the Windows `taskkill` operation used by Playwright after all browser cases had passed. No catalog or search implementation change was needed.
+- All catalog criteria are satisfied and the corresponding `TASKS.md` catalog proof is checked. Audio/ASR, Colab and pilot quality proofs remain separate open work.
