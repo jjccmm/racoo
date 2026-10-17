@@ -80,6 +80,12 @@ def main(argv: list[str] | None = None) -> int:
     processing.add_argument("--output-dir", type=Path, required=True)
     processing.add_argument("--cache-dir", type=Path, default=Path(".cache/asr"))
     processing.add_argument("--retranscribe", action="store_true")
+    result_import = commands.add_parser(
+        "import-results", help="Safely import completed episode JSON from another run"
+    )
+    result_import.add_argument("--catalog", type=Path, required=True)
+    result_import.add_argument("--input-dir", type=Path, required=True)
+    result_import.add_argument("--output-dir", type=Path, required=True)
     catalog.add_parser(commands)
     analysis.add_parser(commands)
     arguments = parser.parse_args(argv)
@@ -101,6 +107,10 @@ def main(argv: list[str] | None = None) -> int:
         from podcast_words.processing import process
 
         return process(arguments)
+    if arguments.command == "import-results":
+        from podcast_words.result_import import import_results
+
+        return import_results(arguments)
     model = analysis.Analysis if arguments.kind == "analysis" else Episode
     content = json.dumps(model.model_json_schema(), indent=2, ensure_ascii=False) + "\n"
     if arguments.output:
