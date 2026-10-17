@@ -20,5 +20,5 @@
 
 ## Comments
 
-- Implementation and controlled public-CLI evidence are complete on `pilot/09-processing`; awaiting integration-branch merger before resolving this ticket.
+- Implementation and controlled public-CLI evidence are committed as `defb6dc` on `pilot/09-processing`; awaiting integration-branch merger before resolving this ticket.
 - Checks: `uv run --frozen ruff check .`, `uv run --frozen ruff format --check .`, `uv run --frozen pytest` (48 tests), and `uv run --frozen python scripts/check_workspace.py` all pass. Real CPU inference remains the completed evidence from ticket 02; no new model download or real inference was run here.
