@@ -42,7 +42,9 @@ export function searchIndex(): Plugin {
       const episodePaths = corpus.map((file) => path.resolve(path.dirname(corpusPath), file));
       if (!episodePaths.length) throw new Error('The search corpus must contain episodes');
       // Python remains authoritative, including semantic time and identity checks.
-      const validation = spawnSync('uv', ['run', '--frozen', 'podcast-words', 'validate', ...episodePaths], {
+      const validation = spawnSync('uv', [
+        'run', '--frozen', 'podcast-words', 'validate', '--compatible-processing', ...episodePaths,
+      ], {
         cwd: root,
         encoding: 'utf8',
         env: { ...process.env, UV_CACHE_DIR: process.env.UV_CACHE_DIR ?? path.join(root, '.uv-cache') },

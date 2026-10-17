@@ -3,9 +3,7 @@
 import argparse
 import hashlib
 import json
-import os
 import re
-import tempfile
 from datetime import UTC, datetime
 from email.utils import parsedate_to_datetime
 from pathlib import Path
@@ -16,6 +14,7 @@ from xml.etree import ElementTree
 from pydantic import AwareDatetime, Field, HttpUrl, ValidationError, model_validator
 
 from podcast_words.contracts import Contract, Identifier, Source, Text
+from podcast_words.json_io import write_json
 
 DEFAULT_FEED = "https://feeds.acast.com/public/shows/podcast-ufo"
 
@@ -119,22 +118,6 @@ class Catalog(Contract):
             if not set(entry.source.guid_aliases) <= verified:
                 raise ValueError("every GUID alias requires recorded identity verification")
         return self
-
-
-def write_json(path: Path, data: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            mode="w", encoding="utf-8", newline="\n", dir=path.parent, delete=False
-        ) as stream:
-            temporary = Path(stream.name)
-            json.dump(data, stream, indent=2, ensure_ascii=False)
-            stream.write("\n")
-        os.replace(temporary, path)
-    finally:
-        if temporary is not None:
-            temporary.unlink(missing_ok=True)
 
 
 def episode_id(podcast_id: str, kind: str, key: str) -> str:

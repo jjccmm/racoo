@@ -7,18 +7,12 @@ from pydantic import ValidationError
 
 from podcast_words.catalog import Catalog, CatalogEpisode
 from podcast_words.contracts import Episode
-from podcast_words.processing import digest, write_json
-
-REVISION_FIELDS = ("input_revision", "configuration_revision", "transcript_revision")
-RECOGNITION_FIELDS = (
-    "model_id",
-    "model_revision",
-    "export_id",
-    "export_revision",
-    "configuration",
-    "execution_providers",
-    "runtime_versions",
+from podcast_words.json_io import write_json
+from podcast_words.revisions import (
+    RECOGNITION_FIELDS,
+    validate_completed_episode,
 )
+
 METADATA_FIELDS = ("title", "published_at", "episode_number", "webpage_url")
 
 
@@ -45,46 +39,8 @@ def identity_match(episode: Episode, catalog: Catalog, entry: CatalogEpisode) ->
     return "catalog-assigned"
 
 
-def configuration_fingerprint(episode: Episode) -> str:
-    transcription = episode.transcription
-    return digest({field: getattr(transcription, field) for field in RECOGNITION_FIELDS})
-
-
 def fingerprints(episode: Episode) -> tuple[dict[str, str], str | None]:
-    transcription = episode.transcription
-    revisions = [getattr(transcription, name) for name in REVISION_FIELDS]
-    if any(revisions) and not all(revisions):
-        raise ValueError(
-            "processing revision provenance is partial; expected all three revision fields"
-        )
-
-    configuration_revision = transcription.configuration_revision or configuration_fingerprint(
-        episode
-    )
-    transcript_revision = digest(
-        {
-            "segments": [segment.model_dump(mode="json") for segment in episode.segments],
-            "audio_sha256": episode.audio.sha256,
-            "configuration_revision": configuration_revision,
-        }
-    )
-    if transcription.input_revision and transcription.input_revision != episode.audio.sha256:
-        raise ValueError("input_revision does not match the saved audio SHA-256")
-    if (
-        transcription.transcript_revision
-        and transcription.transcript_revision != transcript_revision
-    ):
-        raise ValueError("transcript_revision does not match the saved transcript and provenance")
-
-    legacy = None if all(revisions) else "complete-without-revision-fields"
-    return (
-        {
-            "input_revision": episode.audio.sha256,
-            "configuration_revision": configuration_revision,
-            "transcript_revision": transcript_revision,
-        },
-        legacy,
-    )
+    return validate_completed_episode(episode)
 
 
 def catalog_metadata_differences(episode: Episode, entry: CatalogEpisode) -> list[str]:

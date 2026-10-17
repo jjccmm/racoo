@@ -9,6 +9,7 @@ from typing import Annotated, Literal, Self
 from pydantic import Field, StringConstraints, model_validator
 
 from podcast_words.contracts import Contract, Episode, Identifier, Text
+from podcast_words.json_io import write_json
 
 SPACY_VERSION = "3.8.16"
 MODEL_NAME = "de_core_news_lg"
@@ -49,13 +50,6 @@ class Analysis(Contract):
 
 def encoded(value: object) -> bytes:
     return json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
-
-
-def write_json(path: Path, value: object) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_bytes(encoded(value) + b"\n")
-    temporary.replace(path)
 
 
 def consumed_input(episode: Episode) -> str:
@@ -138,11 +132,28 @@ def publish(directory: Path, episodes: list[Episode], analyses: dict[str, Analys
             },
             "episodes": catalog,
         },
+        indent=None,
+        sort_keys=True,
     )
-    write_json(directory / "vocabulary.json", {**envelope, "words": vocabulary})
+    write_json(
+        directory / "vocabulary.json",
+        {**envelope, "words": vocabulary},
+        indent=None,
+        sort_keys=True,
+    )
     for index, counts in enumerate(shards):
-        write_json(directory / f"counts/{index:02d}.json", {**envelope, "counts": counts})
-    write_json(directory / "manifest.json", {**envelope, "podcastId": ordered[0].podcast_id})
+        write_json(
+            directory / f"counts/{index:02d}.json",
+            {**envelope, "counts": counts},
+            indent=None,
+            sort_keys=True,
+        )
+    write_json(
+        directory / "manifest.json",
+        {**envelope, "podcastId": ordered[0].podcast_id},
+        indent=None,
+        sort_keys=True,
+    )
 
 
 def analyze(arguments: argparse.Namespace) -> dict:
@@ -211,7 +222,7 @@ def analyze(arguments: argparse.Namespace) -> dict:
             total_words=total,
             lemmas=lemmas,
         )
-        write_json(path, analysis.model_dump(mode="json"))
+        write_json(path, analysis.model_dump(mode="json"), indent=None, sort_keys=True)
         analyses[episode.episode_id] = analysis
         computed.append(episode.episode_id)
     if arguments.publish:

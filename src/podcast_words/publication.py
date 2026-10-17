@@ -1,7 +1,6 @@
 """Prepare a selected and internally consistent set of public episode artifacts."""
 
 import argparse
-import hashlib
 import json
 import os
 import shutil
@@ -13,16 +12,16 @@ from pydantic import ValidationError
 from podcast_words import analysis
 from podcast_words.catalog import Catalog, CatalogEpisode
 from podcast_words.contracts import Episode
-
-
-def canonical(value: object) -> bytes:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
-        "utf-8"
-    )
+from podcast_words.json_io import write_json
+from podcast_words.revisions import (
+    digest,
+    validate_compatible_processing,
+    validate_completed_episode,
+)
 
 
 def fingerprint(value: object) -> str:
-    return hashlib.sha256(canonical(value)).hexdigest()
+    return digest(value)
 
 
 def relative_episode_paths(path: Path) -> list[Path]:
@@ -70,25 +69,6 @@ def check_identity(episode: Episode, catalog: Catalog, entry: CatalogEpisode) ->
             raise ValueError(f"Unrelated source identity for selected episode {episode.episode_id}")
 
 
-def processing_configuration(episode: Episode) -> dict:
-    transcription = episode.transcription
-    return {
-        "model_id": transcription.model_id,
-        "model_revision": transcription.model_revision,
-        "export_id": transcription.export_id,
-        "export_revision": transcription.export_revision,
-        "configuration": transcription.configuration,
-    }
-
-
-def configuration_provenance(episode: Episode) -> dict:
-    return {
-        "recognition_configuration": processing_configuration(episode),
-        "execution_providers": episode.transcription.execution_providers,
-        "runtime_versions": episode.transcription.runtime_versions,
-    }
-
-
 def metadata_current(episode: Episode, catalog: Catalog, entry: CatalogEpisode) -> Episode:
     if entry.published_at is None:
         raise ValueError(f"Selected catalog entry has no publication date: {episode.episode_id}")
@@ -109,32 +89,10 @@ def metadata_current(episode: Episode, catalog: Catalog, entry: CatalogEpisode) 
 def revisions(episode: Episode) -> tuple[Episode, bool]:
     values = episode.model_dump(mode="json")
     transcription = values["transcription"]
-    input_revision = episode.audio.sha256
-    if transcription.get("input_revision") not in (None, input_revision):
-        raise ValueError(f"Saved input revision does not match audio hash for {episode.episode_id}")
-    configuration_revision = transcription.get("configuration_revision") or fingerprint(
-        configuration_provenance(episode)
-    )
-    transcript_revision = fingerprint(
-        {
-            "segments": [segment.model_dump(mode="json") for segment in episode.segments],
-            "audio_sha256": input_revision,
-            "configuration_revision": configuration_revision,
-        }
-    )
-    if transcription.get("transcript_revision") not in (None, transcript_revision):
-        raise ValueError(
-            f"Saved transcript revision does not match transcript for {episode.episode_id}"
-        )
-    derived = any(
-        transcription.get(name) is None
-        for name in ("input_revision", "configuration_revision", "transcript_revision")
-    )
-    transcription["input_revision"] = input_revision
-    transcription["configuration_revision"] = configuration_revision
-    transcription["transcript_revision"] = transcript_revision
+    revisions_by_field, legacy = validate_completed_episode(episode)
+    transcription.update(revisions_by_field)
     revised = Episode.model_validate_json(json.dumps(values, ensure_ascii=False))
-    return revised, derived
+    return revised, legacy is not None
 
 
 def public_catalog(catalog: Catalog, entries: list[CatalogEpisode]) -> dict:
@@ -164,11 +122,6 @@ def public_catalog(catalog: Catalog, entries: list[CatalogEpisode]) -> dict:
             for item in entries
         ],
     }
-
-
-def write_json(path: Path, value: object) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_bytes(json.dumps(value, indent=2, ensure_ascii=False).encode("utf-8") + b"\n")
 
 
 def replace_generated_directory(staging: Path, output: Path) -> None:
@@ -212,9 +165,7 @@ def prepare(arguments: argparse.Namespace) -> dict:
         entries.append(entry)
     if not episodes:
         raise ValueError("A publication must contain at least one completed episode")
-    configurations = {fingerprint(processing_configuration(episode)) for episode in episodes}
-    if len(configurations) != 1:
-        raise ValueError("Selected transcripts have incompatible transcription configurations")
+    processing_revision = validate_compatible_processing(episodes)
     if len({episode.episode_id for episode in episodes}) != len(episodes):
         raise ValueError("Duplicate selected episode identity")
 
@@ -268,7 +219,7 @@ def prepare(arguments: argparse.Namespace) -> dict:
                 "episodes": [episode.model_dump(mode="json") for episode in episodes],
                 "analyses": analysis_data,
                 "analysisVersion": arguments.analysis_version,
-                "processingConfiguration": next(iter(configurations)),
+                "processingConfiguration": processing_revision,
             }
         )
         write_json(staging / "catalog.json", source_catalog)
