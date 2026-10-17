@@ -31,3 +31,9 @@ Die folgenden nullbasierten Einzelränge wurden am 17. Oktober 2026 direkt aus d
 Die erwartete Gesamtreihenfolge lautet deshalb `complete, pair-b, pair-a, pair-c, pair-d, single-01, single-02, …, single-10`. Die ersten zehn Details enden bei `single-05`; die fünf übrigen folgen nur auf Anforderung. Die Browserprüfungen zählen echte Fragment- und Episodenabrufe und halten spätere Antworten gezielt zurück, um Fehler und überholte Suchläufe zu prüfen.
 
 Alle Segmente beginnen bei 20 Sekunden. Im vollständigen Text liegen Signal, Laterne, Katzen und Fenster auf Wortposition 0, 1, 2 und 3. „Fuß Gruss“ findet außerdem die originalen Pluralformen „Füße und Grüße“, ohne einen Vergleich auf exakte Schreibweise. Dies belegt Wortformsuche und keine Grundformzählung.
+
+## Zusammenhängender Statistikstand
+
+Die 15 zusätzlichen Originaltexte wurden mit dem bereits festgelegten spaCy 3.8.16 / `de_core_news_lg` 3.8.0 über den öffentlichen Analysebefehl verarbeitet. Ihre gespeicherten Analysen liegen im [gemeinsamen Analyseverzeichnis](../analysis/coverage-complete.json). Der Web-Build prüft dieselben 17 Episoden für Suche und Statistik; fehlende oder veraltete Analysen bleiben Fehler.
+
+Die zusätzliche Gesamtwortzahl wurde unabhängig am Text ausgezählt: `complete` enthält 25 alphabetische Wörter; vier Paartexte enthalten jeweils fünf; zehn Einzeltexte enthalten jeweils zwei. Das ergibt 65 zusätzliche Gesamtwörter und zusammen mit den ursprünglichen 284 genau 349. Die bestehenden Hund-Zählungen (256 in der zweiten ursprünglichen Folge, sonst null) bleiben gleich. Die Browsererwartung verwendet diese Rechnung statt die Summe aus dem Analyseprogramm zurückzulesen.

@@ -50,10 +50,15 @@ class Transcription(Contract):
     export_revision: Text
     processed_at: AwareDatetime
     runtime_versions: Annotated[dict[Text, Text], Field(min_length=1)]
+    export_id: Text | None = None
+    execution_providers: dict[Text, list[Text]] = Field(default_factory=dict)
+    configuration: dict[Text, Text] = Field(default_factory=dict)
 
 
 class TokenPoint(Contract):
-    text: Text
+    # Native SentencePiece output includes standalone whitespace tokens. Retain
+    # them verbatim; token points describe model tokens rather than word spans.
+    text: Annotated[str, StringConstraints(min_length=1)]
     at_seconds: Seconds
 
 

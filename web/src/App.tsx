@@ -1,4 +1,5 @@
 import { SearchPanel } from './SearchPanel';
+import { Stats } from './Stats';
 
 export function App() {
   return <main>
@@ -10,5 +11,6 @@ export function App() {
       <p>Die Beispiele sind erfunden. Echte Podcastfolgen und Audiowiedergabe folgen im Pilot.</p>
     </aside>
     <SearchPanel />
+    <Stats />
   </main>;
 }
