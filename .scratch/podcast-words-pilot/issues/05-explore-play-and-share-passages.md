@@ -17,3 +17,8 @@
 - [ ] Share and directly reopen stable episode identity and seek time through query parameters without autoplay; handle an unknown episode explicitly.
 - [ ] Show an unavailable-media error and original episode link without retry loops, and explain machine-transcript accuracy and audio-version alignment briefly.
 - [ ] Exercise passage selection, cross-segment matches, repeated occurrences, seeking, forward/backward controls, direct links, and failed media through browser behavior. Preserve these behaviors during later root/project-prefix integration.
+
+## Comments
+
+- Implemented the built-site passage and player behavior on `pilot/05-passages`. Browser cases use the real Pagefind build and a controlled valid WAV media source. Repeated hits, term proximity, successive segments, late token-point seek, direct links without autoplay, unknown identities, bounded controls, and unavailable audio/source links are covered.
+- Verification on this branch: `npm.cmd run typecheck`, `npm.cmd run lint`, production build, and the full Playwright browser suite passed 27/27 at both `/` and `/podcast_words_v3/`. The final merge into the integration branch remains pending.
