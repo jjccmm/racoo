@@ -4,7 +4,7 @@
 
 **Blocked by:** 05: Explore, play, and share every Fundstelle; 07: Compare Grundformen across episode lengths; 12: Rebuild one coherent static publication.
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 **Spec coverage:** User stories 13, 14, 17, 18, 19, 20, 28, 29, 30, 46, 48, 49 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 
