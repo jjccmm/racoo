@@ -101,9 +101,50 @@ def test_transcribe_preserves_identity_original_audio_and_times_after_a_pause(
     assert measurements["episode"]["validation_and_serialization"]["elapsed_seconds"] >= 0
     assert measurements["model"]["encoder_decoder_session_initialization"]["elapsed_seconds"] >= 0
     assert measurements["model"]["vad_session_initialization"]["elapsed_seconds"] >= 0
+    assert (
+        "model_setup_total_including_imports_lookup_and_sessions_seconds" in measurements["model"]
+    )
+    assert measurements["episode"]["audio_download"]["wire_bytes_downloaded"] == 0
+    assert measurements["episode"]["inference"]["boundary"].startswith(
+        "recognizer generator iteration"
+    )
     assert run_report.is_file()
     assert json.loads(run_report.read_bytes()) == measurements
     assert main(["validate", str(destination)]) == 0
+
+
+def test_transcribe_run_report_cannot_alias_episode_output(tmp_path, capsys):
+    fixture = json.loads((Path(__file__).parent / "fixtures/synthetic-episode.json").read_bytes())
+    metadata = tmp_path / "metadata.json"
+    metadata.write_text(
+        json.dumps(
+            {
+                key: fixture[key]
+                for key in ("podcast_id", "episode_id", "source", "title", "published_at")
+            }
+            | {"audio_url": fixture["audio"]["url"]}
+        ),
+        encoding="utf-8",
+    )
+    destination = tmp_path / "episode.json"
+    assert (
+        main(
+            [
+                "transcribe",
+                "--metadata",
+                str(metadata),
+                "--output",
+                str(destination),
+                "--cache-dir",
+                str(tmp_path / "cache"),
+                "--run-report",
+                str(destination),
+            ]
+        )
+        == 1
+    )
+    assert json.loads(capsys.readouterr().out)["ok"] is False
+    assert not destination.exists()
 
 
 def test_transcribe_rejects_unpaired_native_token_points_without_saving(

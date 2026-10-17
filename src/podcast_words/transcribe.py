@@ -18,6 +18,7 @@ from typing import Annotated
 from pydantic import AwareDatetime, Field, HttpUrl
 
 from podcast_words.contracts import Contract, Episode, Identifier, Source, Text
+from podcast_words.json_io import require_distinct_output, write_json
 
 MODEL_ID = "nvidia/parakeet-tdt-0.6b-v3"
 MODEL_REVISION = "541d1f99c6b0c3cd0b11a95167540bb8edefd82b"
@@ -36,6 +37,21 @@ VAD_OPTIONS = {
 EXECUTION_PROVIDER_ENV = "PODCAST_WORDS_EXECUTION_PROVIDER"
 CPU_PROVIDER = "CPUExecutionProvider"
 GPU_PROVIDER = "CUDAExecutionProvider"
+
+
+def processing_configuration() -> dict:
+    """Return the pinned runtime settings used by the public transcribe path."""
+    return {
+        "model_id": MODEL_ID,
+        "model_revision": MODEL_REVISION,
+        "export_id": EXPORT_ID,
+        "export_revision": EXPORT_REVISION,
+        "quantization": "int8",
+        "vad_id": VAD_ID,
+        "vad_revision": VAD_REVISION,
+        "vad_options": VAD_OPTIONS.copy(),
+        "intra_op_num_threads": 4,
+    }
 
 
 def execution_provider() -> str:
@@ -112,6 +128,7 @@ class Transcriber:
             "execution_provider_chain": execution_provider_chain(),
             "intra_op_num_threads": 4,
         }
+        self.measurements["processing_configuration"] = processing_configuration()
         profile_dir = cache_dir / "profiles"
         if self.profile_enabled:
             profile_dir.mkdir(parents=True, exist_ok=True)
@@ -193,8 +210,12 @@ class Transcriber:
             "vad": vad._model,
         }
         self.model = model.with_vad(vad, **VAD_OPTIONS).with_timestamps()
-        self.measurements["model"]["total_session_initialization_seconds"] = round(
-            time.monotonic() - initialization_started, 6
+        self.measurements["model"][
+            "model_setup_total_including_imports_lookup_and_sessions_seconds"
+        ] = round(time.monotonic() - initialization_started, 6)
+        self.measurements["model"]["model_setup_timing_note"] = (
+            "Outer model setup includes imports, snapshot lookups and session initialization; "
+            "its elapsed time overlaps nested lookup and session timings."
         )
 
     def _snapshot_stage(self, repository: str, revision: str, filenames: list[str]):
@@ -299,6 +320,9 @@ class Transcriber:
         return {
             "node_events": node_events,
             "model_node_events": model_events,
+            "mixed_cpu_fallback": (
+                self.execution_provider == GPU_PROVIDER and model_events[CPU_PROVIDER] > 0
+            ),
             "profile_files": profile_files,
         }
 
@@ -316,10 +340,8 @@ class Transcriber:
         self.measurements["episode"]["audio_download"] = {
             "status": download_status,
             "elapsed_seconds": round(time.monotonic() - download_started, 6),
-            "bytes": audio_file.stat().st_size,
-            "wire_bytes_downloaded": audio_file.stat().st_size
-            if download_status == "downloaded"
-            else 0,
+            "payload_bytes_saved": audio_file.stat().st_size,
+            "wire_bytes_downloaded": 0 if download_status == "provided-local-file" else None,
         }
         with audio_file.open("rb") as original:
             checksum = hashlib.file_digest(original, "sha256").hexdigest()
@@ -380,6 +402,10 @@ class Transcriber:
                 "elapsed_seconds": round(time.monotonic() - inference_started, 6),
                 "execution_proof": (
                     "pending-profile" if self.profile_enabled else "unavailable-profile-disabled"
+                ),
+                "boundary": (
+                    "recognizer generator iteration including VAD/preprocessing and result assembly; "
+                    "not pure encoder, decoder or GPU kernel time"
                 ),
             }
         if not segments:
@@ -450,12 +476,25 @@ def transcribe_command(
 ) -> int:
     started = time.monotonic()
     try:
+        if run_report:
+            require_distinct_output(
+                run_report,
+                [metadata_path, output, audio_file],
+                label="run report",
+            )
         if output.exists():
             raise FileExistsError(f"output already exists; choose another destination: {output}")
         metadata = EpisodeInput.model_validate_json(metadata_path.read_bytes())
         transcriber = Transcriber(cache_dir, profile_enabled=profile_enabled)
         episode = transcriber.transcribe(metadata, audio_file)
         execution_profile = transcriber.finish()
+        if transcriber.profile_enabled:
+            transcriber.measurements["episode"]["inference"]["execution_proof"] = (
+                "executed-ort-node-events"
+                if transcriber.profile_measurements.get("execution_proof")
+                == "executed-ort-node-events"
+                else "profile-not-validated"
+            )
         output.parent.mkdir(parents=True, exist_ok=True)
         serialization_started = time.monotonic()
         content = episode.model_dump_json(indent=2) + "\n"
@@ -483,14 +522,26 @@ def transcribe_command(
             "execution_proof": "unavailable-profile-disabled",
         }
         transcriber.measurements["total_elapsed_seconds"] = round(time.monotonic() - started, 6)
+        transcriber.measurements["total_elapsed_boundary"] = (
+            "Starts inside transcribe_command() and ends before writing the optional run report "
+            "and stdout; excludes interpreter/uv startup and notebook/Drive work."
+        )
         transcriber.measurements["code_revision"] = os.environ.get("PODCAST_WORDS_CODE_REVISION")
         if run_report:
-            run_report.parent.mkdir(parents=True, exist_ok=True)
-            run_report.write_text(
-                json.dumps(transcriber.measurements, indent=2, ensure_ascii=False) + "\n",
-                encoding="utf-8",
-                newline="\n",
-            )
+            try:
+                write_json(run_report, transcriber.measurements)
+            except OSError as error:
+                print(
+                    json.dumps(
+                        {
+                            "ok": False,
+                            "error": f"could not write run report {run_report}: {error}",
+                            "completed_artifact_preserved": str(output),
+                        },
+                        ensure_ascii=True,
+                    )
+                )
+                return 1
         print(
             json.dumps(
                 {

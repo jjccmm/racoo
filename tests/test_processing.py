@@ -184,7 +184,7 @@ def test_process_gpu_profile_records_executed_nodes_and_keeps_partial_cpu_fallba
         )
         assert (
             report["runtime_measurements"]["episodes"][0]["episode"]["inference"]["execution_proof"]
-            == "pending-profile"
+            == "executed-ort-node-events"
         )
         transcript = json.loads((output / "episode-one.json").read_bytes())
         assert transcript["transcription"]["execution_providers"]["encoder"] == [
@@ -425,6 +425,37 @@ def test_process_rejects_one_audio_file_for_multiple_episode_identities(
     assert not recognizer_started
     assert not output.exists()
     assert catalog_path.read_bytes() == original_catalog
+
+
+def test_process_run_report_cannot_alias_catalog_before_any_processing(
+    tmp_path, monkeypatch, capsys
+):
+    catalog_path = tmp_path / "catalog.json"
+    output = tmp_path / "episodes"
+    audio_path = tmp_path / "audio.wav"
+    audio_path.write_bytes(wave_bytes())
+    with audio_server(wave_bytes()) as (audio_url, _response):
+        make_catalog(catalog_path, audio_url)
+        original_catalog = catalog_path.read_bytes()
+
+        def should_not_initialize(*_args, **_kwargs):
+            raise AssertionError("run report path collision must fail before ASR setup")
+
+        monkeypatch.setattr(onnx_asr, "load_model", should_not_initialize)
+        assert (
+            run(
+                catalog_path,
+                output,
+                tmp_path / "cache",
+                "episode-one",
+                audio_file=audio_path,
+                run_report=catalog_path,
+            )
+            == 1
+        )
+    assert json.loads(capsys.readouterr().out)["ok"] is False
+    assert catalog_path.read_bytes() == original_catalog
+    assert not output.exists()
 
 
 def test_process_rejects_stale_or_partial_revisions_without_marking_completion(tmp_path, capsys):

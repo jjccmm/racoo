@@ -12,9 +12,9 @@ from pydantic import ValidationError
 
 from podcast_words.catalog import Catalog, CatalogEpisode
 from podcast_words.contracts import Episode
-from podcast_words.json_io import write_json
+from podcast_words.json_io import require_distinct_output, write_json
 from podcast_words.revisions import digest, validate_completed_episode
-from podcast_words.transcribe import EpisodeInput
+from podcast_words.transcribe import EpisodeInput, processing_configuration
 
 
 def configuration_revision() -> str:
@@ -157,6 +157,16 @@ def process(arguments) -> int:
         if arguments.audio_file is not None and len(selected_ids) != 1:
             raise ValueError("--audio-file requires exactly one selected episode")
         entries = [selection(catalog, identity) for identity in selected_ids]
+        if arguments.run_report:
+            require_distinct_output(
+                arguments.run_report,
+                [
+                    arguments.catalog,
+                    arguments.audio_file,
+                    *[arguments.output_dir / f"{entry.episode_id}.json" for entry in entries],
+                ],
+                label="run report",
+            )
     except (OSError, ValidationError, ValueError) as error:
         print(json.dumps({"ok": False, "error": str(error)}, ensure_ascii=True))
         return 1
@@ -258,9 +268,12 @@ def process(arguments) -> int:
                 validate=lambda content: Episode.model_validate_json(content),
             )
             persisted_bytes = destination.stat().st_size
+            episode_measurements_snapshot = deepcopy(transcriber.measurements)
+            for shared_key in ("model", "runtime", "processing_configuration"):
+                episode_measurements_snapshot.pop(shared_key, None)
             measurements = {
                 "episode_id": entry.episode_id,
-                **deepcopy(transcriber.measurements),
+                **episode_measurements_snapshot,
                 "configuration_revision": config_revision,
                 "result_validation_and_serialization": {
                     "elapsed_seconds": round(time.monotonic() - persistence_started, 6),
@@ -308,6 +321,15 @@ def process(arguments) -> int:
             "finalization_and_parse_seconds": round(time.monotonic() - profile_started, 6),
         }
     )
+    if transcriber is not None and transcriber.profile_enabled:
+        for episode in episode_measurements:
+            episode["episode"]["inference"]["execution_proof"] = (
+                "executed-ort-node-events"
+                if profile_error is None
+                and transcriber.profile_measurements.get("execution_proof")
+                == "executed-ort-node-events"
+                else "profile-not-validated"
+            )
     ok = (
         all(result["status"] in {"completed", "skipped"} for result in results)
         and profile_error is None
@@ -315,7 +337,7 @@ def process(arguments) -> int:
     report = {"ok": ok, "selected": selected_ids, "results": results}
     runtime_measurements = {
         "schema_version": 1,
-        "code_revision": __import__("os").environ.get("PODCAST_WORDS_CODE_REVISION"),
+        "code_revision": os.environ.get("PODCAST_WORDS_CODE_REVISION"),
         "model": transcriber.measurements["model"] if transcriber is not None else {},
         "runtime": transcriber.measurements["runtime"]
         if transcriber is not None
@@ -326,23 +348,19 @@ def process(arguments) -> int:
             "logical_cpu_count": os.cpu_count(),
         },
         "configuration_revision": config_revision,
-        "processing_configuration": {
-            "model_id": "nvidia/parakeet-tdt-0.6b-v3",
-            "export_revision": "8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce",
-            "quantization": "int8",
-            "vad_options": {
-                "batch_size": 1,
-                "max_speech_duration_s": 20,
-                "min_speech_duration_ms": 250,
-                "min_silence_duration_ms": 100,
-                "speech_pad_ms": 0,
-                "threshold": 0.5,
-            },
-            "intra_op_num_threads": 4,
-        },
+        "processing_configuration": processing_configuration(),
         "episodes": episode_measurements,
         "profile": profile_measurements,
         "total_elapsed_seconds": round(time.monotonic() - run_started, 6),
+        "total_elapsed_boundary": (
+            "Starts inside process() and ends before writing the optional run report and stdout. "
+            "Includes catalog/control work and unattributed overhead; excludes interpreter/uv "
+            "startup, environment setup and notebook/Drive work."
+        ),
+        "model_setup_scope": (
+            "One shared model setup per process run, reported only under model; never sum it "
+            "across episodes."
+        ),
         "inference_runs": sum("episode" in item for item in episode_measurements),
         "skipped_runs": sum(item.get("status") == "skipped" for item in results),
     }
@@ -351,18 +369,22 @@ def process(arguments) -> int:
         report["execution_profile"] = execution_profile
     if profile_error is not None:
         report["execution_profile_error"] = profile_error
-    print(
-        json.dumps(
-            report,
-            indent=2,
-            ensure_ascii=True,
-        )
-    )
     if arguments.run_report:
-        arguments.run_report.parent.mkdir(parents=True, exist_ok=True)
-        arguments.run_report.write_text(
-            json.dumps(runtime_measurements, indent=2, ensure_ascii=False) + "\n",
-            encoding="utf-8",
-            newline="\n",
-        )
+        try:
+            write_json(arguments.run_report, runtime_measurements)
+        except OSError as error:
+            print(
+                json.dumps(
+                    {
+                        "ok": False,
+                        "error": f"could not write run report {arguments.run_report}: {error}",
+                        "completed_artifacts_preserved": [
+                            item["output"] for item in results if item.get("status") == "completed"
+                        ],
+                    },
+                    ensure_ascii=True,
+                )
+            )
+            return 1
+    print(json.dumps(report, indent=2, ensure_ascii=True))
     return 130 if interrupted else (0 if ok else 1)
