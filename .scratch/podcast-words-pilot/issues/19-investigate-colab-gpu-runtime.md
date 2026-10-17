@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately). The completed CPU proof in ticket 02 supplies baseline evidence; this investigation can contribute runtime evidence to ticket 10 without waiting for that ticket's full Drive/resume acceptance.
 
-**Status:** claimed
+**Status:** ready-for-human
 
 **Related:** 02: Transcribe one real Folge on Windows CPU; 10: Resume the shared workflow on Colab GPU and Drive.
 
@@ -31,7 +31,7 @@
 - [ ] Evaluate profiling overhead separately with a controlled comparison, preserving a profiled run as execution evidence. Distinguish profiler overhead during inference from profile parsing, file sizes and Drive upload time; keep unmeasured contributions explicitly unknown.
 - [ ] Produce a reproducible stage-by-stage CPU/GPU comparison, including warm inference time, end-to-end time, audio duration and consistently defined speed ratios. Account for the original approximately 36-minute observation or state precisely what prevents reproducing or explaining it and what additional measurement is required.
 - [ ] Document the measured dominant bottleneck and supporting timing/profile evidence before proposing an optimization. Each proposal must explain its expected effect and evidence; implementing optimizations is separate follow-up work, and an explanation must not assume that GPU execution is necessarily faster.
-- [ ] Preserve existing accepted transcripts and provenance, keep heavy audio/models/raw traces outside versioned source, and version concise measurement summaries and conclusions. Routine checks remain fixture-only, without live downloads, model inference or GPU access. This investigation does not replace ticket 10's remaining runtime/resume gates or the pilot's quality and mobile-performance acceptance.
+- [x] Preserve existing accepted transcripts and provenance, keep heavy audio/models/raw traces outside versioned source, and version concise measurement summaries and conclusions. Routine checks remain fixture-only, without live downloads, model inference or GPU access. This investigation does not replace ticket 10's remaining runtime/resume gates or the pilot's quality and mobile-performance acceptance.
 
 ## Scope
 
@@ -46,3 +46,7 @@ Deliver measurement support, real-run evidence and an explanation. Retain the se
 2026-10-17: Added per-stage measurements to the shared CLI, explicit profile-on/off selection, and a single-episode `--audio-file` input for exact-byte forced reruns. Added a separate Colab benchmark cell for a cold run and warm profile-on/off repeats. Fixture tests confirm forced reprocessing, profile-off evidence labeling, profile-on node summaries, and rejection of one audio file assigned to multiple episode IDs. Comparable CPU/GPU timing and bottleneck diagnosis remain open.
 
 2026-10-17: Added an unprofiled Windows CPU run on the same exact audio hash as the earlier Windows proof. The measured recognizer-generator boundary dominates that CPU run, but it is not a pure encoder/kernel measurement and does not explain the Colab whole-cell duration. The original Drive profiles should be summarized in-place first; the historical GPU run still has no stage elapsed times, audio hash or code commit. Ticket 19 remains open pending comparable GPU timings and a GPU/profile bottleneck diagnosis.
+
+2026-10-17: Integrated measurement support and evidence at `1507d1f`, with the single-sample reporting clarification integrated at `4b51b45`. MAIN passed all 80 Python tests, Ruff lint/format and the workspace checker; notebook syntax/links were checked again after the notebook-only follow-up. Standards review found no consequential issue. Spec review's one finding is fixed: each warm profiling mode explicitly records n=1 and variability as unmeasured. See the [review record](../interim-review.md). Accepted transcript, historical 797.015-second proof and operator report hashes remain unchanged. The new CPU run's three raw artifacts were copied and hash-verified under `.cache/ticket19/cpu-baseline-080cc243/` before worktree cleanup.
+
+2026-10-17: Handoff to the operator: use the updated notebook's **Bereits gespeicherte ORT-Profile auswerten** cell first. It summarizes the existing three Drive traces and extracts audio/model provenance from the saved episode, without another inference run or downloading the raw traces locally. Return the resulting compact `reports/ep-5764a1149f18a8f68698fb45bb405264-profile-evidence.json`; then perform only the missing controlled timing runs. The original GPU cache state is unknown (the earlier comment's description as cold was not established). Profiling overhead, Drive duration, matched GPU timings and the GPU bottleneck remain unmeasured, so ticket 19 is `ready-for-human`, not resolved. Other pilot gates are unchanged.

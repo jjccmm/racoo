@@ -46,3 +46,25 @@ After integration as merge `21621ff`, the main worktree passed the 70-test Pytho
 Both original reviewers rechecked the integrated fixes at `f24a253`. Standards confirmed that shared atomic persistence addresses the judgment call; Spec confirmed both provenance and custom-corpus compatibility defects are resolved. Neither found a new consequential issue in those targeted paths. This is an interim review, not final pilot acceptance.
 
 The existing real UFO537 CPU artifact was also resumed through the corrected public CLI: `skipped`, `complete-without-revision-fields`, no metadata mismatch, and unchanged SHA-256 `b30300ae860ec402982eb72c891b4030bd2b4c8a67ca91d4796efc1e6dd76e30`. No ASR or download occurred. Tickets 10 and 13 require operator/reviewer work before the dependent pilot-production and acceptance tickets may proceed.
+
+## Ticket 19 investigation support
+
+**Fixed review range:** `5a64fd3...509d16a`, with targeted re-review of notebook-only follow-up `037b394`. Integrated at `1507d1f` and `4b51b45`. The implementer, merger and both reviewers used `gpt-6-luna` with High effort.
+
+### Standards
+
+No documented-standard violations or additional consequential code smells were found. The documentation preserves the project's language, generated artifacts remain outside versioned source, and episode/provenance contracts are unchanged. The final single-sample notebook clarification introduced no further Standards issue.
+
+### Spec
+
+One reporting gap was found: one warm sample per profiling mode cannot establish variability. Commit `037b394` fixes it by recording repeat counts, n=1 and variability as unmeasured, with matching German instructions. The reviewer confirmed the fix and found no new consequential issue or scope creep. Comparable real Colab timings remain pending; this review does not resolve ticket 19.
+
+**Findings:** Standards 0; Spec 1, fixed. No outstanding code-review finding.
+
+### Verification and handoff
+
+MAIN passed all 80 Python tests, including the frontend build regression, plus Ruff lint/format and the workspace checker (45 Markdown files and notebook syntax). The workspace checker passed again after the notebook-only follow-up; unchanged UI/browser behavior was not retested. Accepted transcript, original operator report and historical 797.015-second evidence remain unchanged.
+
+A separately authorized real CPU retranscription took 582.125 seconds inside the CLI, including 566.922 seconds in the recognizer-generator boundary. It used the verified source audio and warm models, with profiling disabled. The raw report retains producer commit `080cc243`; its summary explains the boundary and does not infer the GPU cause. All three raw CPU artifacts were preserved and hash-verified under main `.cache/ticket19/cpu-baseline-080cc243/`.
+
+Ticket 19 is `ready-for-human`: summarize the existing Drive profiles and saved episode metadata first, then collect missing matched timings and profiling comparisons. No measured GPU bottleneck, speed ratio, optimization, or remaining pilot acceptance is claimed.
