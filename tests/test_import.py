@@ -101,6 +101,10 @@ def test_import_accepts_catalog_identity_and_repeat_skips_without_changing_bytes
     assert "title" in first_report["results"][0]["catalog_metadata_mismatches"]
     assert "audio_url" in first_report["results"][0]["catalog_metadata_mismatches"]
     assert saved_episode.segments[0].text == "Ein Eimer voller Münzen steht neben dem Tisch."
+    assert (
+        saved_episode.transcription.runtime_versions
+        == incoming_episode().transcription.runtime_versions
+    )
     assert saved_episode.title == "Transferred title"
     assert first_report["results"][0]["revisions"]["input_revision"] == saved_episode.audio.sha256
     assert first_report["results"][0]["revisions"]["configuration_revision"]

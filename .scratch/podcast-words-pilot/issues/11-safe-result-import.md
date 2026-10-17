@@ -4,7 +4,7 @@
 
 **Blocked by:** 09: Resume selected episode processing without losing work.
 
-**Status:** claimed
+**Status:** resolved
 
 **Spec coverage:** User stories 34, 38, 42, 43, 44 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 
@@ -23,4 +23,4 @@
 - Implemented the public `import-results` command. It validates each schema-v1 episode, required model/export/runtime provenance, non-empty completion, stable catalog identity and verified GUID aliases before durable acceptance. Existing invalid outputs and transcript/audio/identity/configuration conflicts remain unchanged; identical results skip, and metadata drift is reported separately.
 - The command reports audio, configuration and transcript fingerprints for publication diagnostics. Complete legacy schema-v1 provenance with all optional 09 revision fields absent remains importable; partial or inconsistent revisions are rejected. No audio/model download or ASR call is part of import.
 - Public CLI fixture coverage: acceptance, repeat import, verified alias, malformed/semantically invalid/incomplete inputs, unverified identity, metadata drift, transcript/audio/config conflicts, byte preservation and legacy provenance. Full Python suite: 57 passed. Ruff check/format and workspace documentation/Colab syntax checks passed. `uv run --frozen pytest` could not bootstrap the isolated worktree because PyPI access was denied; tests ran with the installed Python 3.12 environment and worktree `PYTHONPATH` instead.
-- Status remains `claimed` until integration review and merge.
+- Integration acceptance: merged with no fast-forward as `4b392c9`. The full suite passed (57 tests), including import acceptance/repeat, alias, incomplete/invalid inputs, identity/audio/transcript/config conflicts, and byte preservation. Ruff check/format and workspace documentation/Colab syntax checks passed. A focused public CLI assertion also confirms accepted import preserves all runtime-version provenance in the stored episode.
