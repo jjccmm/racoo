@@ -20,7 +20,7 @@ Der [Fünf-Folgen-Pilot](.scratch/podcast-words-pilot/spec.md) ist als `ready-fo
 
 - [ ] Fünf repräsentative Folgen auswählen, Auswahl begründen und vollständig verarbeiten. Start/Wiederaufnahme und die konfliktbewusste Übernahme von Colab-Ergebnissen implementieren.
 - [ ] spaCy-Analyse, Statistikartefakte und einen gemeinsamen Veröffentlichungsstand implementieren.
-- [ ] Suche, Fundstellen, Player und teilbare Links implementieren; danach Diagramme und Gesamtstatistiken.
+- [x] Suche, Fundstellen, Player, teilbare Links, Diagramme und Gesamtstatistiken als statische Site verbinden und mit synthetischen Prüfdaten am Root- und Projektpfad im Browser prüfen.
 - [ ] Zehn manuell geprüfte Passagensuchen und je drei Referenzzeitmarken pro Folge dokumentieren; die bestätigten Qualitätsgrenzen erfüllen.
 - [ ] Mobiles Messprofil festhalten und die bestätigten Zeit-/Übertragungsgrenzen sowie einen Pages-Projektpfad-Build prüfen.
 

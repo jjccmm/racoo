@@ -1,5 +1,6 @@
 """Run the same fixture-only checks locally and on both CI operating systems."""
 
+import os
 import shutil
 import subprocess
 import sys
@@ -25,12 +26,28 @@ def main() -> int:
             "validate",
             "tests/fixtures/synthetic-episode.json",
         ],
-        [npm, "--prefix", "web", "run", "build", "--", "--base", "/podcast_words_v3/"],
-        [npm, "--prefix", "web", "run", "check"],
+        [npm, "--prefix", "web", "run", "lint"],
     ]
     for command in commands:
         print(f"\n> {' '.join(command)}", flush=True)
         result = subprocess.run(command, cwd=ROOT, check=False)
+        if result.returncode:
+            return result.returncode
+
+    for base_path in ("/podcast_words_v3/", "/"):
+        command = [npm, "--prefix", "web", "run", "build"]
+        if base_path != "/":
+            command.extend(["--", "--base", base_path])
+        print(f"\n> {' '.join(command)}", flush=True)
+        result = subprocess.run(command, cwd=ROOT, check=False)
+        if result.returncode:
+            return result.returncode
+
+        command = [npm, "--prefix", "web", "run", "test:browser"]
+        environment = {**os.environ, "PW_BASE_PATH": base_path}
+        port = environment.get("PW_PORT", "4179")
+        print(f"\n> {' '.join(command)} (PW_BASE_PATH={base_path}, PW_PORT={port})", flush=True)
+        result = subprocess.run(command, cwd=ROOT, env=environment, check=False)
         if result.returncode:
             return result.returncode
     return 0
