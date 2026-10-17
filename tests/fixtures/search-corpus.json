@@ -1,4 +1,19 @@
 [
   "synthetic-episode.json",
-  "search/second-episode.json"
+  "search/second-episode.json",
+  "search-coverage/complete.json",
+  "search-coverage/pair-a.json",
+  "search-coverage/pair-b.json",
+  "search-coverage/pair-c.json",
+  "search-coverage/pair-d.json",
+  "search-coverage/single-01.json",
+  "search-coverage/single-02.json",
+  "search-coverage/single-03.json",
+  "search-coverage/single-04.json",
+  "search-coverage/single-05.json",
+  "search-coverage/single-06.json",
+  "search-coverage/single-07.json",
+  "search-coverage/single-08.json",
+  "search-coverage/single-09.json",
+  "search-coverage/single-10.json"
 ]

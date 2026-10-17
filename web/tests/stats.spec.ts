@@ -8,7 +8,8 @@ test('a visitor selects a Grundform and sees exact large counts and known zeros'
   const table = page.getByRole('table', { name: 'Exakte Grundformzählung' });
   await expect(table.getByRole('row').filter({ hasText: 'Titelgeheimnis' })).toContainText('256');
   await expect(table.getByRole('row').filter({ hasText: 'Synthetische Beispielfolge' })).toContainText('0');
-  await expect(page.getByText('Gesamtwörter einschließlich Stoppwörtern: 284')).toBeVisible();
+  // Original records: 284; complete: 25; four pairs: 4×5; ten singles: 10×2.
+  await expect(page.getByText('Gesamtwörter einschließlich Stoppwörtern: 349')).toBeVisible();
 });
 
 test('suggestions stay bounded and the stopword toggle preserves the total', async ({ page }) => {
@@ -26,7 +27,7 @@ test('suggestions stay bounded and the stopword toggle preserves the total', asy
   const table = page.getByRole('table', { name: 'Exakte Grundformzählung' });
   await expect(table.getByRole('row').filter({ hasText: 'Titelgeheimnis' })).toContainText('1');
   await expect(table.getByRole('row').filter({ hasText: 'Synthetische Beispielfolge' })).toContainText('2');
-  await expect(page.getByText('Gesamtwörter einschließlich Stoppwörtern: 284')).toBeVisible();
+  await expect(page.getByText('Gesamtwörter einschließlich Stoppwörtern: 349')).toBeVisible();
   expect(shards).toHaveLength(1);
 });
 
