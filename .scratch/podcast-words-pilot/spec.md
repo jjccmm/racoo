@@ -214,3 +214,7 @@ The known integration questions are concrete work: demonstrate the pinned ASR ti
 The subsequent ticket breakdown should create independently verifiable vertical slices with explicit blockers, retain the real runtime/manual acceptance work, and prevent downstream archive work from bypassing the pilot gates. Do not mark an externally blocked runtime or manual review as complete because its instructions have been written.
 
 The repository uses a local Markdown tracker with the default triage vocabulary. The user has confirmed both public test boundaries. This spec is published as ready-for-agent for ticket decomposition; additional triage is unnecessary. Later branch/worktree execution requires a committed baseline; this spec-writing step does not create commits or start implementation.
+
+## Comments
+
+2026-10-17: Implementation uses `integration/podcast-words-pilot` and isolated ticket worktrees. After usage-limit interruptions, the user requested smaller subagent models to reduce token use. Subsequent subagent runs explicitly use `gpt-6-luna` with high reasoning effort and context pointers. Earlier runs inherited the coordinator's model and effort without explicit overrides; their resolved model/effort values were not exposed by the agent tools. Individual tickets remain authoritative for execution status and evidence.
