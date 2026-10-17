@@ -36,4 +36,6 @@ jobs:
       - run: uv run --frozen podcast-words doctor
       - run: npm ci
         working-directory: web
+      - run: npx playwright install --with-deps chromium --only-shell
+        working-directory: web
       - run: uv run --frozen python scripts/check.py
