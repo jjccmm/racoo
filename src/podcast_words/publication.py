@@ -43,9 +43,7 @@ def relative_episode_paths(path: Path) -> list[Path]:
 def catalog_entry(catalog: Catalog, episode: Episode) -> CatalogEpisode:
     matches = [item for item in catalog.episodes if item.episode_id == episode.episode_id]
     if len(matches) != 1:
-        raise ValueError(
-            f"Catalog must contain exactly one selected identity {episode.episode_id}"
-        )
+        raise ValueError(f"Catalog must contain exactly one selected identity {episode.episode_id}")
     return matches[0]
 
 
@@ -62,10 +60,10 @@ def check_identity(episode: Episode, catalog: Catalog, entry: CatalogEpisode) ->
         if episode.source.key != entry.source.key:
             raise ValueError(f"Stable source key mismatch for {episode.episode_id}")
     else:
-        saved_guids = {value for value in [episode.source.guid, *episode.source.guid_aliases] if value}
-        catalog_guids = {value for value in [entry.source.guid, *entry.source.guid_aliases] if value}
+        saved_guids = {
+            value for value in [episode.source.guid, *episode.source.guid_aliases] if value
+        }
         saved_guids.add(episode.source.key)
-        catalog_guids.add(entry.source.key)
         verified_aliases = {item.guid for item in entry.identity_verifications}
         catalog_guids = {entry.source.guid, *(entry.source.guid_aliases)} | verified_aliases
         if not saved_guids.intersection(catalog_guids):
@@ -80,9 +78,14 @@ def processing_configuration(episode: Episode) -> dict:
         "export_id": transcription.export_id,
         "export_revision": transcription.export_revision,
         "configuration": transcription.configuration,
-        "execution_providers": transcription.execution_providers,
-        "runtime_versions": transcription.runtime_versions,
-        "configuration_revision": transcription.configuration_revision,
+    }
+
+
+def configuration_provenance(episode: Episode) -> dict:
+    return {
+        "recognition_configuration": processing_configuration(episode),
+        "execution_providers": episode.transcription.execution_providers,
+        "runtime_versions": episode.transcription.runtime_versions,
     }
 
 
@@ -110,7 +113,7 @@ def revisions(episode: Episode) -> tuple[Episode, bool]:
     if transcription.get("input_revision") not in (None, input_revision):
         raise ValueError(f"Saved input revision does not match audio hash for {episode.episode_id}")
     configuration_revision = transcription.get("configuration_revision") or fingerprint(
-        processing_configuration(episode)
+        configuration_provenance(episode)
     )
     transcript_revision = fingerprint(
         {
@@ -120,7 +123,9 @@ def revisions(episode: Episode) -> tuple[Episode, bool]:
         }
     )
     if transcription.get("transcript_revision") not in (None, transcript_revision):
-        raise ValueError(f"Saved transcript revision does not match transcript for {episode.episode_id}")
+        raise ValueError(
+            f"Saved transcript revision does not match transcript for {episode.episode_id}"
+        )
     derived = any(
         transcription.get(name) is None
         for name in ("input_revision", "configuration_revision", "transcript_revision")
@@ -173,7 +178,9 @@ def replace_generated_directory(staging: Path, output: Path) -> None:
         try:
             prior = json.loads(marker.read_bytes())
         except (OSError, ValueError) as error:
-            raise ValueError(f"Refusing to replace an unrecognized output directory: {output}") from error
+            raise ValueError(
+                f"Refusing to replace an unrecognized output directory: {output}"
+            ) from error
         if prior.get("generatedBy") != "podcast-words publish":
             raise ValueError(f"Refusing to replace an unrecognized output directory: {output}")
         backup = Path(tempfile.mkdtemp(prefix=f".{output.name}-old-", dir=output.parent))
@@ -214,7 +221,9 @@ def prepare(arguments: argparse.Namespace) -> dict:
     output = arguments.output.resolve()
     analyses = arguments.analyses.resolve()
     if output == analyses or output in analyses.parents:
-        raise ValueError("Analysis cache must be outside the generated publication source directory")
+        raise ValueError(
+            "Analysis cache must be outside the generated publication source directory"
+        )
     output.parent.mkdir(parents=True, exist_ok=True)
     staging = Path(tempfile.mkdtemp(prefix=f".{output.name}-staging-", dir=output.parent))
     try:
@@ -288,6 +297,7 @@ def prepare(arguments: argparse.Namespace) -> dict:
         shutil.rmtree(staging, ignore_errors=True)
         raise
     return {"ok": True, "preparationId": preparation_id, "analysis": analysis_result}
+
 
 def publish(arguments: argparse.Namespace) -> int:
     try:

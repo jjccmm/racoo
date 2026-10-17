@@ -102,8 +102,9 @@ export function publication(): Plugin {
       const size = await treeSize(dist);
       const warning = Number(process.env.PODCAST_WORDS_ARTIFACT_WARNING_BYTES ?? 800_000_000);
       const maximum = Number(process.env.PODCAST_WORDS_ARTIFACT_MAX_BYTES ?? 1_000_000_000);
-      if (!Number.isSafeInteger(warning) || !Number.isSafeInteger(maximum) || warning <= 0 || maximum <= warning) {
-        throw new Error('Artifact size budgets must be positive integers with warning below maximum');
+      if (!Number.isSafeInteger(warning) || !Number.isSafeInteger(maximum) || warning <= 0
+          || warning > 800_000_000 || maximum <= warning || maximum > 1_000_000_000) {
+        throw new Error('Artifact size budgets may only lower the 800,000,000 byte warning and 1,000,000,000 byte maximum');
       }
       if (size > maximum) throw new Error(`Static publication exceeds ${maximum} byte limit (${size} bytes)`);
       if (size > warning) console.warn(`Static publication is ${size} bytes; review the ${warning} byte (800 MB default) warning budget`);

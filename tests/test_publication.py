@@ -1,11 +1,12 @@
 """Publication preparation is verified through the shared public CLI."""
 
-import json
 import hashlib
+import json
 import shutil
 import sys
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
+from typing import ClassVar
 
 import pytest
 
@@ -103,9 +104,7 @@ def test_publish_prepares_one_selected_publication_and_preserves_transcript_cont
     assert len(manifest["episodeIds"]) == 2
     assert report["analysis"]["reused"] == manifest["episodeIds"]
     assert len(list((output / "stats/counts").glob("*.json"))) == 64
-    public_episode = json.loads(
-        (output / "episodes/synthetic-episode-001.json").read_bytes()
-    )
+    public_episode = json.loads((output / "episodes/synthetic-episode-001.json").read_bytes())
     original = json.loads(original_bytes)
     assert public_episode["segments"] == original["segments"]
     assert public_episode["transcription"]["input_revision"] == original["audio"]["sha256"]
@@ -135,9 +134,7 @@ def test_publish_metadata_only_refresh_reuses_analysis_and_updates_public_metada
     assert publish(catalog, corpus, analyses, output) == 0
     report = json.loads(capsys.readouterr().out)
     after = json.loads((output / "manifest.json").read_bytes())["preparationId"]
-    public_episode = json.loads(
-        (output / "episodes/synthetic-episode-001.json").read_bytes()
-    )
+    public_episode = json.loads((output / "episodes/synthetic-episode-001.json").read_bytes())
     assert before != after
     assert report["analysis"]["computed"] == []
     assert public_episode["title"] == "Catalog title after feed refresh"
@@ -162,12 +159,12 @@ def test_publish_rejects_incomplete_and_incompatible_transcription_sets(tmp_path
     second.write_text(json.dumps(data), encoding="utf-8")
     output = tmp_path / "mixed-publication"
     assert publish(catalog, corpus, analyses, output) == 1
-    assert "incompatible transcription configurations" in json.loads(capsys.readouterr().out)["error"]
+    assert (
+        "incompatible transcription configurations" in json.loads(capsys.readouterr().out)["error"]
+    )
 
 
-def test_publish_preserves_processing_revisions_and_only_derives_legacy_omissions(
-    tmp_path, capsys
-):
+def test_publish_preserves_processing_revisions_and_only_derives_legacy_omissions(tmp_path, capsys):
     catalog, corpus, analyses, episodes = selected_inputs(tmp_path)
     config_revision = "a" * 64
     expected_revisions = {}
@@ -189,16 +186,46 @@ def test_publish_preserves_processing_revisions_and_only_derives_legacy_omission
     output = tmp_path / "publication"
     assert publish(catalog, corpus, analyses, output) == 0
     report = json.loads(capsys.readouterr().out)
-    revisions = json.loads(
-        (output / "episodes/synthetic-episode-001.json").read_bytes()
-    )["transcription"]
+    revisions = json.loads((output / "episodes/synthetic-episode-001.json").read_bytes())[
+        "transcription"
+    ]
     assert revisions["configuration_revision"] == config_revision
     assert revisions["transcript_revision"] == expected_revisions["synthetic-episode-001"]
     assert json.loads((output / "manifest.json").read_bytes())["derivedRevisionEpisodeIds"] == []
     assert report["analysis"]["computed"] == []
 
 
-def test_publish_invalidates_only_the_analysis_whose_transcript_changed(tmp_path, capsys, monkeypatch):
+def test_publish_keeps_per_episode_execution_provenance_without_calling_it_mixed_asr(
+    tmp_path, capsys
+):
+    catalog, corpus, analyses, episodes = selected_inputs(tmp_path)
+    second = episodes / "synthetic-episode-002.json"
+    data = json.loads(second.read_bytes())
+    data["transcription"]["runtime_versions"]["onnxruntime"] = "GPU build"
+    data["transcription"]["execution_providers"] = {
+        "CUDAExecutionProvider": ["CUDAExecutionProvider"]
+    }
+    second.write_text(json.dumps(data), encoding="utf-8")
+    output = tmp_path / "publication"
+
+    assert publish(catalog, corpus, analyses, output) == 0
+    capsys.readouterr()
+    first = json.loads((output / "episodes/synthetic-episode-001.json").read_bytes())[
+        "transcription"
+    ]
+    second_transcription = json.loads(
+        (output / "episodes/synthetic-episode-002.json").read_bytes()
+    )["transcription"]
+    assert first["configuration_revision"] != second_transcription["configuration_revision"]
+    assert first["runtime_versions"] != second_transcription["runtime_versions"]
+    assert second_transcription["execution_providers"] == {
+        "CUDAExecutionProvider": ["CUDAExecutionProvider"]
+    }
+
+
+def test_publish_invalidates_only_the_analysis_whose_transcript_changed(
+    tmp_path, capsys, monkeypatch
+):
     catalog, corpus, analyses, episodes = selected_inputs(tmp_path)
     output = tmp_path / "publication"
     first = episodes / "synthetic-episode-001.json"
@@ -210,11 +237,14 @@ def test_publish_invalidates_only_the_analysis_whose_transcript_changed(tmp_path
     package.__version__ = "3.8.16"
 
     class Model:
-        meta = {"version": "3.8.0"}
+        meta: ClassVar[dict[str, str]] = {"version": "3.8.0"}
 
         def __call__(self, text):
-            return [SimpleNamespace(is_alpha=True, lemma_=word.lower(), is_stop=False)
-                    for word in text.split() if word.isalpha()]
+            return [
+                SimpleNamespace(is_alpha=True, lemma_=word.lower(), is_stop=False)
+                for word in text.split()
+                if word.isalpha()
+            ]
 
     package.load = lambda _name: Model()
     monkeypatch.setitem(sys.modules, "spacy", package)
@@ -222,10 +252,13 @@ def test_publish_invalidates_only_the_analysis_whose_transcript_changed(tmp_path
     report = json.loads(capsys.readouterr().out)
     assert report["analysis"]["computed"] == ["synthetic-episode-001"]
     assert report["analysis"]["reused"] == ["synthetic-episode-002"]
-    assert json.loads((analyses / "synthetic-episode-001.json").read_bytes())["input_sha256"] != (
-        json.loads((ROOT / "tests/fixtures/analysis/synthetic-episode-001.json").read_bytes())[
-            "input_sha256"
-        ]
+    assert (
+        json.loads((analyses / "synthetic-episode-001.json").read_bytes())["input_sha256"]
+        != (
+            json.loads((ROOT / "tests/fixtures/analysis/synthetic-episode-001.json").read_bytes())[
+                "input_sha256"
+            ]
+        )
     )
 
 
@@ -233,18 +266,19 @@ def test_analysis_version_change_recomputes_counts_without_retranscribing(
     tmp_path, capsys, monkeypatch
 ):
     catalog, corpus, analyses, episodes = selected_inputs(tmp_path)
-    originals = {
-        path.name: json.loads(path.read_bytes()) for path in episodes.glob("*.json")
-    }
+    originals = {path.name: json.loads(path.read_bytes()) for path in episodes.glob("*.json")}
     package = ModuleType("spacy")
     package.__version__ = "3.8.16"
 
     class Model:
-        meta = {"version": "3.8.0"}
+        meta: ClassVar[dict[str, str]] = {"version": "3.8.0"}
 
         def __call__(self, text):
-            return [SimpleNamespace(is_alpha=True, lemma_=word.lower(), is_stop=False)
-                    for word in text.split() if word.isalpha()]
+            return [
+                SimpleNamespace(is_alpha=True, lemma_=word.lower(), is_stop=False)
+                for word in text.split()
+                if word.isalpha()
+            ]
 
     package.load = lambda _name: Model()
     monkeypatch.setitem(sys.modules, "spacy", package)
@@ -253,7 +287,9 @@ def test_analysis_version_change_recomputes_counts_without_retranscribing(
     report = json.loads(capsys.readouterr().out)
     assert report["analysis"]["computed"] == sorted(Path(name).stem for name in originals)
     assert report["analysis"]["reused"] == []
-    assert all(json.loads(path.read_bytes()) == originals[path.name] for path in episodes.glob("*.json"))
+    assert all(
+        json.loads(path.read_bytes()) == originals[path.name] for path in episodes.glob("*.json")
+    )
     assert json.loads((output / "manifest.json").read_bytes())["analysisVersion"] == "2"
 
 
