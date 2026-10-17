@@ -194,10 +194,14 @@ def process(arguments) -> int:
                         ("episode_id", previous.episode_id, entry.episode_id),
                         ("source.kind", previous.source.kind, entry.source.kind),
                         ("source.key", previous.source.key, entry.source.key),
-                        ("source.guid", previous.source.guid, entry.source.guid),
                     ]
                     if actual != expected
                 ]
+                if (
+                    previous.source.guid != entry.source.guid
+                    and previous.source.guid not in entry.source.guid_aliases
+                ):
+                    identity_mismatches.append("source.guid")
             else:
                 identity_mismatches = []
             if previous is not None and identity_mismatches:

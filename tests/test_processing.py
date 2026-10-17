@@ -235,10 +235,11 @@ def test_process_accepts_catalog_verified_guid_alias_for_same_stable_source(tmp_
     output.mkdir()
     make_catalog(catalog_path, "https://audio.example/episode.wav")
     catalog_data = json.loads(catalog_path.read_bytes())
-    catalog_data["episodes"][0]["source"]["guid_aliases"] = ["verified-new-guid"]
+    catalog_data["episodes"][0]["source"]["guid"] = "verified-new-guid"
+    catalog_data["episodes"][0]["source"]["guid_aliases"] = ["guid-one"]
     catalog_data["episodes"][0]["identity_verifications"] = [
         {
-            "guid": "verified-new-guid",
+            "guid": "guid-one",
             "checked_at": "2026-10-17T00:00:00Z",
             "note": "Publisher source confirms the alias identifies this same recording.",
         }
