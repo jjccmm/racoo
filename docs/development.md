@@ -2,7 +2,7 @@
 
 ## Stand der Einrichtung
 
-Der Plan ist gemeinsam bestätigt. Das Repository enthält ein installierbares Python-Paket unter `src/podcast_words/`, einen React/TypeScript/Vite-Starter unter `web/`, einen dünnen [Colab-Einstieg](../notebooks/colab.ipynb) und gemeinsame Offline-Prüfungen. Die erste Datenvalidierung ist beschrieben in [data-contracts.md](data-contracts.md). [TASKS.md](../TASKS.md) führt zu den nächsten Funktionsnachweisen.
+Der Plan ist gemeinsam bestätigt. Das Repository enthält ein installierbares Python-Paket unter `src/podcast_words/`, eine React/TypeScript/Vite-Site unter `web/`, einen dünnen [Colab-Einstieg](../notebooks/colab.ipynb) und gemeinsame Offline-Prüfungen. Die erste Datenvalidierung ist beschrieben in [data-contracts.md](data-contracts.md). [TASKS.md](../TASKS.md) führt zu den nächsten Funktionsnachweisen.
 
 `AGENTS.md` verweist abhängig von der Aufgabe auf Plan, Fachbegriffe und Recherche. `.editorconfig` und `.gitattributes` vereinheitlichen UTF-8 und Zeilenenden. `.gitignore` hält lokale Umgebungen, Caches und Build-Ergebnisse aus Git heraus; normalisierte Transkripte und Analyseergebnisse werden weiterhin versioniert.
 
@@ -30,7 +30,7 @@ npm --prefix web run browser:install
 uv run --frozen python scripts/check.py
 ```
 
-Der gemeinsame Check läuft ohne Audio-, Modell- oder GPU-Zugriff. Er prüft Python-Lint und Format, die Datenvertragsgrenzen, die kleinen Beispieldateien, Dokumentationslinks und Notebooksyntax sowie Web-Lint, TypeScript, Produktionsbuilds am Root- und Projektpfad und echte Chromium-Suchen am gebauten Root-Pfad. Die Teilbefehle stehen in `pyproject.toml`, `web/package.json` und `scripts/check.py`.
+Der gemeinsame Check läuft ohne Audio-, Modell- oder GPU-Zugriff. Er prüft Python-Lint und Format, die Datenvertragsgrenzen, die kleinen Beispieldateien, Dokumentationslinks und Notebooksyntax sowie Web-Lint, TypeScript, Produktionsbuilds am Root- und Projektpfad und echte Chromium-Prüfungen beider gebauten Pfade. Dabei werden Suchindex und Datenabrufe, direkte Folgen-/Zeitlinks, Playerzustände und die mobile Kombinationsansicht mit Statistikdiagramm geprüft. Am Ende baut der Check erneut den Root-Pfad für den normalen Preview-Befehl. Die Teilbefehle stehen in `pyproject.toml`, `web/package.json` und `scripts/check.py`.
 
 Installationen benötigen einmalig Zugang zu PyPI, npm und dem Playwright-Browserdownload. `browser:install` installiert den zu Playwright 1.64.1 gehörenden Chromium-Headless-Shell-Browser; die Routineprüfungen verwenden anschließend den installierten Browser offline. Linux-CI installiert dessen Systembibliotheken zusätzlich mit `npx playwright install --with-deps chromium --only-shell`. Nach der ersten Installation wurden `uv sync --locked --offline` und ein npm-CI-Lauf mit lokalem Cache und `--offline` erfolgreich geprüft. Ein frischer Rechner ohne gefüllten Cache benötigt weiterhin Netzwerkzugriff.
 
@@ -42,14 +42,14 @@ uv run --frozen podcast-words validate tests/fixtures/synthetic-episode.json
 npm.cmd --prefix web run dev
 ```
 
-Der Entwicklungsserver bindet ausschließlich an `127.0.0.1`, standardmäßig Port 5173. Unter Linux `npm` statt `npm.cmd` verwenden. Mit Strg+C beenden. Die App zeigt ausdrücklich synthetische Daten; Audiowiedergabe folgt später. Für die echte Suche den Produktionsbuild mit seinem generierten Index verwenden:
+Der Entwicklungsserver bindet ausschließlich an `127.0.0.1`, standardmäßig Port 5173. Unter Linux `npm` statt `npm.cmd` verwenden. Mit Strg+C beenden. Die App zeigt ausdrücklich synthetische Daten. Passagen können den gemeinsamen Player nach Nutzeraktion öffnen; die synthetischen Audiodaten sind nicht verfügbar und zeigen den Fehlerzustand. Für die echte Suche den Produktionsbuild mit seinem generierten Index verwenden:
 
 ```powershell
 npm.cmd --prefix web run build
 npm.cmd --prefix web run preview
 ```
 
-`npm.cmd --prefix web run test:browser` prüft einen bereits erzeugten Build mit Playwright und startet dafür selbst einen lokalen Preview auf Port 4179. `PW_PORT` wählt bei Bedarf einen anderen Port. Der Web-Check baut zuerst neu und führt diese Browserprüfungen aus. `PW_BASE_PATH=/podcast_words_v3/` erlaubt dieselben Prüfungen gegen einen zuvor mit diesem Basispfad gebauten Stand. Ein laufender anderer Preview wird nicht stillschweigend wiederverwendet.
+`npm.cmd --prefix web run test:browser` prüft einen bereits erzeugten Build mit Playwright und startet dafür selbst einen lokalen Preview auf Port 4179. `PW_PORT` wählt bei Bedarf einen anderen Port. `PW_BASE_PATH=/podcast_words_v3/` erlaubt dieselben Prüfungen gegen einen zuvor mit diesem Basispfad gebauten Stand. Ein laufender anderer Preview wird nicht stillschweigend wiederverwendet. Der gemeinsame Check führt die Browserprüfungen für beide Basispfade mit Port 4214 aus.
 
 ## Ausgewählte Veröffentlichung
 
@@ -75,7 +75,7 @@ Die Suche läuft in einem eigenen Worker. Er meldet auch von Pagefind intern abg
 
 Mehrere Stichwörter werden nach Unicode-NFC und deutscher Kleinschreibung vereinheitlicht, an Leerraum getrennt, von leeren/doppelten Einträgen befreit und einzeln gesucht. Die Vereinigung verwendet Roh-Ergebnis-IDs und die kompakte Zuordnung: unterschiedliche gefundene Stichwörter absteigend, Summe ihrer Pagefind-Ränge aufsteigend, Veröffentlichungszeitpunkt absteigend, dauerhafte Episoden-ID aufsteigend. Zeitpunkte mit Zeitzonen werden als tatsächliche Zeitpunkte verglichen. Suchabdeckung bleibt von exakten Grundformzählungen getrennt.
 
-Die globale Reihenfolge wird vor den ersten Detailabrufen festgelegt. Anfangs werden höchstens zehn Fragmente und zugehörige Episodendateien geladen. „Weitere Folgen laden“ lädt die nächsten höchstens zehn. Ein fehlgeschlagener weiterer Abruf erhält die bisherigen Ergebnisse und kann bewusst wiederholt werden. Jede Seite bleibt an denselben Indexstand gebunden; eine neue Stichwortsuche bricht ältere Arbeit ab. Der [separate Suchprüfkorpus](../tests/fixtures/search-coverage/README.md) enthält 15 zusätzliche Kandidaten mit unabhängig ausgearbeiteter Rangfolge, Datums-/Identitätsgleichständen und deutschen Wortformen. Die Browserprüfungen beobachten Abdeckungsgruppen, begrenzte Abrufe, Positionsdaten sowie Fehler und überholte Such-/Nachladeantworten. Wiedergabe und echte Pilotqualität bleiben spätere Nachweise.
+Die globale Reihenfolge wird vor den ersten Detailabrufen festgelegt. Anfangs werden höchstens zehn Fragmente und zugehörige Episodendateien geladen. „Weitere Folgen laden“ lädt die nächsten höchstens zehn. Ein fehlgeschlagener weiterer Abruf erhält die bisherigen Ergebnisse und kann bewusst wiederholt werden. Jede Seite bleibt an denselben Indexstand gebunden; eine neue Stichwortsuche bricht ältere Arbeit ab. Der [separate Suchprüfkorpus](../tests/fixtures/search-coverage/README.md) enthält 15 zusätzliche Kandidaten mit unabhängig ausgearbeiteter Rangfolge, Datums-/Identitätsgleichständen und deutschen Wortformen. Die Browserprüfungen beobachten Abdeckungsgruppen, begrenzte Abrufe, Positionsdaten sowie Fehler und überholte Such-/Nachladeantworten. Wiedergabe, Suche und Statistik sind im synthetischen gebauten Browserstand integriert; echte Pilotqualität und mobiles Zeit-/Übertragungsmessen bleiben gesonderte Nachweise.
 
 `doctor` kontrolliert Python und ein ausführbares FFmpeg. Bei fehlendem oder nicht ausführbarem FFmpeg liefert er einen Fehlerstatus. Ein erfolgreicher Aufruf ist kein ASR- oder GPU-Nachweis. Seit dem CPU-ASR-Adapter benötigt auch der Offline-Check FFmpeg: Kleine erzeugte PCM-Prüfdaten durchlaufen die echte Decodierung, während nur der externe Modelloutput ersetzt wird. CI verwendet dafür das über `uv.lock` gesperrte Dev-Wheel `imageio-ffmpeg==0.6.0`; `scripts/prepare_ci_ffmpeg.py` kopiert dessen enthaltene Binärdatei unter dem Befehlsnamen `ffmpeg` in `.cache/ci-ffmpeg` und ergänzt ausschließlich den CI-Pfad. Das Skript lädt selbst nichts herunter und verändert keine globalen Einstellungen. Auf einem frischen lokalen Rechner kann derselbe vorbereitete Ordner dem Shell-Pfad hinzugefügt werden. Große Audio- oder Modelldownloads bleiben ausdrücklich gestarteten Integrationsläufen vorbehalten. Der echte Windows-ASR-Lauf verwendete separat protokolliertes Host-FFmpeg 7.1.1; siehe [ASR](asr.md).
 
@@ -85,7 +85,7 @@ Das Notebook installiert die gegenseitig ausgeschlossene GPU-Abhängigkeitsgrupp
 
 [GitHub Actions](../.github/workflows/ci.yml) installiert die gesperrten Abhängigkeiten auf Windows und Linux und führt denselben gemeinsamen Check aus. Der Workflow veröffentlicht nichts. Ohne Remote wurde noch kein gehosteter Actions-Lauf ausgelöst; die Prüfungen wurden lokal unter Windows ausgeführt.
 
-Der Entwicklungsserver, das durch Vite kompilierte React-Modul und der gemeinsame Prüfdatenimport wurden lokal über HTTP geprüft. Auch Produktions-HTML sowie JavaScript und CSS unter `/podcast_words_v3/` antworteten im lokalen Preview mit HTTP 200. Der Gesamtcheck baut zuletzt den Root-Pfad, sodass anschließend auch der normale Preview-Befehl aus `web/package.json` funktioniert. Die spätere Pilotabnahme enthält echte Browser-, Mobil-, Such- und Playerprüfungen; diese sind durch einen Starter-Build nicht erbracht.
+Der Entwicklungsserver, das durch Vite kompilierte React-Modul und der gemeinsame Prüfdatenimport wurden lokal über HTTP geprüft. Die Produktions-Browserprüfungen laufen nun auf Root- und Projektpfad-Builds und umfassen eine synthetische 390-Pixel-Ansicht mit Suche, Player, Diagramm und Wortentwicklung. Diese Layoutprüfung misst keine realen Pilotlaufzeiten, Übertragungsbytes oder Speichergrenzen. Der Gesamtcheck baut zuletzt den Root-Pfad, sodass anschließend auch der normale Preview-Befehl aus `web/package.json` funktioniert.
 
 ## Besonderheiten dieses Windows-Arbeitsplatzes
 
@@ -114,4 +114,4 @@ Die öffentlichen Befehle für Feedimport, Quellenlücken und geprüfte GUID-Ali
 
 Die [Grundformanalyse](analysis.md) beschreibt das optionale spaCy-Extra, die getrennte Installation des festgelegten deutschen Modells und den expliziten Modellnachweis. Normale Webbuilds verwenden validierte gespeicherte Analysen und laden kein Modell. Eigene Korpora werden für Suche und Statistik gemeinsam über `PODCAST_WORDS_EPISODES` ausgewählt; `PODCAST_WORDS_ANALYSES` verweist auf ihre gespeicherten Analysen.
 
-Bei einer beabsichtigten Abhängigkeitsänderung Manifest und Lockfile gemeinsam aktualisieren und den relevanten Check ausführen. onnx-asr und der CPU-Anbieter sind gesperrt installiert; die Modellgewichte werden erst beim ausdrücklich gestarteten Transkriptionsbefehl geladen. Pagefind ist im kontrollierten Suchnachweis integriert. spaCy ist als optionales Extra gesperrt; sein Sprachmodell wird ausdrücklich getrennt installiert. Recharts folgt mit dem Statistikvergleich. Es gibt keine versteckten Modelldownloads des Starters. Die nächsten Aufgaben stehen in `TASKS.md`.
+Bei einer beabsichtigten Abhängigkeitsänderung Manifest und Lockfile gemeinsam aktualisieren und den relevanten Check ausführen. onnx-asr und der CPU-Anbieter sind gesperrt installiert; die Modellgewichte werden erst beim ausdrücklich gestarteten Transkriptionsbefehl geladen. Pagefind ist in der Suche integriert und Recharts im Statistikvergleich. spaCy ist als optionales Extra gesperrt; sein Sprachmodell wird ausdrücklich getrennt installiert. Es gibt keine versteckten Modelldownloads. Die nächsten Aufgaben stehen in `TASKS.md`.

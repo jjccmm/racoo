@@ -11,6 +11,6 @@ Statische Podcast-Suche und Wortstatistik, zunächst für **DAS PODCAST UFO**. A
 - [Runtime und Suchverträge](docs/research/runtime-and-search-contracts.md): Quellenprüfung für die ersten Funktionsnachweise.
 - [Nächste Aufgaben](TASKS.md): Umsetzungsreihenfolge und noch ausstehende Nachweise.
 
-Der Plan ist gemeinsam bestätigt, die Arbeitsumgebung eingerichtet. Der Python-Starter validiert versionierte Episodendaten; der Web-Starter zeigt ausdrücklich synthetische Beispieldaten. Installation, gemeinsamer Check und Entwicklungsstart sind in der [Entwicklungsanleitung](docs/development.md) beschrieben.
+Der Plan ist gemeinsam bestätigt, die Arbeitsumgebung eingerichtet. Das Python-Paket validiert versionierte Episodendaten; die statische Web-App verbindet Suche, Fundstellen, Audioplayer und Wortstatistiken anhand ausdrücklich synthetischer Prüfdaten. Installation, gemeinsamer Check und Entwicklungsstart sind in der [Entwicklungsanleitung](docs/development.md) beschrieben.
 
-Als Nächstes folgen die ASR- und Such-Funktionsnachweise, danach ein durchgängiger Pilot mit fünf repräsentativen Folgen. Erst nach bestandener Pilotabnahme wird das verfügbare Archiv verarbeitet. Echte Transkription, Archivsuche und öffentliche Bereitstellung sind noch nicht implementiert.
+Der gebaute Such- und Statistikstand wird am Root-Pfad und unter `/podcast_words_v3/` mit Chromium geprüft. Der fünfteilige Pilot, echte ASR-Verarbeitung, manuelle Qualitäts- und Laufzeitabnahme sowie eine Veröffentlichungsentscheidung stehen noch aus. Erst nach bestandener Pilotabnahme wird das verfügbare Archiv verarbeitet.
