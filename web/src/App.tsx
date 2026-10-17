@@ -1,5 +1,6 @@
 import { SearchPanel } from './SearchPanel';
 import { Stats } from './Stats';
+import { VocabularySummary } from './VocabularySummary';
 
 export function App() {
   return <main>
@@ -12,5 +13,6 @@ export function App() {
     </aside>
     <SearchPanel />
     <Stats />
+    <VocabularySummary />
   </main>;
 }

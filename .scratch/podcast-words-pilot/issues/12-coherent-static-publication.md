@@ -4,7 +4,7 @@
 
 **Blocked by:** 04: Rank remembered Stichwörter with lazy result details; 08: Inspect Gesamtwörter and vocabulary growth; 09: Resume selected episode processing without losing work.
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 **Spec coverage:** User stories 29, 32, 44, 45, 46, 47, 49 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 

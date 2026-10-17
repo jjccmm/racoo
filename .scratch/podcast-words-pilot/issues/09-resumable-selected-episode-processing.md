@@ -4,16 +4,24 @@
 
 **Blocked by:** 01: Inspect and reconcile the episode catalog; 02: Transcribe one real Folge on Windows CPU.
 
-**Status:** claimed
+**Status:** resolved
 
 **Spec coverage:** User stories 32, 37, 38, 39, 40, 43, 47, 49 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 
 **Verification:** Public run/resume commands, saved completion records and validated episode artifacts, exit status, and controlled external download/model failures.
 
-- [ ] Consume catalog-assigned stable identities and an explicit selected episode set through the shared Python CLI, using one pinned run configuration and one model initialization per run.
-- [ ] Mark an episode complete only after a durable validated result exists; interrupted/partial writes cannot count as completion or replace an existing valid result.
-- [ ] Resume by skipping validated completed episodes and leaving failed or incomplete episodes retryable with bounded network retries and actionable diagnostics.
-- [ ] Preserve finished recognized text/times when metadata or default model configuration changes; expose provenance/configuration mismatches and require explicit selection for retranscription.
-- [ ] Record consumed audio/configuration and transcript revisions so later analysis and publication can identify relevant changes.
-- [ ] Keep temporary audio/models/runtime checkpoints out of versioned normalized data and avoid silently merging incompatible configurations.
-- [ ] Demonstrate interruption before completion, restart, a download failure, unchanged rerun, metadata change, and explicit retranscription through public outputs. Ordinary checks use controlled external inputs, while ticket 02 supplies real CPU evidence.
+- [x] Consume catalog-assigned stable identities and an explicit selected episode set through the shared Python CLI, using one pinned run configuration and one model initialization per run.
+- [x] Mark an episode complete only after a durable validated result exists; interrupted/partial writes cannot count as completion or replace an existing valid result.
+- [x] Resume by skipping validated completed episodes and leaving failed or incomplete episodes retryable with bounded network retries and actionable diagnostics.
+- [x] Preserve finished recognized text/times when metadata or default model configuration changes; expose provenance/configuration mismatches and require explicit selection for retranscription.
+- [x] Record consumed audio/configuration and transcript revisions so later analysis and publication can identify relevant changes.
+- [x] Keep temporary audio/models/runtime checkpoints out of versioned normalized data and avoid silently merging incompatible configurations.
+- [x] Demonstrate interruption before completion, restart, a download failure, unchanged rerun, metadata change, and explicit retranscription through public outputs. Ordinary checks use controlled external inputs, while ticket 02 supplies real CPU evidence.
+
+## Comments
+
+- Implementation and controlled public-CLI evidence are committed as `defb6dc` on `pilot/09-processing`.
+- Checks: `uv run --frozen ruff check .`, `uv run --frozen ruff format --check .`, `uv run --frozen pytest` (48 tests), and `uv run --frozen python scripts/check_workspace.py` all pass. Real CPU inference remains the completed evidence from ticket 02; no new model download or real inference was run here.
+
+
+- Integration acceptance: merged with no fast-forward as `9383601`; follow-up safeguard commit `87fcf32` accepts a saved source GUID only when it is the catalog's verified alias, while stable source-key and unrelated GUID conflicts remain enforced. The public alias case failed before the fix and passed after it. Full integrated Python suite passed (49 tests), including `test_published_structural_schema_matches_python_contract`; Ruff check/format and documentation/local-link/Colab syntax checks passed. No browser rerun was needed because 09 has no UI changes.

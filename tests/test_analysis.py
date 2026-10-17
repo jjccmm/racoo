@@ -1,5 +1,6 @@
 """The public analysis command with controlled output from the external NLP model."""
 
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -93,6 +94,106 @@ def test_command_counts_lowercase_lemmas_stopwords_and_large_values(tmp_path, mo
     assert shard["counts"]["hund"] == [["synthetic-episode-001", 258]]
     catalog = json.loads((publication / "catalog.json").read_text(encoding="utf-8"))
     assert [episode["totalWords"] for episode in catalog["episodes"]] == [0, 262]
+
+
+def test_publication_reports_chronological_vocabulary_and_is_input_order_independent(
+    tmp_path, capsys
+):
+    source = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    text = "Bekannter Prüftext."
+    lemmas = {
+        "a-frueh": {"der": {"count": 1, "stopword": True}, "hund": {"count": 2, "stopword": False}},
+        "b-gleich": {
+            "der": {"count": 1, "stopword": True},
+            "hund": {"count": 1, "stopword": False},
+            "katze": {"count": 1, "stopword": False},
+        },
+        "c-spaeter": {
+            "hund": {"count": 1, "stopword": False},
+            "katze": {"count": 2, "stopword": False},
+        },
+        "d-null": {},
+    }
+    corpus_paths = []
+    digest = hashlib.sha256(
+        json.dumps([text], sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
+    ).hexdigest()
+    for episode_id, counts in lemmas.items():
+        episode = json.loads(json.dumps(source))
+        episode.update(
+            episode_id=episode_id,
+            title=episode_id,
+            published_at=(
+                "2024-01-01T12:00:00Z" if episode_id != "c-spaeter" else "2024-01-02T12:00:00Z"
+            ),
+            segments=[{**episode["segments"][0], "text": text}],
+        )
+        (tmp_path / f"{episode_id}.json").write_text(json.dumps(episode), encoding="utf-8")
+        (tmp_path / "analyses" / f"{episode_id}.json").parent.mkdir(parents=True, exist_ok=True)
+        analysis = {
+            "schema_version": 1,
+            "podcast_id": episode["podcast_id"],
+            "episode_id": episode_id,
+            "input_sha256": digest,
+            "settings": {
+                "analysis_version": "1",
+                "spacy_version": "3.8.16",
+                "model_name": "de_core_news_lg",
+                "model_version": "3.8.0",
+            },
+            "total_words": sum(item["count"] for item in counts.values()),
+            "lemmas": counts,
+        }
+        (tmp_path / "analyses" / f"{episode_id}.json").write_text(
+            json.dumps(analysis), encoding="utf-8"
+        )
+        corpus_paths.append(f'"{episode_id}.json"')
+
+    def publish_in(order, name):
+        corpus = tmp_path / f"{name}.json"
+        corpus.write_text("[" + ",".join(order) + "]", encoding="utf-8")
+        publication = tmp_path / name
+        assert (
+            main(
+                [
+                    "analyze",
+                    "--episodes",
+                    str(corpus),
+                    "--output",
+                    str(tmp_path / "analyses"),
+                    "--cache-only",
+                    "--publish",
+                    str(publication),
+                ]
+            )
+            == 0
+        )
+        capsys.readouterr()
+        return publication
+
+    first = publish_in(corpus_paths, "first")
+    second = publish_in(list(reversed(corpus_paths)), "second")
+    catalog = json.loads((first / "catalog.json").read_text(encoding="utf-8"))
+    assert catalog["summary"] == {
+        "episodeCount": 4,
+        "totalWords": 9,
+        "distinctWords": 3,
+        "newWords": 3,
+    }
+    assert [
+        (item["episodeId"], item["totalWords"], item["distinctWords"], item["newWords"])
+        for item in catalog["episodes"]
+    ] == [
+        ("a-frueh", 3, 2, 2),
+        ("b-gleich", 3, 3, 1),
+        ("d-null", 0, 0, 0),
+        ("c-spaeter", 3, 2, 0),
+    ]
+    assert (first / "catalog.json").read_bytes() == (second / "catalog.json").read_bytes()
+    assert (
+        json.loads((first / "manifest.json").read_text(encoding="utf-8"))["publicationId"]
+        == (json.loads((second / "manifest.json").read_text(encoding="utf-8"))["publicationId"])
+    )
 
 
 def test_command_reuses_consumed_inputs_and_invalidates_settings_without_touching_transcripts(

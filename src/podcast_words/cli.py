@@ -72,6 +72,14 @@ def main(argv: list[str] | None = None) -> int:
     transcription.add_argument("--output", type=Path, required=True)
     transcription.add_argument("--audio-file", type=Path)
     transcription.add_argument("--cache-dir", type=Path, default=Path(".cache/asr"))
+    processing = commands.add_parser(
+        "process", help="Process an explicit selection of catalog episodes and resume safely"
+    )
+    processing.add_argument("--catalog", type=Path, required=True)
+    processing.add_argument("--episode-id", action="append", required=True)
+    processing.add_argument("--output-dir", type=Path, required=True)
+    processing.add_argument("--cache-dir", type=Path, default=Path(".cache/asr"))
+    processing.add_argument("--retranscribe", action="store_true")
     catalog.add_parser(commands)
     analysis.add_parser(commands)
     arguments = parser.parse_args(argv)
@@ -89,6 +97,10 @@ def main(argv: list[str] | None = None) -> int:
         return transcribe_command(
             arguments.metadata, arguments.output, arguments.cache_dir, arguments.audio_file
         )
+    if arguments.command == "process":
+        from podcast_words.processing import process
+
+        return process(arguments)
     model = analysis.Analysis if arguments.kind == "analysis" else Episode
     content = json.dumps(model.model_json_schema(), indent=2, ensure_ascii=False) + "\n"
     if arguments.output:
