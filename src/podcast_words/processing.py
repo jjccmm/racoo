@@ -42,13 +42,17 @@ def configuration_revision() -> str:
     from podcast_words.transcribe import (
         EXPORT_ID,
         EXPORT_REVISION,
+        GPU_PROVIDER,
         MODEL_ID,
         MODEL_REVISION,
         VAD_ID,
         VAD_OPTIONS,
         VAD_REVISION,
+        execution_provider,
+        execution_provider_chain,
     )
 
+    provider = execution_provider()
     return digest(
         {
             "model_id": MODEL_ID,
@@ -62,18 +66,17 @@ def configuration_revision() -> str:
             "audio_decode": "ffmpeg mono PCM s16le 16000 Hz; original full timeline",
             "token_times": "segment-relative seconds + VAD start, once",
             "intra_op_num_threads": 4,
-            "execution_providers": ["CPUExecutionProvider"],
+            "execution_providers": execution_provider_chain(),
             "runtime_versions": {
                 "python": platform.python_version(),
                 **{
+                    "onnxruntime": version(
+                        "onnxruntime-gpu" if provider == GPU_PROVIDER else "onnxruntime"
+                    )
+                },
+                **{
                     name: version(name)
-                    for name in [
-                        "onnx-asr",
-                        "onnxruntime",
-                        "numpy",
-                        "huggingface-hub",
-                        "podcast-words",
-                    ]
+                    for name in ["onnx-asr", "numpy", "huggingface-hub", "podcast-words"]
                 },
             },
         }
@@ -276,10 +279,25 @@ def process(arguments) -> int:
         if interrupted:
             break
 
-    ok = all(result["status"] in {"completed", "skipped"} for result in results)
+    execution_profile = None
+    profile_error = None
+    if transcriber is not None:
+        try:
+            execution_profile = transcriber.finish()
+        except Exception as error:
+            profile_error = {"type": type(error).__name__, "message": str(error)}
+    ok = (
+        all(result["status"] in {"completed", "skipped"} for result in results)
+        and profile_error is None
+    )
+    report = {"ok": ok, "selected": selected_ids, "results": results}
+    if execution_profile is not None:
+        report["execution_profile"] = execution_profile
+    if profile_error is not None:
+        report["execution_profile_error"] = profile_error
     print(
         json.dumps(
-            {"ok": ok, "selected": selected_ids, "results": results},
+            report,
             indent=2,
             ensure_ascii=True,
         )

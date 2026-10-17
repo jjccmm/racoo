@@ -2,7 +2,9 @@
 
 import hashlib
 import json
+import os
 import threading
+import uuid
 import wave
 from contextlib import contextmanager
 from datetime import UTC, datetime
@@ -13,7 +15,7 @@ from types import SimpleNamespace
 import huggingface_hub
 import onnx_asr
 
-from podcast_words import transcribe
+from podcast_words import processing, transcribe
 from podcast_words.catalog import Catalog, CatalogEpisode, Enclosure, Source
 from podcast_words.cli import main
 from podcast_words.contracts import Episode
@@ -95,8 +97,41 @@ def make_catalog(path, audio_url, title="Fixture episode"):
     path.write_text(catalog.model_dump_json(indent=2) + "\n", encoding="utf-8")
 
 
-def install_external_recognizer(monkeypatch, tmp_path, *, interrupt=False):
-    session = SimpleNamespace(get_providers=lambda: ["CPUExecutionProvider"])
+def install_external_recognizer(monkeypatch, tmp_path, *, interrupt=False, execute_cuda=True):
+    gpu_requested = os.environ.get("PODCAST_WORDS_EXECUTION_PROVIDER") == "CUDAExecutionProvider"
+
+    def make_session(name):
+        providers = (
+            ["CUDAExecutionProvider", "CPUExecutionProvider"]
+            if gpu_requested
+            else ["CPUExecutionProvider"]
+        )
+
+        def end_profiling():
+            profile = tmp_path / f"{name}-{uuid.uuid4().hex}-profile.json"
+            events = (
+                [
+                    *(
+                        [
+                            {"cat": "Node", "args": {"provider": "CUDAExecutionProvider"}},
+                            {"cat": "Node", "args": {"provider": "CUDAExecutionProvider"}},
+                        ]
+                        if execute_cuda
+                        else []
+                    ),
+                    {"cat": "Node", "args": {"provider": "CPUExecutionProvider"}},
+                ]
+                if gpu_requested and name == "encoder"
+                else []
+            )
+            profile.write_text(json.dumps(events), encoding="utf-8")
+            return str(profile)
+
+        return SimpleNamespace(get_providers=lambda: providers, end_profiling=end_profiling)
+
+    encoder = make_session("encoder")
+    decoder = make_session("decoder")
+    vad_session = make_session("vad")
     result = SimpleNamespace(
         start=1.0,
         end=3.0,
@@ -111,18 +146,55 @@ def install_external_recognizer(monkeypatch, tmp_path, *, interrupt=False):
         return iter([result])
 
     recognizer = SimpleNamespace(
-        asr=SimpleNamespace(_encoder=session, _decoder_joint=session),
+        asr=SimpleNamespace(_encoder=encoder, _decoder_joint=decoder),
         with_vad=lambda *_args, **_kwargs: SimpleNamespace(
             with_timestamps=lambda: SimpleNamespace(recognize=recognize)
         ),
     )
     monkeypatch.setattr(onnx_asr, "load_model", lambda *_args, **_kwargs: recognizer)
     monkeypatch.setattr(
-        onnx_asr, "load_vad", lambda *_args, **_kwargs: SimpleNamespace(_model=session)
+        onnx_asr, "load_vad", lambda *_args, **_kwargs: SimpleNamespace(_model=vad_session)
     )
     monkeypatch.setattr(
         huggingface_hub, "snapshot_download", lambda *_args, **_kwargs: str(tmp_path)
     )
+
+
+def test_process_gpu_profile_records_executed_nodes_and_keeps_partial_cpu_fallback(
+    tmp_path, monkeypatch, capsys
+):
+    catalog_path = tmp_path / "catalog.json"
+    output = tmp_path / "episodes"
+    cache = tmp_path / "cache"
+    with audio_server(wave_bytes()) as (audio_url, _response):
+        make_catalog(catalog_path, audio_url)
+        monkeypatch.setenv("PODCAST_WORDS_EXECUTION_PROVIDER", "CUDAExecutionProvider")
+        monkeypatch.setattr(processing, "version", lambda _name: "1.27.0")
+        monkeypatch.setattr(transcribe, "version", lambda _name: "1.27.0")
+        install_external_recognizer(monkeypatch, tmp_path)
+
+        assert run(catalog_path, output, cache, "episode-one") == 0
+        report = json.loads(capsys.readouterr().out)
+        assert report["results"][0]["status"] == "completed"
+        profile = report["execution_profile"]
+        assert profile["model_node_events"]["CUDAExecutionProvider"] == 2
+        assert profile["model_node_events"]["CPUExecutionProvider"] == 1
+        transcript = json.loads((output / "episode-one.json").read_bytes())
+        assert transcript["transcription"]["execution_providers"]["encoder"] == [
+            "CUDAExecutionProvider",
+            "CPUExecutionProvider",
+        ]
+
+        failed_catalog = tmp_path / "fallback-catalog.json"
+        failed_output = tmp_path / "fallback-episodes"
+        make_catalog(failed_catalog, audio_url)
+        install_external_recognizer(monkeypatch, tmp_path, execute_cuda=False)
+        assert run(failed_catalog, failed_output, cache, "episode-one") == 1
+        failed_profile = json.loads(capsys.readouterr().out)
+        assert failed_profile["ok"] is False
+        assert (
+            "no CUDA model node executions" in failed_profile["execution_profile_error"]["message"]
+        )
 
 
 def run(catalog, output, cache, *episode_ids, retranscribe=False):

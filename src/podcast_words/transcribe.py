@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import os
 import platform
 import subprocess
 import tempfile
@@ -32,6 +33,21 @@ VAD_OPTIONS = {
     "speech_pad_ms": 0,
     "threshold": 0.5,
 }
+EXECUTION_PROVIDER_ENV = "PODCAST_WORDS_EXECUTION_PROVIDER"
+CPU_PROVIDER = "CPUExecutionProvider"
+GPU_PROVIDER = "CUDAExecutionProvider"
+
+
+def execution_provider() -> str:
+    provider = os.environ.get(EXECUTION_PROVIDER_ENV, CPU_PROVIDER)
+    if provider not in {CPU_PROVIDER, GPU_PROVIDER}:
+        raise ValueError(f"unsupported execution provider {provider!r}")
+    return provider
+
+
+def execution_provider_chain() -> list[str]:
+    provider = execution_provider()
+    return [CPU_PROVIDER] if provider == CPU_PROVIDER else [provider, CPU_PROVIDER]
 
 
 class EpisodeInput(Contract):
@@ -80,6 +96,11 @@ class Transcriber:
         from huggingface_hub import snapshot_download
 
         self.cache_dir = cache_dir
+        self.execution_provider = execution_provider()
+        self.profile_enabled = self.execution_provider == GPU_PROVIDER
+        profile_dir = cache_dir / "profiles"
+        if self.profile_enabled:
+            profile_dir.mkdir(parents=True, exist_ok=True)
         model_path = snapshot_download(
             EXPORT_ID,
             revision=EXPORT_REVISION,
@@ -99,17 +120,20 @@ class Transcriber:
         )
         options = onnxruntime.SessionOptions()
         options.intra_op_num_threads = 4
+        if self.profile_enabled:
+            options.enable_profiling = True
+            options.profile_file_prefix = str(profile_dir / "onnxruntime")
         model = onnx_asr.load_model(
             "nemo-parakeet-tdt-0.6b-v3",
             model_path,
             quantization="int8",
-            providers=["CPUExecutionProvider"],
+            providers=execution_provider_chain(),
             sess_options=options,
         )
         vad = onnx_asr.load_vad(
             "silero",
             vad_path,
-            providers=["CPUExecutionProvider"],
+            providers=execution_provider_chain(),
             sess_options=options,
         )
         # onnx-asr 0.12.0 has no public provider-report API. Read the actual sessions,
@@ -119,9 +143,67 @@ class Transcriber:
             "decoder_joint": model.asr._decoder_joint.get_providers(),
             "vad": vad._model.get_providers(),
         }
-        if any(value != ["CPUExecutionProvider"] for value in self.execution_providers.values()):
-            raise RuntimeError("CPU run did not obtain CPU-only inference sessions")
+        if self.execution_provider == CPU_PROVIDER:
+            if any(value != [CPU_PROVIDER] for value in self.execution_providers.values()):
+                raise RuntimeError("CPU run did not obtain CPU-only inference sessions")
+        elif any(
+            GPU_PROVIDER not in self.execution_providers[name]
+            for name in ("encoder", "decoder_joint")
+        ):
+            raise RuntimeError("requested CUDA provider is absent from an ASR model session")
+        self.profile_sessions = {
+            "encoder": model.asr._encoder,
+            "decoder_joint": model.asr._decoder_joint,
+            "vad": vad._model,
+        }
         self.model = model.with_vad(vad, **VAD_OPTIONS).with_timestamps()
+
+    def finish(self) -> dict | None:
+        """Close ORT profiles and report node assignments from actual execution."""
+        if not self.profile_enabled:
+            return None
+        node_events = {}
+        profile_files = {}
+        observed_paths = set()
+        for name, session in self.profile_sessions.items():
+            profile_path = Path(session.end_profiling())
+            resolved_path = profile_path.resolve()
+            if resolved_path in observed_paths:
+                raise RuntimeError("ONNX Runtime sessions returned a shared profile file path")
+            observed_paths.add(resolved_path)
+            if not profile_path.is_file():
+                raise RuntimeError(
+                    f"ONNX Runtime profile file is missing for {name}: {profile_path}"
+                )
+            named_profile = self.cache_dir / "profiles" / f"{name}-{profile_path.name}"
+            if named_profile.exists():
+                raise RuntimeError(
+                    f"ONNX Runtime profile destination already exists: {named_profile}"
+                )
+            profile_path.replace(named_profile)
+            profile_files[name] = str(named_profile)
+            counts = {}
+            for event in json.loads(named_profile.read_text(encoding="utf-8")):
+                if event.get("cat") != "Node":
+                    continue
+                provider = event.get("args", {}).get("provider")
+                if provider:
+                    counts[provider] = counts.get(provider, 0) + 1
+            node_events[name] = counts
+        model_events = {
+            provider: sum(
+                events.get(provider, 0) for name, events in node_events.items() if name != "vad"
+            )
+            for provider in (GPU_PROVIDER, CPU_PROVIDER)
+        }
+        if model_events[GPU_PROVIDER] == 0:
+            raise RuntimeError("ONNX Runtime profile recorded no CUDA model node executions")
+        return {
+            "node_events": node_events,
+            "model_node_events": model_events,
+            "mixed_cpu_fallback": model_events[CPU_PROVIDER] > 0,
+            "profile_files": profile_files,
+        }
 
     def transcribe(self, metadata: EpisodeInput, audio_file: Path | None = None) -> Episode:
         """Decode the exact input, recognize speech and validate absolute episode times."""
@@ -201,7 +283,9 @@ class Transcriber:
                         name: version(name)
                         for name in [
                             "onnx-asr",
-                            "onnxruntime",
+                            "onnxruntime-gpu"
+                            if self.execution_provider == GPU_PROVIDER
+                            else "onnxruntime",
                             "numpy",
                             "huggingface-hub",
                             "podcast-words",
@@ -233,7 +317,9 @@ def transcribe_command(
         if output.exists():
             raise FileExistsError(f"output already exists; choose another destination: {output}")
         metadata = EpisodeInput.model_validate_json(metadata_path.read_bytes())
-        episode = Transcriber(cache_dir).transcribe(metadata, audio_file)
+        transcriber = Transcriber(cache_dir)
+        episode = transcriber.transcribe(metadata, audio_file)
+        execution_profile = transcriber.finish()
         output.parent.mkdir(parents=True, exist_ok=True)
         content = episode.model_dump_json(indent=2) + "\n"
         with output.open("x", encoding="utf-8", newline="\n") as destination:
@@ -248,6 +334,7 @@ def transcribe_command(
                     "audio_seconds": episode.audio.duration_seconds,
                     "segments": len(episode.segments),
                     "execution_providers": episode.transcription.execution_providers,
+                    "execution_profile": execution_profile,
                 }
             )
         )
