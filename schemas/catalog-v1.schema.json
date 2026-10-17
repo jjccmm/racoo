@@ -1,0 +1,430 @@
+{
+  "$defs": {
+    "AudioProbe": {
+      "additionalProperties": false,
+      "properties": {
+        "checked_at": {
+          "format": "date-time",
+          "title": "Checked At",
+          "type": "string"
+        },
+        "requested_url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Requested Url",
+          "type": "string"
+        },
+        "resolved_url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Resolved Url",
+          "type": "string"
+        },
+        "status_code": {
+          "title": "Status Code",
+          "type": "integer"
+        },
+        "media_type": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Media Type",
+          "type": "string"
+        },
+        "bytes_checked": {
+          "exclusiveMinimum": 0,
+          "title": "Bytes Checked",
+          "type": "integer"
+        },
+        "prefix_sha256": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Prefix Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "checked_at",
+        "requested_url",
+        "resolved_url",
+        "status_code",
+        "media_type",
+        "bytes_checked",
+        "prefix_sha256"
+      ],
+      "title": "AudioProbe",
+      "type": "object"
+    },
+    "CatalogEpisode": {
+      "additionalProperties": false,
+      "properties": {
+        "episode_id": {
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,127}$",
+          "title": "Episode Id",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/Source"
+        },
+        "title": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Title",
+          "type": "string"
+        },
+        "published_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Published At"
+        },
+        "episode_number": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Episode Number"
+        },
+        "webpage_url": {
+          "anyOf": [
+            {
+              "format": "uri",
+              "maxLength": 2083,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Webpage Url"
+        },
+        "enclosures": {
+          "items": {
+            "$ref": "#/$defs/Enclosure"
+          },
+          "title": "Enclosures",
+          "type": "array"
+        },
+        "source_status": {
+          "enum": [
+            "feed-listed",
+            "feed-omitted",
+            "verified-supplemental",
+            "source-gap"
+          ],
+          "title": "Source Status",
+          "type": "string"
+        },
+        "audio_availability": {
+          "default": "unverified",
+          "enum": [
+            "unverified",
+            "retrievable",
+            "unknown",
+            "unavailable"
+          ],
+          "title": "Audio Availability",
+          "type": "string"
+        },
+        "processing_status": {
+          "default": "not-processed",
+          "enum": [
+            "not-processed",
+            "processing",
+            "failed",
+            "completed"
+          ],
+          "title": "Processing Status",
+          "type": "string"
+        },
+        "source_evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Source Evidence",
+          "type": "array"
+        },
+        "audio_probe": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AudioProbe"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "identity_verifications": {
+          "items": {
+            "$ref": "#/$defs/IdentityVerification"
+          },
+          "title": "Identity Verifications",
+          "type": "array"
+        }
+      },
+      "required": [
+        "episode_id",
+        "source",
+        "title",
+        "enclosures",
+        "source_status"
+      ],
+      "title": "CatalogEpisode",
+      "type": "object"
+    },
+    "Enclosure": {
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        },
+        "media_type": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Media Type",
+          "type": "string"
+        },
+        "length_bytes": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Length Bytes"
+        }
+      },
+      "required": [
+        "url",
+        "media_type"
+      ],
+      "title": "Enclosure",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "checked_at": {
+          "format": "date-time",
+          "title": "Checked At",
+          "type": "string"
+        },
+        "note": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "checked_at",
+        "note"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "IdentityVerification": {
+      "additionalProperties": false,
+      "properties": {
+        "checked_at": {
+          "format": "date-time",
+          "title": "Checked At",
+          "type": "string"
+        },
+        "note": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Note",
+          "type": "string"
+        },
+        "guid": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Guid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "checked_at",
+        "note",
+        "guid"
+      ],
+      "title": "IdentityVerification",
+      "type": "object"
+    },
+    "Snapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "fetched_at": {
+          "format": "date-time",
+          "title": "Fetched At",
+          "type": "string"
+        },
+        "requested_url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Requested Url",
+          "type": "string"
+        },
+        "resolved_url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Resolved Url",
+          "type": "string"
+        },
+        "sha256": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "path": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Path",
+          "type": "string"
+        },
+        "item_count": {
+          "minimum": 0,
+          "title": "Item Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "fetched_at",
+        "requested_url",
+        "resolved_url",
+        "sha256",
+        "path",
+        "item_count"
+      ],
+      "title": "Snapshot",
+      "type": "object"
+    },
+    "Source": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "rss",
+            "supplemental",
+            "synthetic"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "key": {
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "Key",
+          "type": "string"
+        },
+        "reference_url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Reference Url",
+          "type": "string"
+        },
+        "guid": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Guid"
+        },
+        "guid_aliases": {
+          "items": {
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "title": "Guid Aliases",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "key",
+        "reference_url"
+      ],
+      "title": "Source",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "podcast_id": {
+      "pattern": "^[a-z0-9][a-z0-9_-]{0,127}$",
+      "title": "Podcast Id",
+      "type": "string"
+    },
+    "feed_url": {
+      "format": "uri",
+      "maxLength": 2083,
+      "minLength": 1,
+      "title": "Feed Url",
+      "type": "string"
+    },
+    "snapshots": {
+      "items": {
+        "$ref": "#/$defs/Snapshot"
+      },
+      "title": "Snapshots",
+      "type": "array"
+    },
+    "episodes": {
+      "items": {
+        "$ref": "#/$defs/CatalogEpisode"
+      },
+      "title": "Episodes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "podcast_id",
+    "feed_url"
+  ],
+  "title": "Catalog",
+  "type": "object"
+}
