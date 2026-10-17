@@ -7,6 +7,14 @@ from collections.abc import Callable
 from pathlib import Path
 
 
+def require_distinct_output(path: Path, protected_paths: list[Path | None], *, label: str) -> None:
+    """Keep a generated artifact from replacing any input or other artifact."""
+    destination = path.resolve()
+    for protected in protected_paths:
+        if protected is not None and destination == protected.resolve():
+            raise ValueError(f"{label} must not alias protected path: {protected}")
+
+
 def encode_json(value: object, *, indent: int | None = 2, sort_keys: bool = False) -> bytes:
     options = {"sort_keys": sort_keys, "ensure_ascii": False}
     if indent is None:

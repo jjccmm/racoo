@@ -19,6 +19,26 @@ Ohne lokale Datei lädt der Befehl Audio mit höchstens drei Versuchen, 30 Sekun
 
 Erfolg und Fehler liefern JSON-Diagnostik und einen passenden Exitstatus. Das Ergebnis wird erst nach vollständiger semantischer Episodenvalidierung geschrieben. `Transcriber` hält ein Modell für mehrere Aufrufe im selben Prozess geladen. Der normale Offline-Check lädt keine Modellgewichte oder Audios und verwendet ausschließlich externe Modellfixtures.
 
+## Messläufe und ORT-Profile
+
+`process --run-report PFAD` schreibt getrennte maschinenlesbare Laufzeitdaten atomar. Der Bericht enthält Audio- und Modellcachezustand, Audiohash/-bytes, Modell-/VAD-Ladegrenzen, Encoder-/Decoder- und VAD-Sitzungsaufbau, Decode, die Iteration des vollständigen Recognizer-Generators, Validierung/Serialisierung, Profilabschluss/-analyse und die Gesamtlaufzeit des CLI-Aufrufs. Der Gesamtzähler beginnt innerhalb von `process()` und endet vor Laufbericht und stdout; er enthält Katalog-/Steueraufwand und nicht weiter zugeordneten Aufwand, aber nicht Interpreter-/uv-Start, Abhängigkeitsinstallation oder Notebook-/Drive-Arbeit. Der einmalige Modellaufbau steht auf Prozessebene und wird nicht über Folgen summiert. Die Inferenzgrenze umfasst VAD/Vorverarbeitung und Ergebniszusammenstellung; sie ist keine reine Encoder-, Decoder- oder Kernelzeit. Hugging-Face-Cachedateibytes bezeichnen materialisierte Modellgewichte; die übertragenen Netzwerkbytes bleiben unbekannt. Bei bereitgestellten lokalen Audiobytes betragen Audio-Wire-Bytes null; HTTP-Audioübertragungsbytes bleiben unbekannt, sofern sie nicht ausdrücklich gemessen werden. Laufberichte sind Benchmarkartefakte und gehören in `.cache/`, nicht in die Episodenablage. Laufberichtpfade dürfen keine Eingaben oder Ergebnisdateien überschreiben.
+
+`--audio-file` ist bei `process` auf genau eine Folgen-ID begrenzt. Zusammen mit `--retranscribe` erzwingt es einen neuen Lauf mit denselben verifizierten Bytes, auch wenn bereits ein gültiges Ergebnis existiert. Das Ausgabeverzeichnis sollte dafür getrennt bleiben, damit Messläufe bestehende Transkripte nicht ersetzen.
+
+Die GPU-Voreinstellung profiliert weiterhin automatisch und verlangt mindestens einen tatsächlich ausgeführten CUDA-Modellknoten. `--profile` erzwingt Profilierung für einen Kontrolllauf; `--no-profile` misst den Aufwand ohne Profilierung. Ein solcher GPU-Lauf erhält ausdrücklich keinen Ausführungsnachweis. Ein Profil-on-Lauf muss denselben Eingang, Modell-/VAD-Stand, Commit und Cachezustand wie der Kontrolllauf verwenden.
+
+Bereits vorhandene Rohprofile lassen sich ohne erneute Inferenz streamend auswerten:
+
+```powershell
+uv run --frozen podcast-words profile-summary `
+  --profile encoder=.cache/asr/profiles/encoder-trace.json `
+  --profile decoder_joint=.cache/asr/profiles/decoder-trace.json `
+  --profile vad=.cache/asr/profiles/vad-trace.json `
+  --output .cache/asr/profile-summary.json
+```
+
+Die Zusammenfassung meldet Dateibytes, `Node`-Ereignisse und Host-Operator-Dauersummen nach Anbieter, die nach gemessener Dauersumme wichtigsten Operatoren, vorhandene `Kernel`-Ereignisse, heuristisch erkannte Übertragungs-/Synchronisationsereignisse, den beobachteten Zeitstempelbereich und das späteste Ende eines zeitlich erfassten Ereignisses. Fehlende Ereignisdauern bleiben unbekannt und werden als ungemessen gezählt. Node-Dauern sind Hostzeiten und können sich durch parallele Ausführung überlappen. GPU-Kernzeiten werden nur bei vorhandenen `Kernel`-Ereignissen ausgewiesen; laut [ONNX-Runtime-Profilingdokumentation](https://onnxruntime.ai/docs/performance/tune-performance/profiling-tools.html) benötigen sie CUPTI und einen entsprechend gebauten ORT. Rohereignisdauern sind keine Wandzeit.
+
 ## Ausgewählte Folgen verarbeiten und fortsetzen
 
 Der gemeinsame Katalogbefehl verarbeitet nur die ausdrücklich genannten stabilen Folgen-IDs. Er liest Titel, Quelle, Datum und erste Audio-Enclosure aus dem Katalog und speichert pro Folge eine validierte Datei:

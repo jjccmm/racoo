@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "evidence_kind": "operator-provided-colab-run-summary",
+  "recorded_at_local": "2026-10-17",
+  "source_report": {
+    "original_path": "notebooks/ep-5764a1149f18a8f68698fb45bb405264.json",
+    "sha256": "eb3853876c8488c1bdb139008f4a32ebafcbced58cedf7112cc221969782a657",
+    "preserved_unmodified": true
+  },
+  "episode": {
+    "podcast_id": "podcast-ufo",
+    "episode_id": "ep-5764a1149f18a8f68698fb45bb405264",
+    "title": "UFO537 Festival",
+    "audio_sha256": null,
+    "decoded_duration_seconds": null
+  },
+  "runtime": {
+    "gpu": "Tesla T4",
+    "driver": "580.82.07",
+    "cuda_build": "13.0",
+    "onnxruntime_gpu": "1.27.0",
+    "onnxruntime_build_commit": "8f0278c77b",
+    "notebook_kernel_python": "3.13.15",
+    "cli_runtime_python": "3.12.3",
+    "platform": "Linux 6.6.122+, glibc 2.39",
+    "code_revision": null
+  },
+  "run": {
+    "status": "completed",
+    "started_local": "2026-10-17 19:40:40",
+    "execution_proof": "actual-onnx-runtime-node-events",
+    "model_node_events": {
+      "CUDAExecutionProvider": 1576465,
+      "CPUExecutionProvider": 389687
+    },
+    "mixed_cpu_fallback": true,
+    "node_event_durations": "not present in supplied report; provider event counts do not measure host or device time",
+    "sessions": {
+      "encoder": {
+        "CUDAExecutionProvider": 743133,
+        "CPUExecutionProvider": 256353
+      },
+      "decoder_joint": {
+        "CUDAExecutionProvider": 833332,
+        "CPUExecutionProvider": 133334
+      },
+      "vad": {
+        "CUDAExecutionProvider": 736110,
+        "CPUExecutionProvider": 138890
+      }
+    },
+    "raw_profile_paths_recorded": true,
+    "raw_profiles_available_for_analysis": false
+  },
+  "original_36_minute_observation": {
+    "approximate_seconds": 2160,
+    "timing_boundary": "entire Colab processing/checkpoint cell, beginning with Drive catalog copy into the VM",
+    "includes": [
+      "cold audio and model work",
+      "transcription and ONNX profiling",
+      "episode, catalog and report checkpoint copies to Drive",
+      "raw ONNX profile copies to Drive"
+    ],
+    "excludes": ["earlier uv dependency setup cell"],
+    "three_raw_profile_files_reported_bytes_each_approximate": 700000000,
+    "raw_profile_file_sizes_measured_locally": false
+  },
+  "resume": {
+    "status": "skipped",
+    "new_session_runtime_facts_recorded": true,
+    "new_inference_executed": false
+  },
+  "measurement_gaps": [
+    "The report contains no individual elapsed times for downloads, session creation, decoding, inference, validation, profile work or Drive copies; the operator supplied only the approximately 36-minute whole-cell boundary.",
+    "Audio SHA-256 and decoded duration are absent, so equivalence to the Windows CPU input is unverified.",
+    "The report contains no repository branch or commit, so code equivalence to the Windows CPU run is unverified.",
+    "The Drive profile files were not supplied with the report; node counts cannot establish time spent on either provider or transfer/synchronization costs.",
+    "The resume entry records a skip and runtime facts only; it does not include a second CLI run report or timing."
+  ],
+  "conclusion": "The report proves that this Colab inference executed CUDA nodes and also executed CPU nodes. It does not reproduce or explain the reported 36-minute wall time. Node counts are not elapsed time, and no optimization conclusion is supported."
+}

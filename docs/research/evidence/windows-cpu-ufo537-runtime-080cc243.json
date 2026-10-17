@@ -1,0 +1,89 @@
+{
+    "schema_version": 1,
+    "evidence_kind": "measured-windows-cpu-run-summary",
+    "recorded_at_local": "2026-10-17",
+    "raw_report": {
+        "path": ".cache/ticket19/cpu-baseline-080cc243-runtime-report.json",
+        "sha256": "707475b263202cc560331fc82ab209feeccc8c12d37adff74fdfb5a2b38e600d",
+        "unmodified_copy_of_run_artifact": true
+    },
+    "run": {
+        "code_revision": "080cc243bc471a28a17c22d1ecb71ab5a43f9163",
+        "started_utc": "2026-10-17T21:25:20.3112848Z",
+        "finished_utc": "2026-10-17T21:35:11.4545324Z",
+        "cli_total_elapsed_seconds": 582.125,
+        "cli_total_elapsed_boundary": "process() start to immediately before optional run-report persistence and stdout; includes catalog/control work and unattributed overhead; excludes interpreter/uv startup, environment setup and notebook/Drive work",
+        "status": "completed",
+        "inference_runs": 1,
+        "skipped_runs": 0,
+        "external_host_load": "unknown"
+    },
+    "episode": {
+        "podcast_id": "podcast-ufo",
+        "episode_id": "ep-5764a1149f18a8f68698fb45bb405264",
+        "title": "UFO537 Festival",
+        "audio_sha256": "d7f924479192f60229b5ba800227f640bb18a73527e360cc909f3657839327cf",
+        "audio_bytes": 69491703,
+        "decoded_duration_seconds": 4343.222875,
+        "model_id": "nvidia/parakeet-tdt-0.6b-v3",
+        "model_revision": "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+        "export_id": "istupakov/parakeet-tdt-0.6b-v3-onnx",
+        "export_revision": "8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce",
+        "vad_id": "istupakov/silero-vad-onnx",
+        "vad_revision": "b3e3ee3cce4c11ceb63b1a0b229d916069c1ddf6",
+        "quantization": "int8",
+        "vad_options": {
+            "batch_size": 1,
+            "max_speech_duration_s": 20,
+            "min_speech_duration_ms": 250,
+            "min_silence_duration_ms": 100,
+            "speech_pad_ms": 0,
+            "threshold": 0.5
+        },
+        "intra_op_num_threads": 4,
+        "audio_decode": "ffmpeg mono PCM s16le 16000 Hz; original full timeline",
+        "configuration_revision": "e27e137e8276b49cfc19dccc27223fce2ba81777d2bb1efe2ae65aae96dc5db0"
+    },
+    "runtime": {
+        "platform": "Windows-10-10.0.19045-SP0",
+        "processor": "Intel64 Family 6 Model 94 Stepping 3, GenuineIntel",
+        "logical_cpu_count": 8,
+        "intra_op_num_threads": 4,
+        "python": "3.12.9",
+        "onnx_asr": "0.12.0",
+        "onnxruntime": "1.27.0",
+        "numpy": "2.5.4",
+        "huggingface_hub": "2.2.0",
+        "execution_provider": "CPUExecutionProvider",
+        "execution_proof": "not-collected-profile-disabled"
+    },
+    "cache_state": {
+        "model": "warm",
+        "vad": "warm",
+        "audio": "exact-local-input-provided",
+        "model_materialized_bytes_before": 670480039,
+        "model_materialized_bytes_added": 0,
+        "vad_materialized_bytes_before": 2327554,
+        "vad_materialized_bytes_added": 0,
+        "model_wire_bytes": null,
+        "audio_wire_bytes": 0
+    },
+    "measurements": {
+        "audio_download_seconds": 0.0,
+        "outer_model_setup_including_imports_lookup_and_session_initialization_seconds": 8.016,
+        "model_snapshot_lookup_seconds": 0.031,
+        "vad_snapshot_lookup_seconds": 0.0,
+        "encoder_decoder_session_initialization_seconds": 6.891,
+        "vad_session_initialization_seconds": 0.187,
+        "audio_decode_seconds": 6.14,
+        "recognizer_generator_iteration_seconds": 566.922,
+        "recognizer_measurement_boundary": "includes VAD/preprocessing and result assembly; not pure encoder, decoder or kernel time",
+        "result_validation_and_serialization_seconds": 0.594,
+        "result_bytes": 2251872,
+        "profile_status": "disabled",
+        "raw_report_interpretation": "The measured revision labels the outer model setup as total_session_initialization_seconds; source inspection shows its timer begins before imports and includes snapshot lookups and session setup. This value is not additive to the nested stage timings. The derived summary uses only the single top-level shared model timing, not duplicated per-episode copies in the raw report.",
+        "inference_stage_fraction_of_cli_total": 0.973884293,
+        "inference_fraction_note": "The recognizer generator iteration was 97.4% of this measured CPU CLI run; this is not an attribution of the historical Colab duration or an encoder-only cost."
+    },
+    "conclusion": "The measured CPU run's recognizer generator iteration is the dominant measured stage on this run. The supplied Colab report has no per-stage elapsed times, so no GPU/CPU speed ratio or cause of the historical approximately 36-minute whole-cell duration is established."
+}
