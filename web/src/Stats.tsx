@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { loadPublication } from './publication';
 
 type Word = { lemma: string; stopword: boolean; totalCount: number; shard: string };
 type Episode = { episodeId: string; title: string; publishedAt: string; totalWords: number; distinctWords: number };
@@ -27,7 +28,10 @@ export function Stats() {
     const current = ++generation.current;
     setLoading(true); setError(false);
     try {
+      const publication = await loadPublication();
       const manifest = await read('manifest.json');
+      if (manifest.publicationId !== publication.publicationId || manifest.statisticsId !== publication.statisticsId
+          || manifest.podcastId !== publication.podcastId) throw new Error('Mismatched publication');
       const [vocabulary, catalog] = await Promise.all([
         read('vocabulary.json', manifest.publicationId), read('catalog.json', manifest.publicationId),
       ]);

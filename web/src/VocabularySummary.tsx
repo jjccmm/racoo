@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { loadPublication } from './publication';
 
 type Episode = {
   episodeId: string;
@@ -28,12 +29,13 @@ export function VocabularySummary() {
     setLoading(true);
     setError(false);
     try {
+      const publication = await loadPublication();
       const response = await fetch(`${import.meta.env.BASE_URL}stats/catalog.json`);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const value = await response.json();
       const summary = value.summary as Summary | undefined;
       const episodes = value.episodes as Episode[] | undefined;
-      if (value.schemaVersion !== 1 || !/^[a-f0-9]{64}$/.test(value.publicationId)
+      if (value.schemaVersion !== 1 || value.publicationId !== publication.publicationId
           || !summary || !episodes || !Array.isArray(episodes)
           || !validCount(summary.episodeCount) || !validCount(summary.totalWords)
           || !validCount(summary.distinctWords) || !validCount(summary.newWords)
