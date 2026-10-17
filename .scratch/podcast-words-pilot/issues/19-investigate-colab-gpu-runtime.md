@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately). The completed CPU proof in ticket 02 supplies baseline evidence; this investigation can contribute runtime evidence to ticket 10 without waiting for that ticket's full Drive/resume acceptance.
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 **Related:** 02: Transcribe one real Folge on Windows CPU; 10: Resume the shared workflow on Colab GPU and Drive.
 
