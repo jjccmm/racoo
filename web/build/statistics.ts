@@ -1,0 +1,27 @@
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import type { Plugin, ResolvedConfig } from 'vite';
+
+export function statistics(): Plugin {
+  let config: ResolvedConfig;
+  return {
+    name: 'podcast-words-statistics',
+    apply: 'build',
+    configResolved(resolved) { config = resolved; },
+    closeBundle() {
+      const root = path.resolve(config.root, '..');
+      const result = spawnSync('uv', ['run', '--frozen', 'podcast-words', 'analyze',
+        '--episodes', path.resolve(root, process.env.PODCAST_WORDS_EPISODES ?? 'tests/fixtures/search-corpus.json'),
+        '--output', path.resolve(root, process.env.PODCAST_WORDS_ANALYSES ?? 'tests/fixtures/analysis'),
+        '--cache-only', '--publish', path.resolve(config.root, config.build.outDir, 'stats'),
+      ], {
+        cwd: root, encoding: 'utf8',
+        env: { ...process.env, UV_CACHE_DIR: process.env.UV_CACHE_DIR ?? path.join(root, '.uv-cache') },
+      });
+      if (result.error || result.status !== 0) {
+        throw new Error(`Invalid statistics inputs: ${result.error ?? result.stdout + result.stderr}`);
+      }
+      console.log('Exact lemma statistics published from validated saved analyses (no model loaded)');
+    },
+  };
+}

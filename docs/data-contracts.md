@@ -10,6 +10,8 @@ Die kontrollierten Sucheingaben stehen in [der Korpusliste](../tests/fixtures/se
 
 Bei einer Vertragsänderung Modell, Schema, Produzenten/Verbraucher und relevante Prüfdaten gemeinsam aktualisieren. Abwärtsinkompatible Änderungen benötigen eine neue Schemaversion und einen bewusst geplanten Übergang. Den Schemaexport über `podcast-words schema --output schemas/episode-v1.schema.json` aktualisieren; der Test auf Übereinstimmung erkennt einen veralteten Export.
 
+Die getrennte [Grundformanalyse](analysis.md) verwendet den Python-Vertrag `Analysis` in `src/podcast_words/analysis.py`. Den strukturellen Export mit `podcast-words schema --kind analysis --output schemas/analysis-v1.schema.json` aktualisieren. Gespeicherte Analysen werden vor Wiederverwendung vollständig validiert; konsumierte Segmenttexte und Analysekonfiguration bestimmen ihre Gültigkeit. Episoden-JSON und sein Schema bleiben davon unabhängig.
+
 Der CPU-Produzent ergänzt abwärtskompatibel `export_id`, `execution_providers` (tatsächliche Anbieter je ORT-Session) und `configuration` (Quantisierung, VAD, Decodierung und Zeitbezug) in `transcription`. Bestehende V1-Prüfdaten bleiben gültig; echte neue ASR-Ergebnisse füllen diese Felder. `runtime_versions` enthält weiterhin Paketstände. [ASR](asr.md) dokumentiert die gesperrte Konfiguration und die ausdrücklich nicht attestierte genaue Export-zu-Upstream-Commitzuordnung.
 
 Native Tokenpunkte dürfen nichtleeren Whitespace als Tokentext enthalten: Der gepinnte Parakeet-Decoder gibt solche Tokens tatsächlich aus. Sie werden unverändert erhalten. Segmenttexte benötigen weiterhin mindestens ein Nicht-Whitespace-Zeichen. Die synthetische Prüfdatenfolge enthält zur Darstellung dieser Unterscheidung einen Whitespace-Tokenpunkt.
