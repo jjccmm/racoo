@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** claimed
+**Status:** resolved
 
 **Spec coverage:** User stories 21, 26, 28, 44, 45, 47, 49 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 
@@ -33,3 +33,9 @@
 ### 2026-10-17 — Final integration sync
 
 Implementation commit: `1bce2a1`. Merged the later CPU-transcription integration `10ea882`, preserving both public commands, both documentation updates, the optional spaCy extra, and the integrated ASR pins. Regenerated the combined lock from the merged manifest using cached metadata. The affected checks passed after the merge: 44 Python cases, Ruff lint/format, documentation links/notebook syntax, and the production build with actual Pagefind plus cache-only statistics publication. The merge changes no visitor statistics behavior; the preceding 15 root and 15 project-prefix browser cases remain the behavior evidence, and the coordinator runs the final combined shared check.
+
+### 2026-10-17 — Integrated acceptance
+
+Implementation `1bce2a1` and reconciled branch tip `3258aa0` were integrated by merge `7c1b1ac`. The combined ASR/analysis manifest and lock preserve the exact ASR pins and optional spaCy 3.8.16 extra; `uv sync --locked --offline` passed. The complete `uv run --frozen python scripts/check.py` then exited 0 with Ruff, all 44 Python cases, schema/documentation/notebook checks, root/project-prefix production builds, and all 15 root-path Chromium cases, including the exact-count, bounded-selection/stopword, and failed-shard/retry cases. Browser teardown completed with process permission; an existing inaccessible pytest cache directory produced a warning only. Routine checks loaded neither model weights nor audio.
+
+The separately recorded real German model evidence and preceding project-prefix browser run remain the integration evidence for those boundaries. The basic producer-to-browser count slice meets this ticket's criteria; real pilot analyses, trends, aggregates, and pilot acceptance remain dependent work. Ticket 06 is resolved.
