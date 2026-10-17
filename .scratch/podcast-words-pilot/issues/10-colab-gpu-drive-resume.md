@@ -4,7 +4,7 @@
 
 **Blocked by:** 09: Resume selected episode processing without losing work.
 
-**Status:** claimed
+**Status:** ready-for-human
 
 **Spec coverage:** User stories 37, 38, 39, 40, 41, 52 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 
@@ -28,3 +28,4 @@
 - 2026-10-17: Locked the GPU group to `onnx-asr[gpu,hub]==0.12.0` and `onnxruntime-gpu==1.27.0`, mutually exclusive with the default CPU group. The GPU wheel's CUDA 13/cuDNN 9 system libraries are supplied by Colab and are not locked by uv. Notebook preflight checks NVIDIA driver major >=580, ORT DLL diagnostics, and CUDA provider availability; actual session creation precedes audio download. The available local evidence does not establish Colab image compatibility.
 - 2026-10-17: Verified locally with `pytest tests/test_processing.py -q` (5 passed, mocked model/runtime boundary), `ruff check .`, `ruff format --check .`, and `python scripts/check_workspace.py`. All notebook code cells compile and the workspace checker confirms no saved execution state. No real audio/model inference, Drive transfer, new-session resume, or Colab GPU profile was performed. The live-runtime acceptance criteria therefore remain unchecked and this ticket stays claimed.
 - 2026-10-17: After merging integration through `6c8431f` (`f8e59a5`), reran the full Python fixture suite: `pytest tests -q` (67 passed), `ruff check .`, `ruff format --check .`, `uv lock --check --offline`, `python scripts/check_workspace.py`, and `git diff --check`; all passed. Criteria 1 and 7 are implemented and checked. Criteria 2-6 remain unmet because no Colab runtime, Drive, GPU, audio/model run, or new-session proof was available.
+- 2026-10-17: Integrated as no-ff merge `d0a77fb` on `integration/podcast-words-pilot`. The integrated fixture suite passed (`uv run --frozen --no-sync pytest tests -q --basetemp=.cache/pytest-ticket10`: 67 passed); Ruff lint and format checks, `uv lock --check --offline`, `scripts/check_workspace.py` (42 Markdown files and Colab cell syntax), and `git diff --check` also passed. A normal frozen `uv run` first attempted a Hatchling fetch and could not reach PyPI in this sandbox; verification used the existing project environment, with lock consistency checked offline. Criteria 1 and 7 are implemented. Criteria 2-6 remain open pending operator evidence from an actual Colab GPU/Drive run: runtime compatibility and executed provider, per-episode durable checkpoints, new-session resume, real full-episode and difficult-excerpt timing validation, and captured transfer/run steps. No GPU, model, or audio inference was performed here; this ticket is ready for that human runtime gate and is not resolved.
