@@ -2,7 +2,7 @@
 
 **Fixed baseline:** `3d0564b..52a986b` (`pilot/review-fixes`, based on integrated tip `52a986b`)
 
-This report covers the two interim code-review findings against that fixed range. It does not claim that the five-episode pilot specification is complete.
+This report covers interim review findings against that fixed range. It does not claim that the five-episode pilot specification is complete.
 
 ## Standards
 
@@ -38,3 +38,5 @@ No scope creep was found. This interim review does not mark the entire pilot com
 - Targeted Vite regression: incompatible custom corpus rejected; no model loaded.
 
 Checks used the synchronized main `.venv` with `UV_PROJECT_ENVIRONMENT` pointing to that environment, shared `UV_CACHE_DIR`, `UV_NO_SYNC=1` for nested Vite CLI calls, and `PYTHONPATH` pointing at this worktree's `src`. npm dependencies were installed offline into the worktree using the shared npm cache.
+
+After integration as merge `21621ff`, the main worktree passed the 70-test Python suite, Ruff check/format, the workspace checker (43 Markdown files and Colab cell syntax), web lint, and root and project-prefix production builds. The root build retained publication ID `0f1f4e865a8d`, matching the prior validated output. No browser rerun was needed because these changes do not modify UI code; hosted Actions and deployment remain unclaimed.
