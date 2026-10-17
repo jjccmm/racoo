@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Inspect and reconcile the episode catalog; 02: Transcribe one real Folge on Windows CPU.
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 **Spec coverage:** User stories 32, 37, 38, 39, 40, 43, 47, 49 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 
