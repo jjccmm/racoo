@@ -4,19 +4,19 @@
 
 **Blocked by:** 03: Find a known passage using a real Pagefind index.
 
-**Status:** claimed
+**Status:** resolved
 
 **Spec coverage:** User stories 1, 2, 3, 4, 5, 6, 7, 9, 13, 14, 30, 49 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 
 **Verification:** Built-site browser queries, visible result order/coverage, and observed network requests over a real controlled Pagefind corpus.
 
-- [ ] Normalize nonempty distinct input Stichwörter case-insensitively, ignore repeats, query terms separately, and union episode candidates independently of input order.
-- [ ] Order by distinct-term coverage descending, then the sum of matching Pagefind ranks ascending, publication date descending, and stable episode identity; show partial coverage.
-- [ ] Preserve German stemming without an exact-spelling filter and keep search coverage distinct from exact lemma counts.
-- [ ] Use raw candidate IDs and the index-bound episode/date mapping to establish the complete order before eagerly loading all result fragments.
-- [ ] Load at most the first ten result details initially and provide explicit additional loading; neither initial navigation nor coverage calculation fetches every transcript.
-- [ ] Keep the newest query authoritative and show loading, no-result, partial, and fetch-failure states without self-triggered retry/reload loops.
-- [ ] Verify all tie-breakers, 3/3 before 2/3 before 1/3, repeated/case-varied/reordered terms, inflections, umlauts and sharp S using a real corpus with more than ten candidates and independently known expectations.
+- [x] Normalize nonempty distinct input Stichwörter case-insensitively, ignore repeats, query terms separately, and union episode candidates independently of input order.
+- [x] Order by distinct-term coverage descending, then the sum of matching Pagefind ranks ascending, publication date descending, and stable episode identity; show partial coverage.
+- [x] Preserve German stemming without an exact-spelling filter and keep search coverage distinct from exact lemma counts.
+- [x] Use raw candidate IDs and the index-bound episode/date mapping to establish the complete order before eagerly loading all result fragments.
+- [x] Load at most the first ten result details initially and provide explicit additional loading; neither initial navigation nor coverage calculation fetches every transcript.
+- [x] Keep the newest query authoritative and show loading, no-result, partial, and fetch-failure states without self-triggered retry/reload loops.
+- [x] Verify all tie-breakers, 3/3 before 2/3 before 1/3, repeated/case-varied/reordered terms, inflections, umlauts and sharp S using a real corpus with more than ten candidates and independently known expectations.
 
 ## Comments
 
@@ -36,4 +36,9 @@ The app's synthetic-data notice contains visitor-relevant data state. Search UI 
 
 Implementation commit `22d7d1e` was followed by merge `26b8a64`, incorporating integration tip `7c1b1ac` with the CPU transcription and exact-analysis work. The App shell now renders both `SearchPanel` and `Stats`. The public analysis command, run with the installed spaCy 3.8.16 / `de_core_news_lg` 3.8.0 environment, computed saved analyses for all 15 new fixtures and reused the original two. Both consumers build from the same 17-episode corpus and retain strict stale-cache validation.
 
-The independent total is 284 original words + 25 complete-text words + 4×5 pair words + 10×2 single words = 349; browser statistics expectations record this calculation. The complete integrated `uv run --frozen python scripts/check.py` passed with exit 0: 44 Python tests, 23 real Chromium cases, Ruff, documentation/notebook checks, authoritative validation, TypeScript/lint and both production baselines. The integrated run used `PYTEST_ADDOPTS=--basetemp=.cache/pytest-coverage-integrated` and `PW_PORT=4194` in the approved host context. No model was loaded by routine checks; the explicit analysis preparation reused the already installed model. Status remains `claimed` for integration review.
+The independent total is 284 original words + 25 complete-text words + 4×5 pair words + 10×2 single words = 349; browser statistics expectations record this calculation. The complete integrated `uv run --frozen python scripts/check.py` passed with exit 0: 44 Python tests, 23 real Chromium cases, Ruff, documentation/notebook checks, authoritative validation, TypeScript/lint and both production baselines. The integrated run used `PYTEST_ADDOPTS=--basetemp=.cache/pytest-coverage-integrated` and `PW_PORT=4194` in the approved host context. No model was loaded by routine checks; the explicit analysis preparation reused the already installed model.
+
+
+### Integration acceptance — 17 October 2026
+
+Merged `pilot/04-coverage` with no fast-forward as `20f286b`. The merged tree is identical to the tested branch tip `519958f`, so the integrated check above covers the accepted code and fixtures without a redundant rerun. Ticket 03 plus this ticket establish the Pagefind mapping, ranking, copied query positions and segment anchors; all search-contract criteria in `TASKS.md` are now proven. Status: resolved.

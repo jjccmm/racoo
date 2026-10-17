@@ -13,7 +13,7 @@ Der [Fünf-Folgen-Pilot](.scratch/podcast-words-pilot/spec.md) ist als `ready-fo
 ## Erste Funktionsnachweise
 
 - [ ] **Audio und ASR:** CPU-Installation unter Windows sowie GPU-Installation unter Colab gegen konkrete Paketstände und Modellrevision prüfen. Eine vollständige Folge mit mehreren Pausen verarbeiten; native Tokenpunkte korrekt auf Episodenzeit bringen. Ergebnisse und Kosten in Laufzeit dokumentieren. Audio und Modellgewichte bleiben untracked.
-- [ ] **Suchvertrag:** Mit einem kleinen echten Pagefind-Index die Zuordnung Such-ID → Episoden-ID/Datum, die 3/3-vor-2/3-Rangfolge, Wortformen, Positionen mehrerer Abfragen und Segmentanker nachweisen, ohne alle Fragmente nachzuladen.
+- [x] **Suchvertrag:** Mit einem kleinen echten Pagefind-Index die Zuordnung Such-ID → Episoden-ID/Datum, die 3/3-vor-2/3-Rangfolge, Wortformen, Positionen mehrerer Abfragen und Segmentanker nachweisen, ohne alle Fragmente nachzuladen.
 - [x] **Katalog:** RSS-Snapshot und dauerhafte IDs/Quellenaliase implementieren. Sondertitel erhalten; Folge 37 gezielt prüfen und offene Quellenlücken getrennt von Verarbeitungsfehlern ausweisen.
 
 ## Durchgängiger Pilot
