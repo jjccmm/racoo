@@ -26,6 +26,9 @@ def main() -> int:
     parser.add_argument("--prefix", type=int, default=60)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--cache-dir", type=Path, default=Path(".cache/asr"))
+    parser.add_argument(
+        "--reuse", action="store_true", help="Validate and compare existing results"
+    )
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
     base = args.output_dir / "base.wav"
@@ -60,6 +63,10 @@ def main() -> int:
         destination.writeframes(source.readframes(source.getnframes()))
     episodes = []
     reports = []
+    evidence_path = args.output_dir / "evidence.json"
+    previous = (
+        json.loads(evidence_path.read_text(encoding="utf-8")) if evidence_path.exists() else {}
+    )
     for name, audio in [("base", base), ("shifted", shifted)]:
         metadata = args.output_dir / f"{name}-input.json"
         metadata.write_text(
@@ -80,6 +87,16 @@ def main() -> int:
             encoding="utf-8",
         )
         output = args.output_dir / f"{name}-episode.json"
+        report_path = args.output_dir / f"{name}-run.json"
+        if args.reuse:
+            episode = Episode.model_validate_json(output.read_bytes())
+            with audio.open("rb") as current_audio:
+                if hashlib.file_digest(current_audio, "sha256").hexdigest() != episode.audio.sha256:
+                    raise ValueError("existing result does not match this experiment's audio")
+            episodes.append(episode)
+            if report_path.exists():
+                reports.append(json.loads(report_path.read_text(encoding="utf-8")))
+            continue
         captured = io.StringIO()
         with contextlib.redirect_stdout(captured):
             status = cli(
@@ -96,6 +113,7 @@ def main() -> int:
                 ]
             )
         report = json.loads(captured.getvalue())
+        report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
         reports.append(report)
         if status:
             print(json.dumps(report))
@@ -111,32 +129,70 @@ def main() -> int:
         for episode in episodes
     ]
     same_tokens = [text for text, _ in points[0]] == [text for text, _ in points[1]]
-    errors = [
-        abs(after - before - args.prefix)
-        for (_, before), (_, after) in zip(points[0], points[1], strict=False)
-    ]
+    # VAD's recurrent state can change an endpoint by a frame after silence.
+    # Compare every segment boundary, and native points for unchanged token
+    # sequences. Different lexical output cannot be paired token-by-token.
+    boundary_errors = []
+    errors = []
+    changed_sequences = 0
+    same_segment_count = len(original.segments) == len(prefixed.segments)
+    paired_segments = (
+        zip(original.segments, prefixed.segments, strict=True) if same_segment_count else []
+    )
+    for before, after in paired_segments:
+        boundary_errors.extend(
+            [
+                abs(after.start_seconds - before.start_seconds - args.prefix),
+                abs(after.end_seconds - before.end_seconds - args.prefix),
+            ]
+        )
+        if [point.text for point in before.token_points] != [
+            point.text for point in after.token_points
+        ]:
+            changed_sequences += 1
+            continue
+        errors.extend(
+            abs(right.at_seconds - left.at_seconds - args.prefix)
+            for left, right in zip(before.token_points, after.token_points, strict=True)
+        )
     maximum_error = max(errors) if errors else None
-    ok = same_tokens and maximum_error is not None and maximum_error <= 0.08
+    maximum_boundary_error = max(boundary_errors) if boundary_errors else None
+    ok = (
+        maximum_error is not None
+        and maximum_error <= 0.08
+        and maximum_boundary_error is not None
+        and maximum_boundary_error <= 0.08
+    )
     with args.audio_file.open("rb") as source:
         checksum = hashlib.file_digest(source, "sha256").hexdigest()
     evidence = {
         "ok": ok,
+        "comparison_status": "passed"
+        if ok
+        else ("inconclusive-segmentation" if not same_segment_count else "failed"),
         "source_sha256": checksum,
         "source_excerpt_start_seconds": args.start,
         "source_excerpt_duration_seconds": original.audio.duration_seconds,
         "known_silence_prefix_seconds": args.prefix,
         "same_native_tokens": same_tokens,
+        "same_segment_count": same_segment_count,
+        "base_segment_count": len(original.segments),
+        "prefixed_segment_count": len(prefixed.segments),
         "native_token_count": len(points[0]),
+        "prefixed_native_token_count": len(points[1]),
+        "compared_unchanged_native_points": len(errors),
+        "changed_native_sequences": changed_sequences,
         "maximum_shift_error_seconds": maximum_error,
+        "maximum_boundary_shift_error_seconds": maximum_boundary_error,
         "base_audio_sha256": original.audio.sha256,
         "shifted_audio_sha256": prefixed.audio.sha256,
         "base_first_point": points[0][0] if points[0] else None,
         "shifted_first_point": points[1][0] if points[1] else None,
         "text": " ".join(segment.text for segment in original.segments),
-        "runs": reports,
+        "runs": reports or previous.get("runs", []),
         "quality_scope": "known synthetic time shift; no independent human listening reference",
     }
-    (args.output_dir / "evidence.json").write_text(
+    evidence_path.write_text(
         json.dumps(evidence, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
     print(json.dumps(evidence, ensure_ascii=True))
