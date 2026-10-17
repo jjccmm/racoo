@@ -17,4 +17,12 @@ summary { cursor: pointer; padding: 8px 0; color: #215d4d; font-weight: 600; }
 summary:focus-visible { outline: 3px solid #286c58; outline-offset: 4px; }
 .timestamp { display: inline-block; min-width: 90px; color: #52616a; font-variant-numeric: tabular-nums; }
 .muted { color: #52616a; font-size: .85rem; }
+label { display: block; font-weight: 700; margin-bottom: 8px; }
+.search-controls { display: flex; gap: 12px; }
+input, button { font: inherit; border-radius: 6px; padding: 10px 14px; }
+input { width: 100%; min-width: 0; border: 1px solid #526b72; background: white; }
+button { background: #215d4d; color: white; border: 1px solid #215d4d; cursor: pointer; }
+input:focus-visible, button:focus-visible { outline: 3px solid #286c58; outline-offset: 3px; }
+[role="alert"] { color: #8e2b22; }
+.example + .example { margin-top: 20px; }
 @media (max-width: 640px) { main { padding: 32px 20px; } .steps { grid-template-columns: 1fr; gap: 12px; } .example { padding: 18px; } }

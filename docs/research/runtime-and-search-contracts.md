@@ -32,3 +32,15 @@ Die [Anker-API](https://pagefind.app/docs/sub-results/#calculating-custom-sub-re
 - Zusammenführen mehrerer Suchbegriffe mit erhaltenen Positionen und richtigen Segmentankern.
 
 Ein erfolgreiches Lesen dieser Quellen ersetzt keinen dieser Integrationsnachweise.
+
+## Gesperrter Suchnachweis vom 17. Oktober 2026
+
+Pagefind 1.5.2 ist jetzt im npm-Lockfile gesperrt und wurde über den tatsächlichen Produktionsbuild mit Playwright 1.64.1 und Chromium Headless Shell 156.0.8078.4 geprüft. Zwei semantisch durch die Python-CLI validierte synthetische Folgen ersetzen dabei keine echten ASR-Daten oder Pilotqualitätsprüfung.
+
+- `getFiles()` liefert die erzeugten Fragmentdateien. Der Build liest ausschließlich die gesperrte gzip-/`pagefind_dcd`-Struktur, ordnet deren virtuelle App-URL einer dauerhaften Episoden-ID zu und erstellt daraus die kompakte ID-/Datumszuordnung. Ein SHA-256-Verzeichnis bindet Suchdateien und Originalepisodendaten an denselben Stand. Ein realer Browseraufruf von `search('Eimer')` liefert beide bekannten Identitäten und Daten ohne einen einzigen Fragmentabruf.
+- [Metadaten werden in dieser Version ebenfalls durchsucht](https://pagefind.app/docs/metadata/#searching-metadata), auch außerhalb von `data-pagefind-body`. Ein roter Browsertest zeigte deshalb einen falschen gesprochenen Treffer für das reine Titelwort „Titelgeheimnis“. Der endgültige Index enthält nur Segmenttext und Anker; Titel, Datum und Originalepisodendaten liegen in getrennten, gezielt geladenen JSON-Dateien. Der Titelworttest bleibt jetzt ohne Folge und ohne Fragmentabruf.
+- Das erste Segment liefert für „Münzen“ die Rohposition `[3]`; „Kleingeld“ im zweiten Segment liefert `[14]`. Die Anker liegen bei `segment-001: 0` und `segment-002: 8`. Das entspricht 10 beziehungsweise 60 Sekunden der ursprünglichen Prüfdatenfolge. „Münze“ erhält denselben passenden Wortformtreffer ohne exakten Nachfilter.
+- Im öffentlichen `.data()`-Aufruf der tatsächlich installierten Version blieben die beiden Detailobjekte verschieden; die früher geladenen Positionen wurden bei der zweiten Abfrage nicht verändert. Der ältere Befund zum internen gekoppelten Cache ist daher keine Zusage über das öffentliche Objektverhalten. Die App hält weiterhin eigene Kopien aus `.words`, statt sich auf eine unveränderliche Detailreferenz zu verlassen. Der Browsertest hält diesen konkreten Paketbefund fest.
+- Ein roter Test mit HTTP 503 für `.pf_index` zeigte, dass Pagefind den Abruffehler abfängt und sonst eine leere Ergebnismenge liefern kann. Der isolierte Suchworker erkennt solche Abruffehler und zeigt einen Fehlerzustand. Manifest-, Modul-, Metadaten- und Fragmentfehler werden ebenfalls geprüft; ein bewusster erneuter Suchlauf lädt erfolgreich, ohne automatische Wiederholungsschleifen.
+
+Mehrwort-Zusammenführung, globale Abdeckungsrangfolge, Nachladen jenseits der ersten zehn Folgen, echte Audiozeitqualität und Mobilmessungen bleiben Aufgaben der folgenden Tickets.
