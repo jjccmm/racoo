@@ -33,7 +33,7 @@ def doctor() -> int:
                 "executable": sys.executable,
                 "ffmpeg": ffmpeg,
                 "ffmpeg_version": ffmpeg_version,
-                "asr": "not installed or tested by this check",
+                "asr": "not loaded or tested by this check",
             },
             indent=2,
         )
@@ -65,11 +65,22 @@ def main(argv: list[str] | None = None) -> int:
     validation.add_argument("paths", type=Path, nargs="+")
     schema = commands.add_parser("schema", help="Print or save the structural episode JSON Schema")
     schema.add_argument("--output", type=Path)
+    transcription = commands.add_parser("transcribe", help="Transcribe identified audio on CPU")
+    transcription.add_argument("--metadata", type=Path, required=True)
+    transcription.add_argument("--output", type=Path, required=True)
+    transcription.add_argument("--audio-file", type=Path)
+    transcription.add_argument("--cache-dir", type=Path, default=Path(".cache/asr"))
     arguments = parser.parse_args(argv)
     if arguments.command == "doctor":
         return doctor()
     if arguments.command == "validate":
         return validate(arguments.paths)
+    if arguments.command == "transcribe":
+        from podcast_words.transcribe import transcribe_command
+
+        return transcribe_command(
+            arguments.metadata, arguments.output, arguments.cache_dir, arguments.audio_file
+        )
     content = json.dumps(Episode.model_json_schema(), indent=2, ensure_ascii=False) + "\n"
     if arguments.output:
         arguments.output.parent.mkdir(parents=True, exist_ok=True)

@@ -132,7 +132,6 @@
       "properties": {
         "text": {
           "minLength": 1,
-          "pattern": "\\S",
           "title": "Text",
           "type": "string"
         },
@@ -188,6 +187,51 @@
             "minLength": 1
           },
           "title": "Runtime Versions",
+          "type": "object"
+        },
+        "export_id": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Export Id"
+        },
+        "execution_providers": {
+          "patternProperties": {
+            "\\S": {
+              "items": {
+                "minLength": 1,
+                "pattern": "\\S",
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "propertyNames": {
+            "minLength": 1
+          },
+          "title": "Execution Providers",
+          "type": "object"
+        },
+        "configuration": {
+          "patternProperties": {
+            "\\S": {
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            }
+          },
+          "propertyNames": {
+            "minLength": 1
+          },
+          "title": "Configuration",
           "type": "object"
         }
       },

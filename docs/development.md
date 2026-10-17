@@ -42,7 +42,7 @@ npm.cmd --prefix web run dev
 
 Der Entwicklungsserver bindet ausschließlich an `127.0.0.1`, standardmäßig Port 5173. Unter Linux `npm` statt `npm.cmd` verwenden. Mit Strg+C beenden. Die App zeigt ausdrücklich synthetische Daten; sie enthält noch keine echte Suche oder Audiowiedergabe.
 
-`doctor` kontrolliert Python und ein ausführbares FFmpeg. Bei fehlendem oder nicht ausführbarem FFmpeg liefert er einen Fehlerstatus. Ein erfolgreicher Aufruf ist kein ASR- oder GPU-Nachweis. Der reguläre Offline-Check benötigt FFmpeg noch nicht; die spätere Audioverarbeitung benötigt es.
+`doctor` kontrolliert Python und ein ausführbares FFmpeg. Bei fehlendem oder nicht ausführbarem FFmpeg liefert er einen Fehlerstatus. Ein erfolgreicher Aufruf ist kein ASR- oder GPU-Nachweis. Seit dem CPU-ASR-Adapter benötigt auch der Offline-Check FFmpeg: Kleine erzeugte PCM-Prüfdaten durchlaufen die echte Decodierung, während nur der externe Modelloutput ersetzt wird. CI verwendet dafür das über `uv.lock` gesperrte Dev-Wheel `imageio-ffmpeg==0.6.0`; `scripts/prepare_ci_ffmpeg.py` kopiert dessen enthaltene Binärdatei unter dem Befehlsnamen `ffmpeg` in `.cache/ci-ffmpeg` und ergänzt ausschließlich den CI-Pfad. Das Skript lädt selbst nichts herunter und verändert keine globalen Einstellungen. Auf einem frischen lokalen Rechner kann derselbe vorbereitete Ordner dem Shell-Pfad hinzugefügt werden. Große Audio- oder Modelldownloads bleiben ausdrücklich gestarteten Integrationsläufen vorbehalten. Der echte Windows-ASR-Lauf verwendete separat protokolliertes Host-FFmpeg 7.1.1; siehe [ASR](asr.md).
 
 Das Notebook installiert das gesperrte Paket aus einem bereitgestellten Checkout und ruft dieselbe CLI auf. Es enthält keine zweite Pipeline. Der Notebook-Code wurde lokal auf Syntax und fehlende gespeicherte Ausgaben geprüft; ein echter Colab-/Drive-/GPU-Lauf steht noch aus.
 
@@ -74,4 +74,4 @@ Beim schreibgeschützten Audit am 16. Oktober 2026 waren uv 0.10.9, Node 22.19.0
 
 ## Abhängigkeiten und nächste Arbeiten
 
-Bei einer beabsichtigten Abhängigkeitsänderung Manifest und Lockfile gemeinsam aktualisieren und den relevanten Check ausführen. ASR, spaCy, deren Modelle, Recharts und Pagefind werden mit dem jeweils zugehörigen Funktionsnachweis integriert und validiert. Sie sind keine versteckten Downloads des Starters. Die nächsten Aufgaben stehen in `TASKS.md`.
+Bei einer beabsichtigten Abhängigkeitsänderung Manifest und Lockfile gemeinsam aktualisieren und den relevanten Check ausführen. onnx-asr und der CPU-Anbieter sind gesperrt installiert; die Modellgewichte werden erst beim ausdrücklich gestarteten Transkriptionsbefehl geladen. spaCy, dessen Sprachmodell, Recharts und Pagefind werden mit dem jeweils zugehörigen Funktionsnachweis integriert und validiert. Sie sind keine versteckten Downloads des Starters. Die nächsten Aufgaben stehen in `TASKS.md`.

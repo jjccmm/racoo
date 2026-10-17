@@ -4,7 +4,11 @@ version = "0.1.0"
 description = "Offline podcast transcription contracts and processing tools"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
-dependencies = ["pydantic>=2.12,<3"]
+dependencies = [
+    "onnx-asr[cpu,hub]==0.12.0",
+    "onnxruntime==1.27.0",
+    "pydantic>=2.12,<3",
+]
 
 [project.scripts]
 podcast-words = "podcast_words.cli:main"
@@ -14,7 +18,7 @@ requires = ["hatchling>=1.27,<2"]
 build-backend = "hatchling.build"
 
 [dependency-groups]
-dev = ["pytest>=8,<10", "ruff>=0.11,<1"]
+dev = ["imageio-ffmpeg==0.6.0", "pytest>=8,<10", "ruff>=0.11,<1"]
 
 [tool.ruff]
 target-version = "py312"
