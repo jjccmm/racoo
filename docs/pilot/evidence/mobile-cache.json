@@ -1,0 +1,27 @@
+{
+  "cache": "Fresh context, HTTP cache enabled normally; same page and browser for next/repeated query",
+  "viewport": "390x844",
+  "cpuSlowdown": 4,
+  "rttMs": 150,
+  "downloadBytesPerSecond": 200000,
+  "uploadBytesPerSecond": 62500,
+  "timingBoundary": "Suchen click to completed visible result status",
+  "results": [
+    {
+      "name": "cold",
+      "query": "massagesessel hotline massage",
+      "elapsedMs": 2983
+    },
+    {
+      "name": "next-query",
+      "query": "itunes massagesesseln ψξωζψξωζ",
+      "elapsedMs": 2495
+    },
+    {
+      "name": "repeat-first-query",
+      "query": "massagesessel hotline massage",
+      "elapsedMs": 1932
+    }
+  ],
+  "note": "Local Vite preview; page-target CDP network/CPU emulation is not a hosted/mobile-device measurement."
+}

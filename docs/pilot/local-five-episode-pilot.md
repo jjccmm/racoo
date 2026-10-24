@@ -49,4 +49,20 @@ Episode Schema 2 speichert nur Text, Segment-ID, Start und Ende; die Segmente um
 
 ## Browser und Abschlussprüfung
 
-Die technischen Such-, Statistik- und Mobilbefunde werden nach der vollständigen Prüfung ergänzt.
+Der gemeinsame Offline-Check bestand mit **68 Python-Tests**, Ruff-Lint/-Format, Dokumentationslinks, Validator, Web-Lint/TypeScript und **je 37 Chromium-Fällen** am Root- und Projektpfad. Nach dem Review wurde der separate echte spaCy-Modellnachweis erneut erfolgreich ausgeführt: sechs Wörter, `hund: 2`, `laufen: 2` ([Nachweis](evidence/spacy-model-smoke.json)). Die zwei Reviewbefunde und ihre Korrekturen stehen im [Reviewbericht](review.md).
+
+Die tatsächliche Fünf-Folgen-Webseite wurde an `/` und `/podcast_words_v3/` separat geprüft: **10/10 technische Abfragen je Pfad**, erwartete Folge jeweils auf Platz 1, fünf Timingzeilen, dieselben Grundformzahlen wie in den gespeicherten Analysen, Wortentwicklung, Segmentaktionen, teilbare Zeitparameter und 390-Pixel-Layout ohne Seitenüberlauf. [Root-Befund](evidence/browser-root.json) und [Projektpfad-Befund](evidence/browser-project.json) enthalten Anfragen, erwartete Quellsegmente, Ergebnis-IDs und Datenstand. Online-Audioabrufe wurden im technischen Browsercheck abgebrochen; geprüft wurden Steuerelemente und Zielzeiten, keine weitere Audioidentität oder menschliche Hörqualität.
+
+Die Abfragen sind aus dem ASR-Text abgeleitet. Fünf prüfen jeweils drei vorhandene Stichwörter, fünf jeweils zwei vorhandene Begriffe plus den vorab nativ bestätigten Nulltreffer-Kontrollbegriff `ψξωζψξωζ`. Beispiele für reale Wörter sind „massagesessel hotline massage“, „beatles rettungsequipment songtexte“ und „wunder bezeugen fettarm“. Das ist kein unabhängiger Erinnerungs-/Qualitätsdatensatz.
+
+Pagefind 1.5.2 berücksichtigt neben deutschen Wortformen auch Präfix-/Teilworttreffer. Ein zunächst verwendetes künstliches Fehlwort traf dadurch ein reales kurzes Wort in „QX-Schaum“. Der [native Diagnosebeleg](evidence/pagefind-prefix-diagnosis.json) bestätigt das ohne App-Zustand und hält die Entscheidung fest, die gewünschte Suchsemantik beizubehalten. Suchabdeckung ist entsprechend keine exakte Wort- oder Lemmazählung; letztere liefert die Statistik.
+
+Der Root-Build umfasst **2.797.724 Byte**, der Projektpfad-Build **2.797.955 Byte**. Root-Veröffentlichung: `6f5e43eba992e77076e7e147fbd2abc9645f8c890b3fe25f084fb519552356d6`; Projektpfad: `0f46d3a3e80f` (vollständige ID im Befund). Beide enthalten genau fünf Folgen und `archiveComplete=false`. Es wird vor Suche oder Statistik kein Transkriptarchiv geladen.
+
+## Laufzeitgrenze des Mobilprofils
+
+Im lokalen Chromium-Prüfprofil mit 390×844 Pixeln, vierfacher CPU-Verlangsamung, 150 ms Latenz und 200.000 Byte/s Download dauerte die erste Suche mit normalem HTTP-Cache **2.983 ms**, die nächste **2.495 ms** und die Wiederholung der ersten **1.932 ms** ([Messung](evidence/mobile-cache.json)). Gemessen wurde vom Suchklick bis zum sichtbaren fertigen Ergebnisstatus. Die erste Suche bleibt unter dem früheren Fünf-Sekunden-Ziel; das frühere **Ein-Sekunden-Ziel für Folgesuchen wurde in diesem Profil nicht erreicht**. Der lokale Pilot wird damit als bedienbarer technischer Stand ausgeliefert; eine umfassende Performance-/Archivfreigabe wird nicht behauptet.
+
+Der Browserkontext war zu Beginn leer. Ein zusätzlicher Lauf mit ausdrücklich deaktiviertem HTTP-Cache ergab 3.039/2.455 ms. Die CDP-Bytezählung in diesem Lauf betrifft den Seitentarget und kann Worker-Transfers auslassen; sie ist kein vollständiger Übertragungsnachweis. Die vollständige statische Buildgröße ist oben separat ausgewiesen. Diese lokale Emulation ist weder eine Messung eines gehosteten GitHub-Pages-Standes noch eines echten Mobilgeräts.
+
+Alle vier Implementierungsarbeitskopien sind entfernt. Der integrierte Branch heißt `codex/local-five-episode-pilot`; Build und temporäre Messdateien bleiben ignoriert. Der lokale Preview auf Port 4173 zeigt den echten Pilotstand.

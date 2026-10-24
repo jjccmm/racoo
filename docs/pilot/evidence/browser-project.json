@@ -1,0 +1,167 @@
+{
+  "base": "http://127.0.0.1:4180/podcast_words_v3/",
+  "publicationId": "0f46d3a3e80fcbe59675e02f6ce5ae2df0afd9a3cd164ff249b29c2455943597",
+  "episodeCount": 5,
+  "statsSummary": {
+    "distinctWords": 5427,
+    "episodeCount": 5,
+    "newWords": 5427,
+    "totalWords": 49665
+  },
+  "statisticsLemma": "mensch",
+  "queries": [
+    {
+      "query": "massagesessel hotline massage",
+      "expectedEpisodeId": "ep-9fc90dc95a4e7c5633f4c62489665cf2",
+      "expectedTitle": "UFO001 Prolog",
+      "sourceSegmentId": "segment-000007",
+      "expectedCoverage": 3,
+      "sourceSegmentStart": 1771.84,
+      "resultEpisodeIds": [
+        "ep-9fc90dc95a4e7c5633f4c62489665cf2"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 266
+    },
+    {
+      "query": "itunes massagesesseln ψξωζψξωζ",
+      "expectedEpisodeId": "ep-9fc90dc95a4e7c5633f4c62489665cf2",
+      "expectedTitle": "UFO001 Prolog",
+      "sourceSegmentId": "segment-000007",
+      "expectedCoverage": 2,
+      "sourceSegmentStart": 1771.84,
+      "resultEpisodeIds": [
+        "ep-9fc90dc95a4e7c5633f4c62489665cf2"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 234
+    },
+    {
+      "query": "butter falten sonnencreme",
+      "expectedEpisodeId": "ep-8c3cf057f4cd494721dc22b56ae5ddfc",
+      "expectedTitle": "UGO081 Freestyle Karate",
+      "sourceSegmentId": "segment-000006",
+      "expectedCoverage": 3,
+      "sourceSegmentStart": 1485.6,
+      "resultEpisodeIds": [
+        "ep-8c3cf057f4cd494721dc22b56ae5ddfc",
+        "ep-5f478c2c998d108b9c1a08d27898a417"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 253
+    },
+    {
+      "query": "telefondienst wenden ψξωζψξωζ",
+      "expectedEpisodeId": "ep-8c3cf057f4cd494721dc22b56ae5ddfc",
+      "expectedTitle": "UGO081 Freestyle Karate",
+      "sourceSegmentId": "segment-000006",
+      "expectedCoverage": 2,
+      "sourceSegmentStart": 1485.6,
+      "resultEpisodeIds": [
+        "ep-8c3cf057f4cd494721dc22b56ae5ddfc",
+        "ep-5764a1149f18a8f68698fb45bb405264",
+        "ep-9fc90dc95a4e7c5633f4c62489665cf2",
+        "ep-4e22f6d5c692e3e62564621fdcd8bcb2"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 260
+    },
+    {
+      "query": "beatles rettungsequipment songtexte",
+      "expectedEpisodeId": "ep-4e22f6d5c692e3e62564621fdcd8bcb2",
+      "expectedTitle": "UFO300 Moll",
+      "sourceSegmentId": "segment-000007",
+      "expectedCoverage": 3,
+      "sourceSegmentStart": 1803.104,
+      "resultEpisodeIds": [
+        "ep-4e22f6d5c692e3e62564621fdcd8bcb2"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 252
+    },
+    {
+      "query": "submarine wellen ψξωζψξωζ",
+      "expectedEpisodeId": "ep-4e22f6d5c692e3e62564621fdcd8bcb2",
+      "expectedTitle": "UFO300 Moll",
+      "sourceSegmentId": "segment-000007",
+      "expectedCoverage": 2,
+      "sourceSegmentStart": 1803.104,
+      "resultEpisodeIds": [
+        "ep-4e22f6d5c692e3e62564621fdcd8bcb2",
+        "ep-5f478c2c998d108b9c1a08d27898a417",
+        "ep-5764a1149f18a8f68698fb45bb405264"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 244
+    },
+    {
+      "query": "lehnen position schulter",
+      "expectedEpisodeId": "ep-5f478c2c998d108b9c1a08d27898a417",
+      "expectedTitle": "UFO Experiment (KI-generiert)",
+      "sourceSegmentId": "segment-000003",
+      "expectedCoverage": 3,
+      "sourceSegmentStart": 626.144,
+      "resultEpisodeIds": [
+        "ep-5f478c2c998d108b9c1a08d27898a417",
+        "ep-8c3cf057f4cd494721dc22b56ae5ddfc",
+        "ep-5764a1149f18a8f68698fb45bb405264"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 237
+    },
+    {
+      "query": "verzollen absolute ψξωζψξωζ",
+      "expectedEpisodeId": "ep-5f478c2c998d108b9c1a08d27898a417",
+      "expectedTitle": "UFO Experiment (KI-generiert)",
+      "sourceSegmentId": "segment-000003",
+      "expectedCoverage": 2,
+      "sourceSegmentStart": 626.144,
+      "resultEpisodeIds": [
+        "ep-5f478c2c998d108b9c1a08d27898a417",
+        "ep-4e22f6d5c692e3e62564621fdcd8bcb2",
+        "ep-5764a1149f18a8f68698fb45bb405264"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 229
+    },
+    {
+      "query": "wunder bezeugen fettarm",
+      "expectedEpisodeId": "ep-5764a1149f18a8f68698fb45bb405264",
+      "expectedTitle": "UFO537 Festival",
+      "sourceSegmentId": "segment-000008",
+      "expectedCoverage": 3,
+      "sourceSegmentStart": 2088.192,
+      "resultEpisodeIds": [
+        "ep-5764a1149f18a8f68698fb45bb405264",
+        "ep-9fc90dc95a4e7c5633f4c62489665cf2",
+        "ep-8c3cf057f4cd494721dc22b56ae5ddfc",
+        "ep-4e22f6d5c692e3e62564621fdcd8bcb2",
+        "ep-5f478c2c998d108b9c1a08d27898a417"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 361
+    },
+    {
+      "query": "fettarme gegriffen ψξωζψξωζ",
+      "expectedEpisodeId": "ep-5764a1149f18a8f68698fb45bb405264",
+      "expectedTitle": "UFO537 Festival",
+      "sourceSegmentId": "segment-000008",
+      "expectedCoverage": 2,
+      "sourceSegmentStart": 2088.192,
+      "resultEpisodeIds": [
+        "ep-5764a1149f18a8f68698fb45bb405264"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 245
+    }
+  ],
+  "checks": {
+    "compactTimingOverview": true,
+    "noTranscriptPreload": true,
+    "lemmaCountsMatch": true,
+    "mobileNoOverflow": true,
+    "coarseActionsAndAdHints": true,
+    "sharedTargetUsesSegmentStart": true
+  },
+  "notes": "Technical queries derived from saved ASR text; not independent human accuracy review. Real online audio requests aborted; playback controls/targets tested, not streaming identity or listening quality."
+}

@@ -1,0 +1,99 @@
+{
+  "scope": "Read-only diagnosis against the actual locally served five-episode build",
+  "url": "http://127.0.0.1:4173/",
+  "pagefindVersion": "1.5.2",
+  "publicationId": "6f5e43eba992e77076e7e147fbd2abc9645f8c890b3fe25f084fb519552356d6",
+  "indexId": "8488a5bc6ba74e24d26a5d89278d7c5c358fd58ed7819970c594d2bb80f74b1f",
+  "reproduction": {
+    "original": "node C:\\Users\\User\\AppData\\Local\\Temp\\pw-pilot-smoke.cjs http://127.0.0.1:4173/ diagnose",
+    "originalFailure": "fettarme gegriffen qxvkjzqvjkqzvq expected 2/3 coverage for UFO537 Festival, received 3/3",
+    "minimized": "Native pagefind.createInstance(...).search(term), before any result.data() or application worker; raw word positions copied immediately",
+    "orderIndependence": "qxvkjzqvjkqzvq alone and after fettarme, gegriffen returned the same UFO537 identity and raw position 12283"
+  },
+  "nativePartialMatches": [
+    {
+      "query": "qxvkjzqvjkqzvq",
+      "episodeId": "ep-5764a1149f18a8f68698fb45bb405264",
+      "positions": [
+        12283
+      ],
+      "highlightedSourceWord": "QX-Schaum",
+      "quotedSingleTermResultCount": 0
+    },
+    {
+      "query": "noncezzzzpilotfehlwort",
+      "resultCount": 5,
+      "firstEpisodeId": "ep-9fc90dc95a4e7c5633f4c62489665cf2",
+      "firstPositions": [
+        909,
+        910,
+        2384,
+        9047
+      ],
+      "firstExcerptHighlight": "No, no.",
+      "quotedSingleTermResultCount": 0
+    },
+    {
+      "query": "zzzzzzzzzz",
+      "highlightedSourceWord": "Z."
+    },
+    {
+      "query": "aaaaaaaaaaaa",
+      "highlightedSourceWord": "AA-Batterien"
+    }
+  ],
+  "quotedSingleTermGermanFormObservations": [
+    {
+      "queries": [
+        "Hund",
+        "Hunde"
+      ],
+      "sameEpisodeIds": true,
+      "episodeCount": 3,
+      "highlightedSourceWord": "Hunde"
+    },
+    {
+      "queries": [
+        "Münze",
+        "Münzen"
+      ],
+      "sameEpisodeIds": true,
+      "episodeCount": 1,
+      "highlightedSourceWord": "Euro-Münze"
+    },
+    {
+      "queries": [
+        "Katze",
+        "Katzen"
+      ],
+      "sameEpisodeIds": true,
+      "episodeCount": 2,
+      "highlightedSourceWord": "Katze"
+    },
+    {
+      "queries": [
+        "Gruss",
+        "Grüße"
+      ],
+      "sameEpisodeIds": true,
+      "episodeCount": 2,
+      "highlightedSourceWord": "Grüße"
+    },
+    {
+      "queries": [
+        "Fuß",
+        "Füße"
+      ],
+      "episodeCount": 0,
+      "limitation": "Both empty in quoted mode on this real corpus. Unquoted searches match compounds such as Fußball and Fussel; this is not a positive proof of foot inflection behavior."
+    }
+  ],
+  "quotedModeLimitation": "On this index quoted single terms expose only the first matched raw word position per episode. For fettarm/fettarme unquoted positions were 6439,6451,6454,6531; quoted mode returned only 6439. Blindly quoting all terms would lose later coarse segment Fundstellen.",
+  "nativeNoHitControl": {
+    "query": "ψξωζψξωζ",
+    "resultCount": 0
+  },
+  "conclusion": "The artificial Latin nonce was an invalid no-hit assumption: native Pagefind partial-word matching maps it to shorter indexed components. No application state or result collision is needed to reproduce it. Coverage describes native search-term matching, not exact lemma counts.",
+  "decision": "Keep production native partial matching and German stemming unchanged. Use the preflighted Greek no-hit control for technical 2/3 coverage QA, and document that partial matching may overmatch initials/compound components. A future stricter matching policy would be a separate behavior decision.",
+  "repositoryChanges": "None"
+}

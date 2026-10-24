@@ -1,0 +1,181 @@
+{
+  "base": "http://127.0.0.1:4173/",
+  "publicationId": "6f5e43eba992e77076e7e147fbd2abc9645f8c890b3fe25f084fb519552356d6",
+  "episodeCount": 5,
+  "statsSummary": {
+    "distinctWords": 5427,
+    "episodeCount": 5,
+    "newWords": 5427,
+    "totalWords": 49665
+  },
+  "statisticsLemma": "mensch",
+  "queries": [
+    {
+      "query": "massagesessel hotline massage",
+      "expectedEpisodeId": "ep-9fc90dc95a4e7c5633f4c62489665cf2",
+      "expectedTitle": "UFO001 Prolog",
+      "sourceSegmentId": "segment-000007",
+      "expectedCoverage": 3,
+      "sourceSegmentStart": 1771.84,
+      "resultEpisodeIds": [
+        "ep-9fc90dc95a4e7c5633f4c62489665cf2"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 270
+    },
+    {
+      "query": "itunes massagesesseln ψξωζψξωζ",
+      "expectedEpisodeId": "ep-9fc90dc95a4e7c5633f4c62489665cf2",
+      "expectedTitle": "UFO001 Prolog",
+      "sourceSegmentId": "segment-000007",
+      "expectedCoverage": 2,
+      "sourceSegmentStart": 1771.84,
+      "resultEpisodeIds": [
+        "ep-9fc90dc95a4e7c5633f4c62489665cf2"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 238
+    },
+    {
+      "query": "butter falten sonnencreme",
+      "expectedEpisodeId": "ep-8c3cf057f4cd494721dc22b56ae5ddfc",
+      "expectedTitle": "UGO081 Freestyle Karate",
+      "sourceSegmentId": "segment-000006",
+      "expectedCoverage": 3,
+      "sourceSegmentStart": 1485.6,
+      "resultEpisodeIds": [
+        "ep-8c3cf057f4cd494721dc22b56ae5ddfc",
+        "ep-5f478c2c998d108b9c1a08d27898a417"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 349
+    },
+    {
+      "query": "telefondienst wenden ψξωζψξωζ",
+      "expectedEpisodeId": "ep-8c3cf057f4cd494721dc22b56ae5ddfc",
+      "expectedTitle": "UGO081 Freestyle Karate",
+      "sourceSegmentId": "segment-000006",
+      "expectedCoverage": 2,
+      "sourceSegmentStart": 1485.6,
+      "resultEpisodeIds": [
+        "ep-8c3cf057f4cd494721dc22b56ae5ddfc",
+        "ep-5764a1149f18a8f68698fb45bb405264",
+        "ep-9fc90dc95a4e7c5633f4c62489665cf2",
+        "ep-4e22f6d5c692e3e62564621fdcd8bcb2"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 378
+    },
+    {
+      "query": "beatles rettungsequipment songtexte",
+      "expectedEpisodeId": "ep-4e22f6d5c692e3e62564621fdcd8bcb2",
+      "expectedTitle": "UFO300 Moll",
+      "sourceSegmentId": "segment-000007",
+      "expectedCoverage": 3,
+      "sourceSegmentStart": 1803.104,
+      "resultEpisodeIds": [
+        "ep-4e22f6d5c692e3e62564621fdcd8bcb2"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 245
+    },
+    {
+      "query": "submarine wellen ψξωζψξωζ",
+      "expectedEpisodeId": "ep-4e22f6d5c692e3e62564621fdcd8bcb2",
+      "expectedTitle": "UFO300 Moll",
+      "sourceSegmentId": "segment-000007",
+      "expectedCoverage": 2,
+      "sourceSegmentStart": 1803.104,
+      "resultEpisodeIds": [
+        "ep-4e22f6d5c692e3e62564621fdcd8bcb2",
+        "ep-5f478c2c998d108b9c1a08d27898a417",
+        "ep-5764a1149f18a8f68698fb45bb405264"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 259
+    },
+    {
+      "query": "lehnen position schulter",
+      "expectedEpisodeId": "ep-5f478c2c998d108b9c1a08d27898a417",
+      "expectedTitle": "UFO Experiment (KI-generiert)",
+      "sourceSegmentId": "segment-000003",
+      "expectedCoverage": 3,
+      "sourceSegmentStart": 626.144,
+      "resultEpisodeIds": [
+        "ep-5f478c2c998d108b9c1a08d27898a417",
+        "ep-8c3cf057f4cd494721dc22b56ae5ddfc",
+        "ep-5764a1149f18a8f68698fb45bb405264"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 254
+    },
+    {
+      "query": "verzollen absolute ψξωζψξωζ",
+      "expectedEpisodeId": "ep-5f478c2c998d108b9c1a08d27898a417",
+      "expectedTitle": "UFO Experiment (KI-generiert)",
+      "sourceSegmentId": "segment-000003",
+      "expectedCoverage": 2,
+      "sourceSegmentStart": 626.144,
+      "resultEpisodeIds": [
+        "ep-5f478c2c998d108b9c1a08d27898a417",
+        "ep-4e22f6d5c692e3e62564621fdcd8bcb2",
+        "ep-5764a1149f18a8f68698fb45bb405264"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 245
+    },
+    {
+      "query": "wunder bezeugen fettarm",
+      "expectedEpisodeId": "ep-5764a1149f18a8f68698fb45bb405264",
+      "expectedTitle": "UFO537 Festival",
+      "sourceSegmentId": "segment-000008",
+      "expectedCoverage": 3,
+      "sourceSegmentStart": 2088.192,
+      "resultEpisodeIds": [
+        "ep-5764a1149f18a8f68698fb45bb405264",
+        "ep-9fc90dc95a4e7c5633f4c62489665cf2",
+        "ep-8c3cf057f4cd494721dc22b56ae5ddfc",
+        "ep-4e22f6d5c692e3e62564621fdcd8bcb2",
+        "ep-5f478c2c998d108b9c1a08d27898a417"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 360
+    },
+    {
+      "query": "fettarme gegriffen ψξωζψξωζ",
+      "expectedEpisodeId": "ep-5764a1149f18a8f68698fb45bb405264",
+      "expectedTitle": "UFO537 Festival",
+      "sourceSegmentId": "segment-000008",
+      "expectedCoverage": 2,
+      "sourceSegmentStart": 2088.192,
+      "resultEpisodeIds": [
+        "ep-5764a1149f18a8f68698fb45bb405264"
+      ],
+      "expectedRank": 1,
+      "elapsedMs": 233
+    }
+  ],
+  "checks": {
+    "compactTimingOverview": true,
+    "noTranscriptPreload": true,
+    "lemmaCountsMatch": true,
+    "mobileNoOverflow": true,
+    "coarseActionsAndAdHints": true,
+    "sharedTargetUsesSegmentStart": true
+  },
+  "notes": "Technical queries derived from saved ASR text; not independent human accuracy review. Real online audio requests aborted; playback controls/targets tested, not streaming identity or listening quality.",
+  "mobileMeasurement": {
+    "viewport": "390x844",
+    "cpuSlowdown": 4,
+    "rttMs": 150,
+    "downloadBytesPerSecond": 200000,
+    "uploadBytesPerSecond": 62500,
+    "cache": "fresh context; HTTP cache disabled; repeated search retains app/module state",
+    "timingBoundary": "Suchen click to visible completed result status",
+    "firstSearchMs": 3039,
+    "secondSearchMs": 2455,
+    "encodedPageSessionBytes": 82510,
+    "beforeSearchBytes": 76937,
+    "note": "CDP page-target bytes may omit worker-target transfers; size is not a complete wire-byte claim."
+  }
+}

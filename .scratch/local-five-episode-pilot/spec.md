@@ -1,6 +1,6 @@
 # Local five-episode pilot
 
-**Status:** in-progress
+**Status:** resolved
 
 ## User authorization and target
 
@@ -39,3 +39,7 @@ The new instruction supersedes prior requirements to preserve audio, hash-match 
 ## Coordination
 
 Tickets 01 and 02 are independent worktree implementations against the agreed schema/catalog shape above. Ticket 01 owns web source/tests; ticket 02 owns Python contracts/pipeline/schema/fixtures and statistics export. The coordinator owns plan/agent documentation and authoritative ticket state. Each implementation is committed, merged and checked on the integration branch before blocked work starts. The final review compares the integration branch with baseline 05885c90772e0dc3f96203cc122cd66aba93927b.
+
+## Delivered
+
+All four tickets are resolved on `codex/local-five-episode-pilot`. See [pilot report](../../docs/pilot/local-five-episode-pilot.md) and [separate-axis review](../../docs/pilot/review.md). The local five-episode target is complete. Mobile repeat search remains above the historical1s target under the documented throttle; independent human search quality, archive processing and public deployment remain separate.

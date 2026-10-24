@@ -1,0 +1,57 @@
+{
+  "checked_at": "2026-10-24T22:39:52.934907+00:00",
+  "text": "Die Hunde laufen. Ein Hund läuft!",
+  "boundary": "public analyze command to saved analysis and 64 publication shards",
+  "expected_total_words": 6,
+  "expected_lemmas": {
+    "der": {
+      "count": 1,
+      "stopword": true
+    },
+    "hund": {
+      "count": 2,
+      "stopword": false
+    },
+    "laufen": {
+      "count": 2,
+      "stopword": false
+    },
+    "ein": {
+      "count": 1,
+      "stopword": true
+    }
+  },
+  "actual_total_words": 6,
+  "actual_lemmas": {
+    "der": {
+      "count": 1,
+      "stopword": true
+    },
+    "ein": {
+      "count": 1,
+      "stopword": true
+    },
+    "hund": {
+      "count": 2,
+      "stopword": false
+    },
+    "laufen": {
+      "count": 2,
+      "stopword": false
+    }
+  },
+  "settings": {
+    "analysis_version": "1",
+    "model_name": "de_core_news_lg",
+    "model_version": "3.8.0",
+    "spacy_version": "3.8.16"
+  },
+  "command_result": {
+    "ok": true,
+    "computed": [
+      "synthetic-episode-001"
+    ],
+    "reused": []
+  },
+  "passed": true
+}
