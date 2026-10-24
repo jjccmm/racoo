@@ -1,5 +1,7 @@
 # Current scope update — 2026-10-24
 
+Scope update: The operator replaced retained/hash-matched audio and second-accurate timestamps with ephemeral audio, coarse segments and an advertising hint. Current local five-episode implementation and acceptance are in [the new spec](../local-five-episode-pilot/spec.md). This older spec records the preceding scope; it does not reinstate superseded gates.
+
 The user selected local GPU FP32 as the only active ASR path, accepted the complete UFO537 transcript quality and chose about 25× real time for planning. Former remote runtime/result-import requirements are retired and archived; the statements below describe the current local workflow. The five-episode search, reference-timestamp and mobile gates remain active. See [current operation](../../docs/asr.md) and [the investigation](../../docs/research/asr-investigation.md).
 
 # Podcast Words V3: five-episode pilot

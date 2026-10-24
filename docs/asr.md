@@ -25,26 +25,26 @@ uv run --frozen podcast-words process --catalog data/podcast-ufo/catalog.json --
 
 Mit weiteren `--episode-id`-Angaben mehrere ausdrücklich ausgewählte Folgen verarbeiten. Das Modell wird einmal pro Lauf geladen. Jede fertige Folge wird validiert und dauerhaft gespeichert, bevor ihr Katalogstatus `completed` wird. Derselbe Aufruf überspringt fertige Folgen; fehlgeschlagene Arbeit kann erneut gestartet werden. `--retranscribe` ersetzt einen vorhandenen Transkriptstand ausdrücklich. Metadaten- oder Modellabweichungen werden beim Überspringen gemeldet und lösen keine automatische Neutranskription aus.
 
-Für bereits heruntergeladenes Audio `--audio-file <Datei>` verwenden; nur bei genau einer ausgewählten Folge. So wird dieselbe Audiofassung erneut verarbeitet. Alte INT8-Transkripte bleiben bis zur ausdrücklich gewählten FP32-Neuverarbeitung erhalten. Die Veröffentlichung prüft weiterhin kompatible Transkriptionskonfigurationen.
-
-Der Einzelbefehl `transcribe` akzeptiert alternativ explizite Metadaten und einen neuen JSON-Ausgabepfad:
+Der Einzelbefehl `transcribe` akzeptiert alternativ Metadaten und einen neuen JSON-Ausgabepfad. Die Audioquelle wird aus den Metadaten geladen; ein vorhandenes Einzel-Ausgabeziel wird nicht überschrieben:
 
 ```powershell
-uv run --frozen podcast-words transcribe --metadata docs/research/evidence/ufo537-asr-input.json --audio-file .cache/reference.mp3 --output .cache/episode-fp32.json --run-report .cache/asr/single-run.json
+uv run --frozen podcast-words transcribe --metadata docs/research/evidence/ufo537-asr-input.json --output .cache/episode-fp32.json --run-report .cache/asr/single-run.json
 ```
 
-Das Beispiel setzt eine bewusst gewählte lokale Datei `.cache/reference.mp3` voraus. Ein vorhandenes Einzel-Ausgabeziel wird nicht überschrieben.
+## Audio und grobe Segmente
 
-## Audiofassung erhalten und prüfen
+Der Ablauf lautet: Feed-/Katalogeintrag → temporärer Download → FFmpeg → CPU-VAD und Parakeet FP32/CUDA → grobe Textsegmente → validiertes Episoden-JSON → Audio löschen. Auch bei Fehlern werden temporäre MP3-/WAV-Dateien entfernt. Modellgewichte bleiben im Cache. Fertige Transkripte werden bei Wiederaufnahme ohne Download, Hashprüfung oder Abgleich mit der Online-MP3 verwendet.
 
-Die öffentliche Folgen-URL ist eine **Bezugsquelle**, keine feste Audiofassung. Acast liefert clientabhängige Werbefassungen. Neue Verarbeitungen erhalten die tatsächliche Eingabe unter `.cache/asr/audio/<sha256>.<format>`; der Laufbericht nennt `reference_audio_file`, Hash, Dateigröße und decodierte Dauer. Die Datei wird vor und nach der Erkennung geprüft. Eine später geladene andere Fassung überschreibt diese Referenz nicht.
+Etwa fünfminütige Segmente enthalten nur ID, Text, Start und Ende. Der Lader fordert keine Wortzeitpunkte an. Sprachabschnitte werden zusammengefasst, bevor eine gemeinsame Zeitspanne von 300 Sekunden überschritten würde; der erkannte Text bleibt in Reihenfolge erhalten. Pagefind braucht Text und Segmentanker, spaCy nur die Texte.
 
-Bei einer Abweichung von mehr als einer Sekunde zwischen Online- und Transkriptdauer stoppt der Player automatische Sprünge und erklärt die andere Audiofassung. Unter **„Transkribierte Audiodatei öffnen“** kann die lokale Referenz gewählt werden. Ihr SHA-256 wird im Browser geprüft; nur die passende Datei bestätigt die Zeitachse. Die Datei wird nicht hochgeladen. Gleiche Online-Länge allein beweist keine identischen Bytes. Eine dauerhaft garantierte Online-Referenz bietet der geprüfte Acast-Link nicht.
+Der Player springt zum Segmentanfang. Die öffentliche Acast-Quelle darf inzwischen andere Werbung enthalten. Ein sichtbarer Hinweis unmittelbar bei jedem Sprungknopf erklärt diese Ungenauigkeit. Es gibt weder Dateiauswahl noch Fassungsprüfung oder Wiedergabesperre wegen anderer Dauer.
 
-Audio, Modelle und Laufcaches bleiben außerhalb von Git. Referenzdateien erst bewusst löschen, wenn Hörprüfung und Wiederverarbeitung sie nicht mehr benötigen. Die bestätigte UFO537-Hörreferenz bleibt zusätzlich unter `.cache/local-gpu-fp32-full-ufo537-2026-10-24/source.mp3`; die unveränderten TXT-Ausgaben sind im [Untersuchungsbericht](research/asr-investigation.md) verlinkt.
+## Laufzeiten
 
-## Messungen und Prüfung
+Jede gespeicherte Episode enthält `timings.download_seconds`, `transcription_seconds` und `total_seconds`. Der Download umfasst den tatsächlichen Abruf. Die Transkriptionszeit ist die Erkennung einschließlich CPU-VAD und NumPy-Vorverarbeitung; FFmpeg ist separat im Laufbericht messbar. Die Gesamtzeit umfasst die episodenbezogene Verarbeitung. Das einmalige Modell-/VAD-Setup wird separat für den Lauf ausgewiesen und nicht erneut zu jeder Folge addiert.
 
-`--run-report` erfasst Download, Modell-/VAD-Aufbau, Decodierung, Erkennung und Ergebnisprüfung/Speicherung getrennt. Die Erkennung enthält VAD und Vorverarbeitung und ist keine isolierte GPU-Kernelzeit. Modellsetup und Unterzeiten nicht doppelt addieren; Cachezustand, Eingabehash und Runtime gehören zum Vergleich. Die aktive Pipeline enthält keine Profilierungs- oder Benchmarkmodi.
+Für jede fertig verarbeitete Folge geht eine lesbare Statuszeile nach stderr: Audiogesamtdauer, Verarbeitungsgesamtdauer, Downloadsekunden je Audiominute und Transkriptionssekunden je Audiominute. stdout bleibt maschinenlesbares JSON. Die Webseite zeigt Dauer und gemessene Download-/Transkriptionszeiten in der Folgenübersicht. Synthetische Testwerte sind keine Leistungsnachweise.
 
-Routineprüfungen laufen mit kleinen Modelldoubles und echter FFmpeg-Decodierung ohne GPU und Downloads. Runtimeänderungen zusätzlich durch einen kurzen echten GPU-Lauf prüfen. Such- und Zeitmarkenreferenzen für den gesamten Pilotbestand bleiben unabhängig von der akzeptierten einzelnen Transkriptqualität zu erbringen.
+`--run-report` hält zusätzliche Stufen und Runtime fest. Unterzeiten nicht doppelt addieren; Modellcache und Umgebung beim Vergleich angeben. Die aktive Pipeline enthält keine Profilierungs- oder Benchmarkmodi. Frühere CPU-/Colab-Ergebnisse und Hinweise für FP32 auf Colab stehen ausschließlich in der [Untersuchung](research/asr-investigation.md).
+
+Routineprüfungen laufen mit kontrollierten Modellantworten und echter FFmpeg-Decodierung ohne GPU/Downloads. Der [lokale Pilot](pilot/local-five-episode-pilot.md) dokumentiert die tatsächlichen fünf GPU-Verarbeitungen, Suche und Statistik.

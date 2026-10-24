@@ -1,5 +1,7 @@
 # Five-episode pilot tickets
 
+Current work is tracked in [the local five-episode pilot](../local-five-episode-pilot/ticket-index.md). The operator replaced the exact-audio/timestamp gates; historical tickets below retain their evidence and comments.
+
 The [parent spec](spec.md) defines the confirmed behavior and test boundaries. This index provides navigation; each individual ticket's current Status and Blocked by fields govern execution.
 
 1. [01: Inspect and reconcile the episode catalog](issues/01-catalog-and-stable-sources.md)

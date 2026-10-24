@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** claimed-for-agent
+**Status:** claimed
 
 - [ ] Remove local-file upload, audio hashing, byte identity and online-duration mismatch checks from the website.
 - [ ] Use the matching segment's start as playback time, with a clear visible coarse-segment/advertising hint adjacent to every jump action; do not estimate word times.
