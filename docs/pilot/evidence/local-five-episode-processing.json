@@ -1,0 +1,200 @@
+{
+  "recorded_at": "2026-10-24T22:35:50.184861+00:00",
+  "processing_code_revision": "f64b5b3adb77b65704b6c77165901b2582c0f725",
+  "runtime": {
+    "python": "3.12.9",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "processor": "Intel64 Family 6 Model 94 Stepping 3, GenuineIntel",
+    "logical_cpu_count": 8,
+    "execution_provider": "CUDAExecutionProvider",
+    "intra_op_num_threads": 4
+  },
+  "shared_model": {
+    "model_parameters_lookup_download": {
+      "cache_status": "warm",
+      "elapsed_seconds": 0.031,
+      "wire_bytes_downloaded": null
+    },
+    "vad_lookup_download": {
+      "elapsed_seconds": 0.0,
+      "wire_bytes_downloaded": null
+    },
+    "encoder_decoder_session_initialization": {
+      "elapsed_seconds": 3.938
+    },
+    "vad_session_initialization": {
+      "elapsed_seconds": 0.203
+    },
+    "model_setup_total_including_imports_lookup_and_sessions_seconds": 4.984,
+    "model_setup_timing_note": "Outer setup includes runtime imports, cache lookups and nested ASR/VAD initialization; do not add sub-times again."
+  },
+  "batch_total_seconds": 629.906,
+  "episodes": [
+    {
+      "episode_id": "ep-9fc90dc95a4e7c5633f4c62489665cf2",
+      "title": "UFO001 Prolog",
+      "audio_seconds": 3716.4146875,
+      "timings": {
+        "download_seconds": 3.203,
+        "transcription_seconds": 127.688,
+        "total_seconds": 136.047
+      },
+      "download_seconds_per_audio_minute": 0.051711129182216695,
+      "transcription_seconds_per_audio_minute": 2.061470703408956,
+      "recognition_realtime_multiple": 29.10543424205877,
+      "segments": 13,
+      "max_segment_span_seconds": 299.904,
+      "json_bytes": 73924,
+      "total_words": 11529,
+      "execution_providers": {
+        "encoder": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "decoder_joint": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "vad": [
+          "CPUExecutionProvider"
+        ]
+      }
+    },
+    {
+      "episode_id": "ep-8c3cf057f4cd494721dc22b56ae5ddfc",
+      "title": "UGO081 Freestyle Karate",
+      "audio_seconds": 3054.1845,
+      "timings": {
+        "download_seconds": 2.609,
+        "transcription_seconds": 114.39,
+        "total_seconds": 121.547
+      },
+      "download_seconds_per_audio_minute": 0.051254270984611446,
+      "transcription_seconds_per_audio_minute": 2.2472119808086255,
+      "recognition_realtime_multiple": 26.699750852347233,
+      "segments": 11,
+      "max_segment_span_seconds": 299.552,
+      "json_bytes": 63013,
+      "total_words": 9879,
+      "execution_providers": {
+        "encoder": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "decoder_joint": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "vad": [
+          "CPUExecutionProvider"
+        ]
+      }
+    },
+    {
+      "episode_id": "ep-4e22f6d5c692e3e62564621fdcd8bcb2",
+      "title": "UFO300 Moll",
+      "audio_seconds": 4123.115125,
+      "timings": {
+        "download_seconds": 3.687,
+        "transcription_seconds": 149.219,
+        "total_seconds": 158.172
+      },
+      "download_seconds_per_audio_minute": 0.05365360735591878,
+      "transcription_seconds_per_audio_minute": 2.1714504030493202,
+      "recognition_realtime_multiple": 27.63130114127558,
+      "segments": 14,
+      "max_segment_span_seconds": 299.03999999999996,
+      "json_bytes": 76228,
+      "total_words": 11885,
+      "execution_providers": {
+        "encoder": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "decoder_joint": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "vad": [
+          "CPUExecutionProvider"
+        ]
+      }
+    },
+    {
+      "episode_id": "ep-5f478c2c998d108b9c1a08d27898a417",
+      "title": "UFO Experiment (KI-generiert)",
+      "audio_seconds": 1516.4604375,
+      "timings": {
+        "download_seconds": 0.953,
+        "transcription_seconds": 49.516,
+        "total_seconds": 52.859
+      },
+      "download_seconds_per_audio_minute": 0.03770622601554022,
+      "transcription_seconds_per_audio_minute": 1.9591411200267466,
+      "recognition_realtime_multiple": 30.625665189029807,
+      "segments": 5,
+      "max_segment_span_seconds": 298.9760000000001,
+      "json_bytes": 28565,
+      "total_words": 4198,
+      "execution_providers": {
+        "encoder": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "decoder_joint": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "vad": [
+          "CPUExecutionProvider"
+        ]
+      }
+    },
+    {
+      "episode_id": "ep-5764a1149f18a8f68698fb45bb405264",
+      "title": "UFO537 Festival",
+      "audio_seconds": 4346.4881875,
+      "timings": {
+        "download_seconds": 2.25,
+        "transcription_seconds": 148.078,
+        "total_seconds": 155.719
+      },
+      "download_seconds_per_audio_minute": 0.031059557549988168,
+      "transcription_seconds_per_audio_minute": 2.0441054057276213,
+      "recognition_realtime_multiple": 29.35269376612326,
+      "segments": 15,
+      "max_segment_span_seconds": 300.0,
+      "json_bytes": 77954,
+      "total_words": 12174,
+      "execution_providers": {
+        "encoder": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "decoder_joint": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "vad": [
+          "CPUExecutionProvider"
+        ]
+      }
+    }
+  ],
+  "analysis_settings": {
+    "analysis_version": "1",
+    "model_name": "de_core_news_lg",
+    "model_version": "3.8.0",
+    "spacy_version": "3.8.16"
+  },
+  "resume": {
+    "inference_runs": 0,
+    "skipped_runs": 5,
+    "model_initialized": false,
+    "transcript_bytes_unchanged": true,
+    "elapsed_seconds": 0.313
+  },
+  "audio_cleanup": "No files/directories remain in .cache/asr/audio after processing; earlier source/decoded audio removed.",
+  "timing_boundaries": "Episode total: download through decode, recognition, audio cleanup and validation; excludes shared model setup and final serialization. Recognition includes CPU VAD/NumPy preprocessing and coarse assembly, not GPU kernels alone.",
+  "quality_scope": "Technical five-episode integration; earlier UFO537 text quality accepted by user. No independent human search review or archive/public deployment approval claimed."
+}

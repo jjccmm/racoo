@@ -907,7 +907,7 @@
       ],
       "source_status": "feed-listed",
       "audio_availability": "unverified",
-      "processing_status": "not-processed",
+      "processing_status": "completed",
       "source_evidence": [],
       "audio_probe": null,
       "identity_verifications": []
@@ -6469,7 +6469,7 @@
       ],
       "source_status": "feed-listed",
       "audio_availability": "unverified",
-      "processing_status": "not-processed",
+      "processing_status": "completed",
       "source_evidence": [],
       "audio_probe": null,
       "identity_verifications": []
@@ -12409,7 +12409,7 @@
       ],
       "source_status": "feed-listed",
       "audio_availability": "unverified",
-      "processing_status": "not-processed",
+      "processing_status": "completed",
       "source_evidence": [],
       "audio_probe": null,
       "identity_verifications": []
@@ -14515,7 +14515,7 @@
       ],
       "source_status": "feed-listed",
       "audio_availability": "unverified",
-      "processing_status": "not-processed",
+      "processing_status": "completed",
       "source_evidence": [],
       "audio_probe": null,
       "identity_verifications": []
