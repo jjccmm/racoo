@@ -42,7 +42,7 @@ uv run --frozen podcast-words validate tests/fixtures/synthetic-episode.json
 npm.cmd --prefix web run dev
 ```
 
-Der Entwicklungsserver bindet ausschließlich an `127.0.0.1`, standardmäßig Port 5173. Unter Linux `npm` statt `npm.cmd` verwenden. Mit Strg+C beenden. Die App zeigt ausdrücklich synthetische Daten. Passagen können den gemeinsamen Player nach Nutzeraktion öffnen; die synthetischen Audiodaten sind nicht verfügbar und zeigen den Fehlerzustand. Für die echte Suche den Produktionsbuild mit seinem generierten Index verwenden:
+Der Entwicklungsserver bindet ausschließlich an `127.0.0.1`, standardmäßig Port 5173. Unter Linux `npm` statt `npm.cmd` verwenden. Mit Strg+C beenden. Der normale lokale Build verwendet den echten Fünf-Folgen-Pilot. Routinechecks wählen ihre synthetischen Daten ausdrücklich aus. Passagen öffnen den gemeinsamen Online-Player nach Nutzeraktion mit einem Hinweis auf grobe Zeiten und Werbung. Für die echte Suche den Produktionsbuild mit seinem generierten Index verwenden:
 
 ```powershell
 npm.cmd --prefix web run build
@@ -79,7 +79,7 @@ Die globale Reihenfolge wird vor den ersten Detailabrufen festgelegt. Anfangs we
 
 `doctor` kontrolliert Python und ein ausführbares FFmpeg. Bei fehlendem oder nicht ausführbarem FFmpeg liefert er einen Fehlerstatus. Ein erfolgreicher Aufruf ist kein ASR- oder GPU-Nachweis. Seit dem CPU-ASR-Adapter benötigt auch der Offline-Check FFmpeg: Kleine erzeugte PCM-Prüfdaten durchlaufen die echte Decodierung, während nur der externe Modelloutput ersetzt wird. CI verwendet dafür das über `uv.lock` gesperrte Dev-Wheel `imageio-ffmpeg==0.6.0`; `scripts/prepare_ci_ffmpeg.py` kopiert dessen enthaltene Binärdatei unter dem Befehlsnamen `ffmpeg` in `.cache/ci-ffmpeg` und ergänzt ausschließlich den CI-Pfad. Das Skript lädt selbst nichts herunter und verändert keine globalen Einstellungen. Auf einem frischen lokalen Rechner kann derselbe vorbereitete Ordner dem Shell-Pfad hinzugefügt werden. Große Audio- oder Modelldownloads bleiben ausdrücklich gestarteten Integrationsläufen vorbehalten. Der echte Windows-ASR-Lauf verwendete separat protokolliertes Host-FFmpeg 7.1.1; siehe [ASR](asr.md).
 
-Die [ASR-Anleitung](asr.md) beschreibt die lokale GPU-Einrichtung, die behaltenen Referenz-Audiodateien und die Verarbeitung. Die [Untersuchung](research/asr-investigation.md) bewahrt frühere Laufwege ausschließlich als Dokumentation.
+Die [ASR-Anleitung](asr.md) beschreibt die lokale GPU-Einrichtung, temporäres Audio, grobe Textsegmente und die Verarbeitung. Die [Untersuchung](research/asr-investigation.md) bewahrt frühere Laufwege ausschließlich als Dokumentation.
 
 ## CI und Prüfstand
 
