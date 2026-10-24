@@ -14,6 +14,12 @@ def main() -> int:
     if not npm:
         print("npm is missing; install the Node version recorded in .node-version", file=sys.stderr)
         return 1
+    fixture_environment = {
+        **os.environ,
+        "PODCAST_WORDS_EPISODES": "tests/fixtures/search-corpus.json",
+        "PODCAST_WORDS_ANALYSES": "tests/fixtures/analysis",
+    }
+    fixture_environment.pop("PODCAST_WORDS_PUBLICATION_SOURCE", None)
     commands = [
         [sys.executable, "-m", "ruff", "check", "."],
         [sys.executable, "-m", "ruff", "format", "--check", "."],
@@ -30,7 +36,7 @@ def main() -> int:
     ]
     for command in commands:
         print(f"\n> {' '.join(command)}", flush=True)
-        result = subprocess.run(command, cwd=ROOT, check=False)
+        result = subprocess.run(command, cwd=ROOT, env=fixture_environment, check=False)
         if result.returncode:
             return result.returncode
 
@@ -39,12 +45,12 @@ def main() -> int:
         if base_path != "/":
             command.extend(["--", "--base", base_path])
         print(f"\n> {' '.join(command)}", flush=True)
-        result = subprocess.run(command, cwd=ROOT, check=False)
+        result = subprocess.run(command, cwd=ROOT, env=fixture_environment, check=False)
         if result.returncode:
             return result.returncode
 
         command = [npm, "--prefix", "web", "run", "test:browser"]
-        environment = {**os.environ, "PW_BASE_PATH": base_path}
+        environment = {**fixture_environment, "PW_BASE_PATH": base_path}
         port = environment.get("PW_PORT", "4179")
         print(f"\n> {' '.join(command)} (PW_BASE_PATH={base_path}, PW_PORT={port})", flush=True)
         result = subprocess.run(command, cwd=ROOT, env=environment, check=False)

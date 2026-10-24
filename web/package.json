@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --max-warnings 0",
     "build": "tsc --noEmit && vite build",
-    "check": "npm run lint && npm run build && npm run test:browser",
+    "check": "uv run --frozen --no-sync python ../scripts/check.py",
     "browser:install": "playwright install chromium --only-shell",
     "test:browser": "playwright test",
     "preview": "vite preview --host 127.0.0.1"

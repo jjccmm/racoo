@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { Plugin, ResolvedConfig } from 'vite';
+import { buildInputs } from './inputs.ts';
 
 const digest = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const json = async <T,>(file: string): Promise<T> => JSON.parse(await readFile(file, 'utf8')) as T;
@@ -27,10 +28,8 @@ export function publication(): Plugin {
     apply: 'build',
     configResolved(resolved) { config = resolved; },
     async closeBundle() {
-      const root = path.resolve(config.root, '..');
       const dist = path.resolve(config.root, config.build.outDir);
-      const source = process.env.PODCAST_WORDS_PUBLICATION_SOURCE
-        ? path.resolve(root, process.env.PODCAST_WORDS_PUBLICATION_SOURCE) : undefined;
+      const source = buildInputs(config).source;
       const prepared = source ? await json<JsonObject & { podcastId: string; state: string; archiveComplete: boolean; episodeIds: string[]; preparationId: string }>(path.join(source, 'manifest.json')) : undefined;
       const publicCatalog = source ? await json<JsonObject & { podcastId: string; episodes: { episodeId: string }[] }>(path.join(source, 'catalog.json')) : undefined;
       const search = path.join(dist, 'search');
