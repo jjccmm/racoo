@@ -1,6 +1,6 @@
 # Podcast Words V3 – Projektplan
 
-Stand: 24. Oktober 2026; Laufwegentscheidung nach abgeschlossener ASR-Untersuchung aktualisiert.
+Stand: 25. Oktober 2026; lokaler Fünf-Folgen-Pilot mit temporärem Audio und groben Segmenten. Die aktuelle Umsetzung steht in der [Pilotspezifikation](.scratch/local-five-episode-pilot/spec.md).
 
 Der Plan wurde im dokumentierten Interview gemeinsam bestätigt. Die [Planverfeinerung](docs/planning/refinement.md) hält die Entscheidungen fest; [TASKS.md](TASKS.md) enthält die nachweisorientierte Umsetzungsreihenfolge. Der [bestätigte Einrichtungsumfang](docs/planning/workspace-setup.md) ist die Grundlage der Workspace-Einrichtung.
 
@@ -32,7 +32,7 @@ Offizieller RSS-Feed + geprüfte zusätzliche Audioquellen
   → Webseite, Suchindex und öffentliche Daten auf GitHub Pages
 ```
 
-Die aufwendige Verarbeitung geschieht beim Aktualisieren. Während einer Besuchersuche läuft keine Transkription; der Browser lädt statische Dateien. Der Player verwendet die öffentliche Audioquelle mit Fassungsprüfung. Für bytegenaue Zeitmarken kann die transkribierte lokale Referenzdatei anhand ihres SHA-256 bestätigt werden.
+Die aufwendige Verarbeitung geschieht beim Aktualisieren. Während einer Besuchersuche läuft keine Transkription; der Browser lädt statische Dateien. Die MP3 wird nach der Verarbeitung gelöscht. Das Transkript bleibt die Datenbasis. Der Player verwendet die öffentliche Audioquelle ohne späteren Abgleich; ein Hinweis am Sprungknopf erklärt Segmentanfang und mögliche Werbeverschiebungen.
 
 ### RSS-Quelle und vollständiger Bestand
 
@@ -49,15 +49,15 @@ Standardfeed bleibt `https://feeds.acast.com/public/shows/podcast-ufo`. Die offi
 
 ### Audio und Transkription
 
-MP3 beziehungsweise das im Feed verlinkte Audio herunterladen, unter seinem Inhaltshash lokal als Referenz erhalten, decodieren und für das Modell aufbereiten. Lange Folgen mit einer Sprachaktivitätserkennung in geeignete Abschnitte zerlegen. Native Zeitinformationen auf die ursprüngliche Folge beziehen; Pausen oder abschnittsweise Verarbeitung dürfen keinen fortlaufenden Zeitversatz verursachen.
+MP3 beziehungsweise das im Feed verlinkte Audio einmal pro Verarbeitung herunterladen, temporär decodieren und für das Modell aufbereiten. Temporäre Audiodateien nach Erfolg und Fehler entfernen. Lange Folgen mit einer Sprachaktivitätserkennung in geeignete Abschnitte zerlegen. Native Zeitinformationen auf die ursprüngliche Folge beziehen; Pausen oder abschnittsweise Verarbeitung dürfen keinen fortlaufenden Zeitversatz verursachen.
 
-Der Audioadapter decodiert Feed-Audio ausdrücklich in das vom Modell erwartete Format. Für den gesperrten onnx-asr-Stand nachweisen, ob native Tokenpunkte relativ zum Sprachabschnitt sind, und genau einmal auf Episodenzeit umrechnen. Tokenpunkte nicht als garantierte Wortintervalle ausgeben. Die Prüfung muss mehrere Sprachabschnitte mit Pausen umfassen. Siehe [Runtime-Recherche](docs/research/runtime-and-search-contracts.md).
+Der Audioadapter decodiert Feed-Audio ausdrücklich in das vom Modell erwartete Format. Erkannte Sprachabschnitte in ihrer Reihenfolge zu Segmenten mit höchstens fünf Minuten Zeitspanne zusammenfassen. Originaltexte durch Leerraum verbinden; keine Wort- oder Tokenzeitpunkte anfordern oder speichern. VAD-Grenzen beziehen sich auf die ursprüngliche Folge.
 
 Ein Modell pro Verarbeitungslauf laden. Downloads erhalten Timeouts und begrenzte Wiederholungen. Pro Folge erst nach erfolgreichem Speichern und Validieren „fertig“ setzen; Fehler bleiben erneut ausführbar. Fertige Folgen bei einem Neustart überspringen. Eine ausdrücklich ausgewählte erneute Transkription bleibt möglich.
 
 Fertige Transkripte bei Metadatenänderungen oder neuer Modellkonfiguration erhalten. Abweichende Herkunft oder Konfiguration ausweisen; eine erneute Transkription muss ausdrücklich ausgewählt werden. Änderungen an Transkript- oder Analyseversionen machen nur ihre abhängigen Analysen und Builds ungültig.
 
-Lokal wird direkt in das Datenverzeichnis geschrieben. Fertige Episodendaten werden nach jeder Folge validiert gespeichert und bei erneutem Start übersprungen. Der Laufbericht nennt die erhaltene Audiofassung. Start, Wiederaufnahme und ausdrücklich gewählte Neutranskription sind in der Betriebsanleitung beschrieben.
+Lokal wird direkt in das Datenverzeichnis geschrieben. Fertige Episodendaten werden nach jeder Folge validiert gespeichert und bei erneutem Start übersprungen. Episode und Laufbericht enthalten Download-, Transkriptions- und Gesamtzeit. Die Konsole nennt außerdem Audio-/Gesamtdauer sowie Download- und Transkriptionssekunden je Audiominute; gemeinsames Modellsetup wird separat ausgewiesen. Start, Wiederaufnahme und ausdrücklich gewählte Neutranskription sind in der Betriebsanleitung beschrieben.
 
 ## 3. Datenformate und Wortanalyse
 
@@ -65,8 +65,9 @@ Das Episoden-JSON ist die maßgebliche Quelle für Originaltext und Zeitmarken. 
 
 - Schemaversion, Podcast-ID, stabile Episoden-ID und RSS-GUID beziehungsweise die Herkunft einer ergänzten Quelle;
 - Titel, Veröffentlichungsdatum, optionale Folgennummer, Episodenwebseite und Audio-URL;
-- Modell-/Exportrevision, Verarbeitungszeitpunkt sowie Audio-Prüfsumme und Audiodauer;
-- chronologische Segmente mit ID, Originaltext, Start und Ende in Sekunden; zusätzlich verfügbare native Wort-/Tokenzeitmarken erhalten.
+- Modell-/Exportrevision, Verarbeitungszeitpunkt und Audiodauer;
+- Download-, Transkriptions- und Gesamtzeit in Sekunden;
+- chronologische grobe Segmente mit ID, Originaltext, Start und Ende in Sekunden. Keine Audio-Prüfsumme oder Wort-/Tokenzeitmarken.
 
 Zeitmarken beim Speichern auf sinnvolle Reihenfolge und Grenzen prüfen. Segmente erhalten vor der Indexierung stabile, innerhalb der Folge eindeutige IDs.
 
@@ -80,7 +81,7 @@ Die Analyse pro Folge zwischenspeichern und ihre Version festhalten. Eine geänd
 
 Zählwerte als normale ausreichend große Ganzzahlen behandeln. Ein fehlender Eintrag für eine bekannte Wort-/Folgenkombination bedeutet null; ein fehlgeschlagener Dateiabruf ist ein Fehler und kein Nullwert.
 
-Code, normalisierte Episodendaten und Analyseergebnisse im Projekt versionieren. Lokale Referenz-Audiodateien, Modellgewichte und generierte Web-/Such-Builds gehören nicht in Git; Referenzdateien bis zum bewussten Löschen für Hörprüfung und Wiederverarbeitung erhalten. Öffentlich ausgelieferte Daten werden gezielt vom Build erstellt. Je Podcast eigene Datenbereiche und Suchindizes vorsehen.
+Code, normalisierte Episodendaten und Analyseergebnisse im Projekt versionieren. Modellgewichte und generierte Web-/Such-Builds gehören nicht in Git. Audio wird nur temporär zur Transkription benötigt und danach gelöscht. Öffentlich ausgelieferte Daten werden gezielt vom Build erstellt. Je Podcast eigene Datenbereiche und Suchindizes vorsehen.
 
 ## 4. Suche, Statistik und Player
 
@@ -106,7 +107,7 @@ Mehrere Grundformen auswählbar machen, mit begrenzten Vorschlägen statt einer 
 
 Top-10-Folgen und Statistiken zu Gesamtwörtern, verschiedenen Wörtern und erstmals auftretenden Wörtern beibehalten. Erstes Auftreten chronologisch nach Veröffentlichungsdatum bestimmen; bei gleichem Datum stabil nach ID ordnen.
 
-Treffer zeigen Folgentitel, Datum, Originaltext, passende Begriffe und Zeitmarken. Über einen gemeinsamen Audio-Player mit kurzem Vorlauf und Vor-/Zurückspringen abspielen. Abspielen erfolgt nach Nutzeraktion. Nicht verfügbare Audios als Fehler anzeigen und den Episodenlink anbieten.
+Treffer zeigen Folgentitel, Datum, Originaltext, passende Begriffe und Zeitmarken. Über einen gemeinsamen Audio-Player ab dem groben Segmentanfang mit Vor-/Zurückspringen abspielen. Abspielen erfolgt nach Nutzeraktion. Nicht verfügbare Audios als Fehler anzeigen und den Episodenlink anbieten.
 
 Folge und Audiostelle über URL-Parameter wie `?episode=…&t=…` teilen. Vite-Basispfad, Datenabrufe, Pagefind-Importe und Ergebnis-URLs müssen sowohl lokal als auch unter dem GitHub-Pages-Projektpfad funktionieren.
 
@@ -116,7 +117,7 @@ Zeitmarken gelten für die transkribierte Audiofassung. Später anders eingefüg
 
 ### Umsetzung in Etappen
 
-1. **Arbeitsumgebung und Funktionsnachweise:** Lokales FP32-GPU-Paket, Web-App und CI mit gesperrten Abhängigkeiten betreiben. RSS-Katalog und Quelle für Folge 37 prüfen. Den bestätigten vollständigen FP32-Lauf als Betriebsbasis verwenden; Audiofassungs-, Such- und Zeitmarkenprüfungen mit dem Pilot fortsetzen.
+1. **Arbeitsumgebung und Funktionsnachweise:** Lokales FP32-GPU-Paket, Web-App und CI mit gesperrten Abhängigkeiten betreiben. RSS-Katalog und Quelle für Folge 37 prüfen. Den bestätigten vollständigen FP32-Lauf als Betriebsbasis verwenden; die vereinfachte Pipeline und echte Suche/Statistik mit fünf Folgen nachweisen.
 2. **Durchgängiger Pilot:** Fünf repräsentative Folgen vollständig verarbeiten. Daraus spaCy-Analysen, Statistiken, aufgeteilte Wortzahlen und Pagefind-Index erzeugen. Stichwortsuche mit Teiltreffern, Kontext, Player, teilbaren Links und den vorgesehenen Statistiken bis zu einem GitHub-Pages-Build umsetzen. Lade- und Fehlerzustände sichtbar machen. Die unten festgelegte manuell geprüfte Stichprobe sowie Qualitäts- und Laufzeitgrenzen entscheiden über die Freigabe der Archivverarbeitung.
 3. **Archiv neu erzeugen:** Nach bestandener Pilotabnahme alle verfügbaren Folgen mit derselben festgehaltenen Modellkonfiguration verarbeiten. Wiederaufnahme, Zeitmarken und Vollständigkeit prüfen; Herkunft und Verarbeitungsstand nachvollziehbar speichern.
 4. **Vollständigen Datenstand prüfen:** Analysen, Statistiken und Suchindex für den vollständigen Bestand erzeugen. Alle Artefakte müssen denselben Datenstand referenzieren. Suchqualität, Ladeverhalten, Größe und Laufzeit am vollständigen Bestand erneut prüfen; Quellenlücken ausdrücklich ausweisen.
@@ -124,12 +125,12 @@ Zeitmarken gelten für die transkribierte Audiofassung. Später anders eingefüg
 
 ### Gezielte Prüfungen
 
-**Freigabe vor Archivverarbeitung:** Mindestens neun von zehn manuell geprüften Passagensuchen müssen die richtige Folge unter den ersten fünf Ergebnissen finden. Für jede der fünf Pilotfolgen jeweils am Anfang, in der Mitte und am Ende eine Referenzpassage prüfen: Die zugeordnete Zeitmarke darf höchstens fünf Sekunden von der Referenz abweichen. Maßgeblich ist genau die transkribierte Audiofassung; der kurze Vorlauf des Players zählt nicht als Zeitmarkenfehler. Suchanfragen, Referenzen und Befunde vor der Freigabe festhalten. Eine nicht bestandene Prüfung stoppt die Archivverarbeitung bis zur Klärung.
+**Freigabe vor Archivverarbeitung:** Mindestens neun von zehn manuell geprüften Passagensuchen müssen die richtige Folge unter den ersten fünf Ergebnissen finden. Die frühere Grenze von fünf Sekunden für fünfzehn Zeitmarken entfällt auf ausdrücklichen Nutzerwunsch. Gesucht und abgespielt werden grobe Segmente bis etwa fünf Minuten; Werbeabweichungen sind akzeptiert und direkt am Knopf erklärt. Technische Suchprüfungen aus dem Transkript ersetzen keine unabhängige menschliche Suchqualitätsprüfung. Suchanfragen, Referenzen und Befunde vor der Freigabe festhalten. Eine nicht bestandene Prüfung stoppt die Archivverarbeitung bis zur Klärung.
 
 **Suchlaufzeit und Übertragung:** Auf einem dokumentierten mobilen Prüfprofil erste nutzbare Suchergebnisse innerhalb von fünf Sekunden und weitere Suchen innerhalb einer Sekunde anstreben; bis zu den ersten Ergebnissen höchstens 10 MB übertragen. Cachezustand, Netzwerk- und CPU-Profil sowie Messbeginn und -ende im Bericht angeben. Diese Grenzen zuerst im Pilot und vor Veröffentlichung erneut am vollständigen Bestand prüfen. Dabei weder für die Startseite noch für die globale Trefferabdeckung das gesamte Transkriptarchiv laden.
 
 - **Bestand:** Feed-Sonderfälle einschließlich `UGO081` und offenen Nummernlücken erhalten; stabile IDs, doppelte GUIDs und fehlerhafte Enclosures prüfen. Keine Annahme einer festen zukünftigen Episodenzahl.
-- **Pipeline:** Abbruch, erneuten Start, Downloadfehler und Teilergebnisse prüfen. Lokale FP32-GPU-Verarbeitung mit dauerhaft erhaltener Referenz-Audiofassung; keine unbemerkten Zeitsprünge in anders zusammengesetzten Online-Dateien.
+- **Pipeline:** Abbruch, erneuten Start, Downloadfehler und Teilergebnisse prüfen. Lokale FP32-GPU-Verarbeitung mit temporärem Audio, gespeicherten Laufzeiten und Wiederaufnahme ohne späteren Online-Abgleich.
 - **Zählungen:** Werte über 255, Stoppwörter, Grundformen, chronologische neue Wörter und wiederholte Analyse prüfen. Stichproben gegen die Episodentexte zählen.
 - **Suche:** Unterschiedliche Reihenfolge, fehlender dritter Begriff, 3/3-vor-2/3-Rangfolge, Wortformen, Umlaute, `ß`, doppelte Eingabebegriffe, Mehrfachvorkommen und Fundstellen über Segmentgrenzen testen. Titelwörter dürfen nicht als gesprochene Wörter gezählt werden.
 - **Webseite:** Direkte Folge-/Zeitlinks und Audiosteuerung unter dem tatsächlichen Projekt-Unterpfad prüfen, einschließlich Mobilansicht, fehlender Daten und nicht erreichbarer Audios. Einen veralteten Suchlauf nicht über neuere Ergebnisse schreiben lassen.

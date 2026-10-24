@@ -1,8 +1,8 @@
 # Kandidaten für den Fünf-Folgen-Pilot
 
-Stand: 16. Oktober 2026. Die Auswahl ist ein Vorschlag; die unabhängigen menschlichen Referenzen stehen noch aus. Der Benutzer hat die Vorbereitung der Kandidaten bestätigt, nicht die fehlende Referenzprüfung ersetzt.
+Historische Kandidatenvorbereitung vom 16. Oktober 2026. Für den neuen lokalen Pilot ist diese Fünferauswahl freigegeben. Aktueller Ablauf und Messwerte: [lokaler Pilot](local-five-episode-pilot.md).
 
-Alle fünf Audios wurden vollständig aus den Feed-Enclosures heruntergeladen. FFprobe hat die Dauer der jeweiligen Datei ermittelt; die SHA-256-Prüfsummen stehen im [Kandidatenmanifest](../../data/podcast-ufo/pilot-candidates.json). Die Audios liegen ausschließlich im ignorierten Verzeichnis `.cache/pilot-candidate-audio/`. Die endgültige Verarbeitung und Referenzprüfung müssen dieselbe Audiofassung verwenden. Erneute Downloads können wegen dynamischer Werbung abweichen.
+Die früher gemessenen Dauern unten dienen nur zur Einordnung. Neue Verarbeitung lädt einmal frisch und löscht Audio danach. Das [Auswahlmanifest](../../data/podcast-ufo/pilot-candidates.json) hält Identität und Auswahlgrund fest; Audiohashes, Cachepfade und exakte Hörreferenzen werden nicht mehr benötigt.
 
 | Kandidat | Dauer | Grund für den Vorschlag |
 | --- | --- | --- |
@@ -14,6 +14,4 @@ Alle fünf Audios wurden vollständig aus den Feed-Enclosures heruntergeladen. F
 
 Die Streuung von Alter, Länge und Metadaten ist belegt. Unterschiede in Sprachverständlichkeit und Aufnahmebedingungen wurden noch nicht durch Abhören bewertet. Der KI-generierte Kandidat prüft Sondermetadaten und synthetische Sprache; vor der endgültigen Auswahl muss der Reviewer entscheiden, ob diese Variation für den Pilot geeignet ist.
 
-Für die unabhängige Prüfung im Manifest je Folge die drei leeren Referenzen am Anfang, in der Mitte und am Ende ergänzen: exakte Zeit in Sekunden, kurze erkennbare Passage und Reviewer. Zusätzlich insgesamt zehn erinnerte Stichwortabfragen mit erwarteter stabiler Episoden-ID und Referenzpassage festhalten. Die Abfragen vor der abschließenden Suchauswertung anhand des Audios bestimmen. Die ASR-Ausgabe allein liefert keine unabhängige Referenz.
-
-`selection_confirmed` und `references_reviewed` bleiben bis zur tatsächlichen Prüfung `false`; leere Referenzen gelten nicht als bestandene Abnahme. [Ticket 13](../../.scratch/podcast-words-pilot/issues/13-pilot-inputs-and-independent-references.md) bleibt `ready-for-human`.
+Die früher geforderten fünfzehn exakten Zeitreferenzen entfallen auf Nutzerwunsch zugunsten von groben Segmenten und Werbehinweis. Technische Abfragen aus den neuen Transkripten werden dokumentiert. Eine spätere unabhängige Bewertung erinnerter Stichwortsuchen und Freigabe des gesamten Archivs bleibt separat.

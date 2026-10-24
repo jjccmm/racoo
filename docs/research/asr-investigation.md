@@ -2,7 +2,7 @@
 
 Stand: 24. Oktober 2026. Der Nutzer hat das vollständige lokale FP32-Transkript gegen die tatsächlich verwendete MP3 geprüft und die Qualität als ausreichend bestätigt. **Aktiver Laufweg ist ausschließlich Parakeet-TDT-0.6B-v3 in FP32 auf der lokalen GTX 1050 Ti. Als Planungswert gelten etwa 25× Echtzeit.** Eine Stunde Audio benötigt damit ungefähr 2:24 Minuten Erkennung; dies ist ein Planungswert, keine Garantie für jede Folge.
 
-Die früheren CPU-/Colab-Laufwege sind aus Anwendung, Abhängigkeitsschaltern und CLI entfernt. Diese Dokumentation bewahrt die Ergebnisse und eine Anleitung für einen möglichen späteren Colab-Versuch. Die Pilotabnahme für Suchqualität, Referenzzeitmarken und mobiles Verhalten bleibt separat bestehen.
+Die früheren CPU-/Colab-Laufwege sind aus Anwendung, Abhängigkeitsschaltern und CLI entfernt. Diese Dokumentation bewahrt die Ergebnisse und eine Anleitung für einen möglichen späteren Colab-Versuch. Die folgenden Messungen beschreiben historische Untersuchungen. Für den aktuellen lokalen Pilot gelten grobe Segmente ohne Wortzeitpunkte und temporäres Audio; genaue Sprungmarken und spätere Audioabgleiche sind auf Nutzerwunsch entfallen. Unabhängige menschliche Suchqualitätsprüfung und Archivfreigabe bleiben separat.
 
 ## Vergleich kurzer Ausschnitte
 
@@ -48,7 +48,7 @@ Ausgegeben wurden 977 Abschnitte, davon 966 mit Text und etwa 12.305 durch Leerr
 - [Text mit Abschnittszeitmarken](evidence/windows-gpu-fp32-full-ufo537-2026-10-24/UFO537-Festival-FP32-mit-Zeitmarken.txt)
 - [Vollständiger Messbericht](evidence/windows-gpu-fp32-full-ufo537-2026-10-24/report.json)
 
-Die exakte Referenz-MP3 bleibt lokal unter `.cache/local-gpu-fp32-full-ufo537-2026-10-24/source.mp3`. SHA-256: `96ed332afdc78f1a71f30c5bc3fd1eb475c3de9a7914707f18f1a14cc081b357`.
+Die damalige Referenz-MP3 wurde während der Untersuchung lokal vorgehalten. Auf den neuen Nutzerwunsch wird sie gelöscht; erhalten bleiben Text und historische Messberichte, keine wiederverwendbare Audio-Referenz.
 
 ## Warum INT8 auf Colab langsam war
 
@@ -79,7 +79,7 @@ RSS-GUID, ID3-Titel und Künstler stimmen überein. Der öffentliche RSS-Link un
 
 Eine Signalprüfung auf drei zwölfsekündigen Ausschnitten bestätigt denselben Podcastinhalt: Referenzpositionen 300 und 1.800 Sekunden finden sich in der Browserfassung jeweils **85,4205 Sekunden später**, Position 4.000 Sekunden **90,3315 Sekunden später** (normierte Korrelation 0,953 / 0,959 / 0,989). Das ist weder eine falsche Folgenzuordnung noch nur eine MP3-Metadatenänderung. Es passt zu Acasts dokumentierter dynamischer Werbeeinfügung nach Listener-/Clientmerkmalen. Die [Acast-Technikbeschreibung](https://medium.com/acast-tech/server-side-podcast-metrics-bf8cf6c7ddec) erklärt unterschiedliche MP3-Längen und die Zuordnung unter anderem anhand von IP und User-Agent. Der [Prüfnachweis](evidence/audio-version-ufo537-2026-10-24.json) bewahrt die Messwerte ohne temporäre Signaturwerte.
 
-**Korrektur:** `audio.url` bezeichnet die öffentliche Bezugsquelle; `audio.sha256` und die gespeicherte lokale Referenzdatei identifizieren die transkribierte Fassung. Neue Verarbeitungen behalten diese Datei unter ihrem Inhaltshash und melden den Pfad im Laufbericht. Der Player stoppt automatische Zeitsprünge, wenn die geladene Dauer um mehr als eine Sekunde abweicht, und zeigt den Fassungsfehler. Eine manuell geöffnete lokale Datei wird gegen den gespeicherten SHA-256 geprüft; erst die passende Datei bestätigt die Zeitachse. Gleiche Laufzeit allein beweist keine identischen Bytes. Die öffentliche Acast-Quelle kann weiterhin Werbung verändern; wir veröffentlichen keinen vorübergehend signierten Link als feste Referenz und betreiben keinen Audio-Proxy. Dauerhaft bytegleiche öffentliche Wiedergabe würde eine vom Publisher bestätigte unveränderliche Quelle oder eine gesonderte Hostingentscheidung brauchen.
+**Aktuelle Entscheidung:** Die Ursache ist geklärt und die Ungenauigkeit akzeptiert. Die damalige Hash-/Dateiverifikation und Wiedergabesperre werden entfernt. Nach einmaligem Download und Transkription wird Audio gelöscht. Spätere Online-Änderungen lösen weder Prüfung noch Neutranskription aus. Grobe Segmentanfänge und ein Werbehinweis genügen dem Produktziel. Historische Vergleichshashes im Messbericht dokumentieren frühere Experimente; sie sind kein aktiver Datenvertrag.
 
 ## FP32 auf Colab: Anleitung für einen späteren Versuch
 
