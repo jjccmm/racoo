@@ -1,0 +1,87 @@
+{
+  "runtime_facts": {
+    "nvidia_smi": "Sat Oct 17 19:40:07 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 580.82.07              Driver Version: 580.82.07      CUDA Version: 13.0     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  Tesla T4                       Off |   00000000:00:04.0 Off |                    0 |\n| N/A   37C    P8              9W /   70W |       0MiB /  15360MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+\n",
+    "nvidia_driver_major": 580,
+    "onnxruntime": {
+      "python": "3.12.3",
+      "onnxruntime": "1.27.0",
+      "build_info": "ORT Build Info: git-branch=HEAD, git-commit-id=8f0278c77b, fp8-kv-cache=1, build type=Release",
+      "available_providers": [
+        "TensorrtExecutionProvider",
+        "CUDAExecutionProvider",
+        "CPUExecutionProvider"
+      ],
+      "onnxruntime_gpu_distribution": "1.27.0",
+      "cuda_library_debug_info": "onnxruntime-gpu version: 1.27.0\nCUDA version used in build: 13.0\nplatform: Linux-6.6.122+-x86_64-with-glibc2.39\n\nPython package, version and location:\nonnxruntime-gpu==1.27.0 at /content/podcast_words_v3/.venv/lib/python3.12/site-packages/onnxruntime\ntorch not installed\nnvidia-cuda-runtime-cu13 not installed\nnvidia-cudnn-cu13 not installed\nnvidia-cublas-cu13 not installed\nnvidia-cufft-cu13 not installed\nnvidia-curand-cu13 not installed\nnvidia-cuda-nvrtc-cu13 not installed\nnvidia-nvjitlink-cu13 not installed\n\nEnvironment variable:\nLD_LIBRARY_PATH=/usr/lib64-nvidia\nplease `pip install psutil` to show loaded DLLs.\n"
+    },
+    "onnxruntime_gpu_distribution": "1.27.0",
+    "python": "3.13.15 (main, Aug  6 2026, 11:06:22) [GCC 13.3.0]",
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.39"
+  },
+  "process": {
+    "ok": true,
+    "selected": [
+      "ep-5764a1149f18a8f68698fb45bb405264"
+    ],
+    "results": [
+      {
+        "episode_id": "ep-5764a1149f18a8f68698fb45bb405264",
+        "status": "completed",
+        "output": "/content/podcast-words-work/episodes/ep-5764a1149f18a8f68698fb45bb405264.json"
+      }
+    ],
+    "execution_profile": {
+      "node_events": {
+        "encoder": {
+          "CUDAExecutionProvider": 743133,
+          "CPUExecutionProvider": 256353
+        },
+        "decoder_joint": {
+          "CUDAExecutionProvider": 833332,
+          "CPUExecutionProvider": 133334
+        },
+        "vad": {
+          "CUDAExecutionProvider": 736110,
+          "CPUExecutionProvider": 138890
+        }
+      },
+      "model_node_events": {
+        "CUDAExecutionProvider": 1576465,
+        "CPUExecutionProvider": 389687
+      },
+      "mixed_cpu_fallback": true,
+      "profile_files": {
+        "encoder": "/content/podcast-words-cache/profiles/encoder-onnxruntime_2026-10-17_19-40-40_112.json",
+        "decoder_joint": "/content/podcast-words-cache/profiles/decoder_joint-onnxruntime_2026-10-17_19-40-43_473.json",
+        "vad": "/content/podcast-words-cache/profiles/vad-onnxruntime_2026-10-17_19-40-43_996.json"
+      },
+      "drive_profile_files": {
+        "encoder": "/content/drive/MyDrive/podcast-words-v3/profiles/ep-5764a1149f18a8f68698fb45bb405264-encoder.json",
+        "decoder_joint": "/content/drive/MyDrive/podcast-words-v3/profiles/ep-5764a1149f18a8f68698fb45bb405264-decoder_joint.json",
+        "vad": "/content/drive/MyDrive/podcast-words-v3/profiles/ep-5764a1149f18a8f68698fb45bb405264-vad.json"
+      }
+    }
+  },
+  "resume": {
+    "status": "skipped",
+    "new_session_runtime_facts": {
+      "nvidia_smi": "Sat Oct 17 20:55:47 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 580.82.07              Driver Version: 580.82.07      CUDA Version: 13.0     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  Tesla T4                       Off |   00000000:00:04.0 Off |                    0 |\n| N/A   37C    P8              9W /   70W |       0MiB /  15360MiB |      0%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+\n",
+      "nvidia_driver_major": 580,
+      "onnxruntime": {
+        "python": "3.12.3",
+        "onnxruntime": "1.27.0",
+        "build_info": "ORT Build Info: git-branch=HEAD, git-commit-id=8f0278c77b, fp8-kv-cache=1, build type=Release",
+        "available_providers": [
+          "TensorrtExecutionProvider",
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "onnxruntime_gpu_distribution": "1.27.0",
+        "cuda_library_debug_info": "onnxruntime-gpu version: 1.27.0\nCUDA version used in build: 13.0\nplatform: Linux-6.6.122+-x86_64-with-glibc2.39\n\nPython package, version and location:\nonnxruntime-gpu==1.27.0 at /content/podcast_words_v3/.venv/lib/python3.12/site-packages/onnxruntime\ntorch not installed\nnvidia-cuda-runtime-cu13 not installed\nnvidia-cudnn-cu13 not installed\nnvidia-cublas-cu13 not installed\nnvidia-cufft-cu13 not installed\nnvidia-curand-cu13 not installed\nnvidia-cuda-nvrtc-cu13 not installed\nnvidia-nvjitlink-cu13 not installed\n\nEnvironment variable:\nLD_LIBRARY_PATH=/usr/lib64-nvidia\nplease `pip install psutil` to show loaded DLLs.\n"
+      },
+      "onnxruntime_gpu_distribution": "1.27.0",
+      "python": "3.13.15 (main, Aug  6 2026, 11:06:22) [GCC 13.3.0]",
+      "platform": "Linux-6.6.122+-x86_64-with-glibc2.39"
+    }
+  }
+}

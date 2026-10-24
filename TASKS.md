@@ -4,7 +4,7 @@ Die Reihenfolge setzt [PLAN.md](PLAN.md) um. Ein Haken bedeutet einen erbrachten
 
 Der [Fünf-Folgen-Pilot](.scratch/podcast-words-pilot/spec.md) wartet als `ready-for-human` auf den echten Colab-/Drive-Nachweis und die unabhängigen Pilotreferenzen; die beiden öffentlichen Testgrenzen sind bestätigt. Die [Ticketübersicht](.scratch/podcast-words-pilot/ticket-index.md) enthält die 18 bestätigten Pilotarbeitspakete und die ergänzende Laufzeituntersuchung in Ticket 19. Der aktuelle Ausführungsstand und die Abhängigkeiten stehen jeweils im Ticket.
 
-Für [Ticket 19](.scratch/podcast-words-pilot/issues/19-investigate-colab-gpu-runtime.md) sind Messunterstützung und ein neuer CPU-Lauf integriert. Als nächster Colab-Schritt steht die Notebookzelle **Bereits gespeicherte ORT-Profile auswerten** an; vergleichbare GPU-Stufendauern und eine gemessene Erklärung der 36 Minuten fehlen weiterhin. Das Ticket ist dafür `ready-for-human`.
+Für [Ticket 19](.scratch/podcast-words-pilot/issues/19-investigate-colab-gpu-runtime.md) liegt jetzt die [Auswertung des neuen Colab-Benchmarks](docs/research/colab-gpu-runtime-analysis.md) vor: Die Erkennung dominiert, teure INT8-Operationen laufen im Teilprofil auf der CPU neben aktiver CUDA-Ausführung. Das neue [Diagnose-Notebook](notebooks/colab_diagnostics.ipynb) führt als nächsten begrenzten Versuch einen festen kurzen Audioabschnitt durch INT8 und unquantisiertes FP32 auf derselben GPU, ergänzt um eine CPU-Kontrolle und optionale Einzeltests. Die historische CPU-Referenz verwendet andere Audio-Bytes; ein vergleichbarer CPU/GPU-Nachweis und die Bestätigung der Ursache bleiben offen. Das Ticket ist `ready-for-human`.
 
 ## Workspace
 

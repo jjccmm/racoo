@@ -37,21 +37,24 @@ def main() -> int:
                     continue
                 if not (path.parent / unquote(url.path)).is_file():
                     errors.append(f"{path.relative_to(ROOT)}: missing link {target}")
-    notebook = ROOT / "notebooks" / "colab.ipynb"
-    data = json.loads(notebook.read_text(encoding="utf-8"))
-    for index, cell in enumerate(data["cells"]):
-        if cell["cell_type"] == "code":
-            try:
-                compile("".join(cell["source"]), f"colab-cell-{index}", "exec")
-            except SyntaxError as error:
-                errors.append(str(error))
-            if cell.get("outputs") or cell.get("execution_count") is not None:
-                errors.append(f"Colab cell {index} contains saved execution state")
+    notebooks = sorted((ROOT / "notebooks").glob("*.ipynb"))
+    for notebook in notebooks:
+        data = json.loads(notebook.read_text(encoding="utf-8"))
+        for index, cell in enumerate(data["cells"]):
+            if cell["cell_type"] == "code":
+                try:
+                    compile("".join(cell["source"]), f"{notebook.name}-cell-{index}", "exec")
+                except SyntaxError as error:
+                    errors.append(str(error))
+                if cell.get("outputs") or cell.get("execution_count") is not None:
+                    errors.append(f"{notebook.name} cell {index} contains saved execution state")
     for error in errors:
         print(error)
     if errors:
         return 1
-    print(f"Checked {documents} Markdown files and Colab cell syntax; no broken local links.")
+    print(
+        f"Checked {documents} Markdown files and {len(notebooks)} notebooks; no broken local links."
+    )
     return 0
 
 
