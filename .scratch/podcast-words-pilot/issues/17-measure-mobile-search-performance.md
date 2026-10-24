@@ -4,7 +4,7 @@
 
 **Blocked by:** 14: Use the complete static site at root and project prefix; 15: Produce the five real pilot episodes and publication.
 
-**Status:** ready-for-agent
+**Status:** wontfix
 
 **Spec coverage:** User stories 30, 53, 54 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 
@@ -16,3 +16,5 @@
 - [ ] Observe lazy detail loading and confirm neither startup nor global coverage fetches the entire transcript corpus; record browser memory observations without inventing an unagreed memory threshold.
 - [ ] Tie the report to the real five-episode publication and distinguish a measured pass/fail from an unavailable browser or unexecuted benchmark.
 - [ ] Keep failed targets explicit for correction and rerun; do not claim the small pilot proves full-archive performance.
+
+Scope superseded by the operator: the current [local pilot spec](../../local-five-episode-pilot/spec.md) replaces exact-audio/timestamp gates and covers real processing, technical browser/mobile checks and readiness reporting. Historical evidence above remains; independent human search review is not claimed and archive approval remains separate. This ticket closes without asserting that the old acceptance criteria were met.

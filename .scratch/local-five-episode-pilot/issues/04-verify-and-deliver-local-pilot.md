@@ -4,7 +4,7 @@
 
 **Blocked by:** 03: Process and publish the five real episodes locally.
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] Run the complete fixture-only checks and real-pilot browser smoke checks at the relevant base paths; verify no audio matching or word timestamps remain in active output.
 - [ ] Check real search queries, five-episode statistics, displayed durations/timings, ordinary playback actions and the nearby advertising/coarse-time warning.
@@ -12,3 +12,7 @@
 - [ ] Review standards and spec against the committed baseline in separate subagents and fix consequential findings.
 - [ ] Update current plan/operation docs and retire superseded exact-audio/exact-time pilot requirements without claiming full-archive approval.
 - [ ] Commit all delivered work, leave git status clean, remove implementation worktrees safely and start the actual five-episode local website for the operator.
+
+## Assignment
+
+Coordinator owns final fixture/real browser verification, documentation and delivery. Standards and spec reviews run in separate subagents against baseline `05885c9`.

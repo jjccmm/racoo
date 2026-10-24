@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Inspect and reconcile the episode catalog.
 
-**Status:** ready-for-human
+**Status:** wontfix
 
 **Spec coverage:** User stories 32, 33, 36, 38, 50, 51 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 
@@ -22,3 +22,5 @@
 ## Comments
 
 2026-10-16: The user requested candidate preparation and confirmed that independent references remain pending. Prepared a [candidate inventory](../../../docs/pilot/candidate-inventory.md) and [machine-readable manifest](../../../data/podcast-ufo/pilot-candidates.json), tied to the dated live catalog snapshot. All five candidate audio files were downloaded completely, SHA-256 hashed and measured with FFprobe. Heavy audio remains ignored. Selection confirmation, subjective audio review, ten independent queries and fifteen annotated times remain pending; this ticket stays ready-for-human.
+
+Scope superseded by the operator: the current [local pilot spec](../../local-five-episode-pilot/spec.md) replaces exact-audio/timestamp gates and covers real processing, technical browser/mobile checks and readiness reporting. Historical evidence above remains; independent human search review is not claimed and archive approval remains separate. This ticket closes without asserting that the old acceptance criteria were met.

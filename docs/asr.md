@@ -41,7 +41,7 @@ Der Player springt zum Segmentanfang. Die öffentliche Acast-Quelle darf inzwisc
 
 ## Laufzeiten
 
-Jede gespeicherte Episode enthält `timings.download_seconds`, `transcription_seconds` und `total_seconds`. Der Download umfasst den tatsächlichen Abruf. Die Transkriptionszeit ist die Erkennung einschließlich CPU-VAD und NumPy-Vorverarbeitung; FFmpeg ist separat im Laufbericht messbar. Die Gesamtzeit umfasst die episodenbezogene Verarbeitung. Das einmalige Modell-/VAD-Setup wird separat für den Lauf ausgewiesen und nicht erneut zu jeder Folge addiert.
+Jede gespeicherte Episode enthält `timings.download_seconds`, `transcription_seconds` und `total_seconds`. Der Download umfasst den tatsächlichen Abruf. Die Transkriptionszeit ist die Erkennung einschließlich CPU-VAD und NumPy-Vorverarbeitung; FFmpeg ist separat im Laufbericht messbar. Die Gesamtzeit umfasst Download, Decodierung, Erkennung, Audio-Cleanup und Validierung. Abschließende Transkript-/Berichtserialisierung liegt außerhalb und wird separat protokolliert. Das einmalige Modell-/VAD-Setup wird separat für den Lauf ausgewiesen und nicht erneut zu jeder Folge addiert.
 
 Für jede fertig verarbeitete Folge geht eine lesbare Statuszeile nach stderr: Audiogesamtdauer, Verarbeitungsgesamtdauer, Downloadsekunden je Audiominute und Transkriptionssekunden je Audiominute. stdout bleibt maschinenlesbares JSON. Die Webseite zeigt Dauer und gemessene Download-/Transkriptionszeiten in der Folgenübersicht. Synthetische Testwerte sind keine Leistungsnachweise.
 

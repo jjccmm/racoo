@@ -4,7 +4,7 @@
 
 **Blocked by:** 14: Use the complete static site at root and project prefix; 15: Produce the five real pilot episodes and publication.
 
-**Status:** ready-for-human
+**Status:** wontfix
 
 **Spec coverage:** User stories 50, 51, 52, 54 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 
@@ -19,3 +19,5 @@
 - [ ] Record manual review and each measurement/result against the source/reference and publication identities; synthetic results or unreviewed recognizer-derived expectations cannot pass.
 - [ ] Explain that the five-episode top-five gate checks recall, while the larger controlled browser corpus verifies ranking and later archive-scale qualification remains separate.
 - [ ] Leave unresolved references, failed thresholds, or missing real runtime evidence explicit and withhold a passing gate rather than labeling the pilot complete.
+
+Scope superseded by the operator: the current [local pilot spec](../../local-five-episode-pilot/spec.md) replaces exact-audio/timestamp gates and covers real processing, technical browser/mobile checks and readiness reporting. Historical evidence above remains; independent human search review is not claimed and archive approval remains separate. This ticket closes without asserting that the old acceptance criteria were met.

@@ -39,10 +39,11 @@ Installationen benötigen einmalig Zugang zu PyPI, npm und dem Playwright-Browse
 ```powershell
 uv run --frozen podcast-words doctor
 uv run --frozen podcast-words validate tests/fixtures/synthetic-episode.json
-npm.cmd --prefix web run dev
+npm.cmd --prefix web run build
+npm.cmd --prefix web run preview
 ```
 
-Der Entwicklungsserver bindet ausschließlich an `127.0.0.1`, standardmäßig Port 5173. Unter Linux `npm` statt `npm.cmd` verwenden. Mit Strg+C beenden. Der normale lokale Build verwendet den echten Fünf-Folgen-Pilot. Routinechecks wählen ihre synthetischen Daten ausdrücklich aus. Passagen öffnen den gemeinsamen Online-Player nach Nutzeraktion mit einem Hinweis auf grobe Zeiten und Werbung. Für die echte Suche den Produktionsbuild mit seinem generierten Index verwenden:
+Der Preview bindet ausschließlich an `127.0.0.1`, standardmäßig Port 4173. Unter Linux `npm` statt `npm.cmd` verwenden. Mit Strg+C beenden. Der normale lokale Build verwendet den echten Fünf-Folgen-Pilot. Routinechecks wählen ihre synthetischen Daten ausdrücklich aus. Passagen öffnen den gemeinsamen Online-Player nach Nutzeraktion mit einem Hinweis auf grobe Zeiten und Werbung. Für die echte Suche den Produktionsbuild mit seinem generierten Index verwenden:
 
 ```powershell
 npm.cmd --prefix web run build
@@ -53,7 +54,7 @@ npm.cmd --prefix web run preview
 
 ## Ausgewählte Veröffentlichung
 
-Die öffentliche CLI bereitet aus einer expliziten JSON-Liste relativer Transkriptpfade eine ausgewählte, validierte Veröffentlichungsquelle vor. Katalogänderungen aktualisieren öffentliche Metadaten, ohne erkannten Text oder Zeiten zu ändern; gültige Analysen werden wiederverwendet. Die Vorbereitung liest keine ASR-Modelle:
+Der normale Build bereitet automatisch die gespeicherten fünf Pilotfolgen aus `data/podcast-ufo/pilot-episodes.json` und ihren Analysen vor, ohne Modelle zu laden. Der vollständige Ablauf steht unter [lokaler Pilot](pilot/local-five-episode-pilot.md). Alternativ bereitet die öffentliche CLI aus einer expliziten JSON-Liste relativer Transkriptpfade eine ausgewählte, validierte Veröffentlichungsquelle vor. Katalogänderungen aktualisieren öffentliche Metadaten, ohne erkannten Text oder Zeiten zu ändern; gültige Analysen werden wiederverwendet. Die Vorbereitung liest keine ASR-Modelle:
 
 ```powershell
 $env:UV_CACHE_DIR = 'C:/Users/User/Code/podcast_words_v3/.uv-cache'
@@ -85,7 +86,7 @@ Die [ASR-Anleitung](asr.md) beschreibt die lokale GPU-Einrichtung, temporäres A
 
 [GitHub Actions](../.github/workflows/ci.yml) installiert die gesperrten Abhängigkeiten auf Windows und Linux und führt denselben gemeinsamen Check aus. Der Workflow veröffentlicht nichts. Ohne Remote wurde noch kein gehosteter Actions-Lauf ausgelöst; die Prüfungen wurden lokal unter Windows ausgeführt.
 
-Der Entwicklungsserver, das durch Vite kompilierte React-Modul und der gemeinsame Prüfdatenimport wurden lokal über HTTP geprüft. Die Produktions-Browserprüfungen laufen nun auf Root- und Projektpfad-Builds und umfassen eine synthetische 390-Pixel-Ansicht mit Suche, Player, Diagramm und Wortentwicklung. Diese Layoutprüfung misst keine realen Pilotlaufzeiten, Übertragungsbytes oder Speichergrenzen. Der Gesamtcheck baut zuletzt den Root-Pfad, sodass anschließend auch der normale Preview-Befehl aus `web/package.json` funktioniert.
+Der Entwicklungsserver, das durch Vite kompilierte React-Modul und der gemeinsame Prüfdatenimport wurden lokal über HTTP geprüft. Die Produktions-Browserprüfungen laufen nun auf Root- und Projektpfad-Builds und umfassen eine synthetische 390-Pixel-Ansicht mit Suche, Player, Diagramm und Wortentwicklung. Diese Layoutprüfung misst keine realen Pilotlaufzeiten, Übertragungsbytes oder Speichergrenzen. Der Gesamtcheck baut zuletzt den Root-Pfad mit ausdrücklich synthetischen Fixtures. Für den echten Pilot danach `npm.cmd --prefix web run build` ausführen; erst dann zeigt der Preview wieder die fünf echten Folgen.
 
 ## Besonderheiten dieses Windows-Arbeitsplatzes
 

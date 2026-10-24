@@ -4,7 +4,7 @@
 
 **Blocked by:** 12: Rebuild one coherent static publication; 13: Select pilot Folgen and independent passage references. The local FP32 runtime is confirmed by the 2026-10-24 investigation; former tickets 10 and 11 are retired.
 
-**Status:** ready-for-agent
+**Status:** wontfix
 
 **Spec coverage:** User stories 36, 37, 38, 39, 40, 41, 42, 43, 45, 46, 47, 52 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 
@@ -19,3 +19,5 @@
 - [ ] Run pinned real spaCy analysis and build one matching publication from the five completed episodes, including the search index and its metadata mapping.
 - [ ] Keep incomplete episodes, conflicting data, runtime gaps, or missing reference inputs explicit; none counts as a completed five-episode corpus.
 - [ ] Save a concise reproducible evidence record tied to selected audio identities, configuration and publication state, while leaving audio, model weights and generated builds untracked. Do not start the full archive.
+
+Scope superseded by the operator: the current [local pilot spec](../../local-five-episode-pilot/spec.md) replaces exact-audio/timestamp gates and covers real processing, technical browser/mobile checks and readiness reporting. Historical evidence above remains; independent human search review is not claimed and archive approval remains separate. This ticket closes without asserting that the old acceptance criteria were met.

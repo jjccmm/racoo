@@ -1,6 +1,6 @@
 # Podcast Words V3
 
-Statische Podcast-Suche und Wortstatistik, zunächst für **DAS PODCAST UFO**. Alle Folgen werden mit **Parakeet-TDT-0.6B-v3** neu transkribiert. Die Verarbeitung läuft lokal mit FP32 auf der GPU (Planungswert etwa 25× Echtzeit); die Webseite wird auf GitHub Pages veröffentlicht.
+Statische Podcast-Suche und Wortstatistik, zunächst für **DAS PODCAST UFO**. Alle Folgen werden mit **Parakeet-TDT-0.6B-v3** neu transkribiert. Die Verarbeitung läuft lokal mit FP32 auf der GPU (Planungswert etwa 25× Echtzeit); die Webseite ist statisch für GitHub Pages geeignet. Der aktuelle Pilot läuft lokal.
 
 - [Projektplan](PLAN.md): Entscheidungen, Datenfluss, Umsetzung und Abnahme.
 - [Recherche zu Feed und Suche](docs/research/v3-feed-and-search.md): geprüfte Quellen und technische Grenzen, Stand 16. Oktober 2026.
@@ -11,9 +11,17 @@ Statische Podcast-Suche und Wortstatistik, zunächst für **DAS PODCAST UFO**. A
 - [Runtime und Suchverträge](docs/research/runtime-and-search-contracts.md): Quellenprüfung für die ersten Funktionsnachweise.
 - [Nächste Aufgaben](TASKS.md): Umsetzungsreihenfolge und noch ausstehende Nachweise.
 
-Der Plan ist gemeinsam bestätigt, die Arbeitsumgebung eingerichtet. Das Python-Paket validiert versionierte Episodendaten; die statische Web-App verbindet Suche, Fundstellen, Audioplayer und Wortstatistiken anhand ausdrücklich synthetischer Prüfdaten. Installation, gemeinsamer Check und Entwicklungsstart sind in der [Entwicklungsanleitung](docs/development.md) beschrieben.
+Der lokale Pilot enthält fünf echte, frisch mit FP32/GPU verarbeitete Folgen samt spaCy-Wortanalysen. Der normale Build verwendet diese gespeicherten Daten und lädt weder Audio noch Modelle:
 
-Der gebaute Such- und Statistikstand wird am Root-Pfad und unter `/podcast_words_v3/` mit Chromium geprüft. Die vollständige lokale FP32-Transkription ist nachgewiesen und die Textqualität von UFO537 vom Nutzer als ausreichend bestätigt. Die übrige fünfteilige Pilotabnahme und die Veröffentlichungsentscheidung stehen noch aus. Erst nach bestandener Pilotabnahme wird das verfügbare Archiv verarbeitet.
+```powershell
+npm.cmd --prefix web run build
+npm.cmd --prefix web run preview -- --port 4173 --strictPort
+```
 
-- [Lokale FP32-Verarbeitung](docs/asr.md): Installation, Verarbeitung und genaue Audiofassungen.
-- [ASR-Untersuchung und Laufzeitvergleich](docs/research/asr-investigation.md): Ergebnisse, Betriebsentscheidung und dokumentierte Alternativen.
+Öffnen: <http://127.0.0.1:4173/>. Suche nach mehreren erinnerten Stichwörtern; unter „Wortstatistik öffnen“ lassen sich Grundformen vergleichen und Download-/Transkriptionszeiten je Folge ansehen. Grobe Segmente ersetzen Wortzeitstempel. Der Hinweis am Sprungknopf erklärt die mögliche Verschiebung durch Werbung. Audio wird nach der Transkription gelöscht.
+
+- [Fünf-Folgen-Pilot](docs/pilot/local-five-episode-pilot.md): Auswahl, Befehle, tatsächliche Laufzeiten und Grenzen der Prüfung.
+- [Lokale FP32-Verarbeitung](docs/asr.md): GPU-Einrichtung, temporäres Audio, Wiederaufnahme und Messgrenzen.
+- [ASR-Untersuchung und Laufzeitvergleich](docs/research/asr-investigation.md): historische CPU-/Colab-Ergebnisse und Hinweise zu FP32 auf Colab.
+
+Routinechecks wählen ausdrücklich synthetische Fixtures und benötigen keine GPU oder Modelle. Die Textqualität von UFO537 wurde vom Nutzer als ausreichend bestätigt; technische Suchchecks aus dem Transkript ersetzen keine unabhängige menschliche Suchqualitätsabnahme. Archivverarbeitung und öffentliche Veröffentlichung bleiben gesonderte Entscheidungen.
