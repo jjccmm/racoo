@@ -6,8 +6,8 @@ type Fragment = {
 type Episode = {
   title: string; episode_id: string; published_at: string; webpage_url?: string;
   source: { reference_url: string };
-  audio: { url: string; sha256: string; duration_seconds: number };
-  segments: (Segment & { token_points?: { text: string; at_seconds: number }[] })[];
+  audio: { url: string; duration_seconds: number };
+  segments: Segment[];
 };
 type RawResult = { id: string; words: number[]; data(): Promise<Fragment> };
 type Pagefind = { init(): Promise<void>; search(term: string): Promise<{ results: RawResult[] }> };
@@ -67,50 +67,22 @@ async function search({ moduleUrl, episodes, terms, offset }: SearchRequest): Pr
     const segmentFor = (position: number) => {
       const anchor = fragment.anchors.filter((item) => item.location <= position).at(-1);
       return anchor && episode.segments.find((segment) => segment.id === anchor.id)
-        ? { segmentId: anchor.id, localWord: position - anchor.location }
+        ? anchor.id
         : undefined;
     };
-    const pointTime = (segment: Episode['segments'][number], localWord: number) => {
-      const points = segment.token_points ?? [];
-      const text = points.map((point) => point.text).join('');
-      if (!points.length || text !== segment.text) return segment.start_seconds;
-      const wordStarts = [...segment.text.matchAll(/[\p{L}\p{M}\p{N}]+/gu)].map((match) => match.index!);
-      const charStart = wordStarts[localWord];
-      if (charStart === undefined) return segment.start_seconds;
-      let charOffset = 0;
-      for (const point of points) {
-        const nextOffset = charOffset + point.text.length;
-        if (nextOffset > charStart) return Math.max(segment.start_seconds, Math.min(segment.end_seconds, point.at_seconds));
-        charOffset = nextOffset;
-      }
-      return segment.start_seconds;
-    };
-    const found = new Map<string, { segmentId: string; seconds: number; terms: Set<string> }>();
+    const found = new Map<string, Set<string>>();
     for (const [term, positions] of Object.entries(positionsByTerm)) {
       for (const position of positions) {
-        const location = segmentFor(position);
-        if (!location) continue;
-        const segment = episode.segments.find((item) => item.id === location.segmentId)!;
-        const key = `${location.segmentId}:${position}`;
-        const occurrence = found.get(key) ?? {
-          segmentId: location.segmentId,
-          seconds: pointTime(segment, location.localWord),
-          terms: new Set<string>(),
-        };
-        occurrence.terms.add(term);
-        found.set(key, occurrence);
+        const segmentId = segmentFor(position);
+        if (!segmentId) continue;
+        const matchedTerms = found.get(segmentId) ?? new Set<string>();
+        matchedTerms.add(term);
+        found.set(segmentId, matchedTerms);
       }
     }
-    const occurrences = [...found.entries()].map(([id, occurrence]) => {
-      const nearbyTerms = new Set<string>();
-      for (const other of found.values()) {
-        if (Math.abs(other.seconds - occurrence.seconds) <= 30) other.terms.forEach((term) => nearbyTerms.add(term));
-      }
-      return { id, seconds: occurrence.seconds, terms: [...occurrence.terms].sort(), nearbyTerms: [...nearbyTerms].sort() };
-    });
     const passages = episode.segments.flatMap((segment) => {
-      const matches = occurrences.filter((occurrence) => occurrence.id.startsWith(`${segment.id}:`));
-      return matches.length ? [{ ...segment, occurrences: matches.sort((a, b) => b.nearbyTerms.length - a.nearbyTerms.length || a.seconds - b.seconds) }] : [];
+      const matchedTerms = found.get(segment.id);
+      return matchedTerms ? [{ ...segment, terms: [...matchedTerms].sort() }] : [];
     });
     return {
       ...identity,
@@ -120,12 +92,10 @@ async function search({ moduleUrl, episodes, terms, offset }: SearchRequest): Pr
       positionsByTerm,
       rankSum,
       passages: passages.sort((a, b) =>
-        Math.max(...b.occurrences.map((occurrence) => occurrence.nearbyTerms.length)) -
-        Math.max(...a.occurrences.map((occurrence) => occurrence.nearbyTerms.length)) ||
+        b.terms.length - a.terms.length ||
         a.start_seconds - b.start_seconds,
       ),
       audioUrl: episode.audio.url,
-      audioSha256: episode.audio.sha256,
       durationSeconds: episode.audio.duration_seconds,
       webpageUrl: episode.webpage_url ?? episode.source.reference_url,
     };
