@@ -1,6 +1,6 @@
 # Local five-episode pilot
 
-**Status:** ready-for-agent
+**Status:** in-progress
 
 ## User authorization and target
 

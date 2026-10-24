@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** ready-for-agent
+**Status:** claimed-for-agent
 
 - [ ] Produce schema-v2 episodes with text/start/end coarse segments of about five minutes and no token/word timing arrays or audio identity hash.
 - [ ] Preserve all recognized text in order and keep the transcript suitable for existing lemma counts and segment-based Pagefind search.
@@ -14,3 +14,7 @@
 - [ ] Update structural schema, active fixtures, text/configuration provenance and compact statistics metadata together; tests use the public CLI/artifact seam without live model downloads.
 - [ ] Keep the pinned local FP32 GPU path and validate changed timing/cleanup behavior with focused red-green tests.
 - [ ] Commit the implementation and integrate the current integration tip before completion.
+
+## Assignment
+
+Claimed for an isolated implementer worktree; coordinator owns authoritative status and integration.

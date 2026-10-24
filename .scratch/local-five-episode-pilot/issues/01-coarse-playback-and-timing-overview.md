@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** ready-for-agent
+**Status:** claimed-for-agent
 
 - [ ] Remove local-file upload, audio hashing, byte identity and online-duration mismatch checks from the website.
 - [ ] Use the matching segment's start as playback time, with a clear visible coarse-segment/advertising hint adjacent to every jump action; do not estimate word times.
@@ -16,3 +16,7 @@
 ## Comments
 
 The spec declares the agreed Episode/catalog fields and public test seams. The user's new instruction replaces second-accurate playback and audio identity requirements.
+
+## Assignment
+
+Claimed for an isolated implementer worktree; coordinator owns authoritative status and integration.

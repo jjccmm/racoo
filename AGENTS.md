@@ -10,12 +10,12 @@ This project builds a static podcast passage search and word-statistics site, ba
 - Continuing the planning interview: read [docs/planning/refinement.md](docs/planning/refinement.md) for confirmed decisions and the current frontier.
 - Running local commands or setting up tools: read [docs/development.md](docs/development.md), including this Windows host's npm, uv-cache, and scoped Git-ownership handling.
 - Changing feed import or search: consult [the source research](docs/research/v3-feed-and-search.md). Its observations are dated; verify mutable facts when needed.
-- Changing ASR or audio playback: read [local FP32 operation](docs/asr.md) and the [investigation](docs/research/asr-investigation.md). The active pipeline is local FP32/CUDA; validate against the retained audio bytes. For Pagefind positions, consult [runtime findings](docs/research/runtime-and-search-contracts.md).
+- Changing ASR or audio playback: read [local FP32 operation](docs/asr.md) and the [investigation](docs/research/asr-investigation.md). The active pipeline is local FP32/CUDA; audio is temporary and is deleted after processing. Playback starts at coarse segment boundaries and can shift because of advertising. For Pagefind positions, consult [runtime findings](docs/research/runtime-and-search-contracts.md).
 - Changing episode JSON: read [data contracts](docs/data-contracts.md); Python is authoritative and the JSON Schema export must stay in sync.
 
 ## Data and validation
 
-Keep normalized episode JSON and analysis results versioned as specified in the plan. Keep reference audio, model weights, caches, and generated web/search builds untracked. Retain the exact transcribed audio by content hash; a source URL can return different ad versions.
+Keep normalized episode JSON and analysis results versioned as specified in the plan. Keep model weights, caches, and generated web/search builds untracked. Download audio once per processing run and delete it afterward, including on failure. The stored transcript is the data basis; never hash-match it against later online audio. Active Episode schema v2 contains coarse segments without word timestamps and measured processing timings. The current scope and shared interfaces are in `.scratch/local-five-episode-pilot/spec.md`.
 
 When a data contract changes, update its producers, consumers, and representative fixtures together. Keep stable episode identity separate from feed metadata, display numbers, and search-index identifiers.
 
