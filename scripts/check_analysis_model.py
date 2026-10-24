@@ -23,7 +23,7 @@ def main() -> int:
         "laufen": {"count": 2, "stopword": False},
         "ein": {"count": 1, "stopword": True},
     }
-    text = "Die Hunde laufen. Ein Hund lÃ¤uft!"
+    text = "Die Hunde laufen. Ein Hund l\u00e4uft!"
     with TemporaryDirectory(prefix="analysis-model-", dir=cache) as temporary:
         directory = Path(temporary)
         episode = json.loads(
