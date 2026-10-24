@@ -1,17 +1,12 @@
-"""Reproduce ORT's external-data cache failure with a tiny model, without downloads."""
+"""Exercise the production FP32 loader with tiny, real ONNX external weights offline."""
 
-import os
 import shutil
 import struct
-import subprocess
 from pathlib import Path
 from types import SimpleNamespace
 
 import numpy as np
 import onnxruntime as rt
-import pytest
-
-from podcast_words import asr_diagnostics as diag
 
 
 def _varint(value):
@@ -47,48 +42,6 @@ def _external_add_model(location):
     return _field(1, 8) + _field(7, graph) + _field(8, _field(2, 13))
 
 
-@pytest.fixture
-def sharded_snapshot(tmp_path):
-    snapshot = tmp_path / "snapshots" / "revision"
-    graph_blob = tmp_path / "blobs" / "9a"
-    weights_blob = tmp_path / "blobs" / "79"
-    for folder in (snapshot, graph_blob, weights_blob):
-        folder.mkdir(parents=True)
-    weight = weights_blob / "encoder-model.onnx.data"
-    weight.write_bytes(struct.pack("<f", 2))
-    junction = None
-    if os.name == "nt":
-        # Windows file symlinks require privileges; a directory junction exercises
-        # the same canonical-path containment check without those privileges.
-        location = "weights/encoder-model.onnx.data"
-        junction = snapshot / "weights"
-        result = subprocess.run(
-            ["cmd", "/c", "mklink", "/J", str(junction), str(weights_blob)],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if result.returncode:
-            pytest.fail(f"Cannot create fixture junction: {result.stderr}")
-        (snapshot / "encoder-model.onnx").write_bytes(_external_add_model(location))
-        shutil.copyfile(weight, snapshot / "encoder-model.onnx.data")
-    else:
-        location = "encoder-model.onnx.data"
-        graph = graph_blob / "graph"
-        graph.write_bytes(_external_add_model(location))
-        (snapshot / "encoder-model.onnx").symlink_to(graph)
-        (snapshot / "encoder-model.onnx.data").symlink_to(weight)
-    (snapshot / "config.json").write_text("{}", encoding="utf-8")
-    (snapshot / "vocab.txt").write_text("fixture", encoding="utf-8")
-    (snapshot / "decoder_joint-model.onnx").write_bytes(b"unused fixture decoder")
-    try:
-        yield snapshot
-    finally:
-        if junction is not None:
-            assert junction.parent == snapshot
-            junction.rmdir()  # Remove only the link; the blob directory remains intact.
-
-
 def _load_and_run(directory):
     options = rt.SessionOptions()
     options.intra_op_num_threads = 1
@@ -99,56 +52,57 @@ def _load_and_run(directory):
     np.testing.assert_array_equal(result[0], [3])
 
 
-def test_real_ort_rejects_cache_links_and_accepts_identical_local_bytes(sharded_snapshot, tmp_path):
-    with pytest.raises(Exception, match="External data path escapes model directory"):
-        _load_and_run(sharded_snapshot)
-    local = tmp_path / "plain-files"
-    shutil.copytree(sharded_snapshot, local, symlinks=False)
-    assert not (local / "encoder-model.onnx").is_symlink()
-    assert (local / "encoder-model.onnx").read_bytes() == (
-        sharded_snapshot / "encoder-model.onnx"
-    ).read_bytes()
-    _load_and_run(local)
-
-
-def test_fp32_loader_materializes_files_before_real_ort_creation(
-    sharded_snapshot, tmp_path, monkeypatch
+def test_local_fp32_loader_materializes_external_weights_before_session_creation(
+    tmp_path, monkeypatch
 ):
     import huggingface_hub
     import onnx_asr
 
-    def snapshot_download(repo, **kwargs):
-        if repo == diag.VAD_ID:
-            return str(sharded_snapshot)
-        if kwargs.get("local_dir"):
-            local = Path(kwargs["local_dir"])
-            shutil.copytree(sharded_snapshot, local, symlinks=False)
-            return str(local)
-        return str(sharded_snapshot)
+    from podcast_words.transcribe import EXPORT_ID, VAD_ID, Transcriber
 
-    class Session:
-        def get_providers(self):
-            return [diag.CUDA, diag.CPU]
+    snapshot = tmp_path / "snapshot"
+    snapshot.mkdir()
+    (snapshot / "encoder-model.onnx").write_bytes(_external_add_model("encoder-model.onnx.data"))
+    (snapshot / "encoder-model.onnx.data").write_bytes(struct.pack("<f", 2))
+    (snapshot / "config.json").write_text("{}", encoding="utf-8")
+    (snapshot / "vocab.txt").write_text("fixture", encoding="utf-8")
+    (snapshot / "decoder_joint-model.onnx").write_bytes(b"fixture decoder")
+
+    def download(repo, **kwargs):
+        if repo == VAD_ID:
+            return str(snapshot)
+        assert repo == EXPORT_ID
+        local = Path(kwargs["local_dir"])
+        shutil.copytree(snapshot, local)
+        return str(local)
 
     class Model:
         asr = SimpleNamespace(
-            _encoder=Session(), _decoder_joint=Session(), _preprocessor=SimpleNamespace()
+            _encoder=SimpleNamespace(
+                get_providers=lambda: ["CUDAExecutionProvider", "CPUExecutionProvider"]
+            ),
+            _decoder_joint=SimpleNamespace(
+                get_providers=lambda: ["CUDAExecutionProvider", "CPUExecutionProvider"]
+            ),
         )
-        resampler = SimpleNamespace(_preprocessors={})
 
-        def with_vad(self, *args, **kwargs):
+        def with_vad(self, *a, **k):
             return self
 
         def with_timestamps(self):
             return self
 
-    def load_model(name, path, **kwargs):
+    def load(name, path, **kwargs):
         _load_and_run(Path(path))
         return Model()
 
-    monkeypatch.setattr(huggingface_hub, "snapshot_download", snapshot_download)
-    monkeypatch.setattr(onnx_asr, "load_model", load_model)
-    monkeypatch.setattr(onnx_asr, "load_vad", lambda *a, **k: SimpleNamespace(_model=Session()))
-    monkeypatch.setattr(rt, "get_available_providers", lambda: [diag.CUDA, diag.CPU])
-    monkeypatch.setattr(rt, "preload_dlls", lambda: None)
-    diag.load_models(diag.CASES["cuda-fp32"], tmp_path / "experiment", False)
+    monkeypatch.setattr(huggingface_hub, "snapshot_download", download)
+    monkeypatch.setattr(onnx_asr, "load_model", load)
+    monkeypatch.setattr(
+        onnx_asr,
+        "load_vad",
+        lambda *a, **k: SimpleNamespace(
+            _model=SimpleNamespace(get_providers=lambda: ["CPUExecutionProvider"])
+        ),
+    )
+    Transcriber(tmp_path / "cache")

@@ -1,10 +1,14 @@
+# Retired remote workflows
+
+Archived on 2026-10-24 after the user selected local GPU FP32 exclusively. These former requirements are historical, not active work.
+
 # 10: Resume the shared workflow on Colab GPU and Drive
 
 **What to build:** An operator can manually start the same processing workflow in Colab, persist each completed episode on Drive, and resume in a new session with a verified GPU provider.
 
 **Blocked by:** 09: Resume selected episode processing without losing work.
 
-**Status:** ready-for-human
+**Status:** wontfix
 
 **Spec coverage:** User stories 37, 38, 39, 40, 41, 52 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 
@@ -21,6 +25,10 @@
 - [x] Keep live Colab/Drive/GPU work separate from the fixture-only Windows/Linux check path.
 
 
+## Superseded scope
+
+2026-10-24: The user selected local GPU FP32 exclusively. This former workflow and its code were explicitly removed. The retained text below is historical evidence, not an active requirement. See [the investigation](../asr-investigation.md).
+
 ## Comments
 
 - 2026-10-17: Added a thin Colab notebook that selects the mutually exclusive locked GPU dependency group, calls the shared `process` CLI per episode, keeps audio/models/profiles in VM storage, and checkpoints validated per-episode JSON plus run metadata to Drive before proceeding. It reuses valid Drive checkpoints in a new session and refuses to count provider availability alone as GPU proof. The optional difficult-excerpt workflow calls the shared `transcribe` CLI and stores offset-adjusted excerpt evidence separately from full episode results.
@@ -33,3 +41,35 @@
 - 2026-10-17: The operator attempted bootstrap on a Colab kernel from VS Code. The supplied traceback reports `uv sync --locked --no-default-groups --group gpu --python 3.12` exiting with status 2, but contains no uv diagnostic output. The bootstrap cell now captures combined stdout/stderr and includes it in the setup exception. Local notebook syntax/workspace checks passed; the underlying setup failure awaits the actual uv output and is not yet diagnosed or counted as GPU runtime evidence.
 
 - 2026-10-17: The operator identified the bootstrap error's cause as the wrong Git branch checked out on the Colab server. At the operator's request, the notebook's diagnostic-only change from `930f69b` was reverted; the original bootstrap command is restored. The operator also reports 36 minutes for the same episode that took 797.015 seconds locally on CPU with cached audio/models. That observation motivates a separate performance investigation; the Colab timing boundary, cache/setup costs and executed-provider/profile evidence have not yet been supplied, so the reported duration alone does not close the runtime or resume acceptance gates.
+
+
+# 11: Import transferred results without silent conflicts
+
+**What to build:** An operator can import completed episode results from another run, skip identical work, and receive explicit conflicts while preserving existing valid data.
+
+**Blocked by:** 09: Resume selected episode processing without losing work.
+
+**Status:** wontfix
+
+**Spec coverage:** User stories 34, 38, 42, 43, 44 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
+
+**Verification:** Public import/reconcile command, persisted episode/run state, exit status, and repeat import observations.
+
+- [x] Validate every incoming episode's semantic contract, stable identity, aliases, audio/model provenance, and completion state before accepting it.
+- [x] Skip identical existing results idempotently and report what was accepted or skipped.
+- [x] Report differing existing transcript, audio, identity, or configuration data as a conflict without silent overwrite; preserve the existing validated result.
+- [x] Keep verified catalog identity and metadata reconciliation separate from recognition replacement; a metadata change alone must not run ASR.
+- [x] Expose relevant changed transcript/analysis inputs to downstream rebuilds without falsely retaining obsolete completion/publication state.
+- [x] Verify valid import, repeat import, incomplete/invalid input, identity mismatch, conflicting output, and preserved previous data using public artifacts and diagnostics.
+- [x] Do not require a live Colab session for deterministic import checks; the real cross-runtime transfer is evidenced with the later pilot run.
+
+## Superseded scope
+
+2026-10-24: The user selected local GPU FP32 exclusively. This former workflow and its code were explicitly removed. The retained text below is historical evidence, not an active requirement. See [the investigation](../asr-investigation.md).
+
+## Comments
+
+- Implemented the public `import-results` command. It validates each schema-v1 episode, required model/export/runtime provenance, non-empty completion, stable catalog identity and verified GUID aliases before durable acceptance. Existing invalid outputs and transcript/audio/identity/configuration conflicts remain unchanged; identical results skip, and metadata drift is reported separately.
+- The command reports audio, configuration and transcript fingerprints for publication diagnostics. Complete legacy schema-v1 provenance with all optional 09 revision fields absent remains importable; partial or inconsistent revisions are rejected. No audio/model download or ASR call is part of import.
+- Public CLI fixture coverage: acceptance, repeat import, verified alias, malformed/semantically invalid/incomplete inputs, unverified identity, metadata drift, transcript/audio/config conflicts, byte preservation and legacy provenance. Full Python suite: 57 passed. Ruff check/format and workspace documentation/Colab syntax checks passed. `uv run --frozen pytest` could not bootstrap the isolated worktree because PyPI access was denied; tests ran with the installed Python 3.12 environment and worktree `PYTHONPATH` instead.
+- Integration acceptance: merged with no fast-forward as `4b392c9`. The full suite passed (57 tests), including import acceptance/repeat, alias, incomplete/invalid inputs, identity/audio/transcript/config conflicts, and byte preservation. Ruff check/format and workspace documentation/Colab syntax checks passed. A focused public CLI assertion also confirms accepted import preserves all runtime-version provenance in the stored episode.

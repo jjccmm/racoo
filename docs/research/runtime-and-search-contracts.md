@@ -4,11 +4,7 @@ Stand: 16. Oktober 2026. Quellenprüfung zur Planverfeinerung; keine Installatio
 
 ## Python und GPU
 
-Die [onnx-asr-Installation](https://istupakov.github.io/onnx-asr/installation/) dokumentiert Windows, CPU-/GPU-Pakete und Python 3.10–3.14. Python 3.12 liegt in diesem Bereich und ist auf dem Arbeitsplatz vorhanden; seine Eignung für die gesamte Kombination einschließlich spaCy muss bei der Abhängigkeitsauflösung nachgewiesen werden.
-
-Aktuelle Standardpakete von `onnxruntime-gpu` ab 1.27 verwenden laut [ONNX Runtime](https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html) CUDA 13. Die [NVIDIA-Treibermatrix](https://docs.nvidia.com/deploy/cuda-compatibility/minor-version-compatibility.html) nennt dafür mindestens Treiber 580; auf diesem Arbeitsplatz wurde 576.02 festgestellt. Außerdem entfällt mit CUDA 13 die Bibliotheks- und Offline-Kompilierungsunterstützung für Pascal, die Architektur der GTX 1050 Ti. Siehe [CUDA-13-Änderungen](https://docs.nvidia.com/cuda/archive/13.0.1/cuda-toolkit-release-notes/index.html). Auch die aktuelle [cuDNN-Matrix](https://docs.nvidia.com/deeplearning/cudnn/backend/latest/reference/support-matrix.html) schließt Pascal aus.
-
-Folgerung: Aus der vorhandenen NVIDIA-Karte darf keine funktionierende lokale Beschleunigung abgeleitet werden. Ein älterer kompatibler Paketstand wäre ein eigener Funktionsnachweis. Colab benötigt vor jedem Integrationslauf eine Prüfung von zugeteilter GPU, Treiber, CUDA/cuDNN und tatsächlich verwendetem ONNX-Ausführungsanbieter. Ein ungesperrtes GPU-Extra reicht dafür nicht.
+Aktiver Laufweg seit 24.10.2026: lokales FP32 auf GTX 1050 Ti mit ORT GPU 1.20.1 als CUDA-11-Build, CUDA 11.8/cuDNN 8.6. Der vollständige Lauf und die Nutzerabnahme der Textqualität stehen in der [ASR-Untersuchung](asr-investigation.md); die [ASR-Anleitung](../asr.md) beschreibt die Einrichtung. Die folgenden Such-/Zeitmarkenbefunde erhalten ihre datierte Herkunft.
 
 ## Audio und Zeitmarken
 
@@ -26,7 +22,7 @@ Die [Anker-API](https://pagefind.app/docs/sub-results/#calculating-custom-sub-re
 
 ## Nachweise vor Archivverarbeitung
 
-- CPU-Transkription unter Windows und ein nachweislich verwendeter GPU-Anbieter unter Colab.
+- Bestätigter lokaler FP32-GPU-Laufweg und Prüfung der genauen Audiofassung.
 - Richtige Episodenzeiten nach mehreren Sprachabschnitten und Pausen.
 - Indexstandgebundene Zuordnung von Such-ID, Episoden-ID und Datum ohne Nachladen sämtlicher Ergebnisfragmente.
 - Zusammenführen mehrerer Suchbegriffe mit erhaltenen Positionen und richtigen Segmentankern.

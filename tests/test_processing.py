@@ -2,9 +2,7 @@
 
 import hashlib
 import json
-import os
 import threading
-import uuid
 import wave
 from contextlib import contextmanager
 from datetime import UTC, datetime
@@ -15,7 +13,7 @@ from types import SimpleNamespace
 import huggingface_hub
 import onnx_asr
 
-from podcast_words import processing, transcribe
+from podcast_words import transcribe
 from podcast_words.catalog import Catalog, CatalogEpisode, Enclosure, Source
 from podcast_words.cli import main
 from podcast_words.contracts import Episode
@@ -97,41 +95,14 @@ def make_catalog(path, audio_url, title="Fixture episode"):
     path.write_text(catalog.model_dump_json(indent=2) + "\n", encoding="utf-8")
 
 
-def install_external_recognizer(monkeypatch, tmp_path, *, interrupt=False, execute_cuda=True):
-    gpu_requested = os.environ.get("PODCAST_WORDS_EXECUTION_PROVIDER") == "CUDAExecutionProvider"
-
-    def make_session(name):
-        providers = (
-            ["CUDAExecutionProvider", "CPUExecutionProvider"]
-            if gpu_requested
-            else ["CPUExecutionProvider"]
-        )
-
-        def end_profiling():
-            profile = tmp_path / f"{name}-{uuid.uuid4().hex}-profile.json"
-            events = (
-                [
-                    *(
-                        [
-                            {"cat": "Node", "args": {"provider": "CUDAExecutionProvider"}},
-                            {"cat": "Node", "args": {"provider": "CUDAExecutionProvider"}},
-                        ]
-                        if execute_cuda and gpu_requested
-                        else []
-                    ),
-                    {"cat": "Node", "args": {"provider": "CPUExecutionProvider"}},
-                ]
-                if name == "encoder"
-                else []
-            )
-            profile.write_text(json.dumps(events), encoding="utf-8")
-            return str(profile)
-
-        return SimpleNamespace(get_providers=lambda: providers, end_profiling=end_profiling)
-
-    encoder = make_session("encoder")
-    decoder = make_session("decoder")
-    vad_session = make_session("vad")
+def install_external_recognizer(monkeypatch, tmp_path, *, interrupt=False):
+    encoder = SimpleNamespace(
+        get_providers=lambda: ["CUDAExecutionProvider", "CPUExecutionProvider"]
+    )
+    decoder = SimpleNamespace(
+        get_providers=lambda: ["CUDAExecutionProvider", "CPUExecutionProvider"]
+    )
+    vad_session = SimpleNamespace(get_providers=lambda: ["CPUExecutionProvider"])
     result = SimpleNamespace(
         start=1.0,
         end=3.0,
@@ -160,50 +131,6 @@ def install_external_recognizer(monkeypatch, tmp_path, *, interrupt=False, execu
     )
 
 
-def test_process_gpu_profile_records_executed_nodes_and_keeps_partial_cpu_fallback(
-    tmp_path, monkeypatch, capsys
-):
-    catalog_path = tmp_path / "catalog.json"
-    output = tmp_path / "episodes"
-    cache = tmp_path / "cache"
-    with audio_server(wave_bytes()) as (audio_url, _response):
-        make_catalog(catalog_path, audio_url)
-        monkeypatch.setenv("PODCAST_WORDS_EXECUTION_PROVIDER", "CUDAExecutionProvider")
-        monkeypatch.setattr(processing, "version", lambda _name: "1.27.0")
-        monkeypatch.setattr(transcribe, "version", lambda _name: "1.27.0")
-        install_external_recognizer(monkeypatch, tmp_path)
-
-        assert run(catalog_path, output, cache, "episode-one") == 0
-        report = json.loads(capsys.readouterr().out)
-        assert report["results"][0]["status"] == "completed"
-        profile = report["execution_profile"]
-        assert profile["model_node_events"]["CUDAExecutionProvider"] == 2
-        assert profile["model_node_events"]["CPUExecutionProvider"] == 1
-        assert report["runtime_measurements"]["profile"]["execution_proof"] == (
-            "executed-ort-node-events"
-        )
-        assert (
-            report["runtime_measurements"]["episodes"][0]["episode"]["inference"]["execution_proof"]
-            == "executed-ort-node-events"
-        )
-        transcript = json.loads((output / "episode-one.json").read_bytes())
-        assert transcript["transcription"]["execution_providers"]["encoder"] == [
-            "CUDAExecutionProvider",
-            "CPUExecutionProvider",
-        ]
-
-        failed_catalog = tmp_path / "fallback-catalog.json"
-        failed_output = tmp_path / "fallback-episodes"
-        make_catalog(failed_catalog, audio_url)
-        install_external_recognizer(monkeypatch, tmp_path, execute_cuda=False)
-        assert run(failed_catalog, failed_output, cache, "episode-one") == 1
-        failed_profile = json.loads(capsys.readouterr().out)
-        assert failed_profile["ok"] is False
-        assert (
-            "no CUDA model node executions" in failed_profile["execution_profile_error"]["message"]
-        )
-
-
 def run(
     catalog,
     output,
@@ -211,8 +138,6 @@ def run(
     *episode_ids,
     retranscribe=False,
     run_report=None,
-    no_profile=False,
-    profile=False,
     audio_file=None,
 ):
     args = [
@@ -230,10 +155,6 @@ def run(
         args.append("--retranscribe")
     if run_report:
         args.extend(["--run-report", str(run_report)])
-    if no_profile:
-        args.append("--no-profile")
-    if profile:
-        args.append("--profile")
     if audio_file:
         args.extend(["--audio-file", str(audio_file)])
     return main(args)
@@ -299,97 +220,6 @@ def test_process_selected_episode_is_durable_skipped_on_resume_and_explicitly_re
         assert replacement["segments"] == first["segments"]
         assert json.loads(capsys.readouterr().out)["results"][0]["status"] == "completed"
         assert json.loads(initial_output)["results"][0]["status"] == "completed"
-
-
-def test_forced_process_benchmark_executes_audio_and_marks_profile_off_unproven(
-    tmp_path, monkeypatch, capsys
-):
-    audio = wave_bytes()
-    audio_path = tmp_path / "matched-audio.wav"
-    audio_path.write_bytes(audio)
-    catalog_path = tmp_path / "catalog.json"
-    output = tmp_path / "episodes"
-    cache = tmp_path / "cache"
-    run_report = tmp_path / "benchmark" / "run.json"
-    profile_report = tmp_path / "benchmark" / "profiled-run.json"
-    recognition_calls = []
-    with audio_server(audio) as (audio_url, _response):
-        make_catalog(catalog_path, audio_url)
-        install_external_recognizer(monkeypatch, tmp_path)
-        original_model = onnx_asr.load_model
-
-        def counted_model(*args, **kwargs):
-            model = original_model(*args, **kwargs)
-            original_recognize = model.with_vad
-
-            def with_vad(*vad_args, **vad_kwargs):
-                recognizer = original_recognize(*vad_args, **vad_kwargs)
-                timestamped = recognizer.with_timestamps
-
-                def with_timestamps():
-                    result = timestamped()
-                    recognize = result.recognize
-
-                    def recognize_and_count(*recognize_args, **recognize_kwargs):
-                        recognition_calls.append(1)
-                        return recognize(*recognize_args, **recognize_kwargs)
-
-                    return SimpleNamespace(recognize=recognize_and_count)
-
-                return SimpleNamespace(with_timestamps=with_timestamps)
-
-            model.with_vad = with_vad
-            return model
-
-        monkeypatch.setattr(onnx_asr, "load_model", counted_model)
-        assert run(catalog_path, output, cache, "episode-one") == 0
-        capsys.readouterr()
-        calls_before_benchmark = len(recognition_calls)
-        assert (
-            run(
-                catalog_path,
-                output,
-                cache,
-                "episode-one",
-                retranscribe=True,
-                no_profile=True,
-                audio_file=audio_path,
-                run_report=run_report,
-            )
-            == 0
-        )
-        report = json.loads(capsys.readouterr().out)
-        assert (
-            run(
-                catalog_path,
-                output,
-                cache,
-                "episode-one",
-                retranscribe=True,
-                profile=True,
-                audio_file=audio_path,
-                run_report=profile_report,
-            )
-            == 0
-        )
-        profiled = json.loads(capsys.readouterr().out)
-
-    assert len(recognition_calls) > calls_before_benchmark
-    assert report["results"][0]["status"] == "completed"
-    measurements = report["runtime_measurements"]
-    assert measurements["inference_runs"] == 1
-    assert measurements["skipped_runs"] == 0
-    assert measurements["profile"]["status"] == "disabled"
-    assert measurements["profile"]["execution_proof"] == "unavailable-profile-disabled"
-    assert measurements["episodes"][0]["episode"]["audio_download"]["status"] == (
-        "provided-local-file"
-    )
-    assert json.loads(run_report.read_bytes()) == measurements
-    profiled_measurements = profiled["runtime_measurements"]
-    assert profiled_measurements["profile"]["status"] == "captured"
-    assert profiled_measurements["profile"]["execution_proof"] == "executed-ort-node-events"
-    assert profiled_measurements["profile"]["model_node_events"]["CPUExecutionProvider"] == 1
-    assert json.loads(profile_report.read_bytes()) == profiled_measurements
 
 
 def test_process_rejects_one_audio_file_for_multiple_episode_identities(
@@ -628,3 +458,25 @@ def test_interruption_and_download_failure_remain_retryable(tmp_path, monkeypatc
     assert failed["results"][0]["status"] == "failed"
     assert "HTTP Error 503" in failed["results"][0]["error"]
     assert json.loads(failed_catalog.read_bytes())["episodes"][0]["processing_status"] == "failed"
+
+
+def test_changed_download_of_same_url_retains_both_exact_audio_versions(
+    tmp_path, monkeypatch, capsys
+):
+    first, second = wave_bytes(5), wave_bytes(6)
+    path, output, cache = tmp_path / "catalog.json", tmp_path / "episodes", tmp_path / "cache"
+    install_external_recognizer(monkeypatch, tmp_path)
+    with audio_server(first) as (url, response):
+        make_catalog(path, url)
+        assert run(path, output, cache, "episode-one") == 0
+        report1 = json.loads(capsys.readouterr().out)
+        response["body"] = second
+        assert run(path, output, cache, "episode-one", retranscribe=True) == 0
+        report2 = json.loads(capsys.readouterr().out)
+    for raw, report in ((first, report1), (second, report2)):
+        data = report["runtime_measurements"]["episodes"][0]["episode"]["input"]
+        reference = Path(data["reference_audio_file"])
+        assert reference.read_bytes() == raw
+        assert data["audio_sha256"] == hashlib.sha256(raw).hexdigest()
+        assert data["source_url_is_fixed_audio_version"] is False
+    assert len(list((cache / "audio").glob("*.wav"))) == 2

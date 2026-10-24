@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "scope": "Post-cleanup real local FP32 production CLI smoke; bounded synthetic-labelled excerpt, not another full-episode benchmark",
+  "raw_report_sha256": "afc7c45f7211d276b86e3ada1b37edd7b68199b623917e95903ad1952d946510",
+  "measurements": {
+    "schema_version": 1,
+    "model": {
+      "model_parameters_lookup_download": {
+        "cache_status": "warm",
+        "elapsed_seconds": 0.063,
+        "wire_bytes_downloaded": null
+      },
+      "vad_lookup_download": {
+        "elapsed_seconds": 0.0,
+        "wire_bytes_downloaded": null
+      },
+      "encoder_decoder_session_initialization": {
+        "elapsed_seconds": 3.969
+      },
+      "vad_session_initialization": {
+        "elapsed_seconds": 0.14
+      },
+      "model_setup_total_including_imports_lookup_and_sessions_seconds": 5.047,
+      "model_setup_timing_note": "Outer setup includes runtime imports, cache lookups and nested ASR/VAD initialization; do not add sub-times again."
+    },
+    "episode": {
+      "audio_download": {
+        "status": "provided-local-file",
+        "elapsed_seconds": 0.0,
+        "payload_bytes_saved": 256044,
+        "wire_bytes_downloaded": 0
+      },
+      "decode": {
+        "elapsed_seconds": 0.078,
+        "decoded_audio_seconds": 8.0
+      },
+      "inference": {
+        "elapsed_seconds": 0.609,
+        "execution_proof": "session-providers-recorded; timing run is not profiled",
+        "boundary": "recognizer generator iteration including VAD/preprocessing and result assembly; not pure encoder, decoder or GPU kernel time"
+      },
+      "input": {
+        "audio_sha256": "ffae8f86dfdf74c798337afbdb81ffe1df667c68e7434f867f2d6ff3c1d1196b",
+        "audio_bytes": 256044,
+        "reference_audio_file": ".cache\\asr\\audio\\ffae8f86dfdf74c798337afbdb81ffe1df667c68e7434f867f2d6ff3c1d1196b.wav",
+        "source_url_is_fixed_audio_version": false,
+        "decoded_duration_seconds": 8.0
+      },
+      "validation": {
+        "elapsed_seconds": 0.0
+      },
+      "serialization": {
+        "elapsed_seconds": 0.0,
+        "bytes": 6932
+      },
+      "validation_and_serialization": {
+        "elapsed_seconds": 0.0,
+        "validation_seconds": 0.0,
+        "serialization_seconds": 0.0
+      }
+    },
+    "runtime": {
+      "python": "3.12.9",
+      "platform": "Windows-10-10.0.19045-SP0",
+      "processor": "Intel64 Family 6 Model 94 Stepping 3, GenuineIntel",
+      "logical_cpu_count": 8,
+      "execution_provider": "CUDAExecutionProvider",
+      "intra_op_num_threads": 4
+    },
+    "processing_configuration": {
+      "model_id": "nvidia/parakeet-tdt-0.6b-v3",
+      "model_revision": "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+      "export_id": "istupakov/parakeet-tdt-0.6b-v3-onnx",
+      "export_revision": "8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce",
+      "quantization": "fp32",
+      "vad_id": "istupakov/silero-vad-onnx",
+      "vad_revision": "b3e3ee3cce4c11ceb63b1a0b229d916069c1ddf6",
+      "vad_options": {
+        "batch_size": 1,
+        "max_speech_duration_s": 20,
+        "min_speech_duration_ms": 250,
+        "min_silence_duration_ms": 100,
+        "speech_pad_ms": 0,
+        "threshold": 0.5
+      },
+      "intra_op_num_threads": 4,
+      "asr_provider": "CUDAExecutionProvider",
+      "vad_provider": "CPUExecutionProvider",
+      "preprocessing": "numpy-cpu",
+      "cuda_provider_options": {
+        "arena_extend_strategy": "kSameAsRequested",
+        "gpu_mem_limit": "3221225472",
+        "cudnn_conv_algo_search": "HEURISTIC",
+        "cudnn_conv_use_max_workspace": "0"
+      }
+    },
+    "total_elapsed_seconds": 5.765,
+    "total_elapsed_boundary": "Starts inside transcribe_command() and ends before writing the optional run report and stdout; excludes interpreter/uv startup and environment installation.",
+    "code_revision": null
+  },
+  "validation": "Saved Episode contract and retained reference checksum passed; actual CUDA session configuration, no profiling claim."
+}

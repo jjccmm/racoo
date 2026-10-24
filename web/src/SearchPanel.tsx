@@ -4,7 +4,7 @@ import { loadEpisode, searchEpisodes, type Occurrence, type SearchPage, type Sea
 type State =
   | { kind: 'empty' | 'loading' | 'none' | 'error' }
   | { kind: 'results'; page: SearchPage; more: 'idle' | 'loading' | 'error' };
-type PlayerEpisode = Pick<SearchResult, 'episodeId' | 'title' | 'publishedAt' | 'audioUrl' | 'durationSeconds' | 'webpageUrl'>;
+type PlayerEpisode = Pick<SearchResult, 'episodeId' | 'title' | 'publishedAt' | 'audioUrl' | 'audioSha256' | 'durationSeconds' | 'webpageUrl'>;
 type EpisodeRecord = Awaited<ReturnType<typeof loadEpisode>>;
 
 function time(seconds: number) {
@@ -18,6 +18,9 @@ export function SearchPanel() {
   const [targetTime, setTargetTime] = useState(0);
   const [playRequested, setPlayRequested] = useState(false);
   const [mediaError, setMediaError] = useState(false);
+  const [audioMismatch, setAudioMismatch] = useState(false);
+  const [referenceError, setReferenceError] = useState('');
+  const [localAudio, setLocalAudio] = useState<{ episodeId: string; url: string } | null>(null);
   const [directState, setDirectState] = useState<'idle' | 'loading' | 'unknown' | 'error'>(() =>
     new URLSearchParams(window.location.search).has('episode') ? 'loading' : 'idle',
   );
@@ -25,7 +28,10 @@ export function SearchPanel() {
   const session = useRef<SearchSession | null>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
   const appliedTimeline = useRef('');
+  const referenceRequest = useRef(0);
   useEffect(() => () => active.current?.abort(), []);
+  useEffect(() => () => { if (localAudio) URL.revokeObjectURL(localAudio.url); }, [localAudio]);
+  const mediaUrl = player && localAudio?.episodeId === player.episodeId ? localAudio.url : player?.audioUrl;
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -47,9 +53,17 @@ export function SearchPanel() {
   useEffect(() => {
     const media = audio.current;
     if (!player || !media) return;
-    const key = `${player.episodeId}:${targetTime}`;
+    const key = `${player.episodeId}:${mediaUrl}:${targetTime}`;
     if (appliedTimeline.current === key) return;
     const syncTimeline = () => {
+      if (!Number.isFinite(media.duration) || Math.abs(media.duration - player.durationSeconds) > 1) {
+        media.pause();
+        appliedTimeline.current = key;
+        setAudioMismatch(true);
+        setPlayRequested(false);
+        return;
+      }
+      setAudioMismatch(false);
       media.currentTime = clamp(playRequested ? targetTime - 5 : targetTime, player.durationSeconds);
       appliedTimeline.current = key;
       if (playRequested) {
@@ -63,7 +77,7 @@ export function SearchPanel() {
       media.load();
     }
     return () => media.removeEventListener('loadedmetadata', syncTimeline);
-  }, [player, targetTime, playRequested]);
+  }, [player, targetTime, playRequested, mediaUrl]);
 
   async function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -97,6 +111,12 @@ export function SearchPanel() {
   }
 
   function choose(episode: PlayerEpisode, occurrence: Occurrence) {
+    if (player?.episodeId !== episode.episodeId) {
+      referenceRequest.current += 1;
+      setLocalAudio(null);
+      setReferenceError('');
+      setAudioMismatch(false);
+    }
     const url = new URL(window.location.href);
     url.searchParams.set('episode', episode.episodeId);
     url.searchParams.set('t', String(Math.round(occurrence.seconds)));
@@ -109,8 +129,28 @@ export function SearchPanel() {
   }
 
   function nudge(seconds: number) {
-    if (!audio.current || !player) return;
+    if (!audio.current || !player || audioMismatch) return;
     audio.current.currentTime = clamp(audio.current.currentTime + seconds, player.durationSeconds);
+  }
+
+  async function openReference(file: File | undefined) {
+    if (!file || !player) return;
+    const request = ++referenceRequest.current;
+    setReferenceError('');
+    try {
+      const digest = await crypto.subtle.digest('SHA-256', await file.arrayBuffer());
+      if (request !== referenceRequest.current) return;
+      const checksum = [...new Uint8Array(digest)].map((value) => value.toString(16).padStart(2, '0')).join('');
+      if (checksum !== player.audioSha256) {
+        setReferenceError('Datei stimmt nicht mit dem Transkript überein. Bitte die transkribierte Audiodatei wählen.');
+        return;
+      }
+      setMediaError(false);
+      appliedTimeline.current = '';
+      setLocalAudio({ episodeId: player.episodeId, url: URL.createObjectURL(file) });
+    } catch {
+      if (request === referenceRequest.current) setReferenceError('Audiodatei konnte nicht geprüft werden.');
+    }
   }
 
   const directEpisode = directState === 'unknown' ? 'unknown' : directState === 'error' ? 'error' : null;
@@ -143,12 +183,20 @@ export function SearchPanel() {
     {player && <section className="player" aria-label="Gemeinsamer Audioplayer">
       <h2>Wiedergabe: {player.title}</h2>
       <p>{time(targetTime)} · Transkript und Sprungzeit beziehen sich auf die verarbeitete Audiofassung.</p>
-      <audio ref={audio} src={player.audioUrl} controls preload="metadata" onError={() => setMediaError(true)} />
+      <audio ref={audio} src={mediaUrl} controls preload="metadata" onError={() => setMediaError(true)} />
       <div className="player-controls">
-        <button type="button" onClick={() => nudge(-10)}>10 Sekunden zurück</button>
-        <button type="button" onClick={() => nudge(10)}>10 Sekunden vor</button>
+        <button type="button" disabled={audioMismatch} onClick={() => nudge(-10)}>10 Sekunden zurück</button>
+        <button type="button" disabled={audioMismatch} onClick={() => nudge(10)}>10 Sekunden vor</button>
         <a href={shareHref(player.episodeId, targetTime)}>Fundstelle teilen</a>
       </div>
+      {localAudio?.episodeId === player.episodeId
+        ? <p>Audiofassung anhand der Datei bestätigt.</p>
+        : <p className="muted">Die Online-Quelle kann andere Werbung enthalten. Gleiche Länge allein bestätigt die Audiofassung nicht.</p>}
+      <label>Transkribierte Audiodatei öffnen
+        <input type="file" accept="audio/*,.audio" onChange={(event) => { void openReference(event.target.files?.[0]); event.target.value = ''; }} />
+      </label>
+      {referenceError ? <p role="alert">{referenceError}</p>
+        : audioMismatch && <p role="alert">Der Anbieter liefert eine abweichende Audiofassung. Automatische Zeitsprünge sind gestoppt. Für passende Zeitmarken die transkribierte Audiodatei öffnen.</p>}
       {mediaError && <p role="alert">Audio nicht verfügbar. <a href={player.webpageUrl} target="_blank" rel="noreferrer">Zur Episodenseite</a></p>}
     </section>}
   </>;
@@ -157,7 +205,7 @@ export function SearchPanel() {
 function playerFrom(episode: NonNullable<EpisodeRecord>): PlayerEpisode {
   return {
     episodeId: episode.episode_id, title: episode.title, publishedAt: episode.published_at,
-    audioUrl: episode.audio.url, durationSeconds: episode.audio.duration_seconds,
+    audioUrl: episode.audio.url, audioSha256: episode.audio.sha256, durationSeconds: episode.audio.duration_seconds,
     webpageUrl: episode.webpage_url ?? episode.source.reference_url,
   };
 }

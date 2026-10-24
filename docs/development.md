@@ -2,13 +2,13 @@
 
 ## Stand der Einrichtung
 
-Der Plan ist gemeinsam bestätigt. Das Repository enthält ein installierbares Python-Paket unter `src/podcast_words/`, eine React/TypeScript/Vite-Site unter `web/`, einen dünnen [Colab-Einstieg](../notebooks/colab.ipynb) und gemeinsame Offline-Prüfungen. Die erste Datenvalidierung ist beschrieben in [data-contracts.md](data-contracts.md). [TASKS.md](../TASKS.md) führt zu den nächsten Funktionsnachweisen.
+Der Plan ist gemeinsam bestätigt. Das Repository enthält ein installierbares Python-Paket unter `src/podcast_words/`, eine React/TypeScript/Vite-Site unter `web/`, einen lokalen FP32-GPU-Laufweg und gemeinsame Offline-Prüfungen. Die erste Datenvalidierung ist beschrieben in [data-contracts.md](data-contracts.md). [TASKS.md](../TASKS.md) führt zu den nächsten Funktionsnachweisen.
 
 `AGENTS.md` verweist abhängig von der Aufgabe auf Plan, Fachbegriffe und Recherche. `.editorconfig` und `.gitattributes` vereinheitlichen UTF-8 und Zeilenenden. `.gitignore` hält lokale Umgebungen, Caches und Build-Ergebnisse aus Git heraus; normalisierte Transkripte und Analyseergebnisse werden weiterhin versioniert.
 
 ## Installieren und prüfen
 
-Alle folgenden Befehle am Repositoryroot ausführen. Python 3.12 und die Node-Version aus `.node-version` verwenden. uv 0.10.9 wurde lokal geprüft und ist auch im CI- und Colab-Einstieg festgelegt. `uv.lock` und `web/package-lock.json` sind die reproduzierbaren Abhängigkeitsstände; reguläres Einrichten verändert sie nicht.
+Alle folgenden Befehle am Repositoryroot ausführen. Python 3.12 und die Node-Version aus `.node-version` verwenden. uv 0.10.9 wurde lokal geprüft und ist auch im CI festgelegt. `uv.lock` und `web/package-lock.json` sind die reproduzierbaren Abhängigkeitsstände; reguläres Einrichten verändert sie nicht.
 
 PowerShell:
 
@@ -79,7 +79,7 @@ Die globale Reihenfolge wird vor den ersten Detailabrufen festgelegt. Anfangs we
 
 `doctor` kontrolliert Python und ein ausführbares FFmpeg. Bei fehlendem oder nicht ausführbarem FFmpeg liefert er einen Fehlerstatus. Ein erfolgreicher Aufruf ist kein ASR- oder GPU-Nachweis. Seit dem CPU-ASR-Adapter benötigt auch der Offline-Check FFmpeg: Kleine erzeugte PCM-Prüfdaten durchlaufen die echte Decodierung, während nur der externe Modelloutput ersetzt wird. CI verwendet dafür das über `uv.lock` gesperrte Dev-Wheel `imageio-ffmpeg==0.6.0`; `scripts/prepare_ci_ffmpeg.py` kopiert dessen enthaltene Binärdatei unter dem Befehlsnamen `ffmpeg` in `.cache/ci-ffmpeg` und ergänzt ausschließlich den CI-Pfad. Das Skript lädt selbst nichts herunter und verändert keine globalen Einstellungen. Auf einem frischen lokalen Rechner kann derselbe vorbereitete Ordner dem Shell-Pfad hinzugefügt werden. Große Audio- oder Modelldownloads bleiben ausdrücklich gestarteten Integrationsläufen vorbehalten. Der echte Windows-ASR-Lauf verwendete separat protokolliertes Host-FFmpeg 7.1.1; siehe [ASR](asr.md).
 
-Das Notebook installiert die gegenseitig ausgeschlossene GPU-Abhängigkeitsgruppe aus einem bereitgestellten Checkout und ruft dieselbe CLI auf. Pro Folge kopiert es validierte Ergebnisse, Katalogstatus, Laufbericht und ORT-Rohprofile auf Drive; temporäres Audio und Modellgewichte bleiben auf der VM. Der Notebook-Code wurde lokal auf Syntax und fehlende gespeicherte Ausgaben geprüft; ein echter Colab-/Drive-/GPU-Lauf, eine neue Sitzung mit Resume und unabhängige Zeitmarkenprüfungen stehen noch aus.
+Die [ASR-Anleitung](asr.md) beschreibt die lokale GPU-Einrichtung, die behaltenen Referenz-Audiodateien und die Verarbeitung. Die [Untersuchung](research/asr-investigation.md) bewahrt frühere Laufwege ausschließlich als Dokumentation.
 
 ## CI und Prüfstand
 
@@ -100,7 +100,7 @@ Beim schreibgeschützten Audit am 16. Oktober 2026 waren uv 0.10.9, Node 22.19.0
   ```
 
 - Playwright 1.64.1 verwendet unter Windows `taskkill`, um seinen Preview-Prozessbaum zu beenden. Browserchecks in dieser Agentumgebung benötigen die passenden Prozessberechtigungen; der gemeinsame Check kann Port 4214 über `PW_PORT` erhalten. Am 17. Oktober 2026 bestanden alle 35 Chromium-Fälle auf dem gebauten Root-Pfad sowie erneut auf dem Projektpfad. Der vollständige Offline-Check umfasste außerdem 67 Python-Tests.
-- Die vorhandene GTX 1050 Ti hat 4 GiB Speicher und Treiber 576.02. Das ist kein Nachweis für Kompatibilität mit aktuellen ONNX-GPU-Paketen; siehe [Runtime-Recherche](research/runtime-and-search-contracts.md).
+- Die vorhandene GTX 1050 Ti hat 4 GiB Speicher und Treiber 576.02. FP32 wurde mit dem gepinnten CUDA-11-Build von ORT 1.20.1 nachgewiesen; siehe [ASR](asr.md).
 - Das lokale Git-Repository ist auf `main` initialisiert. Es wurde kein Remote angelegt oder konfiguriert. Der eingeschränkte Agent läuft unter einer anderen Windows-SID als der Ordnerbesitzer. Falls Git deshalb „dubious ownership“ meldet, nur für den konkreten Aufruf den geprüften Repositorypfad übergeben, ohne globale Einstellungen zu ändern:
 
   ```powershell
@@ -114,4 +114,4 @@ Die öffentlichen Befehle für Feedimport, Quellenlücken und geprüfte GUID-Ali
 
 Die [Grundformanalyse](analysis.md) beschreibt das optionale spaCy-Extra, die getrennte Installation des festgelegten deutschen Modells und den expliziten Modellnachweis. Normale Webbuilds verwenden validierte gespeicherte Analysen und laden kein Modell. Eigene Korpora werden für Suche und Statistik gemeinsam über `PODCAST_WORDS_EPISODES` ausgewählt; `PODCAST_WORDS_ANALYSES` verweist auf ihre gespeicherten Analysen.
 
-Bei einer beabsichtigten Abhängigkeitsänderung Manifest und Lockfile gemeinsam aktualisieren und den relevanten Check ausführen. onnx-asr und der CPU-Anbieter sind gesperrt installiert; die Modellgewichte werden erst beim ausdrücklich gestarteten Transkriptionsbefehl geladen. Pagefind ist in der Suche integriert und Recharts im Statistikvergleich. spaCy ist als optionales Extra gesperrt; sein Sprachmodell wird ausdrücklich getrennt installiert. Es gibt keine versteckten Modelldownloads. Die nächsten Aufgaben stehen in `TASKS.md`.
+Bei einer beabsichtigten Abhängigkeitsänderung Manifest und Lockfile gemeinsam aktualisieren und den relevanten Check ausführen. onnx-asr und der CUDA-11-GPU-Anbieter sind gesperrt installiert; die Modellgewichte werden erst beim ausdrücklich gestarteten Transkriptionsbefehl geladen. Pagefind ist in der Suche integriert und Recharts im Statistikvergleich. spaCy ist als optionales Extra gesperrt; sein Sprachmodell wird ausdrücklich getrennt installiert. Es gibt keine versteckten Modelldownloads. Die nächsten Aufgaben stehen in `TASKS.md`.

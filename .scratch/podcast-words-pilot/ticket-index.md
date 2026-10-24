@@ -11,8 +11,8 @@ The [parent spec](spec.md) defines the confirmed behavior and test boundaries. T
 7. [07: Compare Grundformen across episode lengths](issues/07-compare-lemma-frequency-trends.md)
 8. [08: Inspect Gesamtwörter and vocabulary growth](issues/08-chronological-vocabulary-statistics.md)
 9. [09: Resume selected episode processing without losing work](issues/09-resumable-selected-episode-processing.md)
-10. [10: Resume the shared workflow on Colab GPU and Drive](issues/10-colab-gpu-drive-resume.md)
-11. [11: Import transferred results without silent conflicts](issues/11-safe-result-import.md)
+10. [10: Retired remote runtime (history)](../../docs/research/history/retired-remote-workflows.md)
+11. [11: Retired result transfer (history)](../../docs/research/history/retired-remote-workflows.md)
 12. [12: Rebuild one coherent static publication](issues/12-coherent-static-publication.md)
 13. [13: Select pilot Folgen and independent passage references](issues/13-pilot-inputs-and-independent-references.md)
 14. [14: Use the complete static site at root and project prefix](issues/14-integrated-static-site-and-ci.md)
@@ -20,7 +20,7 @@ The [parent spec](spec.md) defines the confirmed behavior and test boundaries. T
 16. [16: Review the pilot's search and timestamp accuracy](issues/16-review-passage-quality-gates.md)
 17. [17: Measure the real pilot on a mobile profile](issues/17-measure-mobile-search-performance.md)
 18. [18: Report pilot readiness without bypassing its gates](issues/18-pilot-readiness-report.md)
-19. [19: Explain UFO537 Colab GPU and Windows CPU runtime difference](issues/19-investigate-colab-gpu-runtime.md)
+19. [19: Local FP32 runtime and audio-version correctness](issues/19-local-fp32-runtime.md)
 
 Start only ready-for-agent work whose blockers are resolved. Keep human review and real runtime evidence explicit; a prepared procedure or fixture result does not satisfy an unperformed live check.
 

@@ -1,3 +1,7 @@
+# Current scope update — 2026-10-24
+
+The user selected local GPU FP32 as the only active ASR path, accepted the complete UFO537 transcript quality and chose about 25× real time for planning. Former remote runtime/result-import requirements are retired and archived; the statements below describe the current local workflow. The five-episode search, reference-timestamp and mobile gates remain active. See [current operation](../../docs/asr.md) and [the investigation](../../docs/research/asr-investigation.md).
+
 # Podcast Words V3: five-episode pilot
 
 **Status:** ready-for-human
@@ -58,12 +62,12 @@ The pilot is complete only when the real runtime integrations, reproducible buil
 34. As an operator, I want verified supplemental sources and GUID aliases to preserve existing Folgenidentität, so that a recovered episode does not create duplicates or break shared links.
 35. As an operator, I want known Folgen retained when a later feed omits them, so that a feed change alone does not delete the existing catalog or transcripts.
 36. As an operator, I want five representative real Folgen selected with a recorded rationale, so that the pilot exercises meaningful audio and metadata variation.
-37. As an operator, I want the same Python package to run on Windows CPU and in Colab, so that the notebook does not become a divergent second implementation.
+37. As an operator, I want the Python package to run locally with the tested FP32 GPU configuration, so there is one supported recognition path.
 38. As an operator, I want the chosen model, export, runtime versions, actual execution provider, audio checksum, and duration recorded, so that processing results have verifiable provenance.
 39. As an operator, I want long audio decoded and segmented without losing its original timeline, so that later passages still seek to the correct position.
 40. As an operator, I want interrupted or failed episodes to remain retryable and completed episodes to be skipped, so that a resumed session does not repeat finished work.
-41. As an operator, I want a completed episode checkpointed to Drive before the next Colab episode proceeds, so that session loss does not discard all progress.
-42. As an operator, I want identical imported results skipped and conflicting results reported without silent replacement, so that transferring Colab output preserves existing work.
+41. As an operator, I want each completed episode validated and saved locally before the next one proceeds, so interruption preserves completed work.
+42. As an operator, I want existing results preserved and provenance conflicts reported until explicit reprocessing is selected, so a new model or audio version cannot silently replace accepted work.
 43. As an operator, I want metadata or model-configuration changes to leave finished transcripts intact until retranscription is explicitly selected, so that routine updates do not trigger expensive implicit work.
 44. As an operator, I want changed transcript or analysis inputs to invalidate their dependent derived outputs, so that statistics and search are rebuilt without unnecessary retranscription.
 45. As an operator, I want lemma analyses versioned separately from original transcript text, so that an analysis change can be applied without losing the recognition output.
@@ -73,7 +77,7 @@ The pilot is complete only when the real runtime integrations, reproducible buil
 49. As an operator, I want fixture-based checks to run on Windows and Linux without large downloads or a GPU, so that ordinary code changes receive fast, repeatable feedback.
 50. As a pilot reviewer, I want ten independently reviewed passage searches with expected episodes recorded, so that search acceptance is based on known examples rather than generated assertions.
 51. As a pilot reviewer, I want reference timestamps near the beginning, middle, and end of every pilot Folge, so that accumulated drift is detected.
-52. As a pilot reviewer, I want real Windows CPU and Colab GPU runs recorded separately from automated fixture checks, so that an available device or passing mock is not mistaken for a working runtime.
+52. As a pilot reviewer, I want real local FP32 GPU runs recorded separately from fixture checks, so an available provider or passing model double is not mistaken for working inference.
 53. As a pilot reviewer, I want mobile timing, bytes, and memory observations tied to a documented profile and cache state, so that performance claims can be reproduced.
 54. As an operator, I want archive processing withheld when a required pilot gate fails or lacks evidence, so that incomplete verification cannot authorize a costly full run.
 
@@ -97,7 +101,7 @@ Investigate an actually retrievable source for Folge 37. A historic HTML playbac
 
 ### Audio processing, recognition, and runtime evidence
 
-Use Parakeet-TDT-0.6B-v3 through onnx-asr; do not reopen model selection. Lock the model and export revisions and the runtime configuration used for the pilot. Support Python 3.12 through uv, Windows CPU as the local baseline, and Colab GPU only after verifying the allocated runtime and the provider actually performing inference. The existing GTX 1050 Ti is not a mandatory supported acceleration target.
+Use Parakeet-TDT-0.6B-v3 through onnx-asr with pinned revisions and local FP32/CUDA. Python 3.12, Windows GTX 1050 Ti and the tested CUDA-11 runtime are the supported processing path; approximately 25× real time is the planning value. VAD and NumPy preprocessing run on CPU.
 
 Decode feed audio explicitly into the model's supported input. Keep temporary audio and models outside versioned source. Bound download time and retries; load the model once per processing run. Long episodes use speech-activity segmentation, while all saved segment and token times refer to the original episode timeline. Establish the pinned recognizer's time units and reference frame before converting them exactly once. Native token points must not be mislabeled as guaranteed word start/end intervals.
 
@@ -105,11 +109,11 @@ Store schema version, podcast and episode identity, source provenance and aliase
 
 Select five representative episodes and record why they exercise useful variation in age, duration, audio conditions, or special metadata. Verify difficult excerpts and a complete episode on the supported runtime paths, then process the selected pilot set with one fixed model configuration. A successful environment check, detected GPU, or synthetic transcript is not runtime evidence.
 
-### Durable progress, reruns, and Colab import
+### Durable local progress and explicit reruns
 
 Keep operator starts manual. A completed episode requires a successfully persisted and validated result. An interruption or partial write must never be interpreted as completion or silently replace a previously valid result. A restart skips completed episodes and permits failed or incomplete work to be retried.
 
-In Colab, use the same package and public processing commands as locally. Temporary audio stays on the VM; persist validated completed episode results to Drive after each episode so that a new session can resume from them. Document initial start, resume, result transfer, and any runtime-specific prerequisites. The notebook remains orchestration rather than a second pipeline.
+Use the public local processing commands, retain each exact transcribed audio version by content hash, and persist validated completed episodes before proceeding. Resume skips completed results. Runtime prerequisites and explicit retranscription are documented in the local ASR guide.
 
 Import validates episode identity and provenance before accepting results. Identical existing results are skipped. Conflicting existing results are reported with sufficient context for an explicit decision, without silent overwrite. Finished transcripts remain preserved when metadata or the chosen default model configuration changes; report the mismatch and require explicit selection for retranscription.
 
@@ -155,10 +159,10 @@ The user has confirmed both public test boundaries, and this spec is ready for t
 
 Use two high-level boundaries for new feature behavior. Keep the existing episode-contract tests as established coverage, but avoid introducing a separate unit-test seam for every helper or internal module.
 
-1. **Processing command to validated publication artifacts.** Extend the existing public CLI and exercise the processing/build workflow from declared inputs through persisted outputs, exit status, and diagnostics. This covers catalog identity and source gaps, download/processing failures, completion and restart, Colab-import conflicts, provenance, timestamp normalization, analysis counts, invalidation, and coherent publication/index metadata. It does not establish subjective recognition accuracy or prove a real GPU executes inference when those external operations use controlled fixtures.
+1. **Processing command to validated publication artifacts.** Extend the existing public CLI and exercise the processing/build workflow from declared inputs through persisted outputs, exit status, and diagnostics. This covers catalog identity and source gaps, download/processing failures, completion and restart, saved-result provenance conflicts, provenance, timestamp normalization, analysis counts, invalidation, and coherent publication/index metadata. It does not establish subjective recognition accuracy or prove a real GPU executes inference when those external operations use controlled fixtures.
 2. **Built static site in a browser.** Serve the actual built app with generated data and a real Pagefind index. Test searches, ordering, lazy detail loads, all accessible Fundstellen, vocabulary selection, statistics, direct links, fetch errors, superseded requests, and audio controls through visible UI, URLs, browser requests, and media state. Exercise root and project-prefix builds. This covers producer/consumer integration and visitor behavior; it does not establish the accuracy or continued remote availability of publisher audio.
 
-Real Windows CPU and Colab GPU checks, manual listening, and performance measurements exercise these same public paths with real inputs. They are separate evidence runs, not an excuse to replace fixture behavior tests with expensive live runs.
+Real local FP32 GPU checks, manual listening and performance measurements use the same public paths with real inputs. They are separate integration evidence; ordinary checks remain fixture-only.
 
 ### Test quality and prior art
 
@@ -181,7 +185,7 @@ The processing boundary tests the catalog/provenance, ASR normalization and run 
 
 ### Real pilot acceptance and evidence
 
-**Runtime and inputs:** Record the five selected real episodes and rationale, source snapshot, verified audio/checksum/duration, model/export/runtime revisions, Windows CPU run, actual Colab GPU provider, and completion/resume/Drive/import evidence. Keep heavy transient inputs outside versioned source while retaining reproducible reports and normalized results.
+**Runtime and inputs:** Record the five selected real episodes and rationale, source snapshot, exact reference audio/checksum/duration, pinned model/export/runtime configuration, actual local GPU sessions and durable completion/resume evidence. Keep heavy inputs untracked while retaining reports and normalized results.
 
 **Search quality:** Record ten manually reviewed passage queries with expected episode identities and reference passages before scoring the final run. At least nine must find the correct episode among the first five results. A result-count assertion or query generated only from the recognizer's own output is not a replacement for independently reviewed references.
 
@@ -219,7 +223,7 @@ The repository uses a local Markdown tracker with the default triage vocabulary.
 
 2026-10-17: Implementation uses `integration/podcast-words-pilot` and isolated ticket worktrees. After usage-limit interruptions, the user requested smaller subagent models to reduce token use. Subsequent subagent runs explicitly use `gpt-6-luna` with high reasoning effort and context pointers. Earlier runs inherited the coordinator's model and effort without explicit overrides; their resolved model/effort values were not exposed by the agent tools. Individual tickets remain authoritative for execution status and evidence.
 
-2026-10-17: The available implementation frontier is integrated on `integration/podcast-words-pilot`: tickets 01–09, 11, 12 and 14 are resolved. Ticket 10's notebook/runtime preparation is integrated but remains `ready-for-human`, alongside ticket 13. The next required work is an actual compatible Colab GPU/Drive run with checkpoint/resume and timing evidence, plus confirmation of the five candidates and ten independent queries/fifteen reference times. Tickets 15–18 remain blocked by those requirements. The spec is now `ready-for-human`, not resolved; archive processing and public deployment remain outside this work.
+2026-10-24: The local FP32 runtime and transcript quality decision supersede the former remote-runtime frontier. Tickets 10 and 11 are archived; 19 records the completed investigation. Independent five-episode selection, reference timestamps, search quality and mobile performance remain required before archive processing or publication.
 
 The [interim review](interim-review.md) compares the original baseline through `52a986b`; its two Spec defects and one Standards judgment call were fixed and integrated through `f24a253`. Both original reviewers rechecked their respective fixes and found no remaining consequential issue in those paths. Integrated verification: 70 Python tests, lint/format, documentation/notebook checks, web lint and both production builds passed. The 35 browser cases at each path were previously passed by the unchanged UI; the fixes preserved the root publication ID. The existing real UFO537 CPU artifact also passed the new legacy-resume path with an explicit diagnostic and unchanged SHA-256, without recognition or downloads.
 

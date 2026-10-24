@@ -1,6 +1,6 @@
 # Podcast Words V3 – Projektplan
 
-Stand: 16. Oktober 2026.
+Stand: 24. Oktober 2026; Laufwegentscheidung nach abgeschlossener ASR-Untersuchung aktualisiert.
 
 Der Plan wurde im dokumentierten Interview gemeinsam bestätigt. Die [Planverfeinerung](docs/planning/refinement.md) hält die Entscheidungen fest; [TASKS.md](TASKS.md) enthält die nachweisorientierte Umsetzungsreihenfolge. Der [bestätigte Einrichtungsumfang](docs/planning/workspace-setup.md) ist die Grundlage der Workspace-Einrichtung.
 
@@ -10,11 +10,11 @@ Eine einfach zu betreibende Webseite, die Podcast-Folgen anhand erinnerter Stich
 
 - **Modell:** Parakeet-TDT-0.6B-v3, zunächst über `onnx-asr`. Modellrevision, ONNX-Export und Laufzeitabhängigkeiten festhalten. Kein weiterer Wettbewerb zur Modellauswahl.
 - **Neuverarbeitung:** Alle verfügbaren Folgen vollständig neu transkribieren. Alte Transkripte, Wortzählungen, IDs und Datenbankschemata werden nicht übernommen.
-- **Verarbeitung:** Ein gemeinsames Python-Paket für Windows/lokale Ausführung und ein dünnes, manuell gestartetes Colab-Notebook. GPU verwenden, wenn verfügbar; CPU-Betrieb ermöglichen.
-- **Unterstützte Laufwege:** Windows lokal zunächst über CPU; Colab mit GPU nach Prüfung der zugeteilten Laufzeit und des tatsächlich verwendeten ONNX-Anbieters. Beschleunigung auf der vorhandenen GTX 1050 Ti ist ein optionales späteres Experiment und keine Startvoraussetzung. Python 3.12 über uv und npm für die Web-App verwenden.
+- **Verarbeitung:** Ein lokales Python-Paket mit Parakeet FP32 auf der GPU. Etwa 25× Echtzeit als Planungswert; gemessene Werte und Grenzen stehen in der [ASR-Untersuchung](docs/research/asr-investigation.md).
+- **Unterstützter Laufweg:** Windows mit GTX 1050 Ti, ONNX Runtime GPU 1.20.1 als CUDA-11-Build, CUDA 11.8/cuDNN 8.6 und Python 3.12. Modellqualität der vollständigen UFO537-Folge vom Nutzer als ausreichend bestätigt.
 - **Speicherung:** Versionierte JSON-Dateien je Folge, vorberechnete Analysen und statische Suchdateien. Eine laufende Datenbank oder eigene HTTP-API ist nicht erforderlich.
 - **Webseite:** React, TypeScript, Vite und Recharts; Suche mit Pagefind und ergänzender Logik im Browser. Veröffentlichung über GitHub Actions auf GitHub Pages.
-- **Betrieb:** Aktualisierung manuell lokal oder in Colab starten; Veröffentlichung erfolgt nach einem Push. Zunächst ausschließlich kostenlose Hosting- und Notebook-Angebote einplanen.
+- **Betrieb:** Aktualisierung manuell lokal starten; Veröffentlichung nach einem Push über GitHub Pages. Keine laufende Datenbank, eigene API oder kostenpflichtige Recheninfrastruktur erforderlich.
 - **Reihenfolge:** Zuerst fünf repräsentative Folgen durch den vollständigen Ablauf bis zu Suche, Statistik, Player und GitHub-Pages-Build führen. Erst nach bestandener Pilotabnahme den gesamten verfügbaren Bestand transkribieren.
 - **Transkriptqualität:** Maschinell erzeugte Transkripte mit einem verständlichen Genauigkeitshinweis veröffentlichen. Vor der Archivverarbeitung eine Stichprobe auf ihre Eignung zum Wiederfinden erinnerter Passagen prüfen. Eine umfassende manuelle Transkriptkorrektur ist keine Voraussetzung für V3.
 - **Arbeitsumgebung:** Nach Abschluss der Planverfeinerung lauffähige Python- und React/TypeScript-Starterpakete mit gesperrten Abhängigkeiten, gezielten Prüfungen und CI einrichten. Modelldownloads und die vollständige Transkription sind nachgelagerte Aufgaben.
@@ -32,7 +32,7 @@ Offizieller RSS-Feed + geprüfte zusätzliche Audioquellen
   → Webseite, Suchindex und öffentliche Daten auf GitHub Pages
 ```
 
-Die aufwendige Verarbeitung geschieht beim Aktualisieren. Während einer Besuchersuche läuft keine Transkription; der Browser lädt statische Dateien. Der Player verwendet die ursprüngliche Audioquelle.
+Die aufwendige Verarbeitung geschieht beim Aktualisieren. Während einer Besuchersuche läuft keine Transkription; der Browser lädt statische Dateien. Der Player verwendet die öffentliche Audioquelle mit Fassungsprüfung. Für bytegenaue Zeitmarken kann die transkribierte lokale Referenzdatei anhand ihres SHA-256 bestätigt werden.
 
 ### RSS-Quelle und vollständiger Bestand
 
@@ -49,15 +49,15 @@ Standardfeed bleibt `https://feeds.acast.com/public/shows/podcast-ufo`. Die offi
 
 ### Audio und Transkription
 
-MP3 beziehungsweise das im Feed verlinkte Audio temporär herunterladen, decodieren und für das Modell aufbereiten. Lange Folgen mit einer Sprachaktivitätserkennung in geeignete Abschnitte zerlegen. Native Zeitinformationen auf die ursprüngliche Folge beziehen; Pausen oder abschnittsweise Verarbeitung dürfen keinen fortlaufenden Zeitversatz verursachen.
+MP3 beziehungsweise das im Feed verlinkte Audio herunterladen, unter seinem Inhaltshash lokal als Referenz erhalten, decodieren und für das Modell aufbereiten. Lange Folgen mit einer Sprachaktivitätserkennung in geeignete Abschnitte zerlegen. Native Zeitinformationen auf die ursprüngliche Folge beziehen; Pausen oder abschnittsweise Verarbeitung dürfen keinen fortlaufenden Zeitversatz verursachen.
 
 Der Audioadapter decodiert Feed-Audio ausdrücklich in das vom Modell erwartete Format. Für den gesperrten onnx-asr-Stand nachweisen, ob native Tokenpunkte relativ zum Sprachabschnitt sind, und genau einmal auf Episodenzeit umrechnen. Tokenpunkte nicht als garantierte Wortintervalle ausgeben. Die Prüfung muss mehrere Sprachabschnitte mit Pausen umfassen. Siehe [Runtime-Recherche](docs/research/runtime-and-search-contracts.md).
 
 Ein Modell pro Verarbeitungslauf laden. Downloads erhalten Timeouts und begrenzte Wiederholungen. Pro Folge erst nach erfolgreichem Speichern und Validieren „fertig“ setzen; Fehler bleiben erneut ausführbar. Fertige Folgen bei einem Neustart überspringen. Eine ausdrücklich ausgewählte erneute Transkription bleibt möglich.
 
-Fertige Transkripte bei Metadatenänderungen oder neuer Modellkonfiguration erhalten. Abweichende Herkunft oder Konfiguration ausweisen; eine erneute Transkription muss ausdrücklich ausgewählt werden. Änderungen an Transkript- oder Analyseversionen machen nur ihre abhängigen Analysen und Builds ungültig. Beim Import aus Colab identische Ergebnisse überspringen und abweichende bestehende Ergebnisse als Konflikt melden, statt sie still zu überschreiben.
+Fertige Transkripte bei Metadatenänderungen oder neuer Modellkonfiguration erhalten. Abweichende Herkunft oder Konfiguration ausweisen; eine erneute Transkription muss ausdrücklich ausgewählt werden. Änderungen an Transkript- oder Analyseversionen machen nur ihre abhängigen Analysen und Builds ungültig.
 
-Lokal wird direkt in das Datenverzeichnis geschrieben. In Colab liegen temporäre Audiodateien auf der VM; fertige Episodendaten werden nach jeder Folge auf Google Drive gesichert. Nach einer unterbrochenen Sitzung mit diesen Ergebnissen fortsetzen. Das Notebook enthält keine zweite Implementierung der Pipeline. Die Abläufe für Start, Wiederaufnahme und Übernahme neuer Ergebnisse ins Projekt dokumentieren.
+Lokal wird direkt in das Datenverzeichnis geschrieben. Fertige Episodendaten werden nach jeder Folge validiert gespeichert und bei erneutem Start übersprungen. Der Laufbericht nennt die erhaltene Audiofassung. Start, Wiederaufnahme und ausdrücklich gewählte Neutranskription sind in der Betriebsanleitung beschrieben.
 
 ## 3. Datenformate und Wortanalyse
 
@@ -80,7 +80,7 @@ Die Analyse pro Folge zwischenspeichern und ihre Version festhalten. Eine geänd
 
 Zählwerte als normale ausreichend große Ganzzahlen behandeln. Ein fehlender Eintrag für eine bekannte Wort-/Folgenkombination bedeutet null; ein fehlgeschlagener Dateiabruf ist ein Fehler und kein Nullwert.
 
-Code, normalisierte Episodendaten und Analyseergebnisse im Projekt versionieren. Temporäre Audiodateien, Modellgewichte und generierte Web-/Such-Builds gehören nicht in Git. Öffentlich ausgelieferte Daten werden gezielt vom Build erstellt. Je Podcast eigene Datenbereiche und Suchindizes vorsehen.
+Code, normalisierte Episodendaten und Analyseergebnisse im Projekt versionieren. Lokale Referenz-Audiodateien, Modellgewichte und generierte Web-/Such-Builds gehören nicht in Git; Referenzdateien bis zum bewussten Löschen für Hörprüfung und Wiederverarbeitung erhalten. Öffentlich ausgelieferte Daten werden gezielt vom Build erstellt. Je Podcast eigene Datenbereiche und Suchindizes vorsehen.
 
 ## 4. Suche, Statistik und Player
 
@@ -116,7 +116,7 @@ Zeitmarken gelten für die transkribierte Audiofassung. Später anders eingefüg
 
 ### Umsetzung in Etappen
 
-1. **Arbeitsumgebung und Funktionsnachweise:** Python- und Web-Pakete mit gesperrten Abhängigkeiten, gezielten Prüfungen und CI anlegen. Das gemeinsame Python-Paket und ein schlankes Colab-Notebook vorbereiten. RSS-Katalog erfassen und die offene Quelle für Folge 37 prüfen. Parakeet mit schwierigen Ausschnitten und einer vollständigen Folge lokal sowie in Colab prüfen; Pagefind-Zusammenführung und Zeitmarkenzuordnung mit kleinen Prüfdaten nachweisen. Das ist ein Funktionstest der gesetzten Werkzeuge.
+1. **Arbeitsumgebung und Funktionsnachweise:** Lokales FP32-GPU-Paket, Web-App und CI mit gesperrten Abhängigkeiten betreiben. RSS-Katalog und Quelle für Folge 37 prüfen. Den bestätigten vollständigen FP32-Lauf als Betriebsbasis verwenden; Audiofassungs-, Such- und Zeitmarkenprüfungen mit dem Pilot fortsetzen.
 2. **Durchgängiger Pilot:** Fünf repräsentative Folgen vollständig verarbeiten. Daraus spaCy-Analysen, Statistiken, aufgeteilte Wortzahlen und Pagefind-Index erzeugen. Stichwortsuche mit Teiltreffern, Kontext, Player, teilbaren Links und den vorgesehenen Statistiken bis zu einem GitHub-Pages-Build umsetzen. Lade- und Fehlerzustände sichtbar machen. Die unten festgelegte manuell geprüfte Stichprobe sowie Qualitäts- und Laufzeitgrenzen entscheiden über die Freigabe der Archivverarbeitung.
 3. **Archiv neu erzeugen:** Nach bestandener Pilotabnahme alle verfügbaren Folgen mit derselben festgehaltenen Modellkonfiguration verarbeiten. Wiederaufnahme, Zeitmarken und Vollständigkeit prüfen; Herkunft und Verarbeitungsstand nachvollziehbar speichern.
 4. **Vollständigen Datenstand prüfen:** Analysen, Statistiken und Suchindex für den vollständigen Bestand erzeugen. Alle Artefakte müssen denselben Datenstand referenzieren. Suchqualität, Ladeverhalten, Größe und Laufzeit am vollständigen Bestand erneut prüfen; Quellenlücken ausdrücklich ausweisen.
@@ -129,7 +129,7 @@ Zeitmarken gelten für die transkribierte Audiofassung. Später anders eingefüg
 **Suchlaufzeit und Übertragung:** Auf einem dokumentierten mobilen Prüfprofil erste nutzbare Suchergebnisse innerhalb von fünf Sekunden und weitere Suchen innerhalb einer Sekunde anstreben; bis zu den ersten Ergebnissen höchstens 10 MB übertragen. Cachezustand, Netzwerk- und CPU-Profil sowie Messbeginn und -ende im Bericht angeben. Diese Grenzen zuerst im Pilot und vor Veröffentlichung erneut am vollständigen Bestand prüfen. Dabei weder für die Startseite noch für die globale Trefferabdeckung das gesamte Transkriptarchiv laden.
 
 - **Bestand:** Feed-Sonderfälle einschließlich `UGO081` und offenen Nummernlücken erhalten; stabile IDs, doppelte GUIDs und fehlerhafte Enclosures prüfen. Keine Annahme einer festen zukünftigen Episodenzahl.
-- **Pipeline:** Abbruch, erneuter Start, Downloadfehler und Teilergebnisse testen. Vollständige Folge ohne fortlaufenden Zeitversatz; Modelllauf auf Windows und Colab nachweisen.
+- **Pipeline:** Abbruch, erneuten Start, Downloadfehler und Teilergebnisse prüfen. Lokale FP32-GPU-Verarbeitung mit dauerhaft erhaltener Referenz-Audiofassung; keine unbemerkten Zeitsprünge in anders zusammengesetzten Online-Dateien.
 - **Zählungen:** Werte über 255, Stoppwörter, Grundformen, chronologische neue Wörter und wiederholte Analyse prüfen. Stichproben gegen die Episodentexte zählen.
 - **Suche:** Unterschiedliche Reihenfolge, fehlender dritter Begriff, 3/3-vor-2/3-Rangfolge, Wortformen, Umlaute, `ß`, doppelte Eingabebegriffe, Mehrfachvorkommen und Fundstellen über Segmentgrenzen testen. Titelwörter dürfen nicht als gesprochene Wörter gezählt werden.
 - **Webseite:** Direkte Folge-/Zeitlinks und Audiosteuerung unter dem tatsächlichen Projekt-Unterpfad prüfen, einschließlich Mobilansicht, fehlender Daten und nicht erreichbarer Audios. Einen veralteten Suchlauf nicht über neuere Ergebnisse schreiben lassen.
@@ -137,7 +137,7 @@ Zeitmarken gelten für die transkribierte Audiofassung. Später anders eingefüg
 
 GitHub Pages erlaubt derzeit bis zu 1 GB veröffentlichte Seitengröße; ab 800 MB im Build-Bericht eine Warnung ausgeben und bei Überschreiten von 1 GB nicht veröffentlichen. Ein späterer Wechsel zu anderem statischem Hosting oder externem Dateispeicher kann dieselben Dateischnittstellen nutzen. Für den jetzigen PUFO-Start wird diese zusätzliche Infrastruktur nicht eingerichtet. [GitHub-Pages-Limits](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)
 
-Kostenlose Colab-GPUs und Laufzeiten sind nicht garantiert; deshalb sind manuelle Starts und dauerhafte Speicherung je Folge Teil des Grundablaufs. [Colab-FAQ](https://research.google.com/colaboratory/faq.html)
+Die [ASR-Untersuchung](docs/research/asr-investigation.md) bewahrt die verworfenen Alternativen und Messbedingungen ausschließlich als Hintergrunddokumentation.
 
 ### Quellen und Einstieg
 

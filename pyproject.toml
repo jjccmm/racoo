@@ -6,6 +6,8 @@ readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "pydantic>=2.12,<3",
+    "onnx-asr[hub]==0.12.0",
+    "onnxruntime-gpu==1.20.1",
 ]
 
 [project.optional-dependencies]
@@ -19,17 +21,20 @@ requires = ["hatchling>=1.27,<2"]
 build-backend = "hatchling.build"
 
 [dependency-groups]
-cpu = ["onnx-asr[cpu,hub]==0.12.0", "onnxruntime==1.27.0"]
-gpu = ["onnx-asr[gpu,hub]==0.12.0", "onnxruntime-gpu==1.27.0"]
 dev = ["imageio-ffmpeg==0.6.0", "pytest>=8,<10", "ruff>=0.11,<1"]
 
-[tool.uv]
-default-groups = ["dev", "cpu"]
-conflicts = [[{ group = "cpu" }, { group = "gpu" }]]
+[tool.uv.sources]
+onnxruntime-gpu = { index = "onnxruntime-cuda11" }
+
+[[tool.uv.index]]
+name = "onnxruntime-cuda11"
+url = "https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-11/pypi/simple/"
+explicit = true
 
 [tool.ruff]
 target-version = "py312"
 line-length = 100
+extend-exclude = [".cache"]
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I", "UP", "B", "RUF"]

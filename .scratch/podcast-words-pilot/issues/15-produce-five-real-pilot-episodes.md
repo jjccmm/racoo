@@ -1,21 +1,21 @@
 # 15: Produce the five real pilot episodes and publication
 
-**What to build:** The selected real five-episode corpus is processed, safely transferred, analyzed, and built as one traceable pilot publication using the proven runtime paths.
+**What to build:** The selected real five-episode corpus is processed locally with FP32/GPU, analyzed, and built as one traceable pilot publication.
 
-**Blocked by:** 10: Resume the shared workflow on Colab GPU and Drive; 11: Import transferred results without silent conflicts; 12: Rebuild one coherent static publication; 13: Select pilot Folgen and independent passage references.
+**Blocked by:** 12: Rebuild one coherent static publication; 13: Select pilot Folgen and independent passage references. The local FP32 runtime is confirmed by the 2026-10-24 investigation; former tickets 10 and 11 are retired.
 
 **Status:** ready-for-agent
 
 **Spec coverage:** User stories 36, 37, 38, 39, 40, 41, 42, 43, 45, 46, 47, 52 of the confirmed five-episode pilot spec. Its settled decisions and confirmed public test boundaries apply.
 
-**Verification:** Actual shared processing/import/build commands, real normalized results, checkpoint/transfer observations, and recorded runtime/publication provenance.
+**Verification:** Actual local processing/build commands, real normalized results, durable resume, and recorded audio/runtime/publication provenance.
 
-**Human involvement:** The operator manually starts any required Colab sessions; preserve pending external runtime work rather than reporting a fixture run as completion.
+**Human involvement:** Independent listening and pilot reference checks. Actual processing is local; fixture results do not substitute for real five-episode evidence.
 
 - [ ] Process exactly the reviewed five-episode selection with the agreed fixed Parakeet model/export configuration; reuse prior compatible validated results where possible instead of retranscribing needlessly.
 - [ ] Retain complete source/audio/model/export/runtime provenance, original text, valid absolute segment/token times, and unique segment identities for every real result.
-- [ ] Use the proven Windows CPU and Colab GPU paths as appropriate and include their required full-episode runtime reports; do not assume bit-identical recognition solely from matching model settings.
-- [ ] Demonstrate durable completion/resume and per-episode Drive persistence, then use the safe import workflow for real transferred results with no silent conflicts.
+- [ ] Use the proven local Windows FP32/GPU configuration and record full-episode runtime reports, with approximately 25× real time as the planning value.
+- [ ] Demonstrate durable local completion/resume and retain each exact transcribed audio version by content hash for reference checks.
 - [ ] Run pinned real spaCy analysis and build one matching publication from the five completed episodes, including the search index and its metadata mapping.
 - [ ] Keep incomplete episodes, conflicting data, runtime gaps, or missing reference inputs explicit; none counts as a completed five-episode corpus.
 - [ ] Save a concise reproducible evidence record tied to selected audio identities, configuration and publication state, while leaving audio, model weights and generated builds untracked. Do not start the full archive.

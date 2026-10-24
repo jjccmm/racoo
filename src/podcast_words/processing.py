@@ -18,44 +18,22 @@ from podcast_words.transcribe import EpisodeInput, processing_configuration
 
 
 def configuration_revision() -> str:
-    from podcast_words.transcribe import (
-        EXPORT_ID,
-        EXPORT_REVISION,
-        GPU_PROVIDER,
-        MODEL_ID,
-        MODEL_REVISION,
-        VAD_ID,
-        VAD_OPTIONS,
-        VAD_REVISION,
-        execution_provider,
-        execution_provider_chain,
-    )
-
-    provider = execution_provider()
     return digest(
         {
-            "model_id": MODEL_ID,
-            "model_revision": MODEL_REVISION,
-            "export_id": EXPORT_ID,
-            "export_revision": EXPORT_REVISION,
-            "vad_id": VAD_ID,
-            "vad_revision": VAD_REVISION,
-            "vad_options": VAD_OPTIONS,
-            "quantization": "int8",
+            **processing_configuration(),
             "audio_decode": "ffmpeg mono PCM s16le 16000 Hz; original full timeline",
             "token_times": "segment-relative seconds + VAD start, once",
-            "intra_op_num_threads": 4,
-            "execution_providers": execution_provider_chain(),
             "runtime_versions": {
                 "python": platform.python_version(),
                 **{
-                    "onnxruntime": version(
-                        "onnxruntime-gpu" if provider == GPU_PROVIDER else "onnxruntime"
-                    )
-                },
-                **{
                     name: version(name)
-                    for name in ["onnx-asr", "numpy", "huggingface-hub", "podcast-words"]
+                    for name in (
+                        "onnxruntime-gpu",
+                        "onnx-asr",
+                        "numpy",
+                        "huggingface-hub",
+                        "podcast-words",
+                    )
                 },
             },
         }
@@ -251,12 +229,7 @@ def process(arguments) -> int:
             if transcriber is None:
                 from podcast_words.transcribe import Transcriber
 
-                transcriber = Transcriber(
-                    arguments.cache_dir,
-                    profile_enabled=(
-                        False if arguments.no_profile else True if arguments.profile else None
-                    ),
-                )
+                transcriber = Transcriber(arguments.cache_dir)
             transcript = transcriber.transcribe(metadata, arguments.audio_file)
             persistence_started = time.monotonic()
             transcript = with_revisions(transcript, config_revision)
@@ -302,38 +275,7 @@ def process(arguments) -> int:
         if interrupted:
             break
 
-    execution_profile = None
-    profile_error = None
-    profile_started = time.monotonic()
-    if transcriber is not None:
-        try:
-            execution_profile = transcriber.finish()
-        except Exception as error:
-            profile_error = {"type": type(error).__name__, "message": str(error)}
-    profile_measurements = (
-        transcriber.profile_measurements
-        if transcriber is not None and transcriber.profile_measurements
-        else {
-            "status": "disabled" if arguments.no_profile else "unavailable",
-            "execution_proof": "unavailable-profile-disabled"
-            if arguments.no_profile
-            else "not-produced",
-            "finalization_and_parse_seconds": round(time.monotonic() - profile_started, 6),
-        }
-    )
-    if transcriber is not None and transcriber.profile_enabled:
-        for episode in episode_measurements:
-            episode["episode"]["inference"]["execution_proof"] = (
-                "executed-ort-node-events"
-                if profile_error is None
-                and transcriber.profile_measurements.get("execution_proof")
-                == "executed-ort-node-events"
-                else "profile-not-validated"
-            )
-    ok = (
-        all(result["status"] in {"completed", "skipped"} for result in results)
-        and profile_error is None
-    )
+    ok = all(result["status"] in {"completed", "skipped"} for result in results)
     report = {"ok": ok, "selected": selected_ids, "results": results}
     runtime_measurements = {
         "schema_version": 1,
@@ -350,12 +292,11 @@ def process(arguments) -> int:
         "configuration_revision": config_revision,
         "processing_configuration": processing_configuration(),
         "episodes": episode_measurements,
-        "profile": profile_measurements,
         "total_elapsed_seconds": round(time.monotonic() - run_started, 6),
         "total_elapsed_boundary": (
             "Starts inside process() and ends before writing the optional run report and stdout. "
             "Includes catalog/control work and unattributed overhead; excludes interpreter/uv "
-            "startup, environment setup and notebook/Drive work."
+            "startup and environment setup."
         ),
         "model_setup_scope": (
             "One shared model setup per process run, reported only under model; never sum it "
@@ -365,10 +306,6 @@ def process(arguments) -> int:
         "skipped_runs": sum(item.get("status") == "skipped" for item in results),
     }
     report["runtime_measurements"] = runtime_measurements
-    if execution_profile is not None:
-        report["execution_profile"] = execution_profile
-    if profile_error is not None:
-        report["execution_profile_error"] = profile_error
     if arguments.run_report:
         try:
             write_json(arguments.run_report, runtime_measurements)

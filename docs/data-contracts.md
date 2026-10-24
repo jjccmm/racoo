@@ -19,3 +19,7 @@ Der ausgewählte Verarbeitungsbefehl ergänzt `input_revision` (SHA-256 der gele
 Native Tokenpunkte dürfen nichtleeren Whitespace als Tokentext enthalten: Der gepinnte Parakeet-Decoder gibt solche Tokens tatsächlich aus. Sie werden unverändert erhalten. Segmenttexte benötigen weiterhin mindestens ein Nicht-Whitespace-Zeichen. Die synthetische Prüfdatenfolge enthält zur Darstellung dieser Unterscheidung einen Whitespace-Tokenpunkt.
 
 Der separate [Folgenkatalog](catalog.md) in `src/podcast_words/catalog.py` speichert Quellen, Metadaten und ausdrückliche Quellenlücken. Sein struktureller Export ist [catalog-v1.schema.json](../schemas/catalog-v1.schema.json). `catalog show` prüft zusätzlich eindeutige Folgen-/Quellenidentitäten, katalogweit eindeutige GUIDs und belegte GUID-Aliase. Ein Katalogeintrag ersetzt kein validiertes Episoden-JSON und keine Transkription.
+
+## Audiofassung und öffentliche Quelle
+
+`audio.url` ist die öffentliche Bezugsquelle und kann clientabhängige Werbung liefern. `audio.sha256` bezeichnet ausschließlich die tatsächlich transkribierten Bytes; `duration_seconds` und alle Zeitmarken gehören zu dieser Fassung. Neue lokale Verarbeitungen erhalten diese Bytes in einer nach SHA-256 benannten Referenzdatei und nennen den privaten Pfad im Laufbericht. Der Pfad wird nicht in öffentliche Episodendaten übernommen. Bei abweichender Online-Dauer stoppt der Player automatische Zeitsprünge; eine lokal ausgewählte Datei wird vollständig gegen den gespeicherten SHA-256 geprüft. Keine Schemaänderung erforderlich.

@@ -14,6 +14,7 @@ export type SearchResult = Identity & {
   rankSum: number;
   passages: Passage[];
   audioUrl: string;
+  audioSha256: string;
   durationSeconds: number;
   webpageUrl: string;
 };
@@ -98,7 +99,7 @@ export async function loadEpisode(episodeId: string, signal: AbortSignal) {
     throw new Error('Suchindex und Folgendetails stimmen nicht überein');
   }
   return episode as {
-    episode_id: string; title: string; published_at: string; audio: { url: string; duration_seconds: number };
+    episode_id: string; title: string; published_at: string; audio: { url: string; sha256: string; duration_seconds: number };
     webpage_url?: string; source: { reference_url: string };
     segments: (Segment & { token_points?: { text: string; at_seconds: number }[] })[];
   };

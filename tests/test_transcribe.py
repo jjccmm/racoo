@@ -37,7 +37,9 @@ def test_transcribe_preserves_identity_original_audio_and_times_after_a_pause(
         "audio_url": "https://example.org/original.wav",
     }
     metadata.write_text(json.dumps(original), encoding="utf-8")
-    session = SimpleNamespace(get_providers=lambda: ["CPUExecutionProvider"])
+    session = SimpleNamespace(
+        get_providers=lambda: ["CUDAExecutionProvider", "CPUExecutionProvider"]
+    )
     results = [
         SimpleNamespace(
             start=10.0, end=15.0, text="Ein Eimer.", tokens=["Ein", "Eimer"], timestamps=[0.08, 2.4]
@@ -92,7 +94,10 @@ def test_transcribe_preserves_identity_original_audio_and_times_after_a_pause(
     assert episode.segments[0].token_points[0].at_seconds == 10.08
     assert episode.segments[1].text == "Münzen nach der Pause."
     assert len({segment.id for segment in episode.segments}) == 2
-    assert episode.transcription.execution_providers["encoder"] == ["CPUExecutionProvider"]
+    assert episode.transcription.execution_providers["encoder"] == [
+        "CUDAExecutionProvider",
+        "CPUExecutionProvider",
+    ]
     assert report["ok"] is True
     measurements = report["runtime_measurements"]
     assert measurements["episode"]["audio_download"]["status"] == "provided-local-file"
@@ -168,7 +173,9 @@ def test_transcribe_rejects_unpaired_native_token_points_without_saving(
         output.setsampwidth(2)
         output.setframerate(16000)
         output.writeframes(b"\0\0" * 16000 * 5)
-    session = SimpleNamespace(get_providers=lambda: ["CPUExecutionProvider"])
+    session = SimpleNamespace(
+        get_providers=lambda: ["CUDAExecutionProvider", "CPUExecutionProvider"]
+    )
     result = SimpleNamespace(
         start=0.0, end=4.0, text="Native token without point.", tokens=["Native"], timestamps=None
     )
@@ -248,3 +255,48 @@ def test_transcribe_reports_runtime_model_failure_as_diagnostics(tmp_path, monke
     )
     assert not destination.exists()
     assert json.loads(capsys.readouterr().out)["error"] == "external runtime rejected model"
+
+
+def test_fp32_loader_uses_pinned_plain_files_and_refuses_cpu_only_sessions(tmp_path, monkeypatch):
+    import pytest
+
+    from podcast_words.transcribe import EXPORT_REVISION, Transcriber
+
+    calls = []
+    monkeypatch.setattr(
+        huggingface_hub,
+        "snapshot_download",
+        lambda repo, **kw: calls.append((repo, kw)) or str(tmp_path),
+    )
+    session = SimpleNamespace(get_providers=lambda: ["CPUExecutionProvider"])
+    model = SimpleNamespace(asr=SimpleNamespace(_encoder=session, _decoder_joint=session))
+
+    def load(name, path, **kwargs):
+        assert kwargs["quantization"] is None
+        assert kwargs["providers"][0][0] == "CUDAExecutionProvider"
+        assert kwargs["preprocessor_config"]["use_numpy_preprocessors"] is True
+        return model
+
+    monkeypatch.setattr(onnx_asr, "load_model", load)
+    monkeypatch.setattr(onnx_asr, "load_vad", lambda *a, **k: SimpleNamespace(_model=session))
+    with pytest.raises(RuntimeError, match="CUDA provider is absent"):
+        Transcriber(tmp_path / "cache")
+    assert calls[0][1]["revision"] == EXPORT_REVISION
+    assert calls[0][1]["local_dir"] == str(tmp_path / "cache/models" / EXPORT_REVISION / "fp32")
+    assert "encoder-model.onnx.data" in calls[0][1]["allow_patterns"]
+
+
+def test_local_asr_fails_before_download_when_cuda_is_unavailable(tmp_path, monkeypatch):
+    import onnxruntime
+    import pytest
+
+    from podcast_words.transcribe import Transcriber
+
+    monkeypatch.setattr(onnxruntime, "get_available_providers", lambda: ["CPUExecutionProvider"])
+    monkeypatch.setattr(
+        huggingface_hub,
+        "snapshot_download",
+        lambda *a, **k: pytest.fail("unexpected model download"),
+    )
+    with pytest.raises(RuntimeError, match="requires the GPU"):
+        Transcriber(tmp_path / "cache")

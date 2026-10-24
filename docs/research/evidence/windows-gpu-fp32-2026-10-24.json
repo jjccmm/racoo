@@ -1,0 +1,836 @@
+{
+  "schema_version": 1,
+  "evidence_kind": "real-windows-pascal-fp32-gpu-experiment",
+  "performed_on_local_date": "2026-10-24",
+  "experiment_directory": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\local-gpu-fp32-2026-10-24",
+  "raw_artifacts": [
+    {
+      "relative_to_experiment": "probe-report.json",
+      "sha256": "9f5933ad81ce8f11681659a677dbb8f7d1bbd252bd49277f0603f888848ec333",
+      "bytes": 4956
+    },
+    {
+      "relative_to_experiment": "preparation-report.json",
+      "sha256": "d64285ccea05bc1c365f5d9f5b9b0a31d2773143b88aa02ac37f06350c2f51c4",
+      "bytes": 1863
+    },
+    {
+      "relative_to_experiment": "runs/gpu-fp32.json",
+      "sha256": "def8b1bdf23f205ff0959155c5db3e3b7ca52c610cd460389bb9fc962a3ecb90",
+      "bytes": 81575
+    },
+    {
+      "relative_to_experiment": "runs/cpu-int8.json",
+      "sha256": "51288c24125e8e11cbbd52e0f7377908fa36417c66c1535fc028ed719ac468f9",
+      "bytes": 91585
+    },
+    {
+      "relative_to_experiment": "runs/gpu-fp32-profile.json",
+      "sha256": "da0b7861626b2d698a17cf0a2afff81e48d8aa861f995243f4142726dc2ff04e",
+      "bytes": 26745
+    },
+    {
+      "relative_to_experiment": "requirements-resolved.txt",
+      "sha256": "ee1306b46c14119e92d1c006eb17aec288d4edd730f3e5880b8b5a0ad4fe8b10",
+      "bytes": 593
+    },
+    {
+      "relative_to_experiment": "experiment-script-hashes.json",
+      "sha256": "738c02561ac070bd3e7c1246dad18dc7c41ff4c373b3609ae2243106063de40f",
+      "bytes": 305
+    },
+    {
+      "relative_to_experiment": "zlib-provenance.json",
+      "sha256": "b51a744d5910f0c1ebec95628493750363640ace5ed92e15905abb475626d170",
+      "bytes": 335
+    }
+  ],
+  "hardware": {
+    "gpu": "NVIDIA GeForce GTX 1050 Ti",
+    "compute_capability": "6.1",
+    "device_memory_mib": 4096,
+    "driver": "576.02",
+    "cuda_runtime_version_api": 11080,
+    "cudnn_version_api": 8600,
+    "logical_cpu_count": 8
+  },
+  "runtime": {
+    "python": "3.12.9",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "logical_cpu_count": 8,
+    "ort_build": "ORT Build Info: git-branch=HEAD, git-commit-id=5c1b7ccbff, build type=Release, cmake cxx flags: /MP /guard:cf /DWIN32 /D_WINDOWS /D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR /DWINAPI_FAMILY=100 /DWINVER=0x0A00 /D_WIN32_WINNT=0x0A00 /DNTDDI_VERSION=0x0A000000 /Qspectre /DONNXRUNTIME_ENABLE_INTEL_METEOR_LAKE_MOBILE_PLATFORM_PERF_PATCH /O2 /Ob2 /DNDEBUG /Zc:__cplusplus /EHsc /wd26812 -DEIGEN_HAS_C99_MATH -DCPUINFO_SUPPORTED",
+    "packages": {
+      "onnx-asr": "0.12.0",
+      "onnxruntime-gpu": "1.20.1",
+      "numpy": "2.5.4",
+      "pydantic": "2.14.1",
+      "huggingface-hub": "2.2.0",
+      "nvidia-ml-py": "13.615.71"
+    }
+  },
+  "environment_note": "Separate venv in experiment cache. ORT 1.20.1 CUDA-11 build from the documented Microsoft feed uses existing CUDA 11.8/cuDNN 8.6 DLLs. zlibwapi is local to the experiment. No system driver/toolkit installation or production lockfile change.",
+  "ort_package_index": "https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-11/pypi/simple/",
+  "zlib": {
+    "package_url": "https://api.anaconda.org/download/conda-forge/libzlib-wapi/1.2.13/win-64/libzlib-wapi-1.2.13-hcfcfb64_4.tar.bz2",
+    "package_sha256": "5836b54b4489e80f355cd803b97ed335b6c3f29cf24e4aba5ae162abadc903ab",
+    "dll_sha256": "28ac18ebf49f11b83fca125f79fed4970dbca92c3a8b84eda7208ef73c35a286",
+    "dll_bytes": 89088
+  },
+  "setup_observations": [
+    "Initial native cuDNN probe exited with missing zlibwapi.dll before a report could be saved. The conda-forge libzlib-wapi runtime DLL was then added only to the experiment DLL search path.",
+    "Small Conv/MatMul/LSTM probes executed CUDA nodes successfully before the large FP32 weights were downloaded."
+  ],
+  "preparation": {
+    "model_dir": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\local-gpu-fp32-2026-10-24\\models\\fp32",
+    "vad_dir": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\asr\\models\\models--istupakov--silero-vad-onnx\\snapshots\\b3e3ee3cce4c11ceb63b1a0b229d916069c1ddf6",
+    "metadata": {
+      "encoder-model.onnx": {
+        "ir_version": 8,
+        "opsets": {
+          "": 17
+        }
+      },
+      "decoder_joint-model.onnx": {
+        "ir_version": 8,
+        "opsets": {
+          "": 17
+        }
+      }
+    },
+    "model_files": {
+      "config.json": 97,
+      "decoder_joint-model.onnx": 72520893,
+      "encoder-model.onnx": 41770866,
+      "encoder-model.onnx.data": 2435420160,
+      "vocab.txt": 93939
+    },
+    "elapsed_seconds": 85.84051650005858,
+    "manifest": {
+      "schema_version": 1,
+      "created_at": "2026-10-24T16:03:31.124045+00:00",
+      "source": {
+        "sha256": "96ed332afdc78f1a71f30c5bc3fd1eb475c3de9a7914707f18f1a14cc081b357",
+        "bytes": 69543927,
+        "origin": "https://sphinx.acast.com/p/acast/s/podcast-ufo/e/6ac88caf39599f7c565b9745/media.mp3",
+        "preparation_seconds": 3.650878799962811
+      },
+      "excerpt_start_seconds": 300,
+      "audio": {
+        "file": "excerpt.wav",
+        "sha256": "0fb5e42d601658db7fb377e21ad760936c8531702ae40a57947354f2a54f4ec6",
+        "bytes": 3840194,
+        "duration_seconds": 120.0
+      },
+      "profile_audio": {
+        "file": "profile.wav",
+        "sha256": "ffae8f86dfdf74c798337afbdb81ffe1df667c68e7434f867f2d6ff3c1d1196b",
+        "bytes": 256044,
+        "duration_seconds": 8.0
+      },
+      "decode_excerpt_seconds": 0.7723677000030875,
+      "preparation_total_seconds": 4.423248599981889,
+      "note": "Excerpt times are relative to the excerpt, not a complete episode transcript."
+    },
+    "colab_original_bytes_match": false,
+    "colab_excerpt_wav_bytes_match": false
+  },
+  "runs": [
+    {
+      "case": "gpu-fp32",
+      "configuration": {
+        "precision": "fp32",
+        "asr_provider": "CUDAExecutionProvider",
+        "vad_provider": "CPUExecutionProvider",
+        "preprocessing": "numpy-cpu",
+        "intra_op_num_threads": 4,
+        "vad_options": {
+          "batch_size": 1,
+          "max_speech_duration_s": 20,
+          "min_speech_duration_ms": 250,
+          "min_silence_duration_ms": 100,
+          "speech_pad_ms": 0,
+          "threshold": 0.5
+        },
+        "cuda_provider_options": {
+          "arena_extend_strategy": "kSameAsRequested",
+          "gpu_mem_limit": "3221225472",
+          "cudnn_conv_algo_search": "HEURISTIC",
+          "cudnn_conv_use_max_workspace": "0"
+        },
+        "export_revision": "8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce"
+      },
+      "audio": {
+        "file": "excerpt.wav",
+        "sha256": "0fb5e42d601658db7fb377e21ad760936c8531702ae40a57947354f2a54f4ec6",
+        "bytes": 3840194,
+        "duration_seconds": 120.0
+      },
+      "source_audio_sha256": "96ed332afdc78f1a71f30c5bc3fd1eb475c3de9a7914707f18f1a14cc081b357",
+      "samples": [
+        {
+          "label": "repeat-1",
+          "recognizer_seconds": 3.8853285999502987,
+          "process_cpu_seconds": 9.765625,
+          "text_sha256": "26b2c479a5ca5c90fbdb6871cd748dfb2dc9c3b1f90e50fecc34454f859aa4cb",
+          "output_sha256": "23bae0662a8932a0770e77b04f9ef45e2135a7a570ab5326ab26efb6f1927a0d",
+          "segment_count": 22
+        },
+        {
+          "label": "repeat-2",
+          "recognizer_seconds": 3.87722079991363,
+          "process_cpu_seconds": 9.859375,
+          "text_sha256": "26b2c479a5ca5c90fbdb6871cd748dfb2dc9c3b1f90e50fecc34454f859aa4cb",
+          "output_sha256": "23bae0662a8932a0770e77b04f9ef45e2135a7a570ab5326ab26efb6f1927a0d",
+          "segment_count": 22
+        },
+        {
+          "label": "repeat-3",
+          "recognizer_seconds": 3.871898700017482,
+          "process_cpu_seconds": 9.78125,
+          "text_sha256": "26b2c479a5ca5c90fbdb6871cd748dfb2dc9c3b1f90e50fecc34454f859aa4cb",
+          "output_sha256": "23bae0662a8932a0770e77b04f9ef45e2135a7a570ab5326ab26efb6f1927a0d",
+          "segment_count": 22
+        }
+      ],
+      "warmup": {
+        "label": "warmup",
+        "recognizer_seconds": 4.151693799998611,
+        "process_cpu_seconds": 10.265625,
+        "text_sha256": "26b2c479a5ca5c90fbdb6871cd748dfb2dc9c3b1f90e50fecc34454f859aa4cb",
+        "output_sha256": "23bae0662a8932a0770e77b04f9ef45e2135a7a570ab5326ab26efb6f1927a0d",
+        "segment_count": 22
+      },
+      "statistics": {
+        "n": 3,
+        "median_seconds": 3.87722079991363,
+        "min_seconds": 3.871898700017482,
+        "max_seconds": 3.8853285999502987,
+        "real_time_factor": 0.03231017333261358,
+        "text_stable": true,
+        "timestamps_stable": true
+      },
+      "asr_model_load_seconds": 3.3516511999769136,
+      "session_providers": {
+        "encoder": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "decoder_joint": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "vad": [
+          "CPUExecutionProvider"
+        ]
+      },
+      "timing_note": "Timed generator iteration includes reading PCM, CPU VAD/NumPy preprocessing, ASR and output creation. Hashes, validation, model loading, profiling finalization and downloads are excluded. Device monitoring runs in the background."
+    },
+    {
+      "case": "cpu-int8",
+      "configuration": {
+        "precision": "int8",
+        "asr_provider": "CPUExecutionProvider",
+        "vad_provider": "CPUExecutionProvider",
+        "preprocessing": "numpy-cpu",
+        "intra_op_num_threads": 4,
+        "vad_options": {
+          "batch_size": 1,
+          "max_speech_duration_s": 20,
+          "min_speech_duration_ms": 250,
+          "min_silence_duration_ms": 100,
+          "speech_pad_ms": 0,
+          "threshold": 0.5
+        },
+        "cuda_provider_options": null,
+        "export_revision": "8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce"
+      },
+      "audio": {
+        "file": "excerpt.wav",
+        "sha256": "0fb5e42d601658db7fb377e21ad760936c8531702ae40a57947354f2a54f4ec6",
+        "bytes": 3840194,
+        "duration_seconds": 120.0
+      },
+      "source_audio_sha256": "96ed332afdc78f1a71f30c5bc3fd1eb475c3de9a7914707f18f1a14cc081b357",
+      "samples": [
+        {
+          "label": "repeat-1",
+          "recognizer_seconds": 12.260371600044891,
+          "process_cpu_seconds": 58.125,
+          "text_sha256": "1645f275c0b70c6038777ea28575e1f6bf89fdd19e740061bc94582aa3e3e955",
+          "output_sha256": "6a086b94c5f534c2cb60f6f724ecac9cc512ba8fbe8c363d975520c7c011c369",
+          "segment_count": 23
+        },
+        {
+          "label": "repeat-2",
+          "recognizer_seconds": 12.269819100038148,
+          "process_cpu_seconds": 57.890625,
+          "text_sha256": "1645f275c0b70c6038777ea28575e1f6bf89fdd19e740061bc94582aa3e3e955",
+          "output_sha256": "6a086b94c5f534c2cb60f6f724ecac9cc512ba8fbe8c363d975520c7c011c369",
+          "segment_count": 23
+        },
+        {
+          "label": "repeat-3",
+          "recognizer_seconds": 12.379240899928845,
+          "process_cpu_seconds": 58.15625,
+          "text_sha256": "1645f275c0b70c6038777ea28575e1f6bf89fdd19e740061bc94582aa3e3e955",
+          "output_sha256": "6a086b94c5f534c2cb60f6f724ecac9cc512ba8fbe8c363d975520c7c011c369",
+          "segment_count": 23
+        }
+      ],
+      "warmup": {
+        "label": "warmup",
+        "recognizer_seconds": 12.898176899994723,
+        "process_cpu_seconds": 60.59375,
+        "text_sha256": "1645f275c0b70c6038777ea28575e1f6bf89fdd19e740061bc94582aa3e3e955",
+        "output_sha256": "6a086b94c5f534c2cb60f6f724ecac9cc512ba8fbe8c363d975520c7c011c369",
+        "segment_count": 23
+      },
+      "statistics": {
+        "n": 3,
+        "median_seconds": 12.269819100038148,
+        "min_seconds": 12.260371600044891,
+        "max_seconds": 12.379240899928845,
+        "real_time_factor": 0.10224849250031791,
+        "text_stable": true,
+        "timestamps_stable": true
+      },
+      "asr_model_load_seconds": 3.552372100064531,
+      "session_providers": {
+        "encoder": [
+          "CPUExecutionProvider"
+        ],
+        "decoder_joint": [
+          "CPUExecutionProvider"
+        ],
+        "vad": [
+          "CPUExecutionProvider"
+        ]
+      },
+      "timing_note": "Timed generator iteration includes reading PCM, CPU VAD/NumPy preprocessing, ASR and output creation. Hashes, validation, model loading, profiling finalization and downloads are excluded. Device monitoring runs in the background."
+    }
+  ],
+  "comparison": {
+    "cpu_int8_over_gpu_fp32_median_ratio": 3.16459127123002,
+    "gpu_fp32_audio_seconds_per_recognition_second": 30.950004189256685,
+    "scope": "Practical local CPU-INT8 versus GPU-FP32 paths on identical frozen input and runtime, not a provider-only experiment."
+  },
+  "gpu_memory_observation": {
+    "maximum_sampled_whole_device_used_mib": 3668.00390625,
+    "maximum_sampled_whole_device_used_gib": 3.5820350646972656,
+    "sampling_interval_seconds": 0.5,
+    "includes_other_processes_and_desktop": true,
+    "exact_peak_allocation_is_unmeasured": true
+  },
+  "execution_proof": {
+    "kind": "actual-executed-ORT-node-events",
+    "profile_audio": {
+      "file": "profile.wav",
+      "sha256": "ffae8f86dfdf74c798337afbdb81ffe1df667c68e7434f867f2d6ff3c1d1196b",
+      "bytes": 256044,
+      "duration_seconds": 8.0
+    },
+    "cuda_model_node_events": 7624,
+    "sessions": {
+      "encoder": {
+        "event_count": 23974,
+        "node_events_by_provider": {
+          "CUDAExecutionProvider": 6060,
+          "CPUExecutionProvider": 1928
+        },
+        "top_node_operators_by_provider": {
+          "CUDAExecutionProvider": [
+            {
+              "op_name": "Conv",
+              "count": 308,
+              "timed_count": 308,
+              "duration_microseconds_sum": 393800.0
+            },
+            {
+              "op_name": "Div",
+              "count": 108,
+              "timed_count": 108,
+              "duration_microseconds_sum": 37133.0
+            },
+            {
+              "op_name": "MatMul",
+              "count": 964,
+              "timed_count": 964,
+              "duration_microseconds_sum": 33444.0
+            },
+            {
+              "op_name": "Transpose",
+              "count": 780,
+              "timed_count": 780,
+              "duration_microseconds_sum": 22701.0
+            },
+            {
+              "op_name": "Add",
+              "count": 700,
+              "timed_count": 700,
+              "duration_microseconds_sum": 21357.0
+            },
+            {
+              "op_name": "LayerNormalization",
+              "count": 480,
+              "timed_count": 480,
+              "duration_microseconds_sum": 13212.0
+            },
+            {
+              "op_name": "Reshape",
+              "count": 676,
+              "timed_count": 676,
+              "duration_microseconds_sum": 12241.0
+            },
+            {
+              "op_name": "Where",
+              "count": 288,
+              "timed_count": 288,
+              "duration_microseconds_sum": 11107.0
+            },
+            {
+              "op_name": "QuickGelu",
+              "count": 288,
+              "timed_count": 288,
+              "duration_microseconds_sum": 7339.0
+            },
+            {
+              "op_name": "Shape",
+              "count": 400,
+              "timed_count": 400,
+              "duration_microseconds_sum": 6648.0
+            },
+            {
+              "op_name": "Slice",
+              "count": 204,
+              "timed_count": 204,
+              "duration_microseconds_sum": 6547.0
+            },
+            {
+              "op_name": "Pad",
+              "count": 192,
+              "timed_count": 192,
+              "duration_microseconds_sum": 5427.0
+            },
+            {
+              "op_name": "Softmax",
+              "count": 96,
+              "timed_count": 96,
+              "duration_microseconds_sum": 4692.0
+            },
+            {
+              "op_name": "FusedMatMul",
+              "count": 192,
+              "timed_count": 192,
+              "duration_microseconds_sum": 4593.0
+            },
+            {
+              "op_name": "Split",
+              "count": 96,
+              "timed_count": 96,
+              "duration_microseconds_sum": 4236.0
+            },
+            {
+              "op_name": "Cast",
+              "count": 16,
+              "timed_count": 16,
+              "duration_microseconds_sum": 4180.0
+            },
+            {
+              "op_name": "Mul",
+              "count": 96,
+              "timed_count": 96,
+              "duration_microseconds_sum": 2301.0
+            },
+            {
+              "op_name": "Relu",
+              "count": 12,
+              "timed_count": 12,
+              "duration_microseconds_sum": 2116.0
+            },
+            {
+              "op_name": "Sigmoid",
+              "count": 96,
+              "timed_count": 96,
+              "duration_microseconds_sum": 2062.0
+            },
+            {
+              "op_name": "Range",
+              "count": 4,
+              "timed_count": 4,
+              "duration_microseconds_sum": 947.0
+            },
+            {
+              "op_name": "Expand",
+              "count": 4,
+              "timed_count": 4,
+              "duration_microseconds_sum": 408.0
+            },
+            {
+              "op_name": "Unsqueeze",
+              "count": 20,
+              "timed_count": 20,
+              "duration_microseconds_sum": 374.0
+            },
+            {
+              "op_name": "ConstantOfShape",
+              "count": 4,
+              "timed_count": 4,
+              "duration_microseconds_sum": 283.0
+            },
+            {
+              "op_name": "Floor",
+              "count": 12,
+              "timed_count": 12,
+              "duration_microseconds_sum": 258.0
+            },
+            {
+              "op_name": "Not",
+              "count": 8,
+              "timed_count": 8,
+              "duration_microseconds_sum": 175.0
+            }
+          ],
+          "CPUExecutionProvider": [
+            {
+              "op_name": "Unsqueeze",
+              "count": 700,
+              "timed_count": 700,
+              "duration_microseconds_sum": 11151.0
+            },
+            {
+              "op_name": "Gather",
+              "count": 596,
+              "timed_count": 596,
+              "duration_microseconds_sum": 10164.0
+            },
+            {
+              "op_name": "Concat",
+              "count": 404,
+              "timed_count": 404,
+              "duration_microseconds_sum": 7775.0
+            },
+            {
+              "op_name": "Slice",
+              "count": 96,
+              "timed_count": 96,
+              "duration_microseconds_sum": 2002.0
+            },
+            {
+              "op_name": "Squeeze",
+              "count": 96,
+              "timed_count": 96,
+              "duration_microseconds_sum": 1507.0
+            },
+            {
+              "op_name": "Sub",
+              "count": 8,
+              "timed_count": 8,
+              "duration_microseconds_sum": 126.0
+            },
+            {
+              "op_name": "Tile",
+              "count": 4,
+              "timed_count": 4,
+              "duration_microseconds_sum": 111.0
+            },
+            {
+              "op_name": "Add",
+              "count": 4,
+              "timed_count": 4,
+              "duration_microseconds_sum": 99.0
+            },
+            {
+              "op_name": "Transpose",
+              "count": 4,
+              "timed_count": 4,
+              "duration_microseconds_sum": 93.0
+            },
+            {
+              "op_name": "And",
+              "count": 4,
+              "timed_count": 4,
+              "duration_microseconds_sum": 85.0
+            },
+            {
+              "op_name": "Where",
+              "count": 4,
+              "timed_count": 4,
+              "duration_microseconds_sum": 75.0
+            },
+            {
+              "op_name": "Equal",
+              "count": 4,
+              "timed_count": 4,
+              "duration_microseconds_sum": 73.0
+            },
+            {
+              "op_name": "Reshape",
+              "count": 4,
+              "timed_count": 4,
+              "duration_microseconds_sum": 55.0
+            }
+          ]
+        },
+        "kernel_events": {
+          "count": 0,
+          "timed_count": 0,
+          "duration_microseconds_sum": null
+        }
+      },
+      "decoder_joint": {
+        "event_count": 4830,
+        "node_events_by_provider": {
+          "CUDAExecutionProvider": 1564
+        },
+        "top_node_operators_by_provider": {
+          "CUDAExecutionProvider": [
+            {
+              "op_name": "LSTM",
+              "count": 136,
+              "timed_count": 136,
+              "duration_microseconds_sum": 28157.0
+            },
+            {
+              "op_name": "Add",
+              "count": 272,
+              "timed_count": 272,
+              "duration_microseconds_sum": 6296.0
+            },
+            {
+              "op_name": "Split",
+              "count": 136,
+              "timed_count": 136,
+              "duration_microseconds_sum": 5114.0
+            },
+            {
+              "op_name": "Concat",
+              "count": 136,
+              "timed_count": 136,
+              "duration_microseconds_sum": 4399.0
+            },
+            {
+              "op_name": "MatMul",
+              "count": 136,
+              "timed_count": 136,
+              "duration_microseconds_sum": 4318.0
+            },
+            {
+              "op_name": "Transpose",
+              "count": 136,
+              "timed_count": 136,
+              "duration_microseconds_sum": 3415.0
+            },
+            {
+              "op_name": "Squeeze",
+              "count": 136,
+              "timed_count": 136,
+              "duration_microseconds_sum": 2651.0
+            },
+            {
+              "op_name": "Unsqueeze",
+              "count": 136,
+              "timed_count": 136,
+              "duration_microseconds_sum": 2309.0
+            },
+            {
+              "op_name": "FusedMatMul",
+              "count": 68,
+              "timed_count": 68,
+              "duration_microseconds_sum": 2047.0
+            },
+            {
+              "op_name": "Identity",
+              "count": 68,
+              "timed_count": 68,
+              "duration_microseconds_sum": 2045.0
+            },
+            {
+              "op_name": "Gather",
+              "count": 68,
+              "timed_count": 68,
+              "duration_microseconds_sum": 1738.0
+            },
+            {
+              "op_name": "Cast",
+              "count": 68,
+              "timed_count": 68,
+              "duration_microseconds_sum": 1363.0
+            },
+            {
+              "op_name": "Relu",
+              "count": 68,
+              "timed_count": 68,
+              "duration_microseconds_sum": 1269.0
+            }
+          ]
+        },
+        "kernel_events": {
+          "count": 0,
+          "timed_count": 0,
+          "duration_microseconds_sum": null
+        }
+      },
+      "vad": {
+        "event_count": 45002,
+        "node_events_by_provider": {
+          "CPUExecutionProvider": 14250
+        },
+        "top_node_operators_by_provider": {
+          "CPUExecutionProvider": [
+            {
+              "op_name": "If",
+              "count": 1750,
+              "timed_count": 1750,
+              "duration_microseconds_sum": 679680.0
+            },
+            {
+              "op_name": "Unsqueeze",
+              "count": 2000,
+              "timed_count": 2000,
+              "duration_microseconds_sum": 33871.0
+            },
+            {
+              "op_name": "FusedConv",
+              "count": 1250,
+              "timed_count": 1250,
+              "duration_microseconds_sum": 33017.0
+            },
+            {
+              "op_name": "Squeeze",
+              "count": 1250,
+              "timed_count": 1250,
+              "duration_microseconds_sum": 21186.0
+            },
+            {
+              "op_name": "Gather",
+              "count": 1250,
+              "timed_count": 1250,
+              "duration_microseconds_sum": 20773.0
+            },
+            {
+              "op_name": "Identity",
+              "count": 1250,
+              "timed_count": 1250,
+              "duration_microseconds_sum": 20278.0
+            },
+            {
+              "op_name": "Equal",
+              "count": 1000,
+              "timed_count": 1000,
+              "duration_microseconds_sum": 17422.0
+            },
+            {
+              "op_name": "Shape",
+              "count": 1000,
+              "timed_count": 1000,
+              "duration_microseconds_sum": 15456.0
+            },
+            {
+              "op_name": "LSTM",
+              "count": 250,
+              "timed_count": 250,
+              "duration_microseconds_sum": 13218.0
+            },
+            {
+              "op_name": "Conv",
+              "count": 250,
+              "timed_count": 250,
+              "duration_microseconds_sum": 10702.0
+            },
+            {
+              "op_name": "Pow",
+              "count": 500,
+              "timed_count": 500,
+              "duration_microseconds_sum": 8779.0
+            },
+            {
+              "op_name": "Split",
+              "count": 250,
+              "timed_count": 250,
+              "duration_microseconds_sum": 5007.0
+            },
+            {
+              "op_name": "Concat",
+              "count": 250,
+              "timed_count": 250,
+              "duration_microseconds_sum": 4887.0
+            },
+            {
+              "op_name": "Pad",
+              "count": 250,
+              "timed_count": 250,
+              "duration_microseconds_sum": 4817.0
+            },
+            {
+              "op_name": "Add",
+              "count": 250,
+              "timed_count": 250,
+              "duration_microseconds_sum": 4393.0
+            },
+            {
+              "op_name": "ReduceMean",
+              "count": 250,
+              "timed_count": 250,
+              "duration_microseconds_sum": 4184.0
+            },
+            {
+              "op_name": "Cast",
+              "count": 250,
+              "timed_count": 250,
+              "duration_microseconds_sum": 4024.0
+            },
+            {
+              "op_name": "Relu",
+              "count": 250,
+              "timed_count": 250,
+              "duration_microseconds_sum": 4002.0
+            },
+            {
+              "op_name": "Sqrt",
+              "count": 250,
+              "timed_count": 250,
+              "duration_microseconds_sum": 3961.0
+            },
+            {
+              "op_name": "Not",
+              "count": 250,
+              "timed_count": 250,
+              "duration_microseconds_sum": 3826.0
+            },
+            {
+              "op_name": "Size",
+              "count": 250,
+              "timed_count": 250,
+              "duration_microseconds_sum": 3745.0
+            }
+          ]
+        },
+        "kernel_events": {
+          "count": 0,
+          "timed_count": 0,
+          "duration_microseconds_sum": null
+        }
+      }
+    },
+    "note": "Eight-second proof run, distinct from the unprofiled two-minute timings. No event cap reached. Host durations and provider counts are not whole-run GPU/CPU time percentages."
+  },
+  "quality": {
+    "gpu_output_segments": 22,
+    "cpu_output_segments": 23,
+    "stable_within_each_mode": true,
+    "independent_listening_reference": false,
+    "note": "Recognized text and retained output segments differ between precision modes. Schema-valid timestamps are not independent timing accuracy."
+  },
+  "limits": [
+    "One two-minute excerpt; three warm repetitions and one separate short GPU proof. No full episode or long-session stability test.",
+    "Windows ORT 1.20.1 uses CPU VAD/NumPy preprocessing plus constrained CUDA allocator/workspace. Colab used ORT 1.27.0, GPU VAD/preprocessing, and different audio bytes; no valid direct speed ratio versus Colab.",
+    "Observed longest retained GPU speech segment was about 17.5 seconds; configured maximum remains 20 seconds. Larger/longer input shapes and larger batches have not been validated.",
+    "Approximately 3.58 GiB observed whole-device use leaves limited headroom on a 4 GiB card; other graphics workloads can change available memory.",
+    "Existing project runtime remains CPU ORT 1.27.0; the optional legacy GPU environment is not a production configuration change."
+  ],
+  "primary_sources": [
+    "https://onnxruntime.ai/docs/install/#cuda-11x",
+    "https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html",
+    "https://github.com/conda-forge/zlib-feedstock/blob/main/recipe/bld.bat"
+  ]
+}

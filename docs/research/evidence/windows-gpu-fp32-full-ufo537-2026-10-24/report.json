@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "status": "completed",
+  "phase": "completed",
+  "started_at": "2026-10-24T16:24:31.127426+00:00",
+  "timings_seconds": {
+    "runtime_imports_and_dll_setup": 0.6444395000580698,
+    "audio_download": 2.3635204000165686,
+    "source_hash_after_download": 0.16350759996566921,
+    "audio_decode": 5.208501899964176,
+    "model_setup_cached_weights": 3.701452299952507,
+    "inference": 147.56204600003548,
+    "validation_integrity_and_export": 0.8218122000107542
+  },
+  "worker_code_sha256": "6af82cb995564d29e4055229a9219028cab31dc0f625a4d34887372f27255d62",
+  "repeat_count": 1,
+  "warmup_performed": false,
+  "profile_enabled": false,
+  "note": "One complete first inference after model load; model/VAD weights already cached. No archive/pilot output or production configuration is changed.",
+  "runtime": {
+    "python": "3.12.9 (main, Feb 12 2025, 14:52:31) [MSC v.1942 64 bit (AMD64)]",
+    "executable": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\local-gpu-fp32-2026-10-24\\env\\Scripts\\python.exe",
+    "ort_build": "ORT Build Info: git-branch=HEAD, git-commit-id=5c1b7ccbff, build type=Release, cmake cxx flags: /MP /guard:cf /DWIN32 /D_WINDOWS /D_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR /DWINAPI_FAMILY=100 /DWINVER=0x0A00 /D_WIN32_WINNT=0x0A00 /DNTDDI_VERSION=0x0A000000 /Qspectre /DONNXRUNTIME_ENABLE_INTEL_METEOR_LAKE_MOBILE_PLATFORM_PERF_PATCH /O2 /Ob2 /DNDEBUG /Zc:__cplusplus /EHsc /wd26812 -DEIGEN_HAS_C99_MATH -DCPUINFO_SUPPORTED",
+    "packages": {
+      "onnx-asr": "0.12.0",
+      "onnxruntime-gpu": "1.20.1",
+      "numpy": "2.5.4",
+      "pydantic": "2.14.1",
+      "huggingface-hub": "2.2.0",
+      "nvidia-ml-py": "13.615.71"
+    }
+  },
+  "hardware": "NVIDIA GeForce GTX 1050 Ti, GPU-6db820f6-f86e-4348-ab54-1d9ef038227a, 576.02, 4096 MiB",
+  "configuration": {
+    "model_id": "nvidia/parakeet-tdt-0.6b-v3",
+    "model_revision": "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+    "export_id": "istupakov/parakeet-tdt-0.6b-v3-onnx",
+    "export_revision": "8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce",
+    "precision": "fp32",
+    "vad_id": "istupakov/silero-vad-onnx",
+    "vad_revision": "b3e3ee3cce4c11ceb63b1a0b229d916069c1ddf6",
+    "vad_options": {
+      "batch_size": 1,
+      "max_speech_duration_s": 20,
+      "min_speech_duration_ms": 250,
+      "min_silence_duration_ms": 100,
+      "speech_pad_ms": 0,
+      "threshold": 0.5
+    },
+    "asr_provider": "CUDAExecutionProvider",
+    "vad_provider": "CPUExecutionProvider",
+    "preprocessing": "numpy-cpu",
+    "intra_op_num_threads": 4,
+    "cuda_provider_options": {
+      "arena_extend_strategy": "kSameAsRequested",
+      "gpu_mem_limit": "3221225472",
+      "cudnn_conv_algo_search": "HEURISTIC",
+      "cudnn_conv_use_max_workspace": "0"
+    },
+    "cached_short_cuda_proof_report": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\local-gpu-fp32-2026-10-24\\runs\\gpu-fp32-profile.json",
+    "cached_short_cuda_proof_sha256": "da0b7861626b2d698a17cf0a2afff81e48d8aa861f995243f4142726dc2ff04e"
+  },
+  "episode": {
+    "episode_id": "ep-5764a1149f18a8f68698fb45bb405264",
+    "title": "UFO537 Festival",
+    "published_at": "2026-10-10T12:04:00Z",
+    "webpage_url": "https://shows.acast.com/podcast-ufo/episodes/ufo537-festival",
+    "audio_url": "https://sphinx.acast.com/p/acast/s/podcast-ufo/e/6ac88caf39599f7c565b9745/media.mp3"
+  },
+  "source": {
+    "requested_url": "https://sphinx.acast.com/p/acast/s/podcast-ufo/e/6ac88caf39599f7c565b9745/media.mp3",
+    "http_status": 200,
+    "content_type": "audio/mpeg",
+    "content_length_header": "69543927",
+    "etag": "\"50c506ea6ec814a58152192dab7ec89d\"",
+    "last_modified": null,
+    "path": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\local-gpu-fp32-full-ufo537-2026-10-24\\source.mp3",
+    "bytes": 69543927,
+    "sha256": "96ed332afdc78f1a71f30c5bc3fd1eb475c3de9a7914707f18f1a14cc081b357",
+    "resolved_url_note": "Temporary signed redirect omitted. Stable public Acast URL returned HTTP 200; exact downloaded bytes remain in the local experiment cache."
+  },
+  "ffmpeg_version": "ffmpeg version 7.1.1-full_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers",
+  "audio": {
+    "path": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\local-gpu-fp32-full-ufo537-2026-10-24\\episode.wav",
+    "bytes": 139087816,
+    "sha256": "2dfe908ee0a54e0f466f9b33a33de7826c6d4f70d7009a1e3c5c22137575d33b",
+    "duration_seconds": 4346.4881875,
+    "sample_rate": 16000,
+    "channels": 1,
+    "sample_width_bytes": 2
+  },
+  "model_cache": {
+    "state": "warm",
+    "model_dir": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\local-gpu-fp32-2026-10-24\\models\\fp32",
+    "vad_dir": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\asr\\models\\models--istupakov--silero-vad-onnx\\snapshots\\b3e3ee3cce4c11ceb63b1a0b229d916069c1ddf6",
+    "weights_downloaded": false,
+    "expected_model_file_bytes": {
+      "config.json": 97,
+      "vocab.txt": 93939,
+      "encoder-model.onnx": 41770866,
+      "encoder-model.onnx.data": 2435420160,
+      "decoder_joint-model.onnx": 72520893
+    }
+  },
+  "model_setup_detail_seconds": {
+    "asr_encoder_decoder": 3.5215605999110267,
+    "vad": 0.17986829997971654
+  },
+  "session_providers": {
+    "encoder": [
+      "CUDAExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "decoder_joint": [
+      "CUDAExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "vad": [
+      "CPUExecutionProvider"
+    ]
+  },
+  "inference_process_cpu_seconds": 392.390625,
+  "device_monitor": {
+    "sampling_interval_seconds": 0.5,
+    "whole_device_not_process_attribution": true,
+    "error": null,
+    "maximum_sampled_device_used_mib": 3927.75390625,
+    "sample_count": 293,
+    "maximum_sampled_gpu_utilization_percent": 99
+  },
+  "output": {
+    "segment_count": 966,
+    "word_count_whitespace": 12305,
+    "first_segment_start_seconds": 4.512,
+    "last_segment_end_seconds": 4344.064,
+    "text_sha256": "f93b8d000705c38d574e99513143c23d801c47591e8efe5732c9d8f89742c9e9",
+    "segments_sha256": "20e86dae9f654fc4c8813e2b63fe2066ced5b60d68dd022ce179739b76bc73fe",
+    "files": {
+      "transcript.json": {
+        "path": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\local-gpu-fp32-full-ufo537-2026-10-24\\transcript.json",
+        "bytes": 2466124,
+        "sha256": "3fa9599f2bb03be7b0ab4da4523f66ec660e0646ccd98d92ad4e20666b53b24b"
+      },
+      "UFO537-Festival-FP32.txt": {
+        "path": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\local-gpu-fp32-full-ufo537-2026-10-24\\UFO537-Festival-FP32.txt",
+        "bytes": 76267,
+        "sha256": "5b93d8b6790d3a27360fa096f363228fa73552adb1dc0faf53de1407f0aa40b7"
+      },
+      "UFO537-Festival-FP32-mit-Zeitmarken.txt": {
+        "path": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\local-gpu-fp32-full-ufo537-2026-10-24\\UFO537-Festival-FP32-mit-Zeitmarken.txt",
+        "bytes": 100417,
+        "sha256": "dae74736a8954bfad480b1979a969c622194a90b3bc5a9fa7aacb6d9fb2277c3"
+      },
+      "audio-url.txt": {
+        "path": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\local-gpu-fp32-full-ufo537-2026-10-24\\audio-url.txt",
+        "bytes": 85,
+        "sha256": "f0073819117ca0ee26d79a6ccbfd5daec21791bbcde729500adebe383d90f928"
+      }
+    }
+  },
+  "real_time_factor": 0.03394971748097854,
+  "audio_seconds_per_inference_second": 29.455326117523168,
+  "quality_note": "Syntactic segment/token/time validation and input hashes passed; no independent listening or ground-truth accuracy check performed. Dynamic source may change ads/audio across future downloads.",
+  "overall_wall_seconds": 161.00735309999436,
+  "finished_at": "2026-10-24T16:27:12.135532+00:00",
+  "timing_note": "Sequential full-run wall clock starts before runtime imports. Main timings are disjoint. Model setup includes ASR+VAD sub-timings (do not add again), using existing weights, no model/environment installation. Inference includes PCM reading, CPU VAD, CPU NumPy preprocessing, GPU ASR, generator consumption and progress logging; excludes download, FFmpeg decoding, model loading and final validation/serialization. No warmup/repeats/full-run profiling.",
+  "timed_main_stages_seconds_sum": 160.46527990000322,
+  "other_wall_seconds": 0.5420731999911368,
+  "evidence": {
+    "kind": "Compact full-run report; raw sampling history and temporary redirect omitted",
+    "raw_report_path": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\local-gpu-fp32-full-ufo537-2026-10-24\\report.json",
+    "raw_report_sha256": "bd3e9bd418fdaa446ba1b34da8337e67669782edeab843cf7401286a7b1981f7",
+    "worker_path": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\local-gpu-fp32-full-ufo537-2026-10-24\\run-local-gpu-fp32-full.py"
+  }
+}

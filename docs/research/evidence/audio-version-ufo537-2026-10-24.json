@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "performed_on": "2026-10-24",
+  "comparison": {
+    "stored_episode": {
+      "episode_id": "ep-5764a1149f18a8f68698fb45bb405264",
+      "title": "UFO537 Festival",
+      "published_at": "2026-10-10T12:04:00Z",
+      "webpage_url": "https://shows.acast.com/podcast-ufo/episodes/ufo537-festival",
+      "audio_url": "https://sphinx.acast.com/p/acast/s/podcast-ufo/e/6ac88caf39599f7c565b9745/media.mp3"
+    },
+    "transcribed_audio_sha256": "96ed332afdc78f1a71f30c5bc3fd1eb475c3de9a7914707f18f1a14cc081b357",
+    "transcribed_duration_seconds": 4346.4881875,
+    "current_rss_item": {
+      "title": "UFO537 Festival",
+      "guid": "6ac88caf39599f7c565b9745",
+      "enclosure": {
+        "url": "https://sphinx.acast.com/p/acast/s/podcast-ufo/e/6ac88caf39599f7c565b9745/media.mp3",
+        "length": "67623288",
+        "type": "audio/mpeg"
+      }
+    },
+    "new_downloads": [
+      {
+        "client": "pipeline",
+        "sha256": "96ed332afdc78f1a71f30c5bc3fd1eb475c3de9a7914707f18f1a14cc081b357",
+        "bytes": 69543927,
+        "same_as_transcribed_audio": true,
+        "redirect_without_query": "https://stitcher2.acast.com/livestitches/50c506ea6ec814a58152192dab7ec89d.mp3",
+        "media_info": {
+          "format": {
+            "duration": "4346.479313",
+            "tags": {
+              "artist": "Stefan Titze, Florentin Will",
+              "title": "UFO537 Festival"
+            }
+          }
+        }
+      },
+      {
+        "client": "browser",
+        "sha256": "40b65eeaa792df42d5e96f0a13f9c5c40db32fb83031e5e3fb7d497b7f4c644b",
+        "bytes": 71071479,
+        "same_as_transcribed_audio": false,
+        "redirect_without_query": "https://stitcher2.acast.com/livestitches/00480895177a28ef0947e66d425631c6.mp3",
+        "media_info": {
+          "format": {
+            "duration": "4441.951313",
+            "tags": {
+              "artist": "Stefan Titze, Florentin Will",
+              "title": "UFO537 Festival"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "official_download_comparison": [
+    {
+      "source": "publisher official download link",
+      "client": "pipeline",
+      "url": "https://open.acast.com/public/streams/0301869f-de1f-4fac-97f9-ed5bf6faab23/episodes/6ac88caf39599f7c565b9745.mp3",
+      "sha256": "96ed332afdc78f1a71f30c5bc3fd1eb475c3de9a7914707f18f1a14cc081b357",
+      "bytes": 69543927,
+      "duration_seconds": 4346.479313
+    },
+    {
+      "source": "publisher official download link",
+      "client": "browser",
+      "url": "https://open.acast.com/public/streams/0301869f-de1f-4fac-97f9-ed5bf6faab23/episodes/6ac88caf39599f7c565b9745.mp3",
+      "sha256": "40b65eeaa792df42d5e96f0a13f9c5c40db32fb83031e5e3fb7d497b7f4c644b",
+      "bytes": 71071479,
+      "duration_seconds": 4441.951313
+    }
+  ],
+  "signal_alignment": [
+    {
+      "reference_seconds": 300,
+      "browser_match_seconds": 385.4205,
+      "offset_seconds": 85.4205,
+      "normalized_correlation": 0.9530702974295163
+    },
+    {
+      "reference_seconds": 1800,
+      "browser_match_seconds": 1885.4205,
+      "offset_seconds": 85.42049999999995,
+      "normalized_correlation": 0.9590484979596504
+    },
+    {
+      "reference_seconds": 4000,
+      "browser_match_seconds": 4090.3315000000002,
+      "offset_seconds": 90.33150000000023,
+      "normalized_correlation": 0.9894137840556038
+    }
+  ],
+  "unsigned_stitch_path_status": 403,
+  "conclusion": "Same published episode; client-dependent stitched audio changes duration and timeline. Source URL is not an immutable reference. Retain content-hashed original; verify local file or reject mismatching playback duration.",
+  "source": "https://medium.com/acast-tech/server-side-podcast-metrics-bf8cf6c7ddec"
+}

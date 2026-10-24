@@ -1,0 +1,3561 @@
+{
+  "schema_version": 1,
+  "kind": "Retained historical measurement evidence; executable comparison workflows retired on 2026-10-24",
+  "sources": [
+    {
+      "original_name": "colab-diagnostic-ufo537-2026-10-24.json",
+      "original_sha256": "e6c1926c633a644b2bf1a71bba2e45f439d1f1c83615b8be7de3260a655f928f",
+      "report": {
+        "schema_version": 1,
+        "evidence_kind": "operator-colab-short-diagnostic-summary",
+        "analyzed_on": "2026-10-24",
+        "source_report": {
+          "original_path": "C:\\Users\\User\\Downloads\\diagnostic-report.json",
+          "sha256": "c4f6552285b043db12a2a20b3dcfb8a6f70b9906f30938cb05ef527671487ad3",
+          "bytes": 228476,
+          "preserved_unmodified": true
+        },
+        "manifest": {
+          "schema_version": 1,
+          "created_at": "2026-10-24T14:32:01.322660+00:00",
+          "source": {
+            "sha256": "ded9df3dbe81fabc8a1859c668ba082b009c25755a3b01bf164fc25fbf1fe43e",
+            "bytes": 72210096,
+            "origin": "https://sphinx.acast.com/p/acast/s/podcast-ufo/e/6ac88caf39599f7c565b9745/media.mp3",
+            "preparation_seconds": 1.3866816660010954
+          },
+          "excerpt_start_seconds": 300.0,
+          "audio": {
+            "file": "excerpt.wav",
+            "sha256": "aa5db341dec74315819c66490e00534485c2f8848266b19c7357c8410712cf36",
+            "bytes": 3840194,
+            "duration_seconds": 120.0
+          },
+          "profile_audio": {
+            "file": "profile.wav",
+            "sha256": "537e4b1d2880dbddea2f2e09a59b070cceb35bfa93223e7790b5ba502fe034bc",
+            "bytes": 256044,
+            "duration_seconds": 8.0
+          },
+          "decode_excerpt_seconds": 1.6921952179982327,
+          "preparation_total_seconds": 3.078878899999836,
+          "note": "Excerpt times are relative to the excerpt, not a complete episode transcript."
+        },
+        "notebook_context": {
+          "experiment_id": "8f67d21cde714b1789612f1721face8c",
+          "repository_commit": "1defcf4a4afd4b76fc611d7807248d9961922117",
+          "repository_branch": "integration/podcast-words-pilot",
+          "repository_status": "",
+          "dependency_setup_seconds": 1.415986989000885,
+          "notebook_python": "3.13.16 (main, Oct  1 2026, 15:40:24) [GCC 13.3.0]",
+          "timing_cases": [
+            "cuda-int8",
+            "cuda-fp32",
+            "cpu-int8"
+          ],
+          "profile_cases": [
+            "cuda-int8",
+            "cuda-fp32"
+          ],
+          "extra_cases": [],
+          "repeats": 3,
+          "external_failures": [
+            {
+              "label": "cuda-fp32",
+              "returncode": 1
+            },
+            {
+              "label": "cuda-fp32-profile",
+              "returncode": 1
+            }
+          ]
+        },
+        "diagnostic_code_sha256": "cb9e9d6c38b3ea75d9671e32e7c40d4552797da322da5b056eb1502670ea7297",
+        "runtime": {
+          "python": "3.12.3",
+          "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+          "logical_cpu_count": 2,
+          "cpu_affinity_count": 2,
+          "packages": {
+            "onnx-asr": "0.12.0",
+            "onnxruntime-gpu": "1.27.0",
+            "numpy": "2.5.4",
+            "huggingface-hub": "2.2.0"
+          },
+          "ort_build": "ORT Build Info: git-branch=HEAD, git-commit-id=8f0278c77b, fp8-kv-cache=1, build type=Release",
+          "available_providers": [
+            "TensorrtExecutionProvider",
+            "CUDAExecutionProvider",
+            "CPUExecutionProvider"
+          ],
+          "gpu_identity": "Tesla T4, GPU-1026982e-4e84-29ba-ced2-d1fac76e1aa1, 580.82.07, 15360 MiB"
+        },
+        "timings": [
+          {
+            "case_name": "cuda-int8",
+            "case": {
+              "precision": "int8",
+              "asr_provider": "CUDAExecutionProvider",
+              "vad_provider": "CUDAExecutionProvider",
+              "threads": 4,
+              "batch_size": 1,
+              "preprocessing": "auto"
+            },
+            "statistics": {
+              "n": 3,
+              "median_seconds": 50.66858284499904,
+              "min_seconds": 50.41512305699871,
+              "max_seconds": 50.731774154999584,
+              "sample_stdev_seconds": 0.16758228011831292,
+              "median_real_time_factor": 0.422238190374992,
+              "text_stable": true,
+              "timestamps_stable": true
+            },
+            "samples": [
+              {
+                "recognizer_seconds": 50.41512305699871,
+                "process_cpu_seconds": 96.604635047,
+                "cpu_seconds_per_wall_second": 1.9161836605611378,
+                "real_time_factor": 0.42012602547498923,
+                "text_sha256": "cae569c7eb56640d270261dbf8208b61a3e3abb7926625a50f2bd755013c1fa1",
+                "output_sha256": "98be93e6e25eb53becf765fcad8181f6100e9c9223fcb4e42f776ce319e59c1c",
+                "segment_count": 26,
+                "repeat": 1
+              },
+              {
+                "recognizer_seconds": 50.66858284499904,
+                "process_cpu_seconds": 97.20199103799999,
+                "cpu_seconds_per_wall_second": 1.9183877973329537,
+                "real_time_factor": 0.422238190374992,
+                "text_sha256": "cae569c7eb56640d270261dbf8208b61a3e3abb7926625a50f2bd755013c1fa1",
+                "output_sha256": "98be93e6e25eb53becf765fcad8181f6100e9c9223fcb4e42f776ce319e59c1c",
+                "segment_count": 26,
+                "repeat": 2
+              },
+              {
+                "recognizer_seconds": 50.731774154999584,
+                "process_cpu_seconds": 97.22416936499997,
+                "cpu_seconds_per_wall_second": 1.9164354289671257,
+                "real_time_factor": 0.42276478462499656,
+                "text_sha256": "cae569c7eb56640d270261dbf8208b61a3e3abb7926625a50f2bd755013c1fa1",
+                "output_sha256": "98be93e6e25eb53becf765fcad8181f6100e9c9223fcb4e42f776ce319e59c1c",
+                "segment_count": 26,
+                "repeat": 3
+              }
+            ],
+            "setup": {
+              "downloads_seconds": 5.141422559998318,
+              "sessions_seconds": 5.134382887999891,
+              "session_providers": {
+                "encoder": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "decoder_joint": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "vad": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "preprocessor": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-8000": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-11025": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-22050": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-24000": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-32000": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-44100": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-48000": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ]
+              },
+              "preprocessor_class": "OnnxPreprocessor",
+              "preprocessing_note": "auto follows pinned onnx-asr defaults: NumPy for CPU; ONNX Conv for CUDA",
+              "cuda_library_preload_messages": ""
+            },
+            "warmup": {
+              "recognizer_seconds": 51.03709302400057,
+              "process_cpu_seconds": 97.375984247,
+              "cpu_seconds_per_wall_second": 1.907945348713498,
+              "real_time_factor": 0.4253091085333381,
+              "text_sha256": "cae569c7eb56640d270261dbf8208b61a3e3abb7926625a50f2bd755013c1fa1",
+              "output_sha256": "98be93e6e25eb53becf765fcad8181f6100e9c9223fcb4e42f776ce319e59c1c",
+              "segment_count": 26,
+              "included_in_statistics": false
+            }
+          },
+          {
+            "case_name": "cpu-int8",
+            "case": {
+              "precision": "int8",
+              "asr_provider": "CPUExecutionProvider",
+              "vad_provider": "CPUExecutionProvider",
+              "threads": 4,
+              "batch_size": 1,
+              "preprocessing": "auto"
+            },
+            "statistics": {
+              "n": 3,
+              "median_seconds": 54.97630583099999,
+              "min_seconds": 54.846663907999755,
+              "max_seconds": 55.214559410998845,
+              "sample_stdev_seconds": 0.18660068672096897,
+              "median_real_time_factor": 0.45813588192499993,
+              "text_stable": true,
+              "timestamps_stable": true
+            },
+            "samples": [
+              {
+                "recognizer_seconds": 54.97630583099999,
+                "process_cpu_seconds": 106.55775549799999,
+                "cpu_seconds_per_wall_second": 1.9382487398401058,
+                "real_time_factor": 0.45813588192499993,
+                "text_sha256": "ea64fbe4d52a891eac8b53b9b0fcccca4cd0b7e20f009626d7722c2af5358b15",
+                "output_sha256": "5b3bed75fe31995630a88eb3ec9eb3888b05ae3095a6d93f614c9a3478c8e30b",
+                "segment_count": 26,
+                "repeat": 1
+              },
+              {
+                "recognizer_seconds": 55.214559410998845,
+                "process_cpu_seconds": 106.92242062300002,
+                "cpu_seconds_per_wall_second": 1.9364896100520341,
+                "real_time_factor": 0.4601213284249904,
+                "text_sha256": "ea64fbe4d52a891eac8b53b9b0fcccca4cd0b7e20f009626d7722c2af5358b15",
+                "output_sha256": "5b3bed75fe31995630a88eb3ec9eb3888b05ae3095a6d93f614c9a3478c8e30b",
+                "segment_count": 26,
+                "repeat": 2
+              },
+              {
+                "recognizer_seconds": 54.846663907999755,
+                "process_cpu_seconds": 106.38526768500003,
+                "cpu_seconds_per_wall_second": 1.939685299063067,
+                "real_time_factor": 0.45705553256666465,
+                "text_sha256": "ea64fbe4d52a891eac8b53b9b0fcccca4cd0b7e20f009626d7722c2af5358b15",
+                "output_sha256": "5b3bed75fe31995630a88eb3ec9eb3888b05ae3095a6d93f614c9a3478c8e30b",
+                "segment_count": 26,
+                "repeat": 3
+              }
+            ],
+            "setup": {
+              "downloads_seconds": 0.010518917999434052,
+              "sessions_seconds": 6.4499903050000285,
+              "session_providers": {
+                "encoder": [
+                  "CPUExecutionProvider"
+                ],
+                "decoder_joint": [
+                  "CPUExecutionProvider"
+                ],
+                "vad": [
+                  "CPUExecutionProvider"
+                ],
+                "resampler-8000": [
+                  "CPUExecutionProvider"
+                ],
+                "resampler-11025": [
+                  "CPUExecutionProvider"
+                ],
+                "resampler-22050": [
+                  "CPUExecutionProvider"
+                ],
+                "resampler-24000": [
+                  "CPUExecutionProvider"
+                ],
+                "resampler-32000": [
+                  "CPUExecutionProvider"
+                ],
+                "resampler-44100": [
+                  "CPUExecutionProvider"
+                ],
+                "resampler-48000": [
+                  "CPUExecutionProvider"
+                ]
+              },
+              "preprocessor_class": "NemoPreprocessorNumpy",
+              "preprocessing_note": "auto follows pinned onnx-asr defaults: NumPy for CPU; ONNX Conv for CUDA",
+              "cuda_library_preload_messages": null
+            },
+            "warmup": {
+              "recognizer_seconds": 54.6433635909998,
+              "process_cpu_seconds": 105.631096919,
+              "cpu_seconds_per_wall_second": 1.933100196935869,
+              "real_time_factor": 0.45536136325833165,
+              "text_sha256": "ea64fbe4d52a891eac8b53b9b0fcccca4cd0b7e20f009626d7722c2af5358b15",
+              "output_sha256": "5b3bed75fe31995630a88eb3ec9eb3888b05ae3095a6d93f614c9a3478c8e30b",
+              "segment_count": 26,
+              "included_in_statistics": false
+            }
+          }
+        ],
+        "failed_fp32_runs": [
+          {
+            "profile_enabled": true,
+            "error": "Fail: [ONNXRuntimeError] : 1 : FAIL : External data path validation failed for initializer: pre_encode.out.bias. Error: External data path escapes model directory. External data path: \"encoder-model.onnx.data\" resolved path: \"/content/podcast-words-diagnostics/model-cache/blobs/79/79a81daaa354b233aa2395276dc0c4c09e7506803aed8300f4a2453c97ae36cc\" allowed directory: \"/content/podcast-words-diagnostics/model-cache/blobs/9a\"",
+            "samples": []
+          },
+          {
+            "profile_enabled": false,
+            "error": "Fail: [ONNXRuntimeError] : 1 : FAIL : External data path validation failed for initializer: pre_encode.out.bias. Error: External data path escapes model directory. External data path: \"encoder-model.onnx.data\" resolved path: \"/content/podcast-words-diagnostics/model-cache/blobs/79/79a81daaa354b233aa2395276dc0c4c09e7506803aed8300f4a2453c97ae36cc\" allowed directory: \"/content/podcast-words-diagnostics/model-cache/blobs/9a\"",
+            "samples": []
+          }
+        ],
+        "profile": {
+          "audio": {
+            "file": "profile.wav",
+            "sha256": "537e4b1d2880dbddea2f2e09a59b070cceb35bfa93223e7790b5ba502fe034bc",
+            "bytes": 256044,
+            "duration_seconds": 8.0
+          },
+          "cuda_model_nodes": 8842,
+          "cuda_execution_confirmed": true,
+          "event_limit_reached": false,
+          "sessions": {
+            "encoder": {
+              "event_count": 7796,
+              "node_events_by_provider": {
+                "CUDAExecutionProvider": 5792,
+                "CPUExecutionProvider": 1998
+              },
+              "host_node_duration_microseconds_sum_by_provider": {
+                "CUDAExecutionProvider": 293369.0,
+                "CPUExecutionProvider": 2698305.0
+              },
+              "kernel_events": {
+                "count": 0,
+                "timed_count": 0,
+                "duration_microseconds_sum": null
+              },
+              "top_node_operators_by_provider": {
+                "CUDAExecutionProvider": [
+                  {
+                    "op_name": "MemcpyFromHost",
+                    "count": 1036,
+                    "timed_count": 1036,
+                    "duration_microseconds_sum": 109570.0
+                  },
+                  {
+                    "op_name": "Mul",
+                    "count": 1320,
+                    "timed_count": 1320,
+                    "duration_microseconds_sum": 43423.0
+                  },
+                  {
+                    "op_name": "Cast",
+                    "count": 596,
+                    "timed_count": 596,
+                    "duration_microseconds_sum": 28009.0
+                  },
+                  {
+                    "op_name": "MatMul",
+                    "count": 144,
+                    "timed_count": 144,
+                    "duration_microseconds_sum": 18213.0
+                  },
+                  {
+                    "op_name": "MemcpyToHost",
+                    "count": 448,
+                    "timed_count": 448,
+                    "duration_microseconds_sum": 16927.0
+                  },
+                  {
+                    "op_name": "Transpose",
+                    "count": 390,
+                    "timed_count": 390,
+                    "duration_microseconds_sum": 13001.0
+                  },
+                  {
+                    "op_name": "LayerNormalization",
+                    "count": 192,
+                    "timed_count": 192,
+                    "duration_microseconds_sum": 11689.0
+                  },
+                  {
+                    "op_name": "Add",
+                    "count": 360,
+                    "timed_count": 360,
+                    "duration_microseconds_sum": 11048.0
+                  },
+                  {
+                    "op_name": "Softmax",
+                    "count": 48,
+                    "timed_count": 48,
+                    "duration_microseconds_sum": 8078.0
+                  },
+                  {
+                    "op_name": "Reshape",
+                    "count": 338,
+                    "timed_count": 338,
+                    "duration_microseconds_sum": 5911.0
+                  },
+                  {
+                    "op_name": "QuickGelu",
+                    "count": 144,
+                    "timed_count": 144,
+                    "duration_microseconds_sum": 5250.0
+                  },
+                  {
+                    "op_name": "SkipLayerNormalization",
+                    "count": 48,
+                    "timed_count": 48,
+                    "duration_microseconds_sum": 5137.0
+                  },
+                  {
+                    "op_name": "Shape",
+                    "count": 200,
+                    "timed_count": 200,
+                    "duration_microseconds_sum": 4129.0
+                  },
+                  {
+                    "op_name": "Where",
+                    "count": 144,
+                    "timed_count": 144,
+                    "duration_microseconds_sum": 3012.0
+                  },
+                  {
+                    "op_name": "Slice",
+                    "count": 102,
+                    "timed_count": 102,
+                    "duration_microseconds_sum": 2838.0
+                  },
+                  {
+                    "op_name": "Pad",
+                    "count": 96,
+                    "timed_count": 96,
+                    "duration_microseconds_sum": 2010.0
+                  },
+                  {
+                    "op_name": "Split",
+                    "count": 48,
+                    "timed_count": 48,
+                    "duration_microseconds_sum": 1615.0
+                  },
+                  {
+                    "op_name": "Div",
+                    "count": 54,
+                    "timed_count": 54,
+                    "duration_microseconds_sum": 1059.0
+                  },
+                  {
+                    "op_name": "Sigmoid",
+                    "count": 48,
+                    "timed_count": 48,
+                    "duration_microseconds_sum": 832.0
+                  },
+                  {
+                    "op_name": "Expand",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 576.0
+                  },
+                  {
+                    "op_name": "ConstantOfShape",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 495.0
+                  },
+                  {
+                    "op_name": "Unsqueeze",
+                    "count": 10,
+                    "timed_count": 10,
+                    "duration_microseconds_sum": 104.0
+                  },
+                  {
+                    "op_name": "Relu",
+                    "count": 6,
+                    "timed_count": 6,
+                    "duration_microseconds_sum": 99.0
+                  },
+                  {
+                    "op_name": "Floor",
+                    "count": 6,
+                    "timed_count": 6,
+                    "duration_microseconds_sum": 90.0
+                  },
+                  {
+                    "op_name": "And",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 82.0
+                  }
+                ],
+                "CPUExecutionProvider": [
+                  {
+                    "op_name": "MatMulInteger",
+                    "count": 434,
+                    "timed_count": 434,
+                    "duration_microseconds_sum": 1519782.0
+                  },
+                  {
+                    "op_name": "ConvInteger",
+                    "count": 154,
+                    "timed_count": 154,
+                    "duration_microseconds_sum": 1105837.0
+                  },
+                  {
+                    "op_name": "DynamicQuantizeLinear",
+                    "count": 446,
+                    "timed_count": 446,
+                    "duration_microseconds_sum": 45913.0
+                  },
+                  {
+                    "op_name": "Concat",
+                    "count": 202,
+                    "timed_count": 202,
+                    "duration_microseconds_sum": 14298.0
+                  },
+                  {
+                    "op_name": "Unsqueeze",
+                    "count": 350,
+                    "timed_count": 350,
+                    "duration_microseconds_sum": 5533.0
+                  },
+                  {
+                    "op_name": "Gather",
+                    "count": 298,
+                    "timed_count": 298,
+                    "duration_microseconds_sum": 5427.0
+                  },
+                  {
+                    "op_name": "Slice",
+                    "count": 48,
+                    "timed_count": 48,
+                    "duration_microseconds_sum": 801.0
+                  },
+                  {
+                    "op_name": "Squeeze",
+                    "count": 48,
+                    "timed_count": 48,
+                    "duration_microseconds_sum": 497.0
+                  },
+                  {
+                    "op_name": "Sub",
+                    "count": 4,
+                    "timed_count": 4,
+                    "duration_microseconds_sum": 39.0
+                  },
+                  {
+                    "op_name": "Where",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 32.0
+                  },
+                  {
+                    "op_name": "Transpose",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 30.0
+                  },
+                  {
+                    "op_name": "Add",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 27.0
+                  },
+                  {
+                    "op_name": "Tile",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 26.0
+                  },
+                  {
+                    "op_name": "Equal",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 24.0
+                  },
+                  {
+                    "op_name": "And",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 23.0
+                  },
+                  {
+                    "op_name": "Reshape",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 16.0
+                  }
+                ]
+              }
+            },
+            "decoder_joint": {
+              "event_count": 3662,
+              "node_events_by_provider": {
+                "CUDAExecutionProvider": 3050,
+                "CPUExecutionProvider": 488
+              },
+              "host_node_duration_microseconds_sum_by_provider": {
+                "CUDAExecutionProvider": 197139.0,
+                "CPUExecutionProvider": 203480.0
+              },
+              "kernel_events": {
+                "count": 0,
+                "timed_count": 0,
+                "duration_microseconds_sum": null
+              },
+              "top_node_operators_by_provider": {
+                "CUDAExecutionProvider": [
+                  {
+                    "op_name": "MemcpyFromHost",
+                    "count": 732,
+                    "timed_count": 732,
+                    "duration_microseconds_sum": 65587.0
+                  },
+                  {
+                    "op_name": "Mul",
+                    "count": 366,
+                    "timed_count": 366,
+                    "duration_microseconds_sum": 29193.0
+                  },
+                  {
+                    "op_name": "MemcpyToHost",
+                    "count": 549,
+                    "timed_count": 549,
+                    "duration_microseconds_sum": 25864.0
+                  },
+                  {
+                    "op_name": "Unsqueeze",
+                    "count": 122,
+                    "timed_count": 122,
+                    "duration_microseconds_sum": 12377.0
+                  },
+                  {
+                    "op_name": "DequantizeLinear",
+                    "count": 61,
+                    "timed_count": 61,
+                    "duration_microseconds_sum": 10638.0
+                  },
+                  {
+                    "op_name": "Gather",
+                    "count": 61,
+                    "timed_count": 61,
+                    "duration_microseconds_sum": 9157.0
+                  },
+                  {
+                    "op_name": "Identity",
+                    "count": 61,
+                    "timed_count": 61,
+                    "duration_microseconds_sum": 9057.0
+                  },
+                  {
+                    "op_name": "Relu",
+                    "count": 61,
+                    "timed_count": 61,
+                    "duration_microseconds_sum": 6975.0
+                  },
+                  {
+                    "op_name": "Cast",
+                    "count": 244,
+                    "timed_count": 244,
+                    "duration_microseconds_sum": 6570.0
+                  },
+                  {
+                    "op_name": "Squeeze",
+                    "count": 122,
+                    "timed_count": 122,
+                    "duration_microseconds_sum": 5572.0
+                  },
+                  {
+                    "op_name": "Transpose",
+                    "count": 183,
+                    "timed_count": 183,
+                    "duration_microseconds_sum": 4812.0
+                  },
+                  {
+                    "op_name": "Split",
+                    "count": 122,
+                    "timed_count": 122,
+                    "duration_microseconds_sum": 4476.0
+                  },
+                  {
+                    "op_name": "Add",
+                    "count": 244,
+                    "timed_count": 244,
+                    "duration_microseconds_sum": 4428.0
+                  },
+                  {
+                    "op_name": "Concat",
+                    "count": 122,
+                    "timed_count": 122,
+                    "duration_microseconds_sum": 2433.0
+                  }
+                ],
+                "CPUExecutionProvider": [
+                  {
+                    "op_name": "DynamicQuantizeLSTM",
+                    "count": 122,
+                    "timed_count": 122,
+                    "duration_microseconds_sum": 129610.0
+                  },
+                  {
+                    "op_name": "MatMulInteger",
+                    "count": 183,
+                    "timed_count": 183,
+                    "duration_microseconds_sum": 67304.0
+                  },
+                  {
+                    "op_name": "DynamicQuantizeLinear",
+                    "count": 183,
+                    "timed_count": 183,
+                    "duration_microseconds_sum": 6566.0
+                  }
+                ]
+              }
+            },
+            "vad": {
+              "event_count": 18002,
+              "node_events_by_provider": {
+                "CUDAExecutionProvider": 13250,
+                "CPUExecutionProvider": 2500
+              },
+              "host_node_duration_microseconds_sum_by_provider": {
+                "CUDAExecutionProvider": 891351.0,
+                "CPUExecutionProvider": 15832.0
+              },
+              "kernel_events": {
+                "count": 0,
+                "timed_count": 0,
+                "duration_microseconds_sum": null
+              },
+              "top_node_operators_by_provider": {
+                "CUDAExecutionProvider": [
+                  {
+                    "op_name": "If",
+                    "count": 1750,
+                    "timed_count": 1750,
+                    "duration_microseconds_sum": 544296.0
+                  },
+                  {
+                    "op_name": "Conv",
+                    "count": 1500,
+                    "timed_count": 1500,
+                    "duration_microseconds_sum": 141044.0
+                  },
+                  {
+                    "op_name": "Equal",
+                    "count": 250,
+                    "timed_count": 250,
+                    "duration_microseconds_sum": 63822.0
+                  },
+                  {
+                    "op_name": "LSTM",
+                    "count": 250,
+                    "timed_count": 250,
+                    "duration_microseconds_sum": 33446.0
+                  },
+                  {
+                    "op_name": "Identity",
+                    "count": 1250,
+                    "timed_count": 1250,
+                    "duration_microseconds_sum": 15699.0
+                  },
+                  {
+                    "op_name": "Unsqueeze",
+                    "count": 2000,
+                    "timed_count": 2000,
+                    "duration_microseconds_sum": 14767.0
+                  },
+                  {
+                    "op_name": "Relu",
+                    "count": 1250,
+                    "timed_count": 1250,
+                    "duration_microseconds_sum": 13891.0
+                  },
+                  {
+                    "op_name": "Squeeze",
+                    "count": 1000,
+                    "timed_count": 1000,
+                    "duration_microseconds_sum": 11754.0
+                  },
+                  {
+                    "op_name": "ReduceMean",
+                    "count": 250,
+                    "timed_count": 250,
+                    "duration_microseconds_sum": 6542.0
+                  },
+                  {
+                    "op_name": "Shape",
+                    "count": 1000,
+                    "timed_count": 1000,
+                    "duration_microseconds_sum": 6181.0
+                  },
+                  {
+                    "op_name": "Gather",
+                    "count": 500,
+                    "timed_count": 500,
+                    "duration_microseconds_sum": 6149.0
+                  },
+                  {
+                    "op_name": "Sqrt",
+                    "count": 250,
+                    "timed_count": 250,
+                    "duration_microseconds_sum": 5804.0
+                  },
+                  {
+                    "op_name": "Pow",
+                    "count": 500,
+                    "timed_count": 500,
+                    "duration_microseconds_sum": 5650.0
+                  },
+                  {
+                    "op_name": "Split",
+                    "count": 250,
+                    "timed_count": 250,
+                    "duration_microseconds_sum": 4802.0
+                  },
+                  {
+                    "op_name": "Concat",
+                    "count": 250,
+                    "timed_count": 250,
+                    "duration_microseconds_sum": 4483.0
+                  },
+                  {
+                    "op_name": "Pad",
+                    "count": 250,
+                    "timed_count": 250,
+                    "duration_microseconds_sum": 4446.0
+                  },
+                  {
+                    "op_name": "MemcpyToHost",
+                    "count": 250,
+                    "timed_count": 250,
+                    "duration_microseconds_sum": 3058.0
+                  },
+                  {
+                    "op_name": "Add",
+                    "count": 250,
+                    "timed_count": 250,
+                    "duration_microseconds_sum": 2832.0
+                  },
+                  {
+                    "op_name": "Sigmoid",
+                    "count": 250,
+                    "timed_count": 250,
+                    "duration_microseconds_sum": 2685.0
+                  }
+                ],
+                "CPUExecutionProvider": [
+                  {
+                    "op_name": "Gather",
+                    "count": 750,
+                    "timed_count": 750,
+                    "duration_microseconds_sum": 5162.0
+                  },
+                  {
+                    "op_name": "Equal",
+                    "count": 750,
+                    "timed_count": 750,
+                    "duration_microseconds_sum": 5123.0
+                  },
+                  {
+                    "op_name": "Squeeze",
+                    "count": 250,
+                    "timed_count": 250,
+                    "duration_microseconds_sum": 1568.0
+                  },
+                  {
+                    "op_name": "Cast",
+                    "count": 250,
+                    "timed_count": 250,
+                    "duration_microseconds_sum": 1471.0
+                  },
+                  {
+                    "op_name": "Size",
+                    "count": 250,
+                    "timed_count": 250,
+                    "duration_microseconds_sum": 1277.0
+                  },
+                  {
+                    "op_name": "Not",
+                    "count": 250,
+                    "timed_count": 250,
+                    "duration_microseconds_sum": 1231.0
+                  }
+                ]
+              }
+            },
+            "preprocessor": {
+              "event_count": 88,
+              "node_events_by_provider": {
+                "CUDAExecutionProvider": 76,
+                "CPUExecutionProvider": 6
+              },
+              "host_node_duration_microseconds_sum_by_provider": {
+                "CUDAExecutionProvider": 13722.0,
+                "CPUExecutionProvider": 68.0
+              },
+              "kernel_events": {
+                "count": 0,
+                "timed_count": 0,
+                "duration_microseconds_sum": null
+              },
+              "top_node_operators_by_provider": {
+                "CUDAExecutionProvider": [
+                  {
+                    "op_name": "Where",
+                    "count": 8,
+                    "timed_count": 8,
+                    "duration_microseconds_sum": 3446.0
+                  },
+                  {
+                    "op_name": "Concat",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 2832.0
+                  },
+                  {
+                    "op_name": "FusedMatMul",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 2541.0
+                  },
+                  {
+                    "op_name": "Conv",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 1988.0
+                  },
+                  {
+                    "op_name": "Slice",
+                    "count": 6,
+                    "timed_count": 6,
+                    "duration_microseconds_sum": 826.0
+                  },
+                  {
+                    "op_name": "Range",
+                    "count": 4,
+                    "timed_count": 4,
+                    "duration_microseconds_sum": 363.0
+                  },
+                  {
+                    "op_name": "Sub",
+                    "count": 6,
+                    "timed_count": 6,
+                    "duration_microseconds_sum": 319.0
+                  },
+                  {
+                    "op_name": "Transpose",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 311.0
+                  },
+                  {
+                    "op_name": "Div",
+                    "count": 8,
+                    "timed_count": 8,
+                    "duration_microseconds_sum": 268.0
+                  },
+                  {
+                    "op_name": "ReduceSumSquare",
+                    "count": 4,
+                    "timed_count": 4,
+                    "duration_microseconds_sum": 158.0
+                  },
+                  {
+                    "op_name": "Less",
+                    "count": 4,
+                    "timed_count": 4,
+                    "duration_microseconds_sum": 117.0
+                  },
+                  {
+                    "op_name": "Add",
+                    "count": 4,
+                    "timed_count": 4,
+                    "duration_microseconds_sum": 103.0
+                  },
+                  {
+                    "op_name": "Mul",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 74.0
+                  },
+                  {
+                    "op_name": "ReduceSum",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 62.0
+                  },
+                  {
+                    "op_name": "Unsqueeze",
+                    "count": 6,
+                    "timed_count": 6,
+                    "duration_microseconds_sum": 57.0
+                  },
+                  {
+                    "op_name": "Cast",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 55.0
+                  },
+                  {
+                    "op_name": "Log",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 53.0
+                  },
+                  {
+                    "op_name": "Pad",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 53.0
+                  },
+                  {
+                    "op_name": "Shape",
+                    "count": 4,
+                    "timed_count": 4,
+                    "duration_microseconds_sum": 43.0
+                  },
+                  {
+                    "op_name": "Reshape",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 27.0
+                  },
+                  {
+                    "op_name": "Sqrt",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 26.0
+                  }
+                ],
+                "CPUExecutionProvider": [
+                  {
+                    "op_name": "Gather",
+                    "count": 2,
+                    "timed_count": 2,
+                    "duration_microseconds_sum": 38.0
+                  },
+                  {
+                    "op_name": "Squeeze",
+                    "count": 4,
+                    "timed_count": 4,
+                    "duration_microseconds_sum": 30.0
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "derived_observations": {
+          "cpu_over_gpu_median_ratio": 1.0850176330997607,
+          "gpu_lower_elapsed_percent": 7.835599211127642,
+          "same_segment_boundaries_across_cpu_gpu": true,
+          "cpu_gpu_text_word_sequence_similarity": 0.9699842022116903,
+          "similarity_is_accuracy": false
+        },
+        "limits": [
+          "Three samples per successful mode, a single short excerpt, fixed case order on one shared Colab VM.",
+          "CPU control uses NumPy preprocessing; CUDA uses ONNX Conv. This compares complete paths, not an isolated provider change.",
+          "Profiles cover their eight-second prefix, not the full two-minute timing window. Host durations are not GPU device times; Kernel events are absent.",
+          "No FP32 inference completed. No FP32 speed or quality conclusion can be drawn.",
+          "Outputs are stable within each mode but CPU/CUDA text differs; no independent listening reference was supplied."
+        ],
+        "fp32_load_fix": "Use pinned snapshot_download(local_dir=...) for FP32 to obtain ordinary sibling files; leave security checks and production defaults intact.",
+        "primary_sources": [
+          "https://raw.githubusercontent.com/microsoft/onnxruntime/v1.27.0/onnxruntime/core/framework/tensorprotoutils.cc",
+          "https://huggingface.co/docs/huggingface_hub/guides/download#download-files-to-a-local-folder"
+        ]
+      }
+    },
+    {
+      "original_name": "colab-diagnostic-ufo537-fp32-2026-10-24.json",
+      "original_sha256": "48754af7f6b77e31cf4bbe8fc0956829a291edd6119efb1231a1253dbf14f4d3",
+      "report": {
+        "schema_version": 1,
+        "evidence_kind": "operator-colab-successful-fp32-comparison-summary",
+        "analyzed_on": "2026-10-24",
+        "source_report": {
+          "original_path": "C:\\Users\\User\\Downloads\\diagnostic-report(1).json",
+          "sha256": "298d989696d5f6b13cb309bbc379cd28319896d26d1cd92e4288ecc9090e118d",
+          "bytes": 357932,
+          "preserved_unmodified": true
+        },
+        "manifest": {
+          "schema_version": 1,
+          "created_at": "2026-10-24T15:00:59.732518+00:00",
+          "source": {
+            "sha256": "ded9df3dbe81fabc8a1859c668ba082b009c25755a3b01bf164fc25fbf1fe43e",
+            "bytes": 72210096,
+            "origin": "https://sphinx.acast.com/p/acast/s/podcast-ufo/e/6ac88caf39599f7c565b9745/media.mp3",
+            "preparation_seconds": 0.7764104879988736
+          },
+          "excerpt_start_seconds": 300.0,
+          "audio": {
+            "file": "excerpt.wav",
+            "sha256": "aa5db341dec74315819c66490e00534485c2f8848266b19c7357c8410712cf36",
+            "bytes": 3840194,
+            "duration_seconds": 120.0
+          },
+          "profile_audio": {
+            "file": "profile.wav",
+            "sha256": "537e4b1d2880dbddea2f2e09a59b070cceb35bfa93223e7790b5ba502fe034bc",
+            "bytes": 256044,
+            "duration_seconds": 8.0
+          },
+          "decode_excerpt_seconds": 2.056337023999731,
+          "preparation_total_seconds": 2.832749829000022,
+          "note": "Excerpt times are relative to the excerpt, not a complete episode transcript."
+        },
+        "manifest_sha256": "f26ceb2ec8aeae8ae364e1ac573ea44f9e914fef6bda890cf038af9ff4af581e",
+        "notebook_context": {
+          "experiment_id": "95a3d6f820ca4e2387e21101abd2c241",
+          "repository_commit": "20376706ae74724ba6b543d5278714f1d9feff43",
+          "repository_branch": "integration/podcast-words-pilot",
+          "repository_status": "",
+          "dependency_setup_seconds": 1.7564978119989973,
+          "notebook_python": "3.13.16 (main, Oct  1 2026, 15:40:24) [GCC 13.3.0]",
+          "timing_cases": [
+            "cuda-int8",
+            "cuda-fp32",
+            "cpu-int8"
+          ],
+          "profile_cases": [
+            "cuda-int8",
+            "cuda-fp32"
+          ],
+          "extra_cases": [],
+          "repeats": 3,
+          "external_failures": []
+        },
+        "diagnostic_code_sha256": "1d8692f102336f0fd7acc692778d302a4773600075627942fffc8b0952cb633d",
+        "runtime": {
+          "python": "3.12.3",
+          "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+          "logical_cpu_count": 2,
+          "cpu_affinity_count": 2,
+          "packages": {
+            "onnx-asr": "0.12.0",
+            "onnxruntime-gpu": "1.27.0",
+            "numpy": "2.5.4",
+            "huggingface-hub": "2.2.0"
+          },
+          "ort_build": "ORT Build Info: git-branch=HEAD, git-commit-id=8f0278c77b, fp8-kv-cache=1, build type=Release",
+          "available_providers": [
+            "TensorrtExecutionProvider",
+            "CUDAExecutionProvider",
+            "CPUExecutionProvider"
+          ],
+          "gpu_identity": "Tesla T4, GPU-1026982e-4e84-29ba-ced2-d1fac76e1aa1, 580.82.07, 15360 MiB"
+        },
+        "model": {
+          "model_id": "nvidia/parakeet-tdt-0.6b-v3",
+          "model_revision": "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+          "export_id": "istupakov/parakeet-tdt-0.6b-v3-onnx",
+          "export_revision": "8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce",
+          "vad_id": "istupakov/silero-vad-onnx",
+          "vad_revision": "b3e3ee3cce4c11ceb63b1a0b229d916069c1ddf6",
+          "vad_options": {
+            "batch_size": 1,
+            "max_speech_duration_s": 20,
+            "min_speech_duration_ms": 250,
+            "min_silence_duration_ms": 100,
+            "speech_pad_ms": 0,
+            "threshold": 0.5
+          }
+        },
+        "timings": [
+          {
+            "case_name": "cpu-int8",
+            "case": {
+              "precision": "int8",
+              "asr_provider": "CPUExecutionProvider",
+              "vad_provider": "CPUExecutionProvider",
+              "threads": 4,
+              "batch_size": 1,
+              "preprocessing": "auto"
+            },
+            "statistics": {
+              "n": 3,
+              "median_seconds": 59.75744147700061,
+              "min_seconds": 59.18859074200009,
+              "max_seconds": 62.81172465199961,
+              "sample_stdev_seconds": 1.9484753099787642,
+              "median_real_time_factor": 0.4979786789750051,
+              "text_stable": true,
+              "timestamps_stable": true
+            },
+            "samples": [
+              {
+                "recognizer_seconds": 59.75744147700061,
+                "process_cpu_seconds": 115.38785113300001,
+                "cpu_seconds_per_wall_second": 1.9309369390824802,
+                "real_time_factor": 0.4979786789750051,
+                "text_sha256": "ea64fbe4d52a891eac8b53b9b0fcccca4cd0b7e20f009626d7722c2af5358b15",
+                "output_sha256": "5b3bed75fe31995630a88eb3ec9eb3888b05ae3095a6d93f614c9a3478c8e30b",
+                "segment_count": 26,
+                "repeat": 1
+              },
+              {
+                "recognizer_seconds": 59.18859074200009,
+                "process_cpu_seconds": 114.31167808699999,
+                "cpu_seconds_per_wall_second": 1.9313127184473524,
+                "real_time_factor": 0.49323825618333406,
+                "text_sha256": "ea64fbe4d52a891eac8b53b9b0fcccca4cd0b7e20f009626d7722c2af5358b15",
+                "output_sha256": "5b3bed75fe31995630a88eb3ec9eb3888b05ae3095a6d93f614c9a3478c8e30b",
+                "segment_count": 26,
+                "repeat": 2
+              },
+              {
+                "recognizer_seconds": 62.81172465199961,
+                "process_cpu_seconds": 121.189504091,
+                "cpu_seconds_per_wall_second": 1.9294089560895689,
+                "real_time_factor": 0.5234310387666634,
+                "text_sha256": "ea64fbe4d52a891eac8b53b9b0fcccca4cd0b7e20f009626d7722c2af5358b15",
+                "output_sha256": "5b3bed75fe31995630a88eb3ec9eb3888b05ae3095a6d93f614c9a3478c8e30b",
+                "segment_count": 26,
+                "repeat": 3
+              }
+            ],
+            "warmup": {
+              "recognizer_seconds": 60.009527544001685,
+              "process_cpu_seconds": 115.722050044,
+              "cpu_seconds_per_wall_second": 1.92839461965681,
+              "real_time_factor": 0.5000793962000141,
+              "text_sha256": "ea64fbe4d52a891eac8b53b9b0fcccca4cd0b7e20f009626d7722c2af5358b15",
+              "output_sha256": "5b3bed75fe31995630a88eb3ec9eb3888b05ae3095a6d93f614c9a3478c8e30b",
+              "segment_count": 26,
+              "included_in_statistics": false
+            },
+            "setup": {
+              "downloads_seconds": 0.017632766999668092,
+              "model_storage": {
+                "layout": "hub-cache",
+                "path": "/content/podcast-words-diagnostics/model-cache/models--istupakov--parakeet-tdt-0.6b-v3-onnx/snapshots/8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce",
+                "note": "FP32 local-dir preparation may copy cached bytes; it is not timed inference."
+              },
+              "sessions_seconds": 6.310851641999761,
+              "session_providers": {
+                "encoder": [
+                  "CPUExecutionProvider"
+                ],
+                "decoder_joint": [
+                  "CPUExecutionProvider"
+                ],
+                "vad": [
+                  "CPUExecutionProvider"
+                ],
+                "resampler-8000": [
+                  "CPUExecutionProvider"
+                ],
+                "resampler-11025": [
+                  "CPUExecutionProvider"
+                ],
+                "resampler-22050": [
+                  "CPUExecutionProvider"
+                ],
+                "resampler-24000": [
+                  "CPUExecutionProvider"
+                ],
+                "resampler-32000": [
+                  "CPUExecutionProvider"
+                ],
+                "resampler-44100": [
+                  "CPUExecutionProvider"
+                ],
+                "resampler-48000": [
+                  "CPUExecutionProvider"
+                ]
+              },
+              "preprocessor_class": "NemoPreprocessorNumpy",
+              "preprocessing_note": "auto follows pinned onnx-asr defaults: NumPy for CPU; ONNX Conv for CUDA",
+              "cuda_library_preload_messages": null
+            },
+            "worker_elapsed_seconds": 251.49670969900035,
+            "timing_boundary": "List materialization of recognize(PCM WAV): includes WAV reading, VAD, preprocessing, encoder/decoder and result creation. Excludes hashes, output validation, setup, profile parsing and Drive. Warmup excluded from timing statistics."
+          },
+          {
+            "case_name": "cuda-fp32",
+            "case": {
+              "precision": "fp32",
+              "asr_provider": "CUDAExecutionProvider",
+              "vad_provider": "CUDAExecutionProvider",
+              "threads": 4,
+              "batch_size": 1,
+              "preprocessing": "auto"
+            },
+            "statistics": {
+              "n": 3,
+              "median_seconds": 7.076451299999462,
+              "min_seconds": 7.061053506999087,
+              "max_seconds": 7.268315807001272,
+              "sample_stdev_seconds": 0.11547491941147923,
+              "median_real_time_factor": 0.058970427499995516,
+              "text_stable": true,
+              "timestamps_stable": true
+            },
+            "samples": [
+              {
+                "recognizer_seconds": 7.061053506999087,
+                "process_cpu_seconds": 9.730469809999999,
+                "cpu_seconds_per_wall_second": 1.37804787916632,
+                "real_time_factor": 0.05884211255832573,
+                "text_sha256": "75f711ec03269dde893066bb91a0301f19e3dacc36e42e61ba9913258f20e290",
+                "output_sha256": "18e6b795aba6e876f80ce27365bae8e58840b9edab319b6200a0e2f170d336d3",
+                "segment_count": 26,
+                "repeat": 1
+              },
+              {
+                "recognizer_seconds": 7.076451299999462,
+                "process_cpu_seconds": 9.690688625999996,
+                "cpu_seconds_per_wall_second": 1.369427727991392,
+                "real_time_factor": 0.058970427499995516,
+                "text_sha256": "75f711ec03269dde893066bb91a0301f19e3dacc36e42e61ba9913258f20e290",
+                "output_sha256": "18e6b795aba6e876f80ce27365bae8e58840b9edab319b6200a0e2f170d336d3",
+                "segment_count": 26,
+                "repeat": 2
+              },
+              {
+                "recognizer_seconds": 7.268315807001272,
+                "process_cpu_seconds": 10.173795245,
+                "cpu_seconds_per_wall_second": 1.3997458992081768,
+                "real_time_factor": 0.06056929839167727,
+                "text_sha256": "75f711ec03269dde893066bb91a0301f19e3dacc36e42e61ba9913258f20e290",
+                "output_sha256": "18e6b795aba6e876f80ce27365bae8e58840b9edab319b6200a0e2f170d336d3",
+                "segment_count": 26,
+                "repeat": 3
+              }
+            ],
+            "warmup": {
+              "recognizer_seconds": 8.449701218998598,
+              "process_cpu_seconds": 10.168086864,
+              "cpu_seconds_per_wall_second": 1.2033664387017287,
+              "real_time_factor": 0.07041417682498832,
+              "text_sha256": "75f711ec03269dde893066bb91a0301f19e3dacc36e42e61ba9913258f20e290",
+              "output_sha256": "18e6b795aba6e876f80ce27365bae8e58840b9edab319b6200a0e2f170d336d3",
+              "segment_count": 26,
+              "included_in_statistics": false
+            },
+            "setup": {
+              "downloads_seconds": 16.899049647001448,
+              "model_storage": {
+                "layout": "regular-local-dir",
+                "path": "/content/podcast-words-diagnostics/model-files/8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce/fp32",
+                "note": "FP32 local-dir preparation may copy cached bytes; it is not timed inference."
+              },
+              "sessions_seconds": 13.234917543000847,
+              "session_providers": {
+                "encoder": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "decoder_joint": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "vad": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "preprocessor": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-8000": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-11025": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-22050": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-24000": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-32000": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-44100": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-48000": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ]
+              },
+              "preprocessor_class": "OnnxPreprocessor",
+              "preprocessing_note": "auto follows pinned onnx-asr defaults: NumPy for CPU; ONNX Conv for CUDA",
+              "cuda_library_preload_messages": ""
+            },
+            "worker_elapsed_seconds": 62.45831051099958,
+            "timing_boundary": "List materialization of recognize(PCM WAV): includes WAV reading, VAD, preprocessing, encoder/decoder and result creation. Excludes hashes, output validation, setup, profile parsing and Drive. Warmup excluded from timing statistics."
+          },
+          {
+            "case_name": "cuda-int8",
+            "case": {
+              "precision": "int8",
+              "asr_provider": "CUDAExecutionProvider",
+              "vad_provider": "CUDAExecutionProvider",
+              "threads": 4,
+              "batch_size": 1,
+              "preprocessing": "auto"
+            },
+            "statistics": {
+              "n": 3,
+              "median_seconds": 53.000316853000186,
+              "min_seconds": 52.823604153001725,
+              "max_seconds": 53.615507731001344,
+              "sample_stdev_seconds": 0.4156918874128572,
+              "median_real_time_factor": 0.4416693071083349,
+              "text_stable": true,
+              "timestamps_stable": true
+            },
+            "samples": [
+              {
+                "recognizer_seconds": 53.615507731001344,
+                "process_cpu_seconds": 102.51763377699999,
+                "cpu_seconds_per_wall_second": 1.9120892091771173,
+                "real_time_factor": 0.44679589775834455,
+                "text_sha256": "cae569c7eb56640d270261dbf8208b61a3e3abb7926625a50f2bd755013c1fa1",
+                "output_sha256": "98be93e6e25eb53becf765fcad8181f6100e9c9223fcb4e42f776ce319e59c1c",
+                "segment_count": 26,
+                "repeat": 1
+              },
+              {
+                "recognizer_seconds": 53.000316853000186,
+                "process_cpu_seconds": 101.37609641699999,
+                "cpu_seconds_per_wall_second": 1.912745101093889,
+                "real_time_factor": 0.4416693071083349,
+                "text_sha256": "cae569c7eb56640d270261dbf8208b61a3e3abb7926625a50f2bd755013c1fa1",
+                "output_sha256": "98be93e6e25eb53becf765fcad8181f6100e9c9223fcb4e42f776ce319e59c1c",
+                "segment_count": 26,
+                "repeat": 2
+              },
+              {
+                "recognizer_seconds": 52.823604153001725,
+                "process_cpu_seconds": 101.201610152,
+                "cpu_seconds_per_wall_second": 1.9158406885466026,
+                "real_time_factor": 0.44019670127501437,
+                "text_sha256": "cae569c7eb56640d270261dbf8208b61a3e3abb7926625a50f2bd755013c1fa1",
+                "output_sha256": "98be93e6e25eb53becf765fcad8181f6100e9c9223fcb4e42f776ce319e59c1c",
+                "segment_count": 26,
+                "repeat": 3
+              }
+            ],
+            "warmup": {
+              "recognizer_seconds": 53.64618285600045,
+              "process_cpu_seconds": 102.359247066,
+              "cpu_seconds_per_wall_second": 1.9080434360214853,
+              "real_time_factor": 0.44705152380000374,
+              "text_sha256": "cae569c7eb56640d270261dbf8208b61a3e3abb7926625a50f2bd755013c1fa1",
+              "output_sha256": "98be93e6e25eb53becf765fcad8181f6100e9c9223fcb4e42f776ce319e59c1c",
+              "segment_count": 26,
+              "included_in_statistics": false
+            },
+            "setup": {
+              "downloads_seconds": 0.008885605000614305,
+              "model_storage": {
+                "layout": "hub-cache",
+                "path": "/content/podcast-words-diagnostics/model-cache/models--istupakov--parakeet-tdt-0.6b-v3-onnx/snapshots/8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce",
+                "note": "FP32 local-dir preparation may copy cached bytes; it is not timed inference."
+              },
+              "sessions_seconds": 5.578007489000811,
+              "session_providers": {
+                "encoder": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "decoder_joint": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "vad": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "preprocessor": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-8000": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-11025": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-22050": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-24000": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-32000": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-44100": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ],
+                "resampler-48000": [
+                  "CUDAExecutionProvider",
+                  "CPUExecutionProvider"
+                ]
+              },
+              "preprocessor_class": "OnnxPreprocessor",
+              "preprocessing_note": "auto follows pinned onnx-asr defaults: NumPy for CPU; ONNX Conv for CUDA",
+              "cuda_library_preload_messages": ""
+            },
+            "worker_elapsed_seconds": 221.70698425699993,
+            "timing_boundary": "List materialization of recognize(PCM WAV): includes WAV reading, VAD, preprocessing, encoder/decoder and result creation. Excludes hashes, output validation, setup, profile parsing and Drive. Warmup excluded from timing statistics."
+          }
+        ],
+        "profiles": {
+          "cuda-fp32": {
+            "audio": {
+              "file": "profile.wav",
+              "sha256": "537e4b1d2880dbddea2f2e09a59b070cceb35bfa93223e7790b5ba502fe034bc",
+              "bytes": 256044,
+              "duration_seconds": 8.0
+            },
+            "cuda_execution_confirmed": true,
+            "event_limit_reached": false,
+            "sessions": {
+              "encoder": {
+                "event_count": 4000,
+                "node_events_by_provider": {
+                  "CUDAExecutionProvider": 3030,
+                  "CPUExecutionProvider": 964
+                },
+                "host_node_duration_microseconds_sum_by_provider": {
+                  "CUDAExecutionProvider": 335817.0,
+                  "CPUExecutionProvider": 9888.0
+                },
+                "kernel_events": {
+                  "count": 0,
+                  "timed_count": 0,
+                  "duration_microseconds_sum": null
+                },
+                "top_node_operators_by_provider": {
+                  "CUDAExecutionProvider": [
+                    {
+                      "op_name": "Conv",
+                      "count": 154,
+                      "timed_count": 154,
+                      "duration_microseconds_sum": 248113.0
+                    },
+                    {
+                      "op_name": "MatMul",
+                      "count": 482,
+                      "timed_count": 482,
+                      "duration_microseconds_sum": 32587.0
+                    },
+                    {
+                      "op_name": "Softmax",
+                      "count": 48,
+                      "timed_count": 48,
+                      "duration_microseconds_sum": 9400.0
+                    },
+                    {
+                      "op_name": "Transpose",
+                      "count": 390,
+                      "timed_count": 390,
+                      "duration_microseconds_sum": 7764.0
+                    },
+                    {
+                      "op_name": "LayerNormalization",
+                      "count": 240,
+                      "timed_count": 240,
+                      "duration_microseconds_sum": 6549.0
+                    },
+                    {
+                      "op_name": "Add",
+                      "count": 350,
+                      "timed_count": 350,
+                      "duration_microseconds_sum": 6272.0
+                    },
+                    {
+                      "op_name": "QuickGelu",
+                      "count": 144,
+                      "timed_count": 144,
+                      "duration_microseconds_sum": 3454.0
+                    },
+                    {
+                      "op_name": "Reshape",
+                      "count": 338,
+                      "timed_count": 338,
+                      "duration_microseconds_sum": 3360.0
+                    },
+                    {
+                      "op_name": "FusedMatMul",
+                      "count": 96,
+                      "timed_count": 96,
+                      "duration_microseconds_sum": 3026.0
+                    },
+                    {
+                      "op_name": "Where",
+                      "count": 144,
+                      "timed_count": 144,
+                      "duration_microseconds_sum": 2728.0
+                    },
+                    {
+                      "op_name": "Slice",
+                      "count": 102,
+                      "timed_count": 102,
+                      "duration_microseconds_sum": 2358.0
+                    },
+                    {
+                      "op_name": "Shape",
+                      "count": 200,
+                      "timed_count": 200,
+                      "duration_microseconds_sum": 1873.0
+                    },
+                    {
+                      "op_name": "Pad",
+                      "count": 96,
+                      "timed_count": 96,
+                      "duration_microseconds_sum": 1726.0
+                    },
+                    {
+                      "op_name": "Split",
+                      "count": 48,
+                      "timed_count": 48,
+                      "duration_microseconds_sum": 1602.0
+                    },
+                    {
+                      "op_name": "Div",
+                      "count": 54,
+                      "timed_count": 54,
+                      "duration_microseconds_sum": 876.0
+                    },
+                    {
+                      "op_name": "Mul",
+                      "count": 48,
+                      "timed_count": 48,
+                      "duration_microseconds_sum": 835.0
+                    },
+                    {
+                      "op_name": "Sigmoid",
+                      "count": 48,
+                      "timed_count": 48,
+                      "duration_microseconds_sum": 816.0
+                    },
+                    {
+                      "op_name": "ConstantOfShape",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 784.0
+                    },
+                    {
+                      "op_name": "Expand",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 730.0
+                    },
+                    {
+                      "op_name": "Cast",
+                      "count": 8,
+                      "timed_count": 8,
+                      "duration_microseconds_sum": 197.0
+                    },
+                    {
+                      "op_name": "Relu",
+                      "count": 6,
+                      "timed_count": 6,
+                      "duration_microseconds_sum": 149.0
+                    },
+                    {
+                      "op_name": "And",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 103.0
+                    },
+                    {
+                      "op_name": "Not",
+                      "count": 4,
+                      "timed_count": 4,
+                      "duration_microseconds_sum": 96.0
+                    },
+                    {
+                      "op_name": "MemcpyToHost",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 95.0
+                    },
+                    {
+                      "op_name": "Unsqueeze",
+                      "count": 10,
+                      "timed_count": 10,
+                      "duration_microseconds_sum": 94.0
+                    }
+                  ],
+                  "CPUExecutionProvider": [
+                    {
+                      "op_name": "Unsqueeze",
+                      "count": 350,
+                      "timed_count": 350,
+                      "duration_microseconds_sum": 3149.0
+                    },
+                    {
+                      "op_name": "Gather",
+                      "count": 298,
+                      "timed_count": 298,
+                      "duration_microseconds_sum": 2877.0
+                    },
+                    {
+                      "op_name": "Concat",
+                      "count": 202,
+                      "timed_count": 202,
+                      "duration_microseconds_sum": 2444.0
+                    },
+                    {
+                      "op_name": "Slice",
+                      "count": 48,
+                      "timed_count": 48,
+                      "duration_microseconds_sum": 625.0
+                    },
+                    {
+                      "op_name": "Squeeze",
+                      "count": 48,
+                      "timed_count": 48,
+                      "duration_microseconds_sum": 415.0
+                    },
+                    {
+                      "op_name": "Transpose",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 129.0
+                    },
+                    {
+                      "op_name": "Where",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 82.0
+                    },
+                    {
+                      "op_name": "Sub",
+                      "count": 4,
+                      "timed_count": 4,
+                      "duration_microseconds_sum": 42.0
+                    },
+                    {
+                      "op_name": "And",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 37.0
+                    },
+                    {
+                      "op_name": "Tile",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 26.0
+                    },
+                    {
+                      "op_name": "Add",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 25.0
+                    },
+                    {
+                      "op_name": "Equal",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 24.0
+                    },
+                    {
+                      "op_name": "Reshape",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 13.0
+                    }
+                  ]
+                }
+              },
+              "decoder_joint": {
+                "event_count": 1502,
+                "node_events_by_provider": {
+                  "CUDAExecutionProvider": 1380
+                },
+                "host_node_duration_microseconds_sum_by_provider": {
+                  "CUDAExecutionProvider": 37892.0
+                },
+                "kernel_events": {
+                  "count": 0,
+                  "timed_count": 0,
+                  "duration_microseconds_sum": null
+                },
+                "top_node_operators_by_provider": {
+                  "CUDAExecutionProvider": [
+                    {
+                      "op_name": "LSTM",
+                      "count": 120,
+                      "timed_count": 120,
+                      "duration_microseconds_sum": 15942.0
+                    },
+                    {
+                      "op_name": "Split",
+                      "count": 120,
+                      "timed_count": 120,
+                      "duration_microseconds_sum": 3718.0
+                    },
+                    {
+                      "op_name": "Add",
+                      "count": 240,
+                      "timed_count": 240,
+                      "duration_microseconds_sum": 3386.0
+                    },
+                    {
+                      "op_name": "MatMul",
+                      "count": 120,
+                      "timed_count": 120,
+                      "duration_microseconds_sum": 2954.0
+                    },
+                    {
+                      "op_name": "Concat",
+                      "count": 120,
+                      "timed_count": 120,
+                      "duration_microseconds_sum": 2739.0
+                    },
+                    {
+                      "op_name": "Transpose",
+                      "count": 120,
+                      "timed_count": 120,
+                      "duration_microseconds_sum": 1901.0
+                    },
+                    {
+                      "op_name": "Identity",
+                      "count": 60,
+                      "timed_count": 60,
+                      "duration_microseconds_sum": 1602.0
+                    },
+                    {
+                      "op_name": "FusedMatMul",
+                      "count": 60,
+                      "timed_count": 60,
+                      "duration_microseconds_sum": 1337.0
+                    },
+                    {
+                      "op_name": "Squeeze",
+                      "count": 120,
+                      "timed_count": 120,
+                      "duration_microseconds_sum": 999.0
+                    },
+                    {
+                      "op_name": "Unsqueeze",
+                      "count": 120,
+                      "timed_count": 120,
+                      "duration_microseconds_sum": 898.0
+                    },
+                    {
+                      "op_name": "Gather",
+                      "count": 60,
+                      "timed_count": 60,
+                      "duration_microseconds_sum": 860.0
+                    },
+                    {
+                      "op_name": "Cast",
+                      "count": 60,
+                      "timed_count": 60,
+                      "duration_microseconds_sum": 825.0
+                    },
+                    {
+                      "op_name": "Relu",
+                      "count": 60,
+                      "timed_count": 60,
+                      "duration_microseconds_sum": 731.0
+                    }
+                  ]
+                }
+              },
+              "vad": {
+                "event_count": 18002,
+                "node_events_by_provider": {
+                  "CUDAExecutionProvider": 13250,
+                  "CPUExecutionProvider": 2500
+                },
+                "host_node_duration_microseconds_sum_by_provider": {
+                  "CUDAExecutionProvider": 1115933.0,
+                  "CPUExecutionProvider": 16709.0
+                },
+                "kernel_events": {
+                  "count": 0,
+                  "timed_count": 0,
+                  "duration_microseconds_sum": null
+                },
+                "top_node_operators_by_provider": {
+                  "CUDAExecutionProvider": [
+                    {
+                      "op_name": "If",
+                      "count": 1750,
+                      "timed_count": 1750,
+                      "duration_microseconds_sum": 657239.0
+                    },
+                    {
+                      "op_name": "Conv",
+                      "count": 1500,
+                      "timed_count": 1500,
+                      "duration_microseconds_sum": 207842.0
+                    },
+                    {
+                      "op_name": "Equal",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 86132.0
+                    },
+                    {
+                      "op_name": "LSTM",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 40378.0
+                    },
+                    {
+                      "op_name": "Identity",
+                      "count": 1250,
+                      "timed_count": 1250,
+                      "duration_microseconds_sum": 17583.0
+                    },
+                    {
+                      "op_name": "Unsqueeze",
+                      "count": 2000,
+                      "timed_count": 2000,
+                      "duration_microseconds_sum": 15905.0
+                    },
+                    {
+                      "op_name": "Relu",
+                      "count": 1250,
+                      "timed_count": 1250,
+                      "duration_microseconds_sum": 15126.0
+                    },
+                    {
+                      "op_name": "Squeeze",
+                      "count": 1000,
+                      "timed_count": 1000,
+                      "duration_microseconds_sum": 12460.0
+                    },
+                    {
+                      "op_name": "Sqrt",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 10873.0
+                    },
+                    {
+                      "op_name": "ReduceMean",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 7792.0
+                    },
+                    {
+                      "op_name": "Gather",
+                      "count": 500,
+                      "timed_count": 500,
+                      "duration_microseconds_sum": 6742.0
+                    },
+                    {
+                      "op_name": "Shape",
+                      "count": 1000,
+                      "timed_count": 1000,
+                      "duration_microseconds_sum": 6567.0
+                    },
+                    {
+                      "op_name": "Pow",
+                      "count": 500,
+                      "timed_count": 500,
+                      "duration_microseconds_sum": 6031.0
+                    },
+                    {
+                      "op_name": "Split",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 5675.0
+                    },
+                    {
+                      "op_name": "Pad",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 5205.0
+                    },
+                    {
+                      "op_name": "Concat",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 5111.0
+                    },
+                    {
+                      "op_name": "Add",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 3174.0
+                    },
+                    {
+                      "op_name": "MemcpyToHost",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 3124.0
+                    },
+                    {
+                      "op_name": "Sigmoid",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 2974.0
+                    }
+                  ],
+                  "CPUExecutionProvider": [
+                    {
+                      "op_name": "Equal",
+                      "count": 750,
+                      "timed_count": 750,
+                      "duration_microseconds_sum": 5347.0
+                    },
+                    {
+                      "op_name": "Gather",
+                      "count": 750,
+                      "timed_count": 750,
+                      "duration_microseconds_sum": 5330.0
+                    },
+                    {
+                      "op_name": "Squeeze",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 1777.0
+                    },
+                    {
+                      "op_name": "Cast",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 1517.0
+                    },
+                    {
+                      "op_name": "Size",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 1446.0
+                    },
+                    {
+                      "op_name": "Not",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 1292.0
+                    }
+                  ]
+                }
+              },
+              "preprocessor": {
+                "event_count": 88,
+                "node_events_by_provider": {
+                  "CUDAExecutionProvider": 76,
+                  "CPUExecutionProvider": 6
+                },
+                "host_node_duration_microseconds_sum_by_provider": {
+                  "CUDAExecutionProvider": 24561.0,
+                  "CPUExecutionProvider": 47.0
+                },
+                "kernel_events": {
+                  "count": 0,
+                  "timed_count": 0,
+                  "duration_microseconds_sum": null
+                },
+                "top_node_operators_by_provider": {
+                  "CUDAExecutionProvider": [
+                    {
+                      "op_name": "Where",
+                      "count": 8,
+                      "timed_count": 8,
+                      "duration_microseconds_sum": 7721.0
+                    },
+                    {
+                      "op_name": "FusedMatMul",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 7054.0
+                    },
+                    {
+                      "op_name": "Concat",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 3587.0
+                    },
+                    {
+                      "op_name": "Conv",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 2137.0
+                    },
+                    {
+                      "op_name": "Slice",
+                      "count": 6,
+                      "timed_count": 6,
+                      "duration_microseconds_sum": 1486.0
+                    },
+                    {
+                      "op_name": "Transpose",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 494.0
+                    },
+                    {
+                      "op_name": "Sub",
+                      "count": 6,
+                      "timed_count": 6,
+                      "duration_microseconds_sum": 400.0
+                    },
+                    {
+                      "op_name": "Div",
+                      "count": 8,
+                      "timed_count": 8,
+                      "duration_microseconds_sum": 395.0
+                    },
+                    {
+                      "op_name": "Range",
+                      "count": 4,
+                      "timed_count": 4,
+                      "duration_microseconds_sum": 373.0
+                    },
+                    {
+                      "op_name": "ReduceSumSquare",
+                      "count": 4,
+                      "timed_count": 4,
+                      "duration_microseconds_sum": 213.0
+                    },
+                    {
+                      "op_name": "Add",
+                      "count": 4,
+                      "timed_count": 4,
+                      "duration_microseconds_sum": 113.0
+                    },
+                    {
+                      "op_name": "Less",
+                      "count": 4,
+                      "timed_count": 4,
+                      "duration_microseconds_sum": 103.0
+                    },
+                    {
+                      "op_name": "Mul",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 78.0
+                    },
+                    {
+                      "op_name": "Cast",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 63.0
+                    },
+                    {
+                      "op_name": "Unsqueeze",
+                      "count": 6,
+                      "timed_count": 6,
+                      "duration_microseconds_sum": 62.0
+                    },
+                    {
+                      "op_name": "ReduceSum",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 62.0
+                    },
+                    {
+                      "op_name": "Log",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 58.0
+                    },
+                    {
+                      "op_name": "Pad",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 58.0
+                    },
+                    {
+                      "op_name": "Shape",
+                      "count": 4,
+                      "timed_count": 4,
+                      "duration_microseconds_sum": 48.0
+                    },
+                    {
+                      "op_name": "Sqrt",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 31.0
+                    },
+                    {
+                      "op_name": "Reshape",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 25.0
+                    }
+                  ],
+                  "CPUExecutionProvider": [
+                    {
+                      "op_name": "Squeeze",
+                      "count": 4,
+                      "timed_count": 4,
+                      "duration_microseconds_sum": 27.0
+                    },
+                    {
+                      "op_name": "Gather",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 20.0
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "cuda-int8": {
+            "audio": {
+              "file": "profile.wav",
+              "sha256": "537e4b1d2880dbddea2f2e09a59b070cceb35bfa93223e7790b5ba502fe034bc",
+              "bytes": 256044,
+              "duration_seconds": 8.0
+            },
+            "cuda_execution_confirmed": true,
+            "event_limit_reached": false,
+            "sessions": {
+              "encoder": {
+                "event_count": 7796,
+                "node_events_by_provider": {
+                  "CUDAExecutionProvider": 5792,
+                  "CPUExecutionProvider": 1998
+                },
+                "host_node_duration_microseconds_sum_by_provider": {
+                  "CUDAExecutionProvider": 368812.0,
+                  "CPUExecutionProvider": 3445086.0
+                },
+                "kernel_events": {
+                  "count": 0,
+                  "timed_count": 0,
+                  "duration_microseconds_sum": null
+                },
+                "top_node_operators_by_provider": {
+                  "CUDAExecutionProvider": [
+                    {
+                      "op_name": "MemcpyFromHost",
+                      "count": 1036,
+                      "timed_count": 1036,
+                      "duration_microseconds_sum": 141933.0
+                    },
+                    {
+                      "op_name": "Mul",
+                      "count": 1320,
+                      "timed_count": 1320,
+                      "duration_microseconds_sum": 47484.0
+                    },
+                    {
+                      "op_name": "Cast",
+                      "count": 596,
+                      "timed_count": 596,
+                      "duration_microseconds_sum": 31659.0
+                    },
+                    {
+                      "op_name": "MemcpyToHost",
+                      "count": 448,
+                      "timed_count": 448,
+                      "duration_microseconds_sum": 21073.0
+                    },
+                    {
+                      "op_name": "Add",
+                      "count": 360,
+                      "timed_count": 360,
+                      "duration_microseconds_sum": 20089.0
+                    },
+                    {
+                      "op_name": "Transpose",
+                      "count": 390,
+                      "timed_count": 390,
+                      "duration_microseconds_sum": 16400.0
+                    },
+                    {
+                      "op_name": "LayerNormalization",
+                      "count": 192,
+                      "timed_count": 192,
+                      "duration_microseconds_sum": 12009.0
+                    },
+                    {
+                      "op_name": "MatMul",
+                      "count": 144,
+                      "timed_count": 144,
+                      "duration_microseconds_sum": 11749.0
+                    },
+                    {
+                      "op_name": "SkipLayerNormalization",
+                      "count": 48,
+                      "timed_count": 48,
+                      "duration_microseconds_sum": 11241.0
+                    },
+                    {
+                      "op_name": "Softmax",
+                      "count": 48,
+                      "timed_count": 48,
+                      "duration_microseconds_sum": 8550.0
+                    },
+                    {
+                      "op_name": "Shape",
+                      "count": 200,
+                      "timed_count": 200,
+                      "duration_microseconds_sum": 7713.0
+                    },
+                    {
+                      "op_name": "Div",
+                      "count": 54,
+                      "timed_count": 54,
+                      "duration_microseconds_sum": 7334.0
+                    },
+                    {
+                      "op_name": "Reshape",
+                      "count": 338,
+                      "timed_count": 338,
+                      "duration_microseconds_sum": 6905.0
+                    },
+                    {
+                      "op_name": "Where",
+                      "count": 144,
+                      "timed_count": 144,
+                      "duration_microseconds_sum": 5279.0
+                    },
+                    {
+                      "op_name": "Pad",
+                      "count": 96,
+                      "timed_count": 96,
+                      "duration_microseconds_sum": 4800.0
+                    },
+                    {
+                      "op_name": "Slice",
+                      "count": 102,
+                      "timed_count": 102,
+                      "duration_microseconds_sum": 3907.0
+                    },
+                    {
+                      "op_name": "QuickGelu",
+                      "count": 144,
+                      "timed_count": 144,
+                      "duration_microseconds_sum": 3648.0
+                    },
+                    {
+                      "op_name": "Expand",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 2615.0
+                    },
+                    {
+                      "op_name": "Split",
+                      "count": 48,
+                      "timed_count": 48,
+                      "duration_microseconds_sum": 2095.0
+                    },
+                    {
+                      "op_name": "Sigmoid",
+                      "count": 48,
+                      "timed_count": 48,
+                      "duration_microseconds_sum": 1087.0
+                    },
+                    {
+                      "op_name": "ConstantOfShape",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 585.0
+                    },
+                    {
+                      "op_name": "Unsqueeze",
+                      "count": 10,
+                      "timed_count": 10,
+                      "duration_microseconds_sum": 125.0
+                    },
+                    {
+                      "op_name": "Relu",
+                      "count": 6,
+                      "timed_count": 6,
+                      "duration_microseconds_sum": 116.0
+                    },
+                    {
+                      "op_name": "Not",
+                      "count": 4,
+                      "timed_count": 4,
+                      "duration_microseconds_sum": 114.0
+                    },
+                    {
+                      "op_name": "Floor",
+                      "count": 6,
+                      "timed_count": 6,
+                      "duration_microseconds_sum": 101.0
+                    }
+                  ],
+                  "CPUExecutionProvider": [
+                    {
+                      "op_name": "MatMulInteger",
+                      "count": 434,
+                      "timed_count": 434,
+                      "duration_microseconds_sum": 2012388.0
+                    },
+                    {
+                      "op_name": "ConvInteger",
+                      "count": 154,
+                      "timed_count": 154,
+                      "duration_microseconds_sum": 1348998.0
+                    },
+                    {
+                      "op_name": "DynamicQuantizeLinear",
+                      "count": 446,
+                      "timed_count": 446,
+                      "duration_microseconds_sum": 61401.0
+                    },
+                    {
+                      "op_name": "Gather",
+                      "count": 298,
+                      "timed_count": 298,
+                      "duration_microseconds_sum": 7771.0
+                    },
+                    {
+                      "op_name": "Unsqueeze",
+                      "count": 350,
+                      "timed_count": 350,
+                      "duration_microseconds_sum": 6353.0
+                    },
+                    {
+                      "op_name": "Concat",
+                      "count": 202,
+                      "timed_count": 202,
+                      "duration_microseconds_sum": 5758.0
+                    },
+                    {
+                      "op_name": "Slice",
+                      "count": 48,
+                      "timed_count": 48,
+                      "duration_microseconds_sum": 1488.0
+                    },
+                    {
+                      "op_name": "Squeeze",
+                      "count": 48,
+                      "timed_count": 48,
+                      "duration_microseconds_sum": 649.0
+                    },
+                    {
+                      "op_name": "Where",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 62.0
+                    },
+                    {
+                      "op_name": "Sub",
+                      "count": 4,
+                      "timed_count": 4,
+                      "duration_microseconds_sum": 42.0
+                    },
+                    {
+                      "op_name": "Add",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 37.0
+                    },
+                    {
+                      "op_name": "Transpose",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 37.0
+                    },
+                    {
+                      "op_name": "Equal",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 29.0
+                    },
+                    {
+                      "op_name": "And",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 27.0
+                    },
+                    {
+                      "op_name": "Tile",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 27.0
+                    },
+                    {
+                      "op_name": "Reshape",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 19.0
+                    }
+                  ]
+                }
+              },
+              "decoder_joint": {
+                "event_count": 3662,
+                "node_events_by_provider": {
+                  "CUDAExecutionProvider": 3050,
+                  "CPUExecutionProvider": 488
+                },
+                "host_node_duration_microseconds_sum_by_provider": {
+                  "CUDAExecutionProvider": 234127.0,
+                  "CPUExecutionProvider": 422507.0
+                },
+                "kernel_events": {
+                  "count": 0,
+                  "timed_count": 0,
+                  "duration_microseconds_sum": null
+                },
+                "top_node_operators_by_provider": {
+                  "CUDAExecutionProvider": [
+                    {
+                      "op_name": "MemcpyFromHost",
+                      "count": 732,
+                      "timed_count": 732,
+                      "duration_microseconds_sum": 79284.0
+                    },
+                    {
+                      "op_name": "MemcpyToHost",
+                      "count": 549,
+                      "timed_count": 549,
+                      "duration_microseconds_sum": 28690.0
+                    },
+                    {
+                      "op_name": "Add",
+                      "count": 244,
+                      "timed_count": 244,
+                      "duration_microseconds_sum": 24583.0
+                    },
+                    {
+                      "op_name": "Cast",
+                      "count": 244,
+                      "timed_count": 244,
+                      "duration_microseconds_sum": 23361.0
+                    },
+                    {
+                      "op_name": "Split",
+                      "count": 122,
+                      "timed_count": 122,
+                      "duration_microseconds_sum": 17358.0
+                    },
+                    {
+                      "op_name": "Transpose",
+                      "count": 183,
+                      "timed_count": 183,
+                      "duration_microseconds_sum": 16587.0
+                    },
+                    {
+                      "op_name": "Mul",
+                      "count": 366,
+                      "timed_count": 366,
+                      "duration_microseconds_sum": 11945.0
+                    },
+                    {
+                      "op_name": "Concat",
+                      "count": 122,
+                      "timed_count": 122,
+                      "duration_microseconds_sum": 9151.0
+                    },
+                    {
+                      "op_name": "Relu",
+                      "count": 61,
+                      "timed_count": 61,
+                      "duration_microseconds_sum": 7124.0
+                    },
+                    {
+                      "op_name": "DequantizeLinear",
+                      "count": 61,
+                      "timed_count": 61,
+                      "duration_microseconds_sum": 5805.0
+                    },
+                    {
+                      "op_name": "Gather",
+                      "count": 61,
+                      "timed_count": 61,
+                      "duration_microseconds_sum": 5435.0
+                    },
+                    {
+                      "op_name": "Squeeze",
+                      "count": 122,
+                      "timed_count": 122,
+                      "duration_microseconds_sum": 1915.0
+                    },
+                    {
+                      "op_name": "Unsqueeze",
+                      "count": 122,
+                      "timed_count": 122,
+                      "duration_microseconds_sum": 1603.0
+                    },
+                    {
+                      "op_name": "Identity",
+                      "count": 61,
+                      "timed_count": 61,
+                      "duration_microseconds_sum": 1286.0
+                    }
+                  ],
+                  "CPUExecutionProvider": [
+                    {
+                      "op_name": "DynamicQuantizeLSTM",
+                      "count": 122,
+                      "timed_count": 122,
+                      "duration_microseconds_sum": 216081.0
+                    },
+                    {
+                      "op_name": "MatMulInteger",
+                      "count": 183,
+                      "timed_count": 183,
+                      "duration_microseconds_sum": 175997.0
+                    },
+                    {
+                      "op_name": "DynamicQuantizeLinear",
+                      "count": 183,
+                      "timed_count": 183,
+                      "duration_microseconds_sum": 30429.0
+                    }
+                  ]
+                }
+              },
+              "vad": {
+                "event_count": 18002,
+                "node_events_by_provider": {
+                  "CUDAExecutionProvider": 13250,
+                  "CPUExecutionProvider": 2500
+                },
+                "host_node_duration_microseconds_sum_by_provider": {
+                  "CUDAExecutionProvider": 1038235.0,
+                  "CPUExecutionProvider": 17533.0
+                },
+                "kernel_events": {
+                  "count": 0,
+                  "timed_count": 0,
+                  "duration_microseconds_sum": null
+                },
+                "top_node_operators_by_provider": {
+                  "CUDAExecutionProvider": [
+                    {
+                      "op_name": "If",
+                      "count": 1750,
+                      "timed_count": 1750,
+                      "duration_microseconds_sum": 629328.0
+                    },
+                    {
+                      "op_name": "Conv",
+                      "count": 1500,
+                      "timed_count": 1500,
+                      "duration_microseconds_sum": 162422.0
+                    },
+                    {
+                      "op_name": "Equal",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 73088.0
+                    },
+                    {
+                      "op_name": "LSTM",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 42448.0
+                    },
+                    {
+                      "op_name": "Unsqueeze",
+                      "count": 2000,
+                      "timed_count": 2000,
+                      "duration_microseconds_sum": 20484.0
+                    },
+                    {
+                      "op_name": "Identity",
+                      "count": 1250,
+                      "timed_count": 1250,
+                      "duration_microseconds_sum": 18837.0
+                    },
+                    {
+                      "op_name": "Relu",
+                      "count": 1250,
+                      "timed_count": 1250,
+                      "duration_microseconds_sum": 15782.0
+                    },
+                    {
+                      "op_name": "Squeeze",
+                      "count": 1000,
+                      "timed_count": 1000,
+                      "duration_microseconds_sum": 13319.0
+                    },
+                    {
+                      "op_name": "ReduceMean",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 7537.0
+                    },
+                    {
+                      "op_name": "Concat",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 7193.0
+                    },
+                    {
+                      "op_name": "Gather",
+                      "count": 500,
+                      "timed_count": 500,
+                      "duration_microseconds_sum": 7068.0
+                    },
+                    {
+                      "op_name": "Sqrt",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 7051.0
+                    },
+                    {
+                      "op_name": "Shape",
+                      "count": 1000,
+                      "timed_count": 1000,
+                      "duration_microseconds_sum": 6946.0
+                    },
+                    {
+                      "op_name": "Pow",
+                      "count": 500,
+                      "timed_count": 500,
+                      "duration_microseconds_sum": 6405.0
+                    },
+                    {
+                      "op_name": "Split",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 5682.0
+                    },
+                    {
+                      "op_name": "Pad",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 4931.0
+                    },
+                    {
+                      "op_name": "MemcpyToHost",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 3575.0
+                    },
+                    {
+                      "op_name": "Add",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 3089.0
+                    },
+                    {
+                      "op_name": "Sigmoid",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 3050.0
+                    }
+                  ],
+                  "CPUExecutionProvider": [
+                    {
+                      "op_name": "Equal",
+                      "count": 750,
+                      "timed_count": 750,
+                      "duration_microseconds_sum": 5853.0
+                    },
+                    {
+                      "op_name": "Gather",
+                      "count": 750,
+                      "timed_count": 750,
+                      "duration_microseconds_sum": 5590.0
+                    },
+                    {
+                      "op_name": "Squeeze",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 1745.0
+                    },
+                    {
+                      "op_name": "Cast",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 1533.0
+                    },
+                    {
+                      "op_name": "Size",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 1442.0
+                    },
+                    {
+                      "op_name": "Not",
+                      "count": 250,
+                      "timed_count": 250,
+                      "duration_microseconds_sum": 1370.0
+                    }
+                  ]
+                }
+              },
+              "preprocessor": {
+                "event_count": 88,
+                "node_events_by_provider": {
+                  "CUDAExecutionProvider": 76,
+                  "CPUExecutionProvider": 6
+                },
+                "host_node_duration_microseconds_sum_by_provider": {
+                  "CUDAExecutionProvider": 16318.0,
+                  "CPUExecutionProvider": 49.0
+                },
+                "kernel_events": {
+                  "count": 0,
+                  "timed_count": 0,
+                  "duration_microseconds_sum": null
+                },
+                "top_node_operators_by_provider": {
+                  "CUDAExecutionProvider": [
+                    {
+                      "op_name": "Conv",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 3949.0
+                    },
+                    {
+                      "op_name": "Where",
+                      "count": 8,
+                      "timed_count": 8,
+                      "duration_microseconds_sum": 3749.0
+                    },
+                    {
+                      "op_name": "Concat",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 2938.0
+                    },
+                    {
+                      "op_name": "FusedMatMul",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 2575.0
+                    },
+                    {
+                      "op_name": "Slice",
+                      "count": 6,
+                      "timed_count": 6,
+                      "duration_microseconds_sum": 848.0
+                    },
+                    {
+                      "op_name": "Range",
+                      "count": 4,
+                      "timed_count": 4,
+                      "duration_microseconds_sum": 477.0
+                    },
+                    {
+                      "op_name": "Sub",
+                      "count": 6,
+                      "timed_count": 6,
+                      "duration_microseconds_sum": 368.0
+                    },
+                    {
+                      "op_name": "Transpose",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 329.0
+                    },
+                    {
+                      "op_name": "Div",
+                      "count": 8,
+                      "timed_count": 8,
+                      "duration_microseconds_sum": 259.0
+                    },
+                    {
+                      "op_name": "ReduceSumSquare",
+                      "count": 4,
+                      "timed_count": 4,
+                      "duration_microseconds_sum": 148.0
+                    },
+                    {
+                      "op_name": "Less",
+                      "count": 4,
+                      "timed_count": 4,
+                      "duration_microseconds_sum": 115.0
+                    },
+                    {
+                      "op_name": "Add",
+                      "count": 4,
+                      "timed_count": 4,
+                      "duration_microseconds_sum": 100.0
+                    },
+                    {
+                      "op_name": "Mul",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 76.0
+                    },
+                    {
+                      "op_name": "Cast",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 67.0
+                    },
+                    {
+                      "op_name": "ReduceSum",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 62.0
+                    },
+                    {
+                      "op_name": "Pad",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 56.0
+                    },
+                    {
+                      "op_name": "Unsqueeze",
+                      "count": 6,
+                      "timed_count": 6,
+                      "duration_microseconds_sum": 55.0
+                    },
+                    {
+                      "op_name": "Log",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 54.0
+                    },
+                    {
+                      "op_name": "Shape",
+                      "count": 4,
+                      "timed_count": 4,
+                      "duration_microseconds_sum": 44.0
+                    },
+                    {
+                      "op_name": "Sqrt",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 25.0
+                    },
+                    {
+                      "op_name": "Reshape",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 24.0
+                    }
+                  ],
+                  "CPUExecutionProvider": [
+                    {
+                      "op_name": "Squeeze",
+                      "count": 4,
+                      "timed_count": 4,
+                      "duration_microseconds_sum": 27.0
+                    },
+                    {
+                      "op_name": "Gather",
+                      "count": 2,
+                      "timed_count": 2,
+                      "duration_microseconds_sum": 22.0
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "comparison": {
+          "int8_cuda_over_fp32_cuda_median_ratio": 7.489674500127516,
+          "cpu_int8_over_fp32_cuda_median_ratio": 8.44454924419605,
+          "fp32_cuda_audio_seconds_per_recognition_second": 16.95765220627027,
+          "fp32_cuda_lower_recognition_time_percent": 86.64828491567992,
+          "hypothetical_4513_second_episode_recognition_seconds": 266.1408074126691,
+          "extrapolation_scope": "Linear estimate from a single two-minute excerpt; excludes decode, model preparation, validation, storage and Drive; not a measured full-episode runtime."
+        },
+        "quality": {
+          "segment_boundaries_identical_int8_cuda_fp32_cuda": true,
+          "segment_count_per_variant": 26,
+          "text_and_timestamps_stable_within_each_timing_mode": true,
+          "raw_word_sequence_similarity_int8_cuda_fp32_cuda": 0.8798751950078003,
+          "quality_judgment": "Unknown without an independent listening reference; text similarity is neither accuracy nor WER. Native token sequences and some token times differ despite identical VAD boundaries.",
+          "suggested_listening_windows_source_seconds": [
+            [
+              315.424,
+              325.632
+            ],
+            [
+              335.04,
+              340.0
+            ],
+            [
+              348.544,
+              360.0
+            ]
+          ],
+          "listening_window_note": "Source windows add the 300-second excerpt offset. Prioritize changed recognition; a simple token alignment can pair repeated subwords incorrectly and is not a timestamp ground truth."
+        },
+        "conclusion": "On this T4 and pinned runtime, the FP32 export removes the expensive encoder/decoder CPU integer path and improves median warm recognition speed 7.49-fold over INT8/CUDA on identical two-minute audio. This strongly supports the mixed INT8 CPU/CUDA execution path as the dominant performance problem in the tested configuration. It is not a complete device-time accounting or a full-episode/quality acceptance.",
+        "limits": [
+          "Three samples per timing mode, one two-minute excerpt, fixed case order on one shared Colab VM.",
+          "Profiles use a separate eight-second prefix and do not measure profiling overhead on the timing excerpt. No Kernel-device events were captured; host duration sums may overlap.",
+          "CPU control has provider-dependent NumPy preprocessing instead of CUDA ONNX Conv; it is a complete-path comparison.",
+          "Model lookup/materialization and session construction are measured separately and excluded from the recognition medians.",
+          "No independent transcript or timing reference, full FP32 episode, long-session stability or peak VRAM proof was supplied.",
+          "Production settings and accepted transcripts were not changed by this evidence review."
+        ]
+      }
+    },
+    {
+      "original_name": "colab-gpu-ufo537-2026-10-17.json",
+      "original_sha256": "e275daf3c944e4cec6c8fefe5f8a23537433d44efaf3b24e31c1ce113c5192cf",
+      "report": {
+        "schema_version": 1,
+        "evidence_kind": "operator-provided-colab-run-summary",
+        "recorded_at_local": "2026-10-17",
+        "source_report": {
+          "original_path": "notebooks/ep-5764a1149f18a8f68698fb45bb405264.json",
+          "sha256": "eb3853876c8488c1bdb139008f4a32ebafcbced58cedf7112cc221969782a657",
+          "preserved_unmodified": true
+        },
+        "episode": {
+          "podcast_id": "podcast-ufo",
+          "episode_id": "ep-5764a1149f18a8f68698fb45bb405264",
+          "title": "UFO537 Festival",
+          "audio_sha256": null,
+          "decoded_duration_seconds": null
+        },
+        "runtime": {
+          "gpu": "Tesla T4",
+          "driver": "580.82.07",
+          "cuda_build": "13.0",
+          "onnxruntime_gpu": "1.27.0",
+          "onnxruntime_build_commit": "8f0278c77b",
+          "notebook_kernel_python": "3.13.15",
+          "cli_runtime_python": "3.12.3",
+          "platform": "Linux 6.6.122+, glibc 2.39",
+          "code_revision": null
+        },
+        "run": {
+          "status": "completed",
+          "started_local": "2026-10-17 19:40:40",
+          "execution_proof": "actual-onnx-runtime-node-events",
+          "model_node_events": {
+            "CUDAExecutionProvider": 1576465,
+            "CPUExecutionProvider": 389687
+          },
+          "mixed_cpu_fallback": true,
+          "node_event_durations": "not present in supplied report; provider event counts do not measure host or device time",
+          "sessions": {
+            "encoder": {
+              "CUDAExecutionProvider": 743133,
+              "CPUExecutionProvider": 256353
+            },
+            "decoder_joint": {
+              "CUDAExecutionProvider": 833332,
+              "CPUExecutionProvider": 133334
+            },
+            "vad": {
+              "CUDAExecutionProvider": 736110,
+              "CPUExecutionProvider": 138890
+            }
+          },
+          "raw_profile_paths_recorded": true,
+          "raw_profiles_available_for_analysis": false
+        },
+        "original_36_minute_observation": {
+          "approximate_seconds": 2160,
+          "timing_boundary": "entire Colab processing/checkpoint cell, beginning with Drive catalog copy into the VM",
+          "includes": [
+            "cold audio and model work",
+            "transcription and ONNX profiling",
+            "episode, catalog and report checkpoint copies to Drive",
+            "raw ONNX profile copies to Drive"
+          ],
+          "excludes": [
+            "earlier uv dependency setup cell"
+          ],
+          "three_raw_profile_files_reported_bytes_each_approximate": 700000000,
+          "raw_profile_file_sizes_measured_locally": false
+        },
+        "resume": {
+          "status": "skipped",
+          "new_session_runtime_facts_recorded": true,
+          "new_inference_executed": false
+        },
+        "measurement_gaps": [
+          "The report contains no individual elapsed times for downloads, session creation, decoding, inference, validation, profile work or Drive copies; the operator supplied only the approximately 36-minute whole-cell boundary.",
+          "Audio SHA-256 and decoded duration are absent, so equivalence to the Windows CPU input is unverified.",
+          "The report contains no repository branch or commit, so code equivalence to the Windows CPU run is unverified.",
+          "The Drive profile files were not supplied with the report; node counts cannot establish time spent on either provider or transfer/synchronization costs.",
+          "The resume entry records a skip and runtime facts only; it does not include a second CLI run report or timing."
+        ],
+        "conclusion": "The report proves that this Colab inference executed CUDA nodes and also executed CPU nodes. It does not reproduce or explain the reported 36-minute wall time. Node counts are not elapsed time, and no optimization conclusion is supported."
+      }
+    },
+    {
+      "original_name": "colab-gpu-ufo537-runtime-2026-10-24.json",
+      "original_sha256": "93702412c7c58535bb0364fff40a06ddfafb32850e94db5149c4fe7f9483ce86",
+      "report": {
+        "schema_version": 1,
+        "evidence_kind": "derived-operator-colab-benchmark-summary",
+        "analyzed_on": "2026-10-24",
+        "source_report": {
+          "original_path": "C:\\Users\\User\\Downloads\\ep-5764a1149f18a8f68698fb45bb405264-benchmark.json",
+          "sha256": "fd101f5301cc23ccd83ec1fc8774487d0ada4f1fda719ed5862e97513246d43b",
+          "bytes": 344869,
+          "preserved_unmodified": true,
+          "schema_version": 2,
+          "benchmark_id": "60bcd9d0785d4121a6f615fc49097dfb"
+        },
+        "episode_id": "ep-5764a1149f18a8f68698fb45bb405264",
+        "provenance": {
+          "audio_sha256": "ded9df3dbe81fabc8a1859c668ba082b009c25755a3b01bf164fc25fbf1fe43e",
+          "decoded_duration_seconds": 4513.12325,
+          "model_id": "nvidia/parakeet-tdt-0.6b-v3",
+          "model_revision": "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+          "export_id": "istupakov/parakeet-tdt-0.6b-v3-onnx",
+          "export_revision": "8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce",
+          "configuration_revision": "7554acdfcd2ca517502da26aec8e0426adf31632bde1b588216662c6a77302e3",
+          "execution_providers": {
+            "encoder": [
+              "CUDAExecutionProvider",
+              "CPUExecutionProvider"
+            ],
+            "decoder_joint": [
+              "CUDAExecutionProvider",
+              "CPUExecutionProvider"
+            ],
+            "vad": [
+              "CUDAExecutionProvider",
+              "CPUExecutionProvider"
+            ]
+          },
+          "runtime_versions": {
+            "python": "3.12.3",
+            "onnx-asr": "0.12.0",
+            "onnxruntime-gpu": "1.27.0",
+            "numpy": "2.5.4",
+            "huggingface-hub": "2.2.0",
+            "podcast-words": "0.1.0"
+          }
+        },
+        "audio_bytes": 72210096,
+        "audio_preparation": {
+          "source": "downloaded-current-source",
+          "local_file": "/content/podcast-words-work/runtime-benchmark-60bcd9d0785d4121a6f615fc49097dfb/source-audio.source",
+          "audio_sha256": "ded9df3dbe81fabc8a1859c668ba082b009c25755a3b01bf164fc25fbf1fe43e",
+          "payload_bytes_saved": 72210096,
+          "elapsed_seconds": 2.747528,
+          "boundary": "one download or local copy plus hashing, before any timed inference; includes helper interpreter startup when downloading",
+          "wire_bytes_downloaded": null
+        },
+        "recorded_cpu_reference": {
+          "audio_sha256": "d7f924479192f60229b5ba800227f640bb18a73527e360cc909f3657839327cf",
+          "audio_matches": false,
+          "comparison_status": "invalid-different-audio"
+        },
+        "repository": {
+          "repository_branch": "integration/podcast-words-pilot",
+          "repository_commit": "b5ce31293dd09ec1aa7cd062c6da6edcf3ba324a",
+          "setup_measurements": {
+            "pip_install_seconds": 3.343651,
+            "uv_sync_seconds": 4.896823,
+            "total_dependency_setup_seconds": 8.240475
+          }
+        },
+        "runtime": {
+          "python": "3.12.3",
+          "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+          "processor": "x86_64",
+          "logical_cpu_count": 2,
+          "execution_provider": "CUDAExecutionProvider",
+          "execution_provider_chain": [
+            "CUDAExecutionProvider",
+            "CPUExecutionProvider"
+          ],
+          "intra_op_num_threads": 4
+        },
+        "gpu": {
+          "name": "Tesla T4",
+          "memory_mib": 15360,
+          "driver": "580.82.07",
+          "nvidia_smi_cuda_version": "13.0",
+          "note": "nvidia-smi CUDA version is driver capability, not proof of the loaded CUDA/cuDNN library versions."
+        },
+        "processing_configuration": {
+          "model_id": "nvidia/parakeet-tdt-0.6b-v3",
+          "model_revision": "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+          "export_id": "istupakov/parakeet-tdt-0.6b-v3-onnx",
+          "export_revision": "8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce",
+          "quantization": "int8",
+          "vad_id": "istupakov/silero-vad-onnx",
+          "vad_revision": "b3e3ee3cce4c11ceb63b1a0b229d916069c1ddf6",
+          "vad_options": {
+            "batch_size": 1,
+            "max_speech_duration_s": 20,
+            "min_speech_duration_ms": 250,
+            "min_silence_duration_ms": 100,
+            "speech_pad_ms": 0,
+            "threshold": 0.5
+          },
+          "intra_op_num_threads": 4
+        },
+        "cache_policy": {
+          "initial_cache_state": "new unique model/VAD cache; source audio prepared once outside timed CLI runs",
+          "cold": "fresh model/VAD cache; frozen audio provided locally, audio preparation measured separately",
+          "warm": "same model/VAD cache and frozen source; every timed CLI run uses --audio-file and --retranscribe",
+          "model_wire_bytes": "unavailable from snapshot_download; materialized cache bytes are reported"
+        },
+        "runs": [
+          {
+            "name": "cold-unprofiled",
+            "profile_enabled": false,
+            "wrapper_wall_seconds": 2069.460448,
+            "cli_elapsed_seconds": 2067.056621,
+            "model_setup_seconds": 14.963987,
+            "model_lookup_download_seconds": 5.958468,
+            "vad_lookup_download_seconds": 0.915979,
+            "decode_seconds": 17.168822,
+            "recognizer_generator_seconds": 2033.840151,
+            "result_validation_serialization_seconds": 0.507396,
+            "profile_finalize_and_parse_seconds": 8e-06,
+            "inference_runs": 1,
+            "skipped_runs": 0
+          },
+          {
+            "name": "warm-profiled",
+            "profile_enabled": true,
+            "wrapper_wall_seconds": 2420.526703,
+            "cli_elapsed_seconds": 2414.752179,
+            "model_setup_seconds": 6.272507,
+            "model_lookup_download_seconds": 0.00809,
+            "vad_lookup_download_seconds": 0.002926,
+            "decode_seconds": 17.43196,
+            "recognizer_generator_seconds": 2294.274706,
+            "result_validation_serialization_seconds": 0.46317,
+            "profile_finalize_and_parse_seconds": 95.813261,
+            "inference_runs": 1,
+            "skipped_runs": 0
+          },
+          {
+            "name": "warm-unprofiled",
+            "profile_enabled": false,
+            "wrapper_wall_seconds": 1949.370417,
+            "cli_elapsed_seconds": 1948.646954,
+            "model_setup_seconds": 6.008908,
+            "model_lookup_download_seconds": 0.006104,
+            "vad_lookup_download_seconds": 0.002633,
+            "decode_seconds": 16.688221,
+            "recognizer_generator_seconds": 1924.969385,
+            "result_validation_serialization_seconds": 0.451509,
+            "profile_finalize_and_parse_seconds": 6e-06,
+            "inference_runs": 1,
+            "skipped_runs": 0
+          }
+        ],
+        "derived": {
+          "warm_unprofiled_real_time_factor": 0.43193378709522284,
+          "warm_unprofiled_audio_hours_per_wall_hour": 2.3151696622879445,
+          "warm_recognizer_fraction_of_cli_elapsed": 0.987849225868546,
+          "profiled_minus_unprofiled_wrapper_seconds": 471.1562859999999,
+          "profiled_minus_unprofiled_wrapper_percent": 24.169664312701013,
+          "profile_raw_bytes_total": 2281348213,
+          "profile_parse_seconds": 60.903997,
+          "drive_copy_seconds_total": 13.500724,
+          "benchmark_total_seconds": 6456.97956,
+          "benchmark_residual_seconds": 1.3737400000003195,
+          "dependency_setup_seconds_outside_benchmark": 8.240475
+        },
+        "profile": {
+          "execution_proof": "executed-ort-node-events",
+          "model_node_events": {
+            "CUDAExecutionProvider": 1576465,
+            "CPUExecutionProvider": 389687
+          },
+          "mixed_cpu_fallback": true,
+          "sessions": {
+            "encoder": {
+              "event_count": 1000000,
+              "file_bytes": 804461611,
+              "node_events_by_provider": {
+                "CUDAExecutionProvider": 743133,
+                "CPUExecutionProvider": 256353
+              },
+              "host_node_duration_microseconds_sum_by_provider": {
+                "CUDAExecutionProvider": 46855743.0,
+                "CPUExecutionProvider": 433545910.0
+              },
+              "observed_event_timestamp_span_microseconds": {
+                "start": 3.0,
+                "end": 707513745.0,
+                "duration": 707513742.0
+              },
+              "latest_timed_event_end_microseconds": 707513787.0,
+              "kernel_events": {
+                "count": 0,
+                "timed_count": 0,
+                "duration_microseconds_sum": null
+              },
+              "top_host_node_operators_by_provider": {
+                "CUDAExecutionProvider": [
+                  {
+                    "op_name": "MemcpyFromHost",
+                    "count": 132923,
+                    "timed_count": 132923,
+                    "duration_microseconds_sum": 18656721.0
+                  },
+                  {
+                    "op_name": "Mul",
+                    "count": 169359,
+                    "timed_count": 169359,
+                    "duration_microseconds_sum": 6753222.0
+                  },
+                  {
+                    "op_name": "Cast",
+                    "count": 76469,
+                    "timed_count": 76469,
+                    "duration_microseconds_sum": 4063593.0
+                  },
+                  {
+                    "op_name": "Transpose",
+                    "count": 50036,
+                    "timed_count": 50036,
+                    "duration_microseconds_sum": 2599221.0
+                  },
+                  {
+                    "op_name": "MemcpyToHost",
+                    "count": 57481,
+                    "timed_count": 57481,
+                    "duration_microseconds_sum": 2351537.0
+                  }
+                ],
+                "CPUExecutionProvider": [
+                  {
+                    "op_name": "MatMulInteger",
+                    "count": 55683,
+                    "timed_count": 55683,
+                    "duration_microseconds_sum": 239554601.0
+                  },
+                  {
+                    "op_name": "ConvInteger",
+                    "count": 19759,
+                    "timed_count": 19759,
+                    "duration_microseconds_sum": 179618490.0
+                  },
+                  {
+                    "op_name": "DynamicQuantizeLinear",
+                    "count": 57224,
+                    "timed_count": 57224,
+                    "duration_microseconds_sum": 10922487.0
+                  },
+                  {
+                    "op_name": "Unsqueeze",
+                    "count": 44906,
+                    "timed_count": 44906,
+                    "duration_microseconds_sum": 1022771.0
+                  },
+                  {
+                    "op_name": "Gather",
+                    "count": 38234,
+                    "timed_count": 38234,
+                    "duration_microseconds_sum": 959995.0
+                  }
+                ]
+              },
+              "transfer_summary": {}
+            },
+            "decoder_joint": {
+              "event_count": 1000000,
+              "file_bytes": 769251761,
+              "node_events_by_provider": {
+                "CUDAExecutionProvider": 833332,
+                "CPUExecutionProvider": 133334
+              },
+              "host_node_duration_microseconds_sum_by_provider": {
+                "CUDAExecutionProvider": 48539801.0,
+                "CPUExecutionProvider": 62630781.0
+              },
+              "observed_event_timestamp_span_microseconds": {
+                "start": 4.0,
+                "end": 1151894711.0,
+                "duration": 1151894707.0
+              },
+              "latest_timed_event_end_microseconds": 1151894729.0,
+              "kernel_events": {
+                "count": 0,
+                "timed_count": 0,
+                "duration_microseconds_sum": null
+              },
+              "top_host_node_operators_by_provider": {
+                "CUDAExecutionProvider": [
+                  {
+                    "op_name": "MemcpyFromHost",
+                    "count": 199998,
+                    "timed_count": 199998,
+                    "duration_microseconds_sum": 11443439.0
+                  },
+                  {
+                    "op_name": "MemcpyToHost",
+                    "count": 150002,
+                    "timed_count": 150002,
+                    "duration_microseconds_sum": 7108321.0
+                  },
+                  {
+                    "op_name": "Mul",
+                    "count": 100000,
+                    "timed_count": 100000,
+                    "duration_microseconds_sum": 5912110.0
+                  },
+                  {
+                    "op_name": "Cast",
+                    "count": 66667,
+                    "timed_count": 66667,
+                    "duration_microseconds_sum": 4171648.0
+                  },
+                  {
+                    "op_name": "Add",
+                    "count": 66665,
+                    "timed_count": 66665,
+                    "duration_microseconds_sum": 4036331.0
+                  }
+                ],
+                "CPUExecutionProvider": [
+                  {
+                    "op_name": "DynamicQuantizeLSTM",
+                    "count": 33334,
+                    "timed_count": 33334,
+                    "duration_microseconds_sum": 32531632.0
+                  },
+                  {
+                    "op_name": "MatMulInteger",
+                    "count": 50000,
+                    "timed_count": 50000,
+                    "duration_microseconds_sum": 27665456.0
+                  },
+                  {
+                    "op_name": "DynamicQuantizeLinear",
+                    "count": 50000,
+                    "timed_count": 50000,
+                    "duration_microseconds_sum": 2433693.0
+                  }
+                ]
+              },
+              "transfer_summary": {}
+            },
+            "vad": {
+              "event_count": 1000000,
+              "file_bytes": 707634841,
+              "node_events_by_provider": {
+                "CUDAExecutionProvider": 736110,
+                "CPUExecutionProvider": 138890
+              },
+              "host_node_duration_microseconds_sum_by_provider": {
+                "CUDAExecutionProvider": 49420757.0,
+                "CPUExecutionProvider": 1483783.0
+              },
+              "observed_event_timestamp_span_microseconds": {
+                "start": 4.0,
+                "end": 245559355.0,
+                "duration": 245559351.0
+              },
+              "latest_timed_event_end_microseconds": 245559374.0,
+              "kernel_events": {
+                "count": 0,
+                "timed_count": 0,
+                "duration_microseconds_sum": null
+              },
+              "top_host_node_operators_by_provider": {
+                "CUDAExecutionProvider": [
+                  {
+                    "op_name": "If",
+                    "count": 97221,
+                    "timed_count": 97221,
+                    "duration_microseconds_sum": 34043149.0
+                  },
+                  {
+                    "op_name": "Conv",
+                    "count": 83334,
+                    "timed_count": 83334,
+                    "duration_microseconds_sum": 3460034.0
+                  },
+                  {
+                    "op_name": "LSTM",
+                    "count": 13889,
+                    "timed_count": 13889,
+                    "duration_microseconds_sum": 2399324.0
+                  },
+                  {
+                    "op_name": "Unsqueeze",
+                    "count": 111109,
+                    "timed_count": 111109,
+                    "duration_microseconds_sum": 1419608.0
+                  },
+                  {
+                    "op_name": "Identity",
+                    "count": 69445,
+                    "timed_count": 69445,
+                    "duration_microseconds_sum": 1399962.0
+                  }
+                ],
+                "CPUExecutionProvider": [
+                  {
+                    "op_name": "Equal",
+                    "count": 41667,
+                    "timed_count": 41667,
+                    "duration_microseconds_sum": 479248.0
+                  },
+                  {
+                    "op_name": "Gather",
+                    "count": 41667,
+                    "timed_count": 41667,
+                    "duration_microseconds_sum": 450859.0
+                  },
+                  {
+                    "op_name": "Squeeze",
+                    "count": 13889,
+                    "timed_count": 13889,
+                    "duration_microseconds_sum": 163572.0
+                  },
+                  {
+                    "op_name": "Cast",
+                    "count": 13889,
+                    "timed_count": 13889,
+                    "duration_microseconds_sum": 143202.0
+                  },
+                  {
+                    "op_name": "Size",
+                    "count": 13889,
+                    "timed_count": 13889,
+                    "duration_microseconds_sum": 131819.0
+                  }
+                ]
+              },
+              "transfer_summary": {}
+            }
+          },
+          "default_ort_event_limit_per_session": 1000000,
+          "coverage": "All three sessions reach the ORT 1.27.0 default event cap; traces are partial. Node event counts are not provider wall-time shares.",
+          "duration_limits": "Host Node event durations can overlap and include launch/wait costs; they are not device kernel durations. No device Kernel events were reported. Do not sum session durations into wall time or extrapolate full-run CPU/GPU time shares."
+        },
+        "repeat_counts": {
+          "warm_profiled_n": 1,
+          "warm_unprofiled_n": 1,
+          "cold_unprofiled_n": 1
+        },
+        "limits": [
+          "One sample per mode; variability and causal profiling overhead are not independently measured.",
+          "The historical Windows CPU input has different bytes and duration, and other comparison conditions differ; no valid historical CPU/GPU speed ratio.",
+          "The report was analyzed locally; the Colab GPU experiment was not rerun in this workspace.",
+          "Raw ORT traces were not supplied; analysis uses the report's aggregated trace summaries.",
+          "Measured Drive copy calls do not separately establish remote Drive flush/upload completion.",
+          "nvidia-smi was sampled before inference and does not measure GPU utilization during inference."
+        ],
+        "conclusion": "Recognition dominates. Expensive INT8 operators demonstrably execute on CPU while CUDA executes other nodes; this is the strongest candidate for inefficient acceleration, not a quantified explanation of all wall time. Test the pinned unquantized FP32 export on the same short audio input before changing defaults or reprocessing full episodes.",
+        "primary_sources_checked_on": "2026-10-24",
+        "primary_sources": {
+          "ort_profiler_event_limit": "https://raw.githubusercontent.com/microsoft/onnxruntime/v1.27.0/onnxruntime/core/common/profiler.cc",
+          "ort_profiling": "https://onnxruntime.ai/docs/performance/tune-performance/profiling-tools.html",
+          "ort_quantization": "https://onnxruntime.ai/docs/performance/model-optimizations/quantization.html",
+          "pinned_export_files": "https://huggingface.co/istupakov/parakeet-tdt-0.6b-v3-onnx/tree/8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce"
+        }
+      }
+    }
+  ]
+}

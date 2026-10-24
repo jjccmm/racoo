@@ -1,9 +1,10 @@
-"""Identified audio to validated episode; Windows CPU and Colab share this adapter."""
+"""Local FP32 CUDA transcription of one exact, retained audio version."""
 
 import hashlib
 import json
 import os
 import platform
+import shutil
 import subprocess
 import tempfile
 import time
@@ -19,6 +20,7 @@ from pydantic import AwareDatetime, Field, HttpUrl
 
 from podcast_words.contracts import Contract, Episode, Identifier, Source, Text
 from podcast_words.json_io import require_distinct_output, write_json
+from podcast_words.local_runtime import CUDA_OPTIONS, prepare_runtime
 
 MODEL_ID = "nvidia/parakeet-tdt-0.6b-v3"
 MODEL_REVISION = "541d1f99c6b0c3cd0b11a95167540bb8edefd82b"
@@ -34,36 +36,26 @@ VAD_OPTIONS = {
     "speech_pad_ms": 0,
     "threshold": 0.5,
 }
-EXECUTION_PROVIDER_ENV = "PODCAST_WORDS_EXECUTION_PROVIDER"
 CPU_PROVIDER = "CPUExecutionProvider"
 GPU_PROVIDER = "CUDAExecutionProvider"
 
 
 def processing_configuration() -> dict:
-    """Return the pinned runtime settings used by the public transcribe path."""
     return {
         "model_id": MODEL_ID,
         "model_revision": MODEL_REVISION,
         "export_id": EXPORT_ID,
         "export_revision": EXPORT_REVISION,
-        "quantization": "int8",
+        "quantization": "fp32",
         "vad_id": VAD_ID,
         "vad_revision": VAD_REVISION,
         "vad_options": VAD_OPTIONS.copy(),
         "intra_op_num_threads": 4,
+        "asr_provider": GPU_PROVIDER,
+        "vad_provider": CPU_PROVIDER,
+        "preprocessing": "numpy-cpu",
+        "cuda_provider_options": CUDA_OPTIONS.copy(),
     }
-
-
-def execution_provider() -> str:
-    provider = os.environ.get(EXECUTION_PROVIDER_ENV, CPU_PROVIDER)
-    if provider not in {CPU_PROVIDER, GPU_PROVIDER}:
-        raise ValueError(f"unsupported execution provider {provider!r}")
-    return provider
-
-
-def execution_provider_chain() -> list[str]:
-    provider = execution_provider()
-    return [CPU_PROVIDER] if provider == CPU_PROVIDER else [provider, CPU_PROVIDER]
 
 
 class EpisodeInput(Contract):
@@ -104,227 +96,109 @@ def download_audio(url: str, destination: Path, *, timeout: float = 30, attempts
 
 
 class Transcriber:
-    """One loaded model per run; callers may process several identified episodes."""
+    """Load FP32 once per local run; retain every transcribed audio version by hash."""
 
-    def __init__(self, cache_dir: Path, *, profile_enabled: bool | None = None):
+    def __init__(self, cache_dir: Path):
         initialization_started = time.monotonic()
+        prepare_runtime(cache_dir)
         import onnx_asr
         import onnxruntime
         from huggingface_hub import snapshot_download
 
+        if GPU_PROVIDER not in onnxruntime.get_available_providers():
+            raise RuntimeError("CUDAExecutionProvider is unavailable; local ASR requires the GPU")
         self.cache_dir = cache_dir
-        self.execution_provider = execution_provider()
-        self.profile_enabled = (
-            self.execution_provider == GPU_PROVIDER if profile_enabled is None else profile_enabled
-        )
         self.measurements = {"schema_version": 1, "model": {}, "episode": {}}
-        self.profile_measurements = {}
         self.measurements["runtime"] = {
             "python": platform.python_version(),
             "platform": platform.platform(),
             "processor": platform.processor() or None,
             "logical_cpu_count": os.cpu_count(),
-            "execution_provider": self.execution_provider,
-            "execution_provider_chain": execution_provider_chain(),
+            "execution_provider": GPU_PROVIDER,
             "intra_op_num_threads": 4,
         }
         self.measurements["processing_configuration"] = processing_configuration()
-        profile_dir = cache_dir / "profiles"
-        if self.profile_enabled:
-            profile_dir.mkdir(parents=True, exist_ok=True)
-        model_files = [
+        files = [
             "config.json",
             "vocab.txt",
-            "encoder-model.int8.onnx",
-            "decoder_joint-model.int8.onnx",
+            "encoder-model.onnx",
+            "encoder-model.onnx.data",
+            "decoder_joint-model.onnx",
         ]
-        vad_files = ["config.json", "silero_vad.onnx"]
-        model_stage, model_bytes_before = self._snapshot_stage(
-            EXPORT_ID, EXPORT_REVISION, model_files
-        )
+        local_dir = cache_dir / "models" / EXPORT_REVISION / "fp32"
+        before = [name for name in files if (local_dir / name).is_file()]
         model_started = time.monotonic()
+        # Keep graph and external data as ordinary siblings, including on newer ORT.
         model_path = snapshot_download(
             EXPORT_ID,
             revision=EXPORT_REVISION,
             cache_dir=str(cache_dir / "models"),
-            allow_patterns=model_files,
+            local_dir=str(local_dir),
+            allow_patterns=files,
         )
-        self.measurements["model"]["model_parameters_lookup_download"] = self._snapshot_result(
-            model_stage, model_started, Path(model_path), model_files, model_bytes_before
-        )
-        vad_stage, vad_bytes_before = self._snapshot_stage(VAD_ID, VAD_REVISION, vad_files)
+        self.measurements["model"]["model_parameters_lookup_download"] = {
+            "cache_status": "warm"
+            if len(before) == len(files)
+            else "partial"
+            if before
+            else "cold",
+            "elapsed_seconds": round(time.monotonic() - model_started, 6),
+            "wire_bytes_downloaded": None,
+        }
         vad_started = time.monotonic()
         vad_path = snapshot_download(
             VAD_ID,
             revision=VAD_REVISION,
             cache_dir=str(cache_dir / "models"),
-            allow_patterns=vad_files,
+            allow_patterns=["config.json", "silero_vad.onnx"],
         )
-        self.measurements["model"]["vad_lookup_download"] = self._snapshot_result(
-            vad_stage, vad_started, Path(vad_path), vad_files, vad_bytes_before
-        )
-        options = onnxruntime.SessionOptions()
-        options.intra_op_num_threads = 4
-        if self.profile_enabled:
-            options.enable_profiling = True
-            options.profile_file_prefix = str(profile_dir / "onnxruntime")
+        self.measurements["model"]["vad_lookup_download"] = {
+            "elapsed_seconds": round(time.monotonic() - vad_started, 6),
+            "wire_bytes_downloaded": None,
+        }
+
+        def options():
+            result = onnxruntime.SessionOptions()
+            result.intra_op_num_threads = 4
+            return result
+
         asr_started = time.monotonic()
         model = onnx_asr.load_model(
             "nemo-parakeet-tdt-0.6b-v3",
             model_path,
-            quantization="int8",
-            providers=execution_provider_chain(),
-            sess_options=options,
+            quantization=None,
+            providers=[(GPU_PROVIDER, CUDA_OPTIONS), CPU_PROVIDER],
+            sess_options=options(),
+            preprocessor_config={"use_numpy_preprocessors": True, "max_concurrent_workers": 1},
+            resampler_config={"providers": [CPU_PROVIDER], "sess_options": options()},
         )
         self.measurements["model"]["encoder_decoder_session_initialization"] = {
             "elapsed_seconds": round(time.monotonic() - asr_started, 6)
         }
-        vad_init_started = time.monotonic()
+        vad_started = time.monotonic()
         vad = onnx_asr.load_vad(
-            "silero",
-            vad_path,
-            providers=execution_provider_chain(),
-            sess_options=options,
+            "silero", vad_path, providers=[CPU_PROVIDER], sess_options=options()
         )
         self.measurements["model"]["vad_session_initialization"] = {
-            "elapsed_seconds": round(time.monotonic() - vad_init_started, 6)
+            "elapsed_seconds": round(time.monotonic() - vad_started, 6)
         }
-        # onnx-asr 0.12.0 has no public provider-report API. Read the actual sessions,
-        # rather than recording get_available_providers() or requested configuration.
         self.execution_providers = {
             "encoder": model.asr._encoder.get_providers(),
             "decoder_joint": model.asr._decoder_joint.get_providers(),
             "vad": vad._model.get_providers(),
         }
-        if self.execution_provider == CPU_PROVIDER:
-            if any(value != [CPU_PROVIDER] for value in self.execution_providers.values()):
-                raise RuntimeError("CPU run did not obtain CPU-only inference sessions")
-        elif any(
+        if any(
             GPU_PROVIDER not in self.execution_providers[name]
             for name in ("encoder", "decoder_joint")
         ):
             raise RuntimeError("requested CUDA provider is absent from an ASR model session")
-        self.profile_sessions = {
-            "encoder": model.asr._encoder,
-            "decoder_joint": model.asr._decoder_joint,
-            "vad": vad._model,
-        }
         self.model = model.with_vad(vad, **VAD_OPTIONS).with_timestamps()
         self.measurements["model"][
             "model_setup_total_including_imports_lookup_and_sessions_seconds"
         ] = round(time.monotonic() - initialization_started, 6)
         self.measurements["model"]["model_setup_timing_note"] = (
-            "Outer model setup includes imports, snapshot lookups and session initialization; "
-            "its elapsed time overlaps nested lookup and session timings."
+            "Outer setup includes runtime imports, cache lookups and nested ASR/VAD initialization; do not add sub-times again."
         )
-
-    def _snapshot_stage(self, repository: str, revision: str, filenames: list[str]):
-        cache_root = self.cache_dir / "models"
-        repository_dir = cache_root / f"models--{repository.replace('/', '--')}"
-        snapshot_dir = repository_dir / "snapshots" / revision
-        available = {name for name in filenames if (snapshot_dir / name).is_file()}
-        return {
-            "repository": repository,
-            "revision": revision,
-            "expected_files": filenames,
-            "files_present_before": sorted(available),
-            "materialized_bytes_before": sum(
-                (snapshot_dir / name).stat().st_size for name in available
-            ),
-        }, sum((snapshot_dir / name).stat().st_size for name in available)
-
-    @staticmethod
-    def _snapshot_result(stage, started, snapshot_path, filenames, bytes_before):
-        present = {name for name in filenames if (snapshot_path / name).is_file()}
-        bytes_after = sum((snapshot_path / name).stat().st_size for name in present)
-        before_files = set(stage["files_present_before"])
-        return {
-            **stage,
-            "files_present_after": sorted(present),
-            "materialized_bytes_after": bytes_after,
-            "materialized_bytes_added": max(0, bytes_after - bytes_before),
-            "wire_bytes_downloaded": None,
-            "cache_status": (
-                "warm" if before_files == set(filenames) else "partial" if before_files else "cold"
-            ),
-            "elapsed_seconds": round(time.monotonic() - started, 6),
-        }
-
-    def finish(self) -> dict | None:
-        """Close ORT profiles and report node assignments from actual execution."""
-        if not self.profile_enabled:
-            return None
-        from podcast_words.profile_summary import summarize_profile
-
-        node_events = {}
-        node_durations_us = {}
-        kernel_events = {}
-        transfer_sync_events = {}
-        profile_summaries = {}
-        profile_files = {}
-        observed_paths = set()
-        finalize_started = time.monotonic()
-        parse_seconds = 0.0
-        for name, session in self.profile_sessions.items():
-            profile_path = Path(session.end_profiling())
-            resolved_path = profile_path.resolve()
-            if resolved_path in observed_paths:
-                raise RuntimeError("ONNX Runtime sessions returned a shared profile file path")
-            observed_paths.add(resolved_path)
-            if not profile_path.is_file():
-                raise RuntimeError(
-                    f"ONNX Runtime profile file is missing for {name}: {profile_path}"
-                )
-            named_profile = self.cache_dir / "profiles" / f"{name}-{profile_path.name}"
-            if named_profile.exists():
-                raise RuntimeError(
-                    f"ONNX Runtime profile destination already exists: {named_profile}"
-                )
-            profile_path.replace(named_profile)
-            profile_files[name] = str(named_profile)
-            parse_started = time.monotonic()
-            summary = summarize_profile(named_profile, name)
-            parse_seconds += time.monotonic() - parse_started
-            node_events[name] = summary["node_events_by_provider"]
-            node_durations_us[name] = summary["host_node_duration_microseconds_sum_by_provider"]
-            kernel_events[name] = summary["kernel_events"]
-            transfer_sync_events[name] = summary["transfer_sync_events"]
-            profile_summaries[name] = summary
-        model_events = {
-            provider: sum(
-                events.get(provider, 0) for name, events in node_events.items() if name != "vad"
-            )
-            for provider in (GPU_PROVIDER, CPU_PROVIDER)
-        }
-        if self.execution_provider == GPU_PROVIDER and model_events[GPU_PROVIDER] == 0:
-            raise RuntimeError("ONNX Runtime profile recorded no CUDA model node executions")
-        self.profile_measurements = {
-            "status": "captured",
-            "execution_proof": "executed-ort-node-events",
-            "node_events": node_events,
-            "host_node_event_duration_microseconds_sum": node_durations_us,
-            "model_node_events": model_events,
-            "mixed_cpu_fallback": (
-                self.execution_provider == GPU_PROVIDER and model_events[CPU_PROVIDER] > 0
-            ),
-            "finalization_and_parse_seconds": round(time.monotonic() - finalize_started, 6),
-            "parse_seconds": round(parse_seconds, 6),
-            "profile_bytes": {
-                name: Path(path).stat().st_size for name, path in profile_files.items()
-            },
-            "sessions": profile_summaries,
-            "transfer_sync_events": transfer_sync_events,
-            "kernel_events": kernel_events,
-            "duration_note": "ORT Node durations are host operator times in microseconds and may overlap across threads. GPU kernel durations are reported only for cat=Kernel events; they are absent unless the ORT GPU profiling build and CUPTI support provide them. Event duration sums are not wall-clock time.",
-        }
-        return {
-            "node_events": node_events,
-            "model_node_events": model_events,
-            "mixed_cpu_fallback": (
-                self.execution_provider == GPU_PROVIDER and model_events[CPU_PROVIDER] > 0
-            ),
-            "profile_files": profile_files,
-        }
 
     def transcribe(self, metadata: EpisodeInput, audio_file: Path | None = None) -> Episode:
         """Decode the exact input, recognize speech and validate absolute episode times."""
@@ -345,6 +219,21 @@ class Transcriber:
         }
         with audio_file.open("rb") as original:
             checksum = hashlib.file_digest(original, "sha256").hexdigest()
+        # A URL identifies the source, not its ad-dependent audio version.
+        suffix = audio_file.suffix.lower()
+        if suffix not in {".mp3", ".wav", ".m4a", ".ogg", ".flac"}:
+            suffix = Path(str(metadata.audio_url).split("?", 1)[0]).suffix.lower()
+        if suffix not in {".mp3", ".wav", ".m4a", ".ogg", ".flac"}:
+            suffix = ".audio"
+        reference = audio_dir / f"{checksum}{suffix}"
+        if not reference.exists():
+            shutil.copyfile(audio_file, reference)
+        with reference.open("rb") as saved:
+            if hashlib.file_digest(saved, "sha256").hexdigest() != checksum:
+                raise ValueError("retained audio reference checksum does not match input")
+        if download_status == "downloaded" and audio_file != reference:
+            audio_file.unlink()
+        audio_file = reference
         decode_started = time.monotonic()
         with tempfile.TemporaryDirectory(dir=audio_dir) as temporary:
             wav = Path(temporary) / "decoded.wav"
@@ -400,9 +289,7 @@ class Transcriber:
                 )
             self.measurements["episode"]["inference"] = {
                 "elapsed_seconds": round(time.monotonic() - inference_started, 6),
-                "execution_proof": (
-                    "pending-profile" if self.profile_enabled else "unavailable-profile-disabled"
-                ),
+                "execution_proof": "session-providers-recorded; timing run is not profiled",
                 "boundary": (
                     "recognizer generator iteration including VAD/preprocessing and result assembly; "
                     "not pure encoder, decoder or GPU kernel time"
@@ -429,9 +316,7 @@ class Transcriber:
                         name: version(name)
                         for name in [
                             "onnx-asr",
-                            "onnxruntime-gpu"
-                            if self.execution_provider == GPU_PROVIDER
-                            else "onnxruntime",
+                            "onnxruntime-gpu",
                             "numpy",
                             "huggingface-hub",
                             "podcast-words",
@@ -440,7 +325,7 @@ class Transcriber:
                 },
                 "execution_providers": self.execution_providers,
                 "configuration": {
-                    "quantization": "int8",
+                    "quantization": "fp32",
                     "upstream_revision_role": "selected metadata revision; export linkage unattested",
                     "vad_id": VAD_ID,
                     "vad_revision": VAD_REVISION,
@@ -448,15 +333,24 @@ class Transcriber:
                     "audio_decode": "ffmpeg mono PCM s16le 16000 Hz; original full timeline",
                     "token_times": "segment-relative seconds + VAD start, once",
                     "intra_op_num_threads": "4",
+                    "asr_provider": GPU_PROVIDER,
+                    "vad_provider": CPU_PROVIDER,
+                    "preprocessing": "numpy-cpu",
+                    "cuda_provider_options": json.dumps(CUDA_OPTIONS, sort_keys=True),
                 },
             },
             "segments": segments,
         }
+        with audio_file.open("rb") as saved:
+            if hashlib.file_digest(saved, "sha256").hexdigest() != checksum:
+                raise ValueError("reference audio changed during transcription")
         validation_started = time.monotonic()
         episode = Episode.model_validate_json(json.dumps(data))
         self.measurements["episode"]["input"] = {
             "audio_sha256": episode.audio.sha256,
             "audio_bytes": audio_file.stat().st_size,
+            "reference_audio_file": str(reference),
+            "source_url_is_fixed_audio_version": False,
             "decoded_duration_seconds": episode.audio.duration_seconds,
         }
         self.measurements["episode"]["validation"] = {
@@ -472,7 +366,6 @@ def transcribe_command(
     audio_file: Path | None = None,
     *,
     run_report: Path | None = None,
-    profile_enabled: bool | None = None,
 ) -> int:
     started = time.monotonic()
     try:
@@ -485,16 +378,8 @@ def transcribe_command(
         if output.exists():
             raise FileExistsError(f"output already exists; choose another destination: {output}")
         metadata = EpisodeInput.model_validate_json(metadata_path.read_bytes())
-        transcriber = Transcriber(cache_dir, profile_enabled=profile_enabled)
+        transcriber = Transcriber(cache_dir)
         episode = transcriber.transcribe(metadata, audio_file)
-        execution_profile = transcriber.finish()
-        if transcriber.profile_enabled:
-            transcriber.measurements["episode"]["inference"]["execution_proof"] = (
-                "executed-ort-node-events"
-                if transcriber.profile_measurements.get("execution_proof")
-                == "executed-ort-node-events"
-                else "profile-not-validated"
-            )
         output.parent.mkdir(parents=True, exist_ok=True)
         serialization_started = time.monotonic()
         content = episode.model_dump_json(indent=2) + "\n"
@@ -517,14 +402,10 @@ def transcribe_command(
                 "elapsed_seconds"
             ],
         }
-        transcriber.measurements["profile"] = transcriber.profile_measurements or {
-            "status": "disabled",
-            "execution_proof": "unavailable-profile-disabled",
-        }
         transcriber.measurements["total_elapsed_seconds"] = round(time.monotonic() - started, 6)
         transcriber.measurements["total_elapsed_boundary"] = (
             "Starts inside transcribe_command() and ends before writing the optional run report "
-            "and stdout; excludes interpreter/uv startup and notebook/Drive work."
+            "and stdout; excludes interpreter/uv startup and environment installation."
         )
         transcriber.measurements["code_revision"] = os.environ.get("PODCAST_WORDS_CODE_REVISION")
         if run_report:
@@ -552,7 +433,6 @@ def transcribe_command(
                     "audio_seconds": episode.audio.duration_seconds,
                     "segments": len(episode.segments),
                     "execution_providers": episode.transcription.execution_providers,
-                    "execution_profile": execution_profile,
                     "runtime_measurements": transcriber.measurements,
                 }
             )

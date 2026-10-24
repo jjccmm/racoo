@@ -6,7 +6,7 @@ type Fragment = {
 type Episode = {
   title: string; episode_id: string; published_at: string; webpage_url?: string;
   source: { reference_url: string };
-  audio: { url: string; duration_seconds: number };
+  audio: { url: string; sha256: string; duration_seconds: number };
   segments: (Segment & { token_points?: { text: string; at_seconds: number }[] })[];
 };
 type RawResult = { id: string; words: number[]; data(): Promise<Fragment> };
@@ -125,6 +125,7 @@ async function search({ moduleUrl, episodes, terms, offset }: SearchRequest): Pr
         a.start_seconds - b.start_seconds,
       ),
       audioUrl: episode.audio.url,
+      audioSha256: episode.audio.sha256,
       durationSeconds: episode.audio.duration_seconds,
       webpageUrl: episode.webpage_url ?? episode.source.reference_url,
     };
