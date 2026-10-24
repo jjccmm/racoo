@@ -1,5 +1,7 @@
 # Planverfeinerung
 
+Aktueller Nachtrag: Die Nutzerentscheidung für lokale GPU/FP32, temporäres Audio und grobe Segmente ersetzt die damaligen CPU-/Colab- und sekundengenauen Zeitmarkenvorgaben. Maßgeblich sind [PLAN.md](../../PLAN.md) und die [aktuelle Pilotspezifikation](../../.scratch/local-five-episode-pilot/spec.md). Die Interviewantworten unten bleiben als Verlauf erhalten.
+
 Stand: 16. Oktober 2026. Das `grill-with-docs`-Interview ist abgeschlossen. Der Nutzer hat die gemeinsame Planung und den konkreten Workspace-Umfang ausdrücklich bestätigt; alle Entscheidungen stehen in `PLAN.md`.
 
 ## Ausgangslage

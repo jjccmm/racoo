@@ -1,5 +1,7 @@
 # Runtime und Suchverträge: offene Funktionsnachweise
 
+Aktueller Nachtrag: Die frühere Untersuchung von Tokenzeitpunkten ist historisch. Der aktive Produzent fordert keine Wortzeitpunkte an; er speichert grobe Segmente bis 300 Sekunden. Siehe [Datenvertrag](../data-contracts.md). Die Pagefind-Positionsbefunde bleiben für lexikalische Treffer relevant.
+
 Stand: 16. Oktober 2026. Quellenprüfung zur Planverfeinerung; keine Installation, kein Modelllauf und kein Leistungsnachweis. Aussagen über aktuelle Pakete gelten nur für den Prüfstand und müssen gegen die später gesperrten Versionen geprüft werden.
 
 ## Python und GPU
