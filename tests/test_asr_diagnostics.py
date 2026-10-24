@@ -201,6 +201,7 @@ def test_fp32_download_includes_external_weights_and_uses_none_quantization(
     diag.load_models(diag.CASES["cuda-fp32"], experiment, False)
     assert "encoder-model.onnx.data" in downloads[0][1]["allow_patterns"]
     assert downloads[0][1]["revision"] == diag.EXPORT_REVISION
+    assert Path(downloads[0][1]["local_dir"]).name == "fp32"
     assert settings[0]["quantization"] is None
     assert settings[1]["batch_size"] == 1
 

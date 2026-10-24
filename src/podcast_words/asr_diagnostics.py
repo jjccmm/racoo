@@ -251,6 +251,14 @@ def load_models(case: Case, work: Path, profile: bool):
         revision=EXPORT_REVISION,
         allow_patterns=files,
         cache_dir=str(work.parent / "model-cache"),
+        # ORT 1.27 rejects external weights symlinked into different blob shards.
+        # Hub local_dir materializes ordinary sibling files, reusing cached bytes.
+        # Keep that preparation outside session construction and timed recognition.
+        **(
+            {"local_dir": str(work.parent / "model-files" / EXPORT_REVISION / "fp32")}
+            if case.precision == "fp32"
+            else {}
+        ),
     )
     vad_path = snapshot_download(
         VAD_ID,
@@ -311,6 +319,11 @@ def load_models(case: Case, work: Path, profile: bool):
             )
     setup = {
         "downloads_seconds": downloads_seconds,
+        "model_storage": {
+            "layout": "regular-local-dir" if case.precision == "fp32" else "hub-cache",
+            "path": str(model_path),
+            "note": "FP32 local-dir preparation may copy cached bytes; it is not timed inference.",
+        },
         "sessions_seconds": time.perf_counter() - session_started,
         "session_providers": configured,
         "preprocessor_class": type(inner).__name__,

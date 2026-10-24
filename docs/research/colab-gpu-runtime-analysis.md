@@ -62,3 +62,23 @@ Zuerst einen festen Audioabschnitt von etwa zwei Minuten einmal vorbereiten, has
 Die [bereits gepinnte Exportrevision](https://huggingface.co/istupakov/parakeet-tdt-0.6b-v3-onnx/tree/8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce) enthält `encoder-model.onnx` mit externer Datendatei und `decoder_joint-model.onnx` zusätzlich zu INT8. Ein fertiger FP16-Export ist dort nicht vorhanden; deshalb kein ungeprüfter FP16-Schalter. Parakeet selbst bleibt unverändert. Optimierung und Notebook-Umbau sind gesonderte Folgearbeit; aus dieser Auswertung wurde keine Laufzeitkonfiguration geändert.
 
 [Ticket 19](../../.scratch/podcast-words-pilot/issues/19-investigate-colab-gpu-runtime.md) bleibt offen: Die Erkennungsstufe und CPU-Integer-Operationen sind jetzt gemessen, ein vergleichbarer CPU/GPU-Lauf und die kontrollierte Bestätigung der Beschleunigungsursache fehlen weiter.
+
+## Kurze Diagnosemessung vom 24.10.2026
+
+Der Operator lieferte die neue Messreihe `8f67d21cde714b1789612f1721face8c` von Commit `1defcf4a4afd4b76fc611d7807248d9961922117`. Die [kompakte Evidenz](evidence/colab-diagnostic-ufo537-2026-10-24.json) identifiziert den unveränderten Originalbericht über SHA-256. Die eingefrorene Originalquelle stimmt mit dem vorigen Colab-Benchmark überein; gemessen wurden identische 120 Sekunden PCM ab Minute fünf, auf derselben T4 und demselben Host mit zwei logischen CPUs.
+
+| Laufweg | n | Median | Min-Max | RTF |
+| --- | ---: | ---: | ---: | ---: |
+| INT8/CUDA | 3 | 50,669 s | 50,415-50,732 s | 0,422 |
+| INT8/CPU | 3 | 54,976 s | 54,847-55,215 s | 0,458 |
+| FP32/CUDA | 0 erfolgreiche Inferenzläufe | Modellladen fehlgeschlagen | keine Messung | unbekannt |
+
+INT8/CUDA hat in dieser Stichprobe etwa 7,84 % weniger Erkennungszeit als der CPU-Laufweg (Verhältnis CPU/GPU etwa 1,085). Die automatische Vorverarbeitung unterscheidet sich ebenfalls: NumPy auf CPU, ONNX Conv auf CUDA. Dies ist deshalb ein Vergleich vollständiger Laufwege, kein isolierter Providervergleich und keine allgemeine Leistungsaussage. Die GPU-Messungen verbrauchen etwa 1,92 CPU-Prozesssekunden pro Wandsekunde auf einem Host mit zwei logischen CPUs; das passt zu weiterhin erheblicher CPU-Arbeit, ohne sie vollständig einzelnen Operationen zuzuordnen.
+
+Das separate Achtsekundenprofil enthält 8.842 ausgeführte CUDA-Modellknoten und erreicht keine Ereignisgrenze. Es bestätigt die teuren CPU-INT8-Operationen erneut: Encoder `MatMulInteger` 1,520 Sekunden und `ConvInteger` 1,106 Sekunden aufsummierte Host-Dauer, außerdem CPU-`DynamicQuantizeLSTM` und `MatMulInteger` im Decoder. Geräteseitige `Kernel`-Zeiten fehlen weiterhin. Die Erkennung bleibt innerhalb jeder erfolgreichen Variante textlich und zeitlich stabil; die Texte zwischen CPU und CUDA weichen voneinander ab. Ohne Hörreferenz folgt daraus kein Qualitätsurteil.
+
+**FP32 ist noch nicht verglichen.** Beide Versuche scheitern vor der ersten Inferenz an `External data path escapes model directory`. Modellgraph und externe Gewichte zeigen im Hub-Cache auf verschiedene Blob-Unterordner (`9a` bzw. `79`); die [ORT-1.27-Pfadprüfung](https://raw.githubusercontent.com/microsoft/onnxruntime/v1.27.0/onnxruntime/core/framework/tensorprotoutils.cc) erlaubt die aufgelösten Gewichte dort nicht. Der Fehler wurde mit einem winzigen Modell und der echten lokalen ORT-1.27-CPU-Laufzeit reproduziert. Unveränderte Modelldateien als normale lokale Dateien laden erfolgreich; der Regressionstest führt den Fehler zusätzlich über den tatsächlichen Diagnose-Lader aus. Unter Windows bildet eine Verzeichnis-Junction denselben Pfadprüfungsfall ab, unter Linux die getrennten Blob-Dateisymlinks. Dieser synthetische Test ist kein GPU- oder Parakeet-Leistungsnachweis.
+
+Der Diagnosehelfer fordert FP32 nun mit dem dokumentierten [Hub-Parameter `local_dir`](https://huggingface.co/docs/huggingface_hub/guides/download#download-files-to-a-local-folder) an. Graph und externe Gewichte liegen damit als normale Dateien zusammen in einem revisionsgebundenen lokalen Ordner. Vorhandene Cachebytes können dafür kopiert werden; dieser Aufwand bleibt vor Session-Aufbau und Erkennung. Die Sicherheitsprüfung, Paket-/Modellrevisionen und normalen Produktionsvorgaben werden nicht verändert.
+
+Als Nächstes eine neue Messreihe mit dem korrigierten Helfer durchführen, nach Möglichkeit unter Verwendung der bisherigen eingefrorenen Originaldatei. Der Standardvergleich bleibt INT8/CUDA, FP32/CUDA und CPU-Kontrolle. Alte Ergebnisse bleiben gültige Beobachtungen; Berichte verschiedener Helfer-Codehashes werden nicht zu einem kontrollierten Vergleich vermischt. Der reale FP32-Ladevorgang und dessen GPU-Geschwindigkeit müssen auf Colab noch bestätigt werden.
