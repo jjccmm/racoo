@@ -20,7 +20,7 @@ def validate(data: dict) -> Episode:
 
 def test_valid_episode_retains_absolute_times_across_pause():
     episode = validate(fixture_data())
-    assert episode.segments[1].token_points[0].at_seconds == 64
+    assert episode.segments[1].start_seconds == 60
     assert episode.audio.duration_seconds == 90
 
 
@@ -40,10 +40,10 @@ def test_invalid_segment_boundaries_are_rejected(defect):
         validate(data)
 
 
-@pytest.mark.parametrize("time", [-1, 4, 91, float("inf"), float("nan")])
-def test_relative_or_invalid_token_times_are_rejected(time):
+@pytest.mark.parametrize("time", [-1, float("inf"), float("nan")])
+def test_invalid_processing_timings_are_rejected(time):
     data = fixture_data()
-    data["segments"][1]["token_points"][0]["at_seconds"] = time
+    data["timings"]["transcription_seconds"] = time
     with pytest.raises(ValidationError):
         validate(data)
 
@@ -74,5 +74,5 @@ def test_cli_reports_invalid_files_and_continues(tmp_path, capsys):
 
 
 def test_published_structural_schema_matches_python_contract():
-    schema = Path(__file__).parents[1] / "schemas" / "episode-v1.schema.json"
+    schema = Path(__file__).parents[1] / "schemas" / "episode-v2.schema.json"
     assert json.loads(schema.read_text(encoding="utf-8")) == Episode.model_json_schema()

@@ -82,7 +82,6 @@ def main(argv: list[str] | None = None) -> int:
     )
     transcription.add_argument("--metadata", type=Path, required=True)
     transcription.add_argument("--output", type=Path, required=True)
-    transcription.add_argument("--audio-file", type=Path)
     transcription.add_argument("--cache-dir", type=Path, default=Path(".cache/asr"))
     transcription.add_argument("--run-report", type=Path)
     processing = commands.add_parser(
@@ -94,7 +93,6 @@ def main(argv: list[str] | None = None) -> int:
     processing.add_argument("--cache-dir", type=Path, default=Path(".cache/asr"))
     processing.add_argument("--retranscribe", action="store_true")
     processing.add_argument("--run-report", type=Path)
-    processing.add_argument("--audio-file", type=Path)
     publication = commands.add_parser(
         "publish", help="Prepare one validated, selected static publication source"
     )
@@ -121,7 +119,6 @@ def main(argv: list[str] | None = None) -> int:
             arguments.metadata,
             arguments.output,
             arguments.cache_dir,
-            arguments.audio_file,
             run_report=arguments.run_report,
         )
     if arguments.command == "process":

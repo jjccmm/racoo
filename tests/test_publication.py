@@ -107,7 +107,7 @@ def test_publish_prepares_one_selected_publication_and_preserves_transcript_cont
     public_episode = json.loads((output / "episodes/synthetic-episode-001.json").read_bytes())
     original = json.loads(original_bytes)
     assert public_episode["segments"] == original["segments"]
-    assert public_episode["transcription"]["input_revision"] == original["audio"]["sha256"]
+    assert "input_revision" not in public_episode["transcription"]
     assert public_episode["transcription"]["transcript_revision"]
     assert public_episode["transcription"]["configuration_revision"]
     assert manifest["derivedRevisionEpisodeIds"] == manifest["episodeIds"]
@@ -170,12 +170,10 @@ def test_publish_preserves_processing_revisions_and_only_derives_legacy_omission
     expected_revisions = {}
     for transcript in episodes.glob("*.json"):
         data = json.loads(transcript.read_bytes())
-        data["transcription"]["input_revision"] = data["audio"]["sha256"]
         data["transcription"]["configuration_revision"] = config_revision
         episode = Episode.model_validate_json(json.dumps(data))
         consumed = {
             "segments": [segment.model_dump(mode="json") for segment in episode.segments],
-            "audio_sha256": data["audio"]["sha256"],
             "configuration_revision": config_revision,
         }
         data["transcription"]["transcript_revision"] = hashlib.sha256(

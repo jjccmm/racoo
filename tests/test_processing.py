@@ -1,59 +1,17 @@
 """Selected processing is exercised through the public CLI and external boundaries."""
 
-import hashlib
 import json
-import threading
-import wave
-from contextlib import contextmanager
 from datetime import UTC, datetime
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from types import SimpleNamespace
 
-import huggingface_hub
 import onnx_asr
+from asr_fixtures import audio_server, install_external_recognizer, wave_bytes
 
 from podcast_words import transcribe
 from podcast_words.catalog import Catalog, CatalogEpisode, Enclosure, Source
 from podcast_words.cli import main
 from podcast_words.contracts import Episode
-
-
-@contextmanager
-def audio_server(body, status=200):
-    response = {"body": body, "status": status}
-
-    class Handler(BaseHTTPRequestHandler):
-        def do_GET(self):
-            self.send_response(response["status"])
-            self.send_header("Content-Type", "audio/wav")
-            self.end_headers()
-            self.wfile.write(response["body"])
-
-        def log_message(self, *_args):
-            pass
-
-    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    try:
-        yield f"http://127.0.0.1:{server.server_port}/audio.wav", response
-    finally:
-        server.shutdown()
-        server.server_close()
-        thread.join()
-
-
-def wave_bytes(duration=5):
-    from io import BytesIO
-
-    output = BytesIO()
-    with wave.open(output, "wb") as stream:
-        stream.setnchannels(1)
-        stream.setsampwidth(2)
-        stream.setframerate(16000)
-        stream.writeframes(b"\0\0" * 16000 * duration)
-    return output.getvalue()
 
 
 def make_catalog(path, audio_url, title="Fixture episode"):
@@ -95,42 +53,6 @@ def make_catalog(path, audio_url, title="Fixture episode"):
     path.write_text(catalog.model_dump_json(indent=2) + "\n", encoding="utf-8")
 
 
-def install_external_recognizer(monkeypatch, tmp_path, *, interrupt=False):
-    encoder = SimpleNamespace(
-        get_providers=lambda: ["CUDAExecutionProvider", "CPUExecutionProvider"]
-    )
-    decoder = SimpleNamespace(
-        get_providers=lambda: ["CUDAExecutionProvider", "CPUExecutionProvider"]
-    )
-    vad_session = SimpleNamespace(get_providers=lambda: ["CPUExecutionProvider"])
-    result = SimpleNamespace(
-        start=1.0,
-        end=3.0,
-        text="Known words.",
-        tokens=["Known", "words"],
-        timestamps=[0.1, 1.0],
-    )
-
-    def recognize(*_args, **_kwargs):
-        if interrupt:
-            raise KeyboardInterrupt
-        return iter([result])
-
-    recognizer = SimpleNamespace(
-        asr=SimpleNamespace(_encoder=encoder, _decoder_joint=decoder),
-        with_vad=lambda *_args, **_kwargs: SimpleNamespace(
-            with_timestamps=lambda: SimpleNamespace(recognize=recognize)
-        ),
-    )
-    monkeypatch.setattr(onnx_asr, "load_model", lambda *_args, **_kwargs: recognizer)
-    monkeypatch.setattr(
-        onnx_asr, "load_vad", lambda *_args, **_kwargs: SimpleNamespace(_model=vad_session)
-    )
-    monkeypatch.setattr(
-        huggingface_hub, "snapshot_download", lambda *_args, **_kwargs: str(tmp_path)
-    )
-
-
 def run(
     catalog,
     output,
@@ -138,7 +60,6 @@ def run(
     *episode_ids,
     retranscribe=False,
     run_report=None,
-    audio_file=None,
 ):
     args = [
         "process",
@@ -155,8 +76,6 @@ def run(
         args.append("--retranscribe")
     if run_report:
         args.extend(["--run-report", str(run_report)])
-    if audio_file:
-        args.extend(["--audio-file", str(audio_file)])
     return main(args)
 
 
@@ -176,18 +95,46 @@ def test_process_selected_episode_is_durable_skipped_on_resume_and_explicitly_re
         assert run(catalog_path, output, cache, "episode-one") == 0
         first = json.loads((output / "episode-one.json").read_bytes())
         assert first["segments"][0]["text"] == "Known words."
-        assert first["audio"]["sha256"] == hashlib.sha256(audio).hexdigest()
-        assert first["transcription"]["input_revision"]
+        assert first["schema_version"] == 2
+        assert set(first["audio"]) == {"url", "duration_seconds"}
+        assert "input_revision" not in first["transcription"]
+        assert set(first["segments"][0]) == {"id", "text", "start_seconds", "end_seconds"}
+        assert set(first["timings"]) == {
+            "download_seconds",
+            "transcription_seconds",
+            "total_seconds",
+        }
+        assert first["timings"]["download_seconds"] >= 0
+        assert first["timings"]["transcription_seconds"] >= 0
+        assert first["timings"]["total_seconds"] >= first["timings"]["transcription_seconds"]
+        assert not list((cache / "audio").iterdir())
         assert first["transcription"]["configuration_revision"]
         assert first["transcription"]["transcript_revision"]
         assert (
             json.loads(catalog_path.read_bytes())["episodes"][0]["processing_status"] == "completed"
         )
-        initial_output = capsys.readouterr().out
+        captured = capsys.readouterr()
+        initial_output = captured.out
+        assert "episode-one" in captured.err
+        assert "audio duration" in captured.err
+        assert "total" in captured.err
+        assert "download s/audio min" in captured.err
+        assert "transcription s/audio min" in captured.err
 
-        assert run(catalog_path, output, cache, "episode-one") == 0
+        assert response["requests"] == 1
+        response["status"] = 503
+        response["body"] = wave_bytes(6)
+
+        def no_model_on_resume(*_args, **_kwargs):
+            raise AssertionError("a saved transcript must not initialize ASR")
+
+        with monkeypatch.context() as resume_patch:
+            resume_patch.setattr(onnx_asr, "load_model", no_model_on_resume)
+            assert run(catalog_path, output, cache, "episode-one") == 0
         resumed = json.loads(capsys.readouterr().out)
         assert resumed["results"][0]["status"] == "skipped"
+        assert resumed["results"][0]["timings"] == first["timings"]
+        assert response["requests"] == 1
         assert (output / "episode-two.json").exists() is False
         assert (output / "episode-one.json").read_text() == json.dumps(
             first, indent=2, ensure_ascii=False
@@ -218,43 +165,10 @@ def test_process_selected_episode_is_durable_skipped_on_resume_and_explicitly_re
         replacement = json.loads((output / "episode-one.json").read_bytes())
         assert replacement["title"] == "Updated title"
         assert replacement["segments"] == first["segments"]
+        assert replacement["audio"]["duration_seconds"] == 6
+        assert not list((cache / "audio").iterdir())
         assert json.loads(capsys.readouterr().out)["results"][0]["status"] == "completed"
         assert json.loads(initial_output)["results"][0]["status"] == "completed"
-
-
-def test_process_rejects_one_audio_file_for_multiple_episode_identities(
-    tmp_path, monkeypatch, capsys
-):
-    audio_path = tmp_path / "audio.wav"
-    audio_path.write_bytes(wave_bytes())
-    catalog_path = tmp_path / "catalog.json"
-    output = tmp_path / "episodes"
-    with audio_server(wave_bytes()) as (audio_url, _response):
-        make_catalog(catalog_path, audio_url)
-        original_catalog = catalog_path.read_bytes()
-        recognizer_started = False
-
-        def should_not_initialize(*_args, **_kwargs):
-            nonlocal recognizer_started
-            recognizer_started = True
-            raise AssertionError("preflight must reject before ASR setup")
-
-        monkeypatch.setattr(onnx_asr, "load_model", should_not_initialize)
-        assert (
-            run(
-                catalog_path,
-                output,
-                tmp_path / "cache",
-                "episode-one",
-                "episode-two",
-                audio_file=audio_path,
-            )
-            == 1
-        )
-    assert json.loads(capsys.readouterr().out)["ok"] is False
-    assert not recognizer_started
-    assert not output.exists()
-    assert catalog_path.read_bytes() == original_catalog
 
 
 def test_process_run_report_cannot_alias_catalog_before_any_processing(
@@ -262,8 +176,6 @@ def test_process_run_report_cannot_alias_catalog_before_any_processing(
 ):
     catalog_path = tmp_path / "catalog.json"
     output = tmp_path / "episodes"
-    audio_path = tmp_path / "audio.wav"
-    audio_path.write_bytes(wave_bytes())
     with audio_server(wave_bytes()) as (audio_url, _response):
         make_catalog(catalog_path, audio_url)
         original_catalog = catalog_path.read_bytes()
@@ -278,7 +190,6 @@ def test_process_run_report_cannot_alias_catalog_before_any_processing(
                 output,
                 tmp_path / "cache",
                 "episode-one",
-                audio_file=audio_path,
                 run_report=catalog_path,
             )
             == 1
@@ -302,19 +213,12 @@ def test_process_rejects_stale_or_partial_revisions_without_marking_completion(t
     }
 
     mutations = {
-        "stale-input": {
-            "input_revision": "0" * 64,
-            "configuration_revision": "1" * 64,
-            "transcript_revision": "2" * 64,
-        },
         "stale-transcript": {
-            "input_revision": original["audio"]["sha256"],
             "configuration_revision": "1" * 64,
             "transcript_revision": "2" * 64,
         },
         "partial": {
-            "input_revision": original["audio"]["sha256"],
-            "configuration_revision": None,
+            "configuration_revision": "1" * 64,
             "transcript_revision": None,
         },
     }
@@ -352,7 +256,7 @@ def test_process_skips_complete_legacy_provenance_with_diagnostic(tmp_path, caps
         "guid_aliases": [],
         "reference_url": "https://example.org/episode",
     }
-    for name in ("input_revision", "configuration_revision", "transcript_revision"):
+    for name in ("configuration_revision", "transcript_revision"):
         saved["transcription"].pop(name, None)
     catalog_path = tmp_path / "catalog.json"
     output = tmp_path / "episodes"
@@ -444,6 +348,7 @@ def test_interruption_and_download_failure_remain_retryable(tmp_path, monkeypatc
         assert not (output / "episode-one.json").exists()
         assert json.loads(catalog_path.read_bytes())["episodes"][0]["processing_status"] == "failed"
         assert json.loads(capsys.readouterr().out)["results"][0]["status"] == "interrupted"
+        assert not list((cache / "audio").iterdir())
 
         install_external_recognizer(monkeypatch, tmp_path)
         assert run(catalog_path, output, cache, "episode-one") == 0
@@ -458,25 +363,43 @@ def test_interruption_and_download_failure_remain_retryable(tmp_path, monkeypatc
     assert failed["results"][0]["status"] == "failed"
     assert "HTTP Error 503" in failed["results"][0]["error"]
     assert json.loads(failed_catalog.read_bytes())["episodes"][0]["processing_status"] == "failed"
+    assert not list((cache / "audio").iterdir())
 
 
-def test_changed_download_of_same_url_retains_both_exact_audio_versions(
+def test_process_groups_text_into_five_minute_segments_without_hiding_invalid_chunk_order(
     tmp_path, monkeypatch, capsys
 ):
-    first, second = wave_bytes(5), wave_bytes(6)
     path, output, cache = tmp_path / "catalog.json", tmp_path / "episodes", tmp_path / "cache"
-    install_external_recognizer(monkeypatch, tmp_path)
-    with audio_server(first) as (url, response):
+    results = [
+        SimpleNamespace(start=10.0, end=15.0, text="Erster Satz."),
+        SimpleNamespace(start=295.0, end=300.0, text="Nach langer Pause."),
+        SimpleNamespace(start=310.0, end=315.0, text="Noch derselbe Abschnitt."),
+        SimpleNamespace(start=320.0, end=330.0, text="Neuer Abschnitt."),
+        SimpleNamespace(start=599.0, end=605.0, text="Ende."),
+    ]
+    install_external_recognizer(monkeypatch, tmp_path, results=results)
+    with audio_server(wave_bytes(610)) as (url, _response):
         make_catalog(path, url)
         assert run(path, output, cache, "episode-one") == 0
-        report1 = json.loads(capsys.readouterr().out)
-        response["body"] = second
-        assert run(path, output, cache, "episode-one", retranscribe=True) == 0
-        report2 = json.loads(capsys.readouterr().out)
-    for raw, report in ((first, report1), (second, report2)):
-        data = report["runtime_measurements"]["episodes"][0]["episode"]["input"]
-        reference = Path(data["reference_audio_file"])
-        assert reference.read_bytes() == raw
-        assert data["audio_sha256"] == hashlib.sha256(raw).hexdigest()
-        assert data["source_url_is_fixed_audio_version"] is False
-    assert len(list((cache / "audio").glob("*.wav"))) == 2
+        data = json.loads((output / "episode-one.json").read_bytes())
+        assert data["segments"] == [
+            {
+                "id": "segment-000001",
+                "start_seconds": 10,
+                "end_seconds": 300,
+                "text": "Erster Satz. Nach langer Pause.",
+            },
+            {
+                "id": "segment-000002",
+                "start_seconds": 310,
+                "end_seconds": 605,
+                "text": "Noch derselbe Abschnitt. Neuer Abschnitt. Ende.",
+            },
+        ]
+        capsys.readouterr()
+        previous = (output / "episode-one.json").read_bytes()
+        results[1].start = 14.0
+        assert run(path, output, cache, "episode-one", retranscribe=True) == 1
+        assert "overlap" in json.loads(capsys.readouterr().out)["results"][0]["error"]
+        assert (output / "episode-one.json").read_bytes() == previous
+        assert not list((cache / "audio").iterdir())

@@ -87,6 +87,12 @@ def publish(directory: Path, episodes: list[Episode], analyses: dict[str, Analys
                 "episodeId": episode.episode_id,
                 "title": episode.title,
                 "publishedAt": episode.published_at.isoformat(),
+                "durationSeconds": episode.audio.duration_seconds,
+                "timings": {
+                    "downloadSeconds": episode.timings.download_seconds,
+                    "transcriptionSeconds": episode.timings.transcription_seconds,
+                    "totalSeconds": episode.timings.total_seconds,
+                },
                 "totalWords": analysis.total_words,
                 "distinctWords": len(analysis.lemmas),
                 "newWords": len(new_words),

@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "podcast_id": "synthetic-podcast",
   "episode_id": "synthetic-episode-002",
   "source": {
@@ -12,7 +12,6 @@
   "published_at": "2026-10-15T12:00:00Z",
   "audio": {
     "url": "https://example.org/synthetic-audio-002.mp3",
-    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
     "duration_seconds": 90
   },
   "transcription": {
@@ -29,22 +28,24 @@
       "id": "segment-first",
       "text": "Wir tragen einen Eimer über die Straße.",
       "start_seconds": 5,
-      "end_seconds": 9,
-      "token_points": []
+      "end_seconds": 9
     },
     {
       "id": "segment-last",
       "text": "Später laufen die Gäste nach Hause.",
       "start_seconds": 70,
-      "end_seconds": 75,
-      "token_points": []
+      "end_seconds": 75
     },
     {
       "id": "segment-counts",
       "text": "Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund Hund.",
       "start_seconds": 76,
-      "end_seconds": 89,
-      "token_points": []
+      "end_seconds": 89
     }
-  ]
+  ],
+  "timings": {
+    "download_seconds": 0.25,
+    "transcription_seconds": 1.5,
+    "total_seconds": 2.0
+  }
 }

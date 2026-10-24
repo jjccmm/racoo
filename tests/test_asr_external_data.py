@@ -89,9 +89,6 @@ def test_local_fp32_loader_materializes_external_weights_before_session_creation
         def with_vad(self, *a, **k):
             return self
 
-        def with_timestamps(self):
-            return self
-
     def load(name, path, **kwargs):
         _load_and_run(Path(path))
         return Model()

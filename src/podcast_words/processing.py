@@ -14,7 +14,7 @@ from podcast_words.catalog import Catalog, CatalogEpisode
 from podcast_words.contracts import Episode
 from podcast_words.json_io import require_distinct_output, write_json
 from podcast_words.revisions import digest, validate_completed_episode
-from podcast_words.transcribe import EpisodeInput, processing_configuration
+from podcast_words.transcribe import EpisodeInput, print_episode_timings, processing_configuration
 
 
 def configuration_revision() -> str:
@@ -22,7 +22,7 @@ def configuration_revision() -> str:
         {
             **processing_configuration(),
             "audio_decode": "ffmpeg mono PCM s16le 16000 Hz; original full timeline",
-            "token_times": "segment-relative seconds + VAD start, once",
+            "segments": "recognized speech grouped in order, at most 300 seconds",
             "runtime_versions": {
                 "python": platform.python_version(),
                 **{
@@ -104,12 +104,10 @@ def config_mismatches(episode: Episode, revision: str) -> list[str]:
 
 def with_revisions(episode: Episode, revision: str) -> Episode:
     values = episode.model_dump(mode="json")
-    values["transcription"]["input_revision"] = episode.audio.sha256
     values["transcription"]["configuration_revision"] = revision
     values["transcription"]["transcript_revision"] = digest(
         {
             "segments": [segment.model_dump(mode="json") for segment in episode.segments],
-            "audio_sha256": episode.audio.sha256,
             "configuration_revision": revision,
         }
     )
@@ -132,15 +130,12 @@ def process(arguments) -> int:
         selected_ids = arguments.episode_id
         if len(selected_ids) != len(set(selected_ids)):
             raise ValueError("episode IDs must be unique in a selected run")
-        if arguments.audio_file is not None and len(selected_ids) != 1:
-            raise ValueError("--audio-file requires exactly one selected episode")
         entries = [selection(catalog, identity) for identity in selected_ids]
         if arguments.run_report:
             require_distinct_output(
                 arguments.run_report,
                 [
                     arguments.catalog,
-                    arguments.audio_file,
                     *[arguments.output_dir / f"{entry.episode_id}.json" for entry in entries],
                 ],
                 label="run report",
@@ -212,6 +207,8 @@ def process(arguments) -> int:
                 result.update(
                     {
                         "status": "skipped",
+                        "timings": previous.timings.model_dump(),
+                        "audio_seconds": previous.audio.duration_seconds,
                         "metadata_mismatches": metadata_mismatches(previous, metadata),
                         "configuration_mismatches": config_mismatches(previous, config_revision),
                         "output": str(destination),
@@ -230,7 +227,7 @@ def process(arguments) -> int:
                 from podcast_words.transcribe import Transcriber
 
                 transcriber = Transcriber(arguments.cache_dir)
-            transcript = transcriber.transcribe(metadata, arguments.audio_file)
+            transcript = transcriber.transcribe(metadata)
             persistence_started = time.monotonic()
             transcript = with_revisions(transcript, config_revision)
             # Validate the bytes as read back from the temporary file before the
@@ -256,7 +253,15 @@ def process(arguments) -> int:
             episode_measurements.append(measurements)
             entry.processing_status = "completed"
             write_json(arguments.catalog, catalog.model_dump(mode="json"))
-            result.update({"status": "completed", "output": str(destination)})
+            print_episode_timings(transcript)
+            result.update(
+                {
+                    "status": "completed",
+                    "output": str(destination),
+                    "audio_seconds": transcript.audio.duration_seconds,
+                    "timings": transcript.timings.model_dump(),
+                }
+            )
         except KeyboardInterrupt:
             entry.processing_status = "failed"
             write_json(arguments.catalog, catalog.model_dump(mode="json"))
