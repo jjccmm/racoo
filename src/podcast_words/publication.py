@@ -207,7 +207,6 @@ def prepare(arguments: argparse.Namespace) -> dict:
         source_catalog = public_catalog(catalog, entries)
         revisions_by_episode = {
             episode.episode_id: {
-                "inputRevision": episode.transcription.input_revision,
                 "configurationRevision": episode.transcription.configuration_revision,
                 "transcriptRevision": episode.transcription.transcript_revision,
             }

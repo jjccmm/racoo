@@ -94,6 +94,13 @@ def test_command_counts_lowercase_lemmas_stopwords_and_large_values(tmp_path, mo
     assert shard["counts"]["hund"] == [["synthetic-episode-001", 258]]
     catalog = json.loads((publication / "catalog.json").read_text(encoding="utf-8"))
     assert [episode["totalWords"] for episode in catalog["episodes"]] == [0, 262]
+    for episode in catalog["episodes"]:
+        assert episode["durationSeconds"] == 90
+        assert episode["timings"] == {
+            "downloadSeconds": 0.25,
+            "transcriptionSeconds": 1.5,
+            "totalSeconds": 2.0,
+        }
 
 
 def test_publication_reports_chronological_vocabulary_and_is_input_order_independent(

@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "podcast_id": "synthetic-podcast",
   "episode_id": "coverage-single-10",
   "source": {
@@ -12,7 +12,6 @@
   "published_at": "2024-01-01T12:00:00Z",
   "audio": {
     "url": "https://example.org/fixture.mp3",
-    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
     "duration_seconds": 90
   },
   "transcription": {
@@ -29,8 +28,12 @@
       "id": "passage",
       "text": "Signal Katzen.",
       "start_seconds": 20,
-      "end_seconds": 45,
-      "token_points": []
+      "end_seconds": 45
     }
-  ]
+  ],
+  "timings": {
+    "download_seconds": 0.25,
+    "transcription_seconds": 1.5,
+    "total_seconds": 2.0
+  }
 }

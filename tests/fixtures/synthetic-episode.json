@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "podcast_id": "synthetic-podcast",
   "episode_id": "synthetic-episode-001",
   "source": {
@@ -12,7 +12,6 @@
   "published_at": "2026-10-16T12:00:00Z",
   "audio": {
     "url": "https://example.org/synthetic-audio.mp3",
-    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
     "duration_seconds": 90
   },
   "transcription": {
@@ -20,26 +19,27 @@
     "model_revision": "fixture-v1",
     "export_revision": "fixture-v1",
     "processed_at": "2026-10-16T12:00:00Z",
-    "runtime_versions": { "fixture": "1" }
+    "runtime_versions": {
+      "fixture": "1"
+    }
   },
   "segments": [
     {
       "id": "segment-001",
       "text": "Ein Eimer voller Münzen steht neben dem Tisch.",
       "start_seconds": 10,
-      "end_seconds": 15,
-      "token_points": [
-        { "text": " ", "at_seconds": 10 },
-        { "text": "Eimer", "at_seconds": 10.5 },
-        { "text": "Münzen", "at_seconds": 12 }
-      ]
+      "end_seconds": 15
     },
     {
       "id": "segment-002",
       "text": "Nach einer Pause sprechen wir über Kleingeld.",
       "start_seconds": 60,
-      "end_seconds": 65,
-      "token_points": [{ "text": "Kleingeld", "at_seconds": 64 }]
+      "end_seconds": 65
     }
-  ]
+  ],
+  "timings": {
+    "download_seconds": 0.25,
+    "transcription_seconds": 1.5,
+    "total_seconds": 2.0
+  }
 }

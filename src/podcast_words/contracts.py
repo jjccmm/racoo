@@ -1,4 +1,4 @@
-"""Initial episode contract. All stored times are absolute episode seconds."""
+"""Compact episode contract. Segment boundaries are absolute episode seconds."""
 
 from typing import Annotated, Literal, Self
 
@@ -40,8 +40,13 @@ class Source(Contract):
 
 class Audio(Contract):
     url: HttpUrl
-    sha256: Annotated[str, StringConstraints(pattern=r"^[a-f0-9]{64}$")]
     duration_seconds: Annotated[float, Field(gt=0)]
+
+
+class Timings(Contract):
+    download_seconds: Seconds
+    transcription_seconds: Seconds
+    total_seconds: Seconds
 
 
 class Transcription(Contract):
@@ -53,18 +58,10 @@ class Transcription(Contract):
     export_id: Text | None = None
     execution_providers: dict[Text, list[Text]] = Field(default_factory=dict)
     configuration: dict[Text, Text] = Field(default_factory=dict)
-    input_revision: Annotated[str, StringConstraints(pattern=r"^[a-f0-9]{64}$")] | None = None
     configuration_revision: Annotated[str, StringConstraints(pattern=r"^[a-f0-9]{64}$")] | None = (
         None
     )
     transcript_revision: Annotated[str, StringConstraints(pattern=r"^[a-f0-9]{64}$")] | None = None
-
-
-class TokenPoint(Contract):
-    # Native SentencePiece output includes standalone whitespace tokens. Retain
-    # them verbatim; token points describe model tokens rather than word spans.
-    text: Annotated[str, StringConstraints(min_length=1)]
-    at_seconds: Seconds
 
 
 class Segment(Contract):
@@ -72,22 +69,18 @@ class Segment(Contract):
     text: Text
     start_seconds: Seconds
     end_seconds: Seconds
-    token_points: list[TokenPoint] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def check_times(self) -> Self:
         if self.end_seconds <= self.start_seconds:
             raise ValueError("segment end must be after start")
-        previous = self.start_seconds
-        for point in self.token_points:
-            if not previous <= point.at_seconds <= self.end_seconds:
-                raise ValueError("token points must be ordered absolute times within the segment")
-            previous = point.at_seconds
+        if self.end_seconds - self.start_seconds > 300:
+            raise ValueError("coarse segment must span at most 300 seconds")
         return self
 
 
 class Episode(Contract):
-    schema_version: Literal[1]
+    schema_version: Literal[2]
     podcast_id: Identifier
     episode_id: Identifier
     source: Source
@@ -96,6 +89,7 @@ class Episode(Contract):
     episode_number: Annotated[int, Field(gt=0)] | None = None
     webpage_url: HttpUrl | None = None
     audio: Audio
+    timings: Timings
     transcription: Transcription
     segments: list[Segment]
 

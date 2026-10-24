@@ -23,14 +23,14 @@ def main() -> int:
         "laufen": {"count": 2, "stopword": False},
         "ein": {"count": 1, "stopword": True},
     }
-    text = "Die Hunde laufen. Ein Hund läuft!"
+    text = "Die Hunde laufen. Ein Hund lÃ¤uft!"
     with TemporaryDirectory(prefix="analysis-model-", dir=cache) as temporary:
         directory = Path(temporary)
         episode = json.loads(
             (ROOT / "tests/fixtures/synthetic-episode.json").read_text(encoding="utf-8")
         )
         episode["segments"] = [episode["segments"][0]]
-        episode["segments"][0].update(text=text, token_points=[])
+        episode["segments"][0].update(text=text)
         (directory / "episode.json").write_text(json.dumps(episode), encoding="utf-8")
         (directory / "corpus.json").write_text('["episode.json"]', encoding="utf-8")
         result = subprocess.run(

@@ -1,11 +1,10 @@
-"""Local FP32 CUDA transcription of one exact, retained audio version."""
+"""Local FP32 CUDA transcription with coarse segments and disposable audio."""
 
-import hashlib
 import json
 import os
 import platform
-import shutil
 import subprocess
+import sys
 import tempfile
 import time
 import urllib.error
@@ -18,7 +17,7 @@ from typing import Annotated
 
 from pydantic import AwareDatetime, Field, HttpUrl
 
-from podcast_words.contracts import Contract, Episode, Identifier, Source, Text
+from podcast_words.contracts import Contract, Episode, Identifier, Segment, Source, Text
 from podcast_words.json_io import require_distinct_output, write_json
 from podcast_words.local_runtime import CUDA_OPTIONS, prepare_runtime
 
@@ -96,7 +95,7 @@ def download_audio(url: str, destination: Path, *, timeout: float = 30, attempts
 
 
 class Transcriber:
-    """Load FP32 once per local run; retain every transcribed audio version by hash."""
+    """Load FP32 once per run; retain only the validated transcript."""
 
     def __init__(self, cache_dir: Path):
         initialization_started = time.monotonic()
@@ -192,50 +191,37 @@ class Transcriber:
             for name in ("encoder", "decoder_joint")
         ):
             raise RuntimeError("requested CUDA provider is absent from an ASR model session")
-        self.model = model.with_vad(vad, **VAD_OPTIONS).with_timestamps()
+        self.model = model.with_vad(vad, **VAD_OPTIONS)
         self.measurements["model"][
             "model_setup_total_including_imports_lookup_and_sessions_seconds"
         ] = round(time.monotonic() - initialization_started, 6)
         self.measurements["model"]["model_setup_timing_note"] = (
             "Outer setup includes runtime imports, cache lookups and nested ASR/VAD initialization; do not add sub-times again."
         )
+        print(
+            f"Shared FP32 model setup: {self.measurements['model']['model_setup_total_including_imports_lookup_and_sessions_seconds']:.3f} s",
+            file=sys.stderr,
+            flush=True,
+        )
 
-    def transcribe(self, metadata: EpisodeInput, audio_file: Path | None = None) -> Episode:
-        """Decode the exact input, recognize speech and validate absolute episode times."""
+    def transcribe(self, metadata: EpisodeInput) -> Episode:
+        """Measure download/recognition separately and always discard temporary audio."""
+        episode_started = time.monotonic()
+        self.measurements["episode"] = {}
         audio_dir = self.cache_dir / "audio"
         audio_dir.mkdir(parents=True, exist_ok=True)
-        download_started = time.monotonic()
-        download_status = "provided-local-file"
-        if audio_file is None:
-            key = hashlib.sha256(str(metadata.audio_url).encode()).hexdigest()
-            audio_file = audio_dir / f"{key}.source"
-            download_status = "downloaded"
-            download_audio(str(metadata.audio_url), audio_file)
-        self.measurements["episode"]["audio_download"] = {
-            "status": download_status,
-            "elapsed_seconds": round(time.monotonic() - download_started, 6),
-            "payload_bytes_saved": audio_file.stat().st_size,
-            "wire_bytes_downloaded": 0 if download_status == "provided-local-file" else None,
-        }
-        with audio_file.open("rb") as original:
-            checksum = hashlib.file_digest(original, "sha256").hexdigest()
-        # A URL identifies the source, not its ad-dependent audio version.
-        suffix = audio_file.suffix.lower()
-        if suffix not in {".mp3", ".wav", ".m4a", ".ogg", ".flac"}:
-            suffix = Path(str(metadata.audio_url).split("?", 1)[0]).suffix.lower()
-        if suffix not in {".mp3", ".wav", ".m4a", ".ogg", ".flac"}:
-            suffix = ".audio"
-        reference = audio_dir / f"{checksum}{suffix}"
-        if not reference.exists():
-            shutil.copyfile(audio_file, reference)
-        with reference.open("rb") as saved:
-            if hashlib.file_digest(saved, "sha256").hexdigest() != checksum:
-                raise ValueError("retained audio reference checksum does not match input")
-        if download_status == "downloaded" and audio_file != reference:
-            audio_file.unlink()
-        audio_file = reference
-        decode_started = time.monotonic()
         with tempfile.TemporaryDirectory(dir=audio_dir) as temporary:
+            audio_file = Path(temporary) / "source.audio"
+            download_started = time.monotonic()
+            download_audio(str(metadata.audio_url), audio_file)
+            download_seconds = time.monotonic() - download_started
+            self.measurements["episode"]["audio_download"] = {
+                "status": "downloaded",
+                "elapsed_seconds": round(download_seconds, 6),
+                "payload_bytes_saved": audio_file.stat().st_size,
+                "wire_bytes_downloaded": None,
+            }
+            decode_started = time.monotonic()
             wav = Path(temporary) / "decoded.wav"
             subprocess.run(
                 [
@@ -270,39 +256,46 @@ class Transcriber:
             for result in self.model.recognize(wav):
                 if not result.text.strip():
                     continue
-                points = []
-                if (result.tokens is None) != (result.timestamps is None):
-                    raise ValueError("native token text and timestamps must be supplied together")
-                if result.tokens is not None and result.timestamps is not None:
-                    points = [
-                        {"text": token, "at_seconds": result.start + point}
-                        for token, point in zip(result.tokens, result.timestamps, strict=True)
-                    ]
-                segments.append(
-                    {
-                        "id": f"segment-{len(segments) + 1:06d}",
-                        "text": result.text,
-                        "start_seconds": result.start,
-                        "end_seconds": result.end,
-                        "token_points": points,
-                    }
+                chunk = Segment(
+                    id="speech",
+                    text=result.text,
+                    start_seconds=result.start,
+                    end_seconds=result.end,
                 )
+                if chunk.end_seconds > duration:
+                    raise ValueError("speech chunk exceeds the original audio duration")
+                if segments and chunk.start_seconds < segments[-1]["end_seconds"]:
+                    raise ValueError("speech chunks must be ordered without overlap")
+                if segments and result.end - segments[-1]["start_seconds"] <= 300:
+                    segments[-1]["text"] += " " + result.text
+                    segments[-1]["end_seconds"] = result.end
+                else:
+                    segments.append(
+                        {
+                            "id": f"segment-{len(segments) + 1:06d}",
+                            "text": result.text,
+                            "start_seconds": result.start,
+                            "end_seconds": result.end,
+                        }
+                    )
+            transcription_seconds = time.monotonic() - inference_started
             self.measurements["episode"]["inference"] = {
-                "elapsed_seconds": round(time.monotonic() - inference_started, 6),
+                "elapsed_seconds": round(transcription_seconds, 6),
                 "execution_proof": "session-providers-recorded; timing run is not profiled",
                 "boundary": (
-                    "recognizer generator iteration including VAD/preprocessing and result assembly; "
+                    "recognizer generator iteration including VAD/preprocessing and coarse segment assembly; "
                     "not pure encoder, decoder or GPU kernel time"
                 ),
             }
         if not segments:
             raise ValueError("recognizer returned no spoken text; no completed transcript saved")
         data = metadata.model_dump(mode="json", exclude={"audio_url"}) | {
-            "schema_version": 1,
-            "audio": {
-                "url": str(metadata.audio_url),
-                "sha256": checksum,
-                "duration_seconds": duration,
+            "schema_version": 2,
+            "audio": {"url": str(metadata.audio_url), "duration_seconds": duration},
+            "timings": {
+                "download_seconds": round(download_seconds, 6),
+                "transcription_seconds": round(transcription_seconds, 6),
+                "total_seconds": round(time.monotonic() - episode_started, 6),
             },
             "transcription": {
                 "model_id": MODEL_ID,
@@ -331,7 +324,7 @@ class Transcriber:
                     "vad_revision": VAD_REVISION,
                     "vad_options": json.dumps(VAD_OPTIONS, sort_keys=True),
                     "audio_decode": "ffmpeg mono PCM s16le 16000 Hz; original full timeline",
-                    "token_times": "segment-relative seconds + VAD start, once",
+                    "segments": "recognized speech grouped in order, at most 300 seconds",
                     "intra_op_num_threads": "4",
                     "asr_provider": GPU_PROVIDER,
                     "vad_provider": CPU_PROVIDER,
@@ -341,29 +334,40 @@ class Transcriber:
             },
             "segments": segments,
         }
-        with audio_file.open("rb") as saved:
-            if hashlib.file_digest(saved, "sha256").hexdigest() != checksum:
-                raise ValueError("reference audio changed during transcription")
         validation_started = time.monotonic()
         episode = Episode.model_validate_json(json.dumps(data))
-        self.measurements["episode"]["input"] = {
-            "audio_sha256": episode.audio.sha256,
-            "audio_bytes": audio_file.stat().st_size,
-            "reference_audio_file": str(reference),
-            "source_url_is_fixed_audio_version": False,
-            "decoded_duration_seconds": episode.audio.duration_seconds,
-        }
+        episode.timings.total_seconds = round(time.monotonic() - episode_started, 6)
         self.measurements["episode"]["validation"] = {
             "elapsed_seconds": round(time.monotonic() - validation_started, 6)
         }
+        self.measurements["episode"]["timings"] = episode.timings.model_dump()
+        self.measurements["episode"]["total_timing_boundary"] = (
+            "From download start through decode, recognition, temporary audio cleanup and validation; "
+            "excludes shared model setup and final transcript/report serialization."
+        )
         return episode
+
+
+def print_episode_timings(episode: Episode) -> None:
+    """Keep progress readable without corrupting the machine-readable stdout result."""
+    minutes = episode.audio.duration_seconds / 60
+    timings = episode.timings
+    print(
+        f"{episode.episode_id}: audio duration {episode.audio.duration_seconds:.2f} s; "
+        f"total {timings.total_seconds:.3f} s; "
+        f"download {timings.download_seconds:.3f} s "
+        f"({timings.download_seconds / minutes:.3f} download s/audio min); "
+        f"transcription {timings.transcription_seconds:.3f} s "
+        f"({timings.transcription_seconds / minutes:.3f} transcription s/audio min)",
+        file=sys.stderr,
+        flush=True,
+    )
 
 
 def transcribe_command(
     metadata_path: Path,
     output: Path,
     cache_dir: Path,
-    audio_file: Path | None = None,
     *,
     run_report: Path | None = None,
 ) -> int:
@@ -372,14 +376,14 @@ def transcribe_command(
         if run_report:
             require_distinct_output(
                 run_report,
-                [metadata_path, output, audio_file],
+                [metadata_path, output],
                 label="run report",
             )
         if output.exists():
             raise FileExistsError(f"output already exists; choose another destination: {output}")
         metadata = EpisodeInput.model_validate_json(metadata_path.read_bytes())
         transcriber = Transcriber(cache_dir)
-        episode = transcriber.transcribe(metadata, audio_file)
+        episode = transcriber.transcribe(metadata)
         output.parent.mkdir(parents=True, exist_ok=True)
         serialization_started = time.monotonic()
         content = episode.model_dump_json(indent=2) + "\n"
@@ -402,6 +406,7 @@ def transcribe_command(
                 "elapsed_seconds"
             ],
         }
+        print_episode_timings(episode)
         transcriber.measurements["total_elapsed_seconds"] = round(time.monotonic() - started, 6)
         transcriber.measurements["total_elapsed_boundary"] = (
             "Starts inside transcribe_command() and ends before writing the optional run report "

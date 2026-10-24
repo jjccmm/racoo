@@ -5,7 +5,7 @@ import json
 
 from podcast_words.contracts import Episode
 
-REVISION_FIELDS = ("input_revision", "configuration_revision", "transcript_revision")
+REVISION_FIELDS = ("configuration_revision", "transcript_revision")
 RECOGNITION_FIELDS = (
     "model_id",
     "model_revision",
@@ -35,9 +35,7 @@ def validate_completed_episode(episode: Episode) -> tuple[dict[str, str], str | 
     transcription = episode.transcription
     revisions = [getattr(transcription, name) for name in REVISION_FIELDS]
     if any(revisions) and not all(revisions):
-        raise ValueError(
-            "processing revision provenance is partial; expected all three revision fields"
-        )
+        raise ValueError("processing revision provenance is partial; expected both revision fields")
 
     configuration_revision = transcription.configuration_revision or configuration_fingerprint(
         episode
@@ -45,12 +43,9 @@ def validate_completed_episode(episode: Episode) -> tuple[dict[str, str], str | 
     transcript_revision = digest(
         {
             "segments": [segment.model_dump(mode="json") for segment in episode.segments],
-            "audio_sha256": episode.audio.sha256,
             "configuration_revision": configuration_revision,
         }
     )
-    if transcription.input_revision and transcription.input_revision != episode.audio.sha256:
-        raise ValueError("input_revision does not match the saved audio SHA-256")
     if (
         transcription.transcript_revision
         and transcription.transcript_revision != transcript_revision
@@ -60,7 +55,6 @@ def validate_completed_episode(episode: Episode) -> tuple[dict[str, str], str | 
     legacy = None if all(revisions) else "complete-without-revision-fields"
     return (
         {
-            "input_revision": episode.audio.sha256,
             "configuration_revision": configuration_revision,
             "transcript_revision": transcript_revision,
         },
