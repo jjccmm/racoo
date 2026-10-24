@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** claimed-for-agent
+**Status:** claimed
 
 - [ ] Produce schema-v2 episodes with text/start/end coarse segments of about five minutes and no token/word timing arrays or audio identity hash.
 - [ ] Preserve all recognized text in order and keep the transcript suitable for existing lemma counts and segment-based Pagefind search.

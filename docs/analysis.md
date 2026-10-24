@@ -10,7 +10,7 @@ spaCy ist als optionales Extra exakt auf 3.8.16 gesperrt. `de_core_news_lg` ist 
 $env:UV_CACHE_DIR = Join-Path $PWD '.uv-cache'
 uv sync --frozen --extra analysis
 uv pip install --python .venv/Scripts/python.exe --no-deps https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.8.0/de_core_news_lg-3.8.0-py3-none-any.whl
-uv run --frozen --extra analysis python scripts/check_analysis_model.py --output .cache/spacy-model-report.json
+uv run --frozen --inexact --extra analysis python scripts/check_analysis_model.py --output .cache/spacy-model-report.json
 ```
 
 Unter Linux `.venv/bin/python` verwenden. Nach einem erneuten `uv sync`, das zusätzliche Pakete entfernt, das Modell gegebenenfalls erneut installieren. Es findet kein automatischer Modelldownload statt. Der Adapter weist eine andere spaCy- oder Modellversion zurück.
@@ -20,7 +20,7 @@ Der explizite Integrationstest verwendet den öffentlichen Analysebefehl und den
 ## Analysieren und wiederverwenden
 
 ```powershell
-uv run --frozen --extra analysis podcast-words analyze --episodes tests/fixtures/search-corpus.json --output data/synthetic-podcast/analyses --publish .cache/statistics
+uv run --frozen --inexact --extra analysis podcast-words analyze --episodes tests/fixtures/search-corpus.json --output data/synthetic-podcast/analyses --publish .cache/statistics
 uv run --frozen podcast-words analyze --episodes tests/fixtures/search-corpus.json --output tests/fixtures/analysis --cache-only --publish .cache/statistics
 ```
 
