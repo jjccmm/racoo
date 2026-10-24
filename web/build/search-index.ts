@@ -5,6 +5,7 @@ import { spawnSync } from 'node:child_process';
 import { gunzipSync } from 'node:zlib';
 import * as pagefind from 'pagefind';
 import type { Plugin, ResolvedConfig } from 'vite';
+import { buildInputs } from './inputs.ts';
 
 type Episode = {
   podcast_id: string;
@@ -31,19 +32,13 @@ export function searchIndex(): Plugin {
     configResolved(resolved) { config = resolved; },
     async closeBundle() {
       const root = path.resolve(config.root, '..');
-      if (process.env.PODCAST_WORDS_PUBLICATION_SOURCE && process.env.PODCAST_WORDS_EPISODES) {
-        throw new Error('Choose either PODCAST_WORDS_PUBLICATION_SOURCE or PODCAST_WORDS_EPISODES');
-      }
-      const source = process.env.PODCAST_WORDS_PUBLICATION_SOURCE;
-      const corpusPath = source
-        ? path.resolve(root, source, 'episodes.json')
-        : path.resolve(root, process.env.PODCAST_WORDS_EPISODES ?? 'tests/fixtures/search-corpus.json');
+      const corpusPath = buildInputs(config).episodes;
       const corpus: string[] = JSON.parse(await readFile(corpusPath, 'utf8'));
       const episodePaths = corpus.map((file) => path.resolve(path.dirname(corpusPath), file));
       if (!episodePaths.length) throw new Error('The search corpus must contain episodes');
       // Python remains authoritative, including semantic time and identity checks.
       const validation = spawnSync('uv', [
-        'run', '--frozen', 'podcast-words', 'validate', '--compatible-processing', ...episodePaths,
+        'run', '--frozen', '--no-sync', 'podcast-words', 'validate', '--compatible-processing', ...episodePaths,
       ], {
         cwd: root,
         encoding: 'utf8',

@@ -195,7 +195,7 @@ def prepare(arguments: argparse.Namespace) -> dict:
                 output=analyses,
                 publish=staging / "stats",
                 analysis_version=arguments.analysis_version,
-                cache_only=False,
+                cache_only=arguments.cache_only,
             )
         )
         analysis_data = {

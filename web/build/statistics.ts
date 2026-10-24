@@ -2,6 +2,7 @@ import path from 'node:path';
 import { cp, mkdir } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import type { Plugin, ResolvedConfig } from 'vite';
+import { buildInputs } from './inputs.ts';
 
 export function statistics(): Plugin {
   let config: ResolvedConfig;
@@ -12,15 +13,16 @@ export function statistics(): Plugin {
     async closeBundle() {
       const root = path.resolve(config.root, '..');
       const destination = path.resolve(config.root, config.build.outDir, 'stats');
-      if (process.env.PODCAST_WORDS_PUBLICATION_SOURCE) {
+      const inputs = buildInputs(config);
+      if (inputs.source) {
         await mkdir(destination, { recursive: true });
-        await cp(path.resolve(root, process.env.PODCAST_WORDS_PUBLICATION_SOURCE, 'stats'), destination, { recursive: true });
+        await cp(path.join(inputs.source, 'stats'), destination, { recursive: true });
         console.log('Validated saved analyses reused from the selected publication source');
         return;
       }
-      const result = spawnSync('uv', ['run', '--frozen', 'podcast-words', 'analyze',
-        '--episodes', path.resolve(root, process.env.PODCAST_WORDS_EPISODES ?? 'tests/fixtures/search-corpus.json'),
-        '--output', path.resolve(root, process.env.PODCAST_WORDS_ANALYSES ?? 'tests/fixtures/analysis'),
+      const result = spawnSync('uv', ['run', '--frozen', '--no-sync', 'podcast-words', 'analyze',
+        '--episodes', inputs.episodes,
+        '--output', inputs.analyses,
         '--cache-only', '--publish', path.resolve(config.root, config.build.outDir, 'stats'),
       ], {
         cwd: root, encoding: 'utf8',

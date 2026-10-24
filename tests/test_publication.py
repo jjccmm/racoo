@@ -115,6 +115,21 @@ def test_publish_prepares_one_selected_publication_and_preserves_transcript_cont
     assert len(json.loads((output / "catalog.json").read_bytes())["episodes"]) == 2
 
 
+def test_cache_only_publication_fails_when_saved_analysis_is_missing(tmp_path, capsys):
+    catalog, corpus, analyses, originals = selected_inputs(tmp_path)
+    (analyses / "synthetic-episode-001.json").unlink()
+    output = tmp_path / "publication"
+    before = {path.name: path.read_bytes() for path in originals.glob("*.json")}
+
+    assert publish(catalog, corpus, analyses, output, "--cache-only") == 1
+    assert (
+        "Missing or stale analysis for synthetic-episode-001"
+        in json.loads(capsys.readouterr().out)["error"]
+    )
+    assert not output.exists()
+    assert before == {path.name: path.read_bytes() for path in originals.glob("*.json")}
+
+
 def test_publish_metadata_only_refresh_reuses_analysis_and_updates_public_metadata(
     tmp_path, capsys
 ):
