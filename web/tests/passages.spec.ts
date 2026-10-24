@@ -20,25 +20,14 @@ async function controlledEpisode(route: Route) {
   return route.fulfill({ response, json: episode });
 }
 
-async function detailedEpisode(route: Route) {
+async function coarseEpisode(route: Route) {
   const response = await route.fetch();
   const episode = await response.json();
   const segment = episode.segments[0];
   episode.audio.url = controlledAudioUrl;
   segment.start_seconds = 10;
   segment.end_seconds = 89;
-  const words = [...segment.text.matchAll(/[\p{L}\p{M}\p{N}]+/gu)];
-  // Each point is an independently supplied word start; the final "Grüße" is known at 68 seconds.
-  const points: { text: string; at_seconds: number }[] = [];
-  let cursor = 0;
-  words.forEach((word: RegExpMatchArray, index: number) => {
-    const start = word.index!;
-    if (start > cursor) points.push({ text: segment.text.slice(cursor, start), at_seconds: 20 + index * 2 });
-    points.push({ text: word[0], at_seconds: 20 + index * 2 });
-    cursor = start + word[0].length;
-  });
-  if (cursor < segment.text.length) points.push({ text: segment.text.slice(cursor), at_seconds: 69 });
-  segment.token_points = points;
+  segment.text += ` ${'Langer weiterer Gesprächskontext. '.repeat(120)}Abschluss des vollständigen Segments.`;
   return route.fulfill({ response, json: episode });
 }
 
@@ -48,28 +37,34 @@ async function search(page: import('@playwright/test').Page, query: string) {
   await expect(page.getByRole('article').first()).toBeVisible();
 }
 
-test('repeated occurrences each remain playable at their mapped time and late token points seek accurately', async ({ page }) => {
-  await page.route('**/episodes/coverage-complete.json', detailedEpisode);
+test('repeated terms share one coarse jump with an advertising hint and expandable original text', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.route('**/episodes/coverage-complete.json', coarseEpisode);
   await page.goto('./');
   await search(page, 'und');
   const hits = page.getByLabel('Fundstellen in passage').getByRole('button');
-  await expect(hits).toHaveCount(2);
+  await expect(hits).toHaveCount(1);
   await expect(hits.first()).toContainText('· und');
-  await expect(hits.nth(1)).toContainText('· und');
+  await expect(hits.first()).toHaveAccessibleDescription(/Segmentanfang; Werbung/);
+  const completeText = page.getByText(/Abschluss des vollständigen Segments\.$/);
+  await expect(completeText).toBeHidden();
+  await page.getByText('Vollständiges Segment anzeigen', { exact: true }).click();
+  await expect(completeText).toBeVisible();
 
   await search(page, 'Laterne Katzen Fenster');
-  await expect(page.getByRole('article').first().getByRole('button', { name: /3 Stichwörter in der Nähe/ }).first()).toBeVisible();
+  await expect(page.getByRole('article').first().getByRole('button', { name: /fenster, katzen, laterne/ })).toHaveCount(1);
 
   await search(page, 'Grüße');
-  const lateHit = page.getByRole('button', { name: /Anhören ab 1:08/ });
+  const lateHit = page.getByRole('button', { name: /Anhören ab 0:10/ });
   await expect(lateHit).toBeVisible();
   await lateHit.click();
   const media = page.locator('audio');
   await expect.poll(() => media.evaluate((element: HTMLAudioElement) => element.paused)).toBe(false);
-  expect(await media.evaluate((element: HTMLAudioElement) => element.currentTime)).toBeGreaterThanOrEqual(62.9);
-  expect(await media.evaluate((element: HTMLAudioElement) => element.currentTime)).toBeLessThan(64);
+  expect(await media.evaluate((element: HTMLAudioElement) => element.currentTime)).toBeGreaterThanOrEqual(10);
+  expect(await media.evaluate((element: HTMLAudioElement) => element.currentTime)).toBeLessThan(12);
   expect(new URL(page.url()).searchParams.get('episode')).toBe('coverage-complete');
-  expect(new URL(page.url()).searchParams.get('t')).toBe('68');
+  expect(new URL(page.url()).searchParams.get('t')).toBe('10');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });
 
 test('a shared episode/time link loads the player without autoplay and an unknown identity is explicit', async ({ page }) => {
