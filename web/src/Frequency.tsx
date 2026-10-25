@@ -1,4 +1,5 @@
 import { useState, type ChangeEvent } from 'react';
+import { countPairs } from './statistics';
 import {
   CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from 'recharts';
@@ -18,7 +19,7 @@ async function readShard(path: string, publicationId: string) {
   const response = await fetch(`${import.meta.env.BASE_URL}stats/${path}`);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const shard = await response.json();
-  if (shard.schemaVersion !== 1 || shard.publicationId !== publicationId
+  if (shard.schemaVersion !== 2 || shard.publicationId !== publicationId
       || !/^[a-f0-9]{64}$/.test(shard.publicationId)
       || !shard.counts || typeof shard.counts !== 'object' || Array.isArray(shard.counts)) {
     throw new Error('Invalid count publication');
@@ -27,16 +28,10 @@ async function readShard(path: string, publicationId: string) {
 }
 
 function countsFor(shardCounts: Record<string, unknown>, word: Word, episodes: Episode[]) {
-  const pairs = shardCounts[word.lemma];
-  if (!Array.isArray(pairs)) throw new Error('Invalid lemma counts');
+  const pairs = countPairs(shardCounts[word.lemma], episodes.length);
   const values = new Map<string, number>();
-  const knownEpisodes = new Set(episodes.map((episode) => episode.episodeId));
-  for (const pair of pairs) {
-    if (!Array.isArray(pair) || typeof pair[0] !== 'string' || !knownEpisodes.has(pair[0])
-        || !Number.isSafeInteger(pair[1]) || (pair[1] as number) <= 0 || values.has(pair[0])) {
-      throw new Error('Invalid lemma counts');
-    }
-    values.set(pair[0], pair[1] as number);
+  for (const [index, count] of pairs) {
+    values.set(episodes[index].episodeId, count);
   }
   return values;
 }

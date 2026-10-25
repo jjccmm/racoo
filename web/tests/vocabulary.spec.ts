@@ -23,7 +23,7 @@ test('a zero-word episode remains visible with zero counts', async ({ page }) =>
   const publicationId = await page.evaluate(async () => (await (await fetch('publication.json')).json()).publicationId);
   await page.route('**/stats/catalog.json', (route) => route.fulfill({
     json: {
-      schemaVersion: 1,
+      schemaVersion: 2,
       publicationId,
       summary: { episodeCount: 1, totalWords: 0, distinctWords: 0, newWords: 0 },
       episodes: [{

@@ -91,7 +91,8 @@ def test_command_counts_lowercase_lemmas_stopwords_and_large_values(tmp_path, mo
     vocabulary = json.loads((publication / "vocabulary.json").read_text(encoding="utf-8"))
     word = next(item for item in vocabulary["words"] if item["lemma"] == "hund")
     shard = json.loads((publication / word["shard"]).read_text(encoding="utf-8"))
-    assert shard["counts"]["hund"] == [["synthetic-episode-001", 258]]
+    assert shard["schemaVersion"] == vocabulary["schemaVersion"] == 2
+    assert shard["counts"]["hund"] == [[1, 258]]
     catalog = json.loads((publication / "catalog.json").read_text(encoding="utf-8"))
     assert [episode["totalWords"] for episode in catalog["episodes"]] == [0, 262]
     for episode in catalog["episodes"]:
@@ -197,6 +198,14 @@ def test_publication_reports_chronological_vocabulary_and_is_input_order_indepen
         ("c-spaeter", 3, 2, 0),
     ]
     assert (first / "catalog.json").read_bytes() == (second / "catalog.json").read_bytes()
+    vocabulary = json.loads((first / "vocabulary.json").read_bytes())
+    dog = next(word for word in vocabulary["words"] if word["lemma"] == "hund")
+    assert json.loads((first / dog["shard"]).read_bytes())["counts"]["hund"] == [
+        [0, 2],
+        [1, 1],
+        [3, 1],
+    ]
+    assert (first / dog["shard"]).read_bytes() == (second / dog["shard"]).read_bytes()
     assert (
         json.loads((first / "manifest.json").read_text(encoding="utf-8"))["publicationId"]
         == (json.loads((second / "manifest.json").read_text(encoding="utf-8"))["publicationId"])
@@ -250,3 +259,24 @@ def test_command_reuses_consumed_inputs_and_invalidates_settings_without_touchin
         "reused": ["synthetic-empty"],
     }
     assert json.loads((output / "synthetic-episode-001.json").read_text())["total_words"] == 0
+
+
+def test_publishing_rejects_counts_that_cannot_be_represented_exactly_in_the_browser(
+    tmp_path, monkeypatch, capsys
+):
+    corpus = prepare(tmp_path)
+    external_model(monkeypatch)
+    output = tmp_path / "analyses"
+    command = ["analyze", "--episodes", str(corpus), "--output", str(output)]
+    assert main(command) == 0
+    capsys.readouterr()
+    saved = output / "synthetic-episode-001.json"
+    analysis = json.loads(saved.read_bytes())
+    analysis["lemmas"] = {"hund": {"count": 9007199254740992, "stopword": False}}
+    analysis["total_words"] = 9007199254740992
+    saved.write_text(json.dumps(analysis), encoding="utf-8")
+    monkeypatch.setitem(sys.modules, "spacy", None)
+    publication = tmp_path / "public"
+    assert main([*command, "--cache-only", "--publish", str(publication)]) == 1
+    assert "safe integer" in json.loads(capsys.readouterr().out)["error"]
+    assert not publication.exists()

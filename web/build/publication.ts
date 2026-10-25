@@ -3,6 +3,7 @@ import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { Plugin, ResolvedConfig } from 'vite';
 import { buildInputs } from './inputs.ts';
+import { countPairs } from '../src/statistics.ts';
 
 const digest = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const json = async <T,>(file: string): Promise<T> => JSON.parse(await readFile(file, 'utf8')) as T;
@@ -38,13 +39,14 @@ export function publication(): Plugin {
       const searchMapPath = path.join(search, searchManifest.indexId, 'episodes.json');
       const searchMap = await json<SearchMap>(searchMapPath);
       const statsManifestPath = path.join(stats, 'manifest.json');
-      const statsManifest = await json<{ publicationId: string; podcastId: string }>(statsManifestPath);
+      const statsManifest = await json<{ schemaVersion: number; publicationId: string; podcastId: string }>(statsManifestPath);
       const statsCatalogPath = path.join(stats, 'catalog.json');
-      const statsCatalog = await json<{ publicationId: string; episodes: StatEpisode[] }>(statsCatalogPath);
+      const statsCatalog = await json<{ schemaVersion: number; publicationId: string; episodes: StatEpisode[] }>(statsCatalogPath);
       if (!/^[a-f0-9]{64}$/.test(searchManifest.indexId) || searchMap.indexId !== searchManifest.indexId) {
         throw new Error('Search index and stable episode mapping do not match');
       }
-      if (!/^[a-f0-9]{64}$/.test(statsManifest.publicationId)
+      if (statsManifest.schemaVersion !== 2 || statsCatalog.schemaVersion !== 2
+          || !/^[a-f0-9]{64}$/.test(statsManifest.publicationId)
           || statsManifest.podcastId !== searchManifest.podcastId
           || statsCatalog.publicationId !== statsManifest.publicationId) {
         throw new Error('Search and statistics inputs belong to different publications');
@@ -69,6 +71,22 @@ export function publication(): Plugin {
         throw new Error('Publication source is incomplete or differs from built search/statistics inputs');
       }
       const statisticsId = statsManifest.publicationId;
+      const statisticsFiles = ['manifest.json', 'catalog.json', 'vocabulary.json',
+        ...Array.from({ length: 64 }, (_, index) => `counts/${String(index).padStart(2, '0')}.json`)];
+      const statisticsArtifacts = await Promise.all(statisticsFiles.map(async (file) => {
+        const filePath = path.join(stats, file);
+        const value = await json<JsonObject>(filePath);
+        if (value.schemaVersion !== 2 || value.publicationId !== statisticsId) {
+          throw new Error(`Invalid statistics artifact: ${file}`);
+        }
+        if (file.startsWith('counts/')) {
+          if (!value.counts || typeof value.counts !== 'object' || Array.isArray(value.counts)) {
+            throw new Error(`Invalid statistics artifact: ${file}`);
+          }
+          for (const pairs of Object.values(value.counts)) countPairs(pairs, statsCatalog.episodes.length);
+        }
+        return { filePath, value };
+      }));
       const publicationId = digest({
         schemaVersion: 1, podcastId: searchManifest.podcastId,
         state: prepared?.state ?? 'synthetic-fixture', archiveComplete: false,
@@ -79,10 +97,7 @@ export function publication(): Plugin {
       searchMap.publicationId = publicationId;
       await writeFile(path.join(search, 'manifest.json'), JSON.stringify(searchManifest));
       await writeFile(searchMapPath, JSON.stringify(searchMap));
-      for (const file of ['manifest.json', 'catalog.json', 'vocabulary.json', ...(await readdir(path.join(stats, 'counts'))).map((name) => `counts/${name}`)]) {
-        const filePath = path.join(stats, file);
-        const value = await json<JsonObject>(filePath);
-        if (value.publicationId !== statisticsId) throw new Error(`Mixed statistics artifact: ${file}`);
+      for (const { filePath, value } of statisticsArtifacts) {
         value.statisticsId = statisticsId;
         value.publicationId = publicationId;
         await writeFile(filePath, JSON.stringify(value));
