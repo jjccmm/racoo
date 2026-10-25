@@ -4,7 +4,7 @@
 
 **Blocked by:** 01: Compact episode/count pairs throughout the published comparison.
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] Filter spaCy stopword lemmas consistently across the whole publication from vocabulary AND all count files.
 - [ ] Provide a tracked, documented UTF-8 ignored-lemma list seeded with observed fillers, automatically used by every publishing route and overridable through the CLI.
@@ -15,3 +15,5 @@
 ## Comments
 
 See the specification for exact normalization, errors and metric boundaries. Alphabetical word files and frequency-sorted count shards must remain deferred documentation options. Coordinator handles final integration evidence and shared planning/domain docs.
+
+Assigned to filtered-statistics implementer after ticket01 integration.
