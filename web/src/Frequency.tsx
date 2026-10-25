@@ -68,14 +68,12 @@ type Props = { publicationId: string; words: Word[]; episodes: Episode[] };
 
 export function Frequency({ publicationId, words, episodes }: Props) {
   const [query, setQuery] = useState('');
-  const [includeStopwords, setIncludeStopwords] = useState(false);
   const [mode, setMode] = useState<Mode>('normalized');
   const [selected, setSelected] = useState<SelectedWord[]>([]);
   const [loading, setLoading] = useState(false);
   const [failedLemma, setFailedLemma] = useState<string>();
 
-  const suggestions = words.filter((word) => (includeStopwords || !word.stopword)
-    && word.lemma.includes(query.trim().toLocaleLowerCase('de')))
+  const suggestions = words.filter((word) => word.lemma.includes(query.trim().toLocaleLowerCase('de')))
     .slice(0, MAX_SUGGESTIONS);
 
   async function toggle(word: Word) {
@@ -131,10 +129,7 @@ export function Frequency({ publicationId, words, episodes }: Props) {
   return <div className="frequency">
     <label htmlFor="lemma">Grundform suchen</label>
     <input id="lemma" value={query} onChange={(event) => setQuery(event.target.value)} />
-    <label className="stopword-control">
-      <input type="checkbox" checked={includeStopwords} onChange={(event) => setIncludeStopwords(event.target.checked)} />
-      Stoppwörter in Vorschlägen einschließen
-    </label>
+    <p className="muted">Automatische Stoppwörter und Wörter aus einer manuell gepflegten Zusatzliste sind von Wortauswahl und Häufigkeitsvergleich ausgeschlossen. Gesamtwörter, verschiedene und neue Wörter sowie der Nenner der normierten Häufigkeit enthalten weiterhin alle alphabetischen Wörter. Die Stichwortsuche durchsucht das vollständige Transkript.</p>
     <p className="muted">Höchstens zehn Vorschläge; bis zu fünf Grundformen vergleichen. Die Auswahl ändert weder Gesamtwörter noch den Nenner der normierten Häufigkeit.</p>
     <ul aria-label="Grundformvorschläge" className="word-suggestions">
       {suggestions.map((word) => {

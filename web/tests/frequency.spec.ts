@@ -35,7 +35,7 @@ test('a visitor compares multiple Grundformen, normalized rates and absolute occ
   await expect(cat.getByRole('row').filter({ hasText: 'Paar D' })).toContainText('3');
 });
 
-test('stopword suggestions can be toggled without changing counts or the normalization denominator', async ({ page }) => {
+test('excluded words are explained and unavailable while all-word metrics and rates stay complete', async ({ page }) => {
   await openStatistics(page);
   await choose(page, 'hund');
   const total = page.getByText('Gesamtwörter einschließlich Stoppwörtern: 349');
@@ -46,20 +46,14 @@ test('stopword suggestions can be toggled without changing counts or the normali
   await page.getByRole('textbox', { name: 'Grundform suchen' }).fill('ein');
   await expect(page.getByRole('list', { name: 'Grundformvorschläge' })
     .getByRole('button', { name: 'ein', exact: true })).toHaveCount(0);
-  await page.getByRole('checkbox', { name: 'Stoppwörter in Vorschlägen einschließen' }).check();
-  await expect(page.getByRole('list', { name: 'Grundformvorschläge' })
-    .getByRole('button', { name: 'ein', exact: true })).toHaveCount(1);
-  await choose(page, 'ein');
+  await expect(page.getByRole('checkbox', { name: 'Stoppwörter in Vorschlägen einschließen' })).toHaveCount(0);
+  await expect(page.locator('.frequency')).toContainText('Automatische Stoppwörter und Wörter aus einer manuell gepflegten Zusatzliste');
+  await expect(page.locator('.frequency')).toContainText('Gesamtwörter, verschiedene und neue Wörter sowie der Nenner der normierten Häufigkeit enthalten weiterhin alle alphabetischen Wörter');
   await expect(total).toBeVisible();
   await expect(page.getByRole('table', { name: 'Top 10: hund' })
     .getByRole('row').filter({ hasText: 'Titelgeheimnis' })).toContainText('269');
   await expect(page.getByRole('table', { name: 'Top 10: hund' })
     .getByRole('row').filter({ hasText: 'Titelgeheimnis' })).toContainText('951,7');
-  const stopwordEpisode = page.getByRole('table', { name: 'Top 10: ein' })
-    .getByRole('row').filter({ hasText: 'Synthetische Beispielfolge' });
-  await expect(stopwordEpisode).toContainText('2');
-  await expect(stopwordEpisode).toContainText('15');
-  await expect(stopwordEpisode).toContainText('133,3');
   await expect(page.locator('input[name="frequency-mode"][value="normalized"]')).toBeChecked();
 });
 

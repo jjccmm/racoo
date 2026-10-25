@@ -102,6 +102,11 @@ def main(argv: list[str] | None = None) -> int:
     publication.add_argument("--output", type=Path, required=True)
     publication.add_argument("--analysis-version", default=analysis.ANALYSIS_VERSION)
     publication.add_argument(
+        "--ignored-lemmas",
+        type=Path,
+        help="Override the shipped additional frequency-exclusion list (UTF-8, one lemma per line)",
+    )
+    publication.add_argument(
         "--cache-only", action="store_true", help="Require valid saved analyses; never load a model"
     )
     catalog.add_parser(commands)

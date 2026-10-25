@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import unicodedata
 from pathlib import Path
 from typing import Annotated, Literal, Self
 
@@ -72,8 +73,44 @@ def load_model():
     return model
 
 
-def publish(directory: Path, episodes: list[Episode], analyses: dict[str, Analysis]) -> None:
+def ignored_lemmas(path: Path | None = None) -> set[str]:
+    path = path if path is not None else Path(__file__).with_name("ignored_lemmas.txt")
+    result = set()
+    try:
+        lines = path.read_text(encoding="utf-8-sig").splitlines()
+    except (OSError, UnicodeError) as error:
+        raise ValueError(f"Cannot read ignored-lemma list {path}: {error}") from error
+    for line_number, line in enumerate(lines, 1):
+        value = line.strip()
+        if not value or value.startswith("#"):
+            continue
+        lemma = unicodedata.normalize("NFC", value.lower())
+        if not lemma.isalpha():
+            raise ValueError(f"{path}:{line_number}: Expected one alphabetic lemma per line")
+        result.add(lemma)
+    return result
+
+
+def publish(
+    directory: Path,
+    episodes: list[Episode],
+    analyses: dict[str, Analysis],
+    *,
+    ignored_lemmas_path: Path | None = None,
+) -> None:
     ordered = sorted(episodes, key=lambda episode: (episode.published_at, episode.episode_id))
+    manual_exclusions = ignored_lemmas(ignored_lemmas_path)
+    exclusion_policy = {
+        "automaticStopwords": "union-of-selected-analysis-flags",
+        "ignoredLemmas": sorted(manual_exclusions),
+    }
+    excluded = {
+        lemma
+        for episode in ordered
+        for lemma, item in analyses[episode.episode_id].lemmas.items()
+        if item.stopword
+    }
+    excluded.update(manual_exclusions)
     words: dict[str, dict] = {}
     shards: list[dict[str, list]] = [{} for _ in range(64)]
     catalog = []
@@ -99,6 +136,8 @@ def publish(directory: Path, episodes: list[Episode], analyses: dict[str, Analys
             }
         )
         for lemma, item in sorted(analysis.lemmas.items()):
+            if lemma in excluded:
+                continue
             if item.count > 9_007_199_254_740_991:
                 raise ValueError(
                     f"Count for {lemma} in {episode.episode_id} exceeds a safe integer"
@@ -121,6 +160,7 @@ def publish(directory: Path, episodes: list[Episode], analyses: dict[str, Analys
         encoded(
             {
                 "schemaVersion": 2,
+                "frequencyExclusions": exclusion_policy,
                 "catalog": catalog,
                 "vocabulary": vocabulary,
                 "shards": shards,
@@ -138,7 +178,7 @@ def publish(directory: Path, episodes: list[Episode], analyses: dict[str, Analys
             "summary": {
                 "episodeCount": len(ordered),
                 "totalWords": sum(analysis.total_words for analysis in analyses.values()),
-                "distinctWords": len(words),
+                "distinctWords": len(seen_lemmas),
                 "newWords": sum(episode["newWords"] for episode in catalog),
             },
             "episodes": catalog,
@@ -161,7 +201,11 @@ def publish(directory: Path, episodes: list[Episode], analyses: dict[str, Analys
         )
     write_json(
         directory / "manifest.json",
-        {**envelope, "podcastId": ordered[0].podcast_id},
+        {
+            **envelope,
+            "podcastId": ordered[0].podcast_id,
+            "frequencyExclusions": exclusion_policy,
+        },
         indent=None,
         sort_keys=True,
     )
@@ -237,7 +281,12 @@ def analyze(arguments: argparse.Namespace) -> dict:
         analyses[episode.episode_id] = analysis
         computed.append(episode.episode_id)
     if arguments.publish:
-        publish(arguments.publish, episodes, analyses)
+        publish(
+            arguments.publish,
+            episodes,
+            analyses,
+            ignored_lemmas_path=getattr(arguments, "ignored_lemmas", None),
+        )
     return {"ok": True, "computed": computed, "reused": reused}
 
 
@@ -249,6 +298,11 @@ def add_parser(commands: argparse._SubParsersAction) -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--publish", type=Path)
     parser.add_argument("--analysis-version", default=ANALYSIS_VERSION)
+    parser.add_argument(
+        "--ignored-lemmas",
+        type=Path,
+        help="Override the shipped additional frequency-exclusion list (UTF-8, one lemma per line)",
+    )
     parser.add_argument(
         "--cache-only",
         action="store_true",

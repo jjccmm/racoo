@@ -130,6 +130,44 @@ def test_cache_only_publication_fails_when_saved_analysis_is_missing(tmp_path, c
     assert before == {path.name: path.read_bytes() for path in originals.glob("*.json")}
 
 
+def test_cache_only_publish_uses_override_and_preserves_existing_output_on_invalid_list(
+    tmp_path, monkeypatch, capsys
+):
+    catalog, corpus, analyses, originals = selected_inputs(tmp_path)
+    output = tmp_path / "publication"
+    before_analyses = {path.name: path.read_bytes() for path in analyses.glob("*.json")}
+    before_transcripts = {path.name: path.read_bytes() for path in originals.glob("*.json")}
+    monkeypatch.setitem(sys.modules, "spacy", None)
+    ignored = tmp_path / "ignored.txt"
+    ignored.write_text("HUND\n", encoding="utf-8")
+    options = ["--cache-only", "--ignored-lemmas", str(ignored)]
+    assert publish(catalog, corpus, analyses, output, *options) == 0
+    assert json.loads(capsys.readouterr().out)["analysis"]["computed"] == []
+    words = json.loads((output / "stats/vocabulary.json").read_bytes())["words"]
+    assert "hund" not in {word["lemma"] for word in words}
+    assert "ein" not in {word["lemma"] for word in words}
+    assert "eimer" in {word["lemma"] for word in words}
+    stats = json.loads((output / "stats/catalog.json").read_bytes())
+    assert stats["summary"]["totalWords"] == 284
+    prior = {str(path.relative_to(output)): path.read_bytes() for path in output.rglob("*.json")}
+    ignored.write_text("hund\nzwei wörter\n", encoding="utf-8")
+    assert publish(catalog, corpus, analyses, output, *options) == 1
+    error = json.loads(capsys.readouterr().out)["error"]
+    assert f"{ignored}:2:" in error
+    assert "alphabetic lemma" in error
+    assert prior == {
+        str(path.relative_to(output)): path.read_bytes() for path in output.rglob("*.json")
+    }
+    ignored.unlink()
+    assert publish(catalog, corpus, analyses, output, *options) == 1
+    assert str(ignored) in json.loads(capsys.readouterr().out)["error"]
+    assert prior == {
+        str(path.relative_to(output)): path.read_bytes() for path in output.rglob("*.json")
+    }
+    assert before_analyses == {path.name: path.read_bytes() for path in analyses.glob("*.json")}
+    assert before_transcripts == {path.name: path.read_bytes() for path in originals.glob("*.json")}
+
+
 def test_publish_metadata_only_refresh_reuses_analysis_and_updates_public_metadata(
     tmp_path, capsys
 ):

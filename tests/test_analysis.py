@@ -6,6 +6,8 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
 from podcast_words.cli import main
 
 FIXTURE = Path(__file__).parent / "fixtures" / "synthetic-episode.json"
@@ -89,6 +91,11 @@ def test_command_counts_lowercase_lemmas_stopwords_and_large_values(tmp_path, mo
     assert (tmp_path / "first.json").read_bytes() == original
     assert len(list((publication / "counts").glob("*.json"))) == 64
     vocabulary = json.loads((publication / "vocabulary.json").read_text(encoding="utf-8"))
+    assert [item["lemma"] for item in vocabulary["words"]] == ["hund", "laufen"]
+    assert all(
+        not {"der", "ein"}.intersection(json.loads(path.read_bytes())["counts"])
+        for path in (publication / "counts").glob("*.json")
+    )
     word = next(item for item in vocabulary["words"] if item["lemma"] == "hund")
     shard = json.loads((publication / word["shard"]).read_text(encoding="utf-8"))
     assert shard["schemaVersion"] == vocabulary["schemaVersion"] == 2
@@ -110,7 +117,10 @@ def test_publication_reports_chronological_vocabulary_and_is_input_order_indepen
     source = json.loads(FIXTURE.read_text(encoding="utf-8"))
     text = "Bekannter Prüftext."
     lemmas = {
-        "a-frueh": {"der": {"count": 1, "stopword": True}, "hund": {"count": 2, "stopword": False}},
+        "a-frueh": {
+            "der": {"count": 1, "stopword": False},
+            "hund": {"count": 2, "stopword": False},
+        },
         "b-gleich": {
             "der": {"count": 1, "stopword": True},
             "hund": {"count": 1, "stopword": False},
@@ -199,6 +209,11 @@ def test_publication_reports_chronological_vocabulary_and_is_input_order_indepen
     ]
     assert (first / "catalog.json").read_bytes() == (second / "catalog.json").read_bytes()
     vocabulary = json.loads((first / "vocabulary.json").read_bytes())
+    assert [word["lemma"] for word in vocabulary["words"]] == ["hund", "katze"]
+    assert all(
+        "der" not in json.loads(path.read_bytes())["counts"]
+        for path in (first / "counts").glob("*.json")
+    )
     dog = next(word for word in vocabulary["words"] if word["lemma"] == "hund")
     assert json.loads((first / dog["shard"]).read_bytes())["counts"]["hund"] == [
         [0, 2],
@@ -280,3 +295,131 @@ def test_publishing_rejects_counts_that_cannot_be_represented_exactly_in_the_bro
     assert main([*command, "--cache-only", "--publish", str(publication)]) == 1
     assert "safe integer" in json.loads(capsys.readouterr().out)["error"]
     assert not publication.exists()
+
+
+def test_manual_exclusions_republish_saved_analyses_with_normalized_policy_identity(
+    tmp_path, monkeypatch, capsys
+):
+    corpus = prepare(tmp_path)
+    external_model(monkeypatch)
+    output, publication = tmp_path / "analyses", tmp_path / "public"
+    command = [
+        "analyze",
+        "--episodes",
+        str(corpus),
+        "--output",
+        str(output),
+        "--publish",
+        str(publication),
+    ]
+    assert main(command) == 0
+    capsys.readouterr()
+    original_analysis = (output / "synthetic-episode-001.json").read_bytes()
+    original_episode = (tmp_path / "first.json").read_bytes()
+    original_catalog = json.loads((publication / "catalog.json").read_bytes())
+    monkeypatch.setitem(sys.modules, "spacy", None)
+    ignored = tmp_path / "ignored.txt"
+    ignored.write_text("# Operator additions\n HUND \nhund\nMu\u0308nze\n", encoding="utf-8-sig")
+    cached = [*command, "--cache-only", "--ignored-lemmas", str(ignored)]
+    assert main(cached) == 0
+    assert json.loads(capsys.readouterr().out)["computed"] == []
+    vocabulary = json.loads((publication / "vocabulary.json").read_bytes())
+    assert [word["lemma"] for word in vocabulary["words"]] == ["laufen"]
+    first_id = vocabulary["publicationId"]
+    assert all(
+        "hund" not in json.loads(path.read_bytes())["counts"]
+        for path in (publication / "counts").glob("*.json")
+    )
+    catalog = json.loads((publication / "catalog.json").read_bytes())
+    assert catalog["summary"] == original_catalog["summary"]
+    assert catalog["episodes"] == original_catalog["episodes"]
+    ignored.write_text("m\u00fcnze\nhund\n# Same effective list\n", encoding="utf-8")
+    assert main(cached) == 0
+    capsys.readouterr()
+    assert json.loads((publication / "manifest.json").read_bytes())["publicationId"] == first_id
+    ignored.write_text("m\u00fcnze\nhund\nkatze\n", encoding="utf-8")
+    assert main(cached) == 0
+    capsys.readouterr()
+    changed = json.loads((publication / "vocabulary.json").read_bytes())
+    assert changed["publicationId"] != first_id
+    assert changed["words"] == vocabulary["words"]
+    assert (output / "synthetic-episode-001.json").read_bytes() == original_analysis
+    assert (tmp_path / "first.json").read_bytes() == original_episode
+
+
+def test_default_published_exclusions_remove_fillers_but_keep_complete_analysis(
+    tmp_path, monkeypatch, capsys
+):
+    corpus = prepare(tmp_path)
+
+    def nlp(text):
+        if text == "123 !!!":
+            return []
+        return [
+            SimpleNamespace(lemma_=lemma, is_stop=stop, is_alpha=True)
+            for lemma, stop in [("ÄH", False), ("ähm", False), ("Hund", False), ("der", True)]
+        ]
+
+    nlp.meta = {"version": "3.8.0"}
+    monkeypatch.setitem(
+        sys.modules, "spacy", SimpleNamespace(__version__="3.8.16", load=lambda _: nlp)
+    )
+    output, publication = tmp_path / "analyses", tmp_path / "public"
+    assert (
+        main(
+            [
+                "analyze",
+                "--episodes",
+                str(corpus),
+                "--output",
+                str(output),
+                "--publish",
+                str(publication),
+            ]
+        )
+        == 0
+    )
+    capsys.readouterr()
+    saved = json.loads((output / "synthetic-episode-001.json").read_bytes())
+    assert saved["total_words"] == 4
+    assert saved["lemmas"]["äh"] == {"count": 1, "stopword": False}
+    assert saved["lemmas"]["ähm"] == {"count": 1, "stopword": False}
+    assert json.loads((publication / "catalog.json").read_bytes())["summary"] == {
+        "episodeCount": 2,
+        "totalWords": 4,
+        "distinctWords": 4,
+        "newWords": 4,
+    }
+    assert [
+        word["lemma"]
+        for word in json.loads((publication / "vocabulary.json").read_bytes())["words"]
+    ] == ["hund"]
+    assert json.loads((publication / "manifest.json").read_bytes())["frequencyExclusions"] == {
+        "automaticStopwords": "union-of-selected-analysis-flags",
+        "ignoredLemmas": ["äh", "ähm"],
+    }
+
+
+@pytest.mark.parametrize("entry", ["two words", "123", "word # comment", "bad-word"])
+def test_analyze_rejects_nonlemma_entries_with_path_and_line(tmp_path, capsys, entry):
+    ignored = tmp_path / "ignored.txt"
+    ignored.write_text(f"# Additions\n{entry}\n", encoding="utf-8")
+    assert (
+        main(
+            [
+                "analyze",
+                "--episodes",
+                str(Path(__file__).parent / "fixtures/search-corpus.json"),
+                "--output",
+                str(Path(__file__).parent / "fixtures/analysis"),
+                "--cache-only",
+                "--publish",
+                str(tmp_path / "public"),
+                "--ignored-lemmas",
+                str(ignored),
+            ]
+        )
+        == 1
+    )
+    assert f"{ignored}:2:" in json.loads(capsys.readouterr().out)["error"]
+    assert not (tmp_path / "public").exists()
