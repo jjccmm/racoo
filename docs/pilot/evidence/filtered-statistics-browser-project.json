@@ -1,0 +1,104 @@
+{
+  "base": "http://127.0.0.1:4180/podcast_words_v3/",
+  "publicationId": "52b834e93784b0ed7cdf4565e715a780ea79e2d67963020de3cd396f0463b2ac",
+  "statisticsSchemaVersion": 2,
+  "episodeCount": 5,
+  "summary": {
+    "distinctWords": 5427,
+    "episodeCount": 5,
+    "newWords": 5427,
+    "totalWords": 49665
+  },
+  "vocabularyEntries": 5121,
+  "pairCount": 7304,
+  "excludedAutomaticLemmas": 304,
+  "manualList": [
+    "äh",
+    "ähm"
+  ],
+  "allAllowedCountsComparedWithSavedAnalysis": true,
+  "noTranscriptLoadBeforeSearch": true,
+  "exclusionNotice": true,
+  "stopwordToggleRemoved": true,
+  "displayedHundCounts": [
+    {
+      "episodeId": "ep-9fc90dc95a4e7c5633f4c62489665cf2",
+      "count": 12,
+      "rate": "1,0"
+    },
+    {
+      "episodeId": "ep-8c3cf057f4cd494721dc22b56ae5ddfc",
+      "count": 0,
+      "rate": "0,0"
+    },
+    {
+      "episodeId": "ep-4e22f6d5c692e3e62564621fdcd8bcb2",
+      "count": 2,
+      "rate": "0,2"
+    },
+    {
+      "episodeId": "ep-5f478c2c998d108b9c1a08d27898a417",
+      "count": 0,
+      "rate": "0,0"
+    },
+    {
+      "episodeId": "ep-5764a1149f18a8f68698fb45bb405264",
+      "count": 4,
+      "rate": "0,3"
+    }
+  ],
+  "mobileNoOverflow": true,
+  "searches": [
+    {
+      "query": "massagesessel hotline massage",
+      "expectedTitle": "UFO001 Prolog",
+      "rank": 1
+    },
+    {
+      "query": "itunes massagesesseln ψξωζψξωζ",
+      "expectedTitle": "UFO001 Prolog",
+      "rank": 1
+    },
+    {
+      "query": "butter falten sonnencreme",
+      "expectedTitle": "UGO081 Freestyle Karate",
+      "rank": 1
+    },
+    {
+      "query": "telefondienst wenden ψξωζψξωζ",
+      "expectedTitle": "UGO081 Freestyle Karate",
+      "rank": 1
+    },
+    {
+      "query": "beatles rettungsequipment songtexte",
+      "expectedTitle": "UFO300 Moll",
+      "rank": 1
+    },
+    {
+      "query": "submarine wellen ψξωζψξωζ",
+      "expectedTitle": "UFO300 Moll",
+      "rank": 1
+    },
+    {
+      "query": "lehnen position schulter",
+      "expectedTitle": "UFO Experiment (KI-generiert)",
+      "rank": 1
+    },
+    {
+      "query": "verzollen absolute ψξωζψξωζ",
+      "expectedTitle": "UFO Experiment (KI-generiert)",
+      "rank": 1
+    },
+    {
+      "query": "wunder bezeugen fettarm",
+      "expectedTitle": "UFO537 Festival",
+      "rank": 1
+    },
+    {
+      "query": "fettarme gegriffen ψξωζψξωζ",
+      "expectedTitle": "UFO537 Festival",
+      "rank": 1
+    }
+  ],
+  "notes": "Technical checks against saved ASR/analysis. No online audio or independent human search-quality assessment."
+}

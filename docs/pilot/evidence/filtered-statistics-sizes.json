@@ -1,0 +1,109 @@
+{
+  "date": "2026-10-25",
+  "fiveRealEpisodes": {
+    "before": {
+      "countsBytes": 438666,
+      "vocabularyBytes": 422627,
+      "catalogBytes": 1770,
+      "vocabularyEntries": 5427,
+      "lemmaEpisodePairs": 8476
+    },
+    "compactOnly": {
+      "stage": "compact-only",
+      "countBytes": 133530,
+      "vocabularyBytes": 422627,
+      "catalogBytes": 1770,
+      "vocabularyEntries": 5427,
+      "summary": {
+        "distinctWords": 5427,
+        "episodeCount": 5,
+        "newWords": 5427,
+        "totalWords": 49665
+      }
+    },
+    "compactAndFiltered": {
+      "countsBytes": 122873,
+      "vocabularyBytes": 399713,
+      "catalogBytes": 1770,
+      "vocabularyEntries": 5121,
+      "lemmaEpisodePairs": 7304,
+      "summary": {
+        "distinctWords": 5427,
+        "episodeCount": 5,
+        "newWords": 5427,
+        "totalWords": 49665
+      }
+    }
+  },
+  "synthetic600": {
+    "historical": {
+      "kind": "synthetic-statistics-only; 120 repetitions of five existing analysis/texts with unique episode IDs; not 600 independent episodes or end-to-end website benchmark",
+      "episodes": 600,
+      "words": 5959800,
+      "distinctWords": 5427,
+      "lemmaEpisodePairs": 1017120,
+      "publishSeconds": 8.54,
+      "countsSumRaw": 42889945,
+      "countsMeanRaw": 670155,
+      "countsMinRaw": 465392,
+      "countsMaxRaw": 966629,
+      "countsSumGzip": 2160627,
+      "countsMeanGzip": 33760,
+      "catalogBytes": 177218,
+      "vocabularyBytes": 433452,
+      "notes": "Gzip is a local compression estimate, not measured Pages delivery. Repeated vocabulary/text overestimates compressibility and does not model real vocabulary growth.",
+      "unimplemented_numeric_index_projection": {
+        "pair_bytes_current": 41796120,
+        "pair_bytes_numeric_indices": 7027568,
+        "pair_bytes_reduction_percent": 83.2,
+        "all_count_files_estimated_raw_bytes": 8121393,
+        "scope": "Accounting estimate for the same synthetic pair distribution; not a changed exporter or actual numeric-format export. Does not estimate additional catalog mapping bytes."
+      }
+    },
+    "compactOnly": {
+      "kind": "synthetic statistics only: 120 repetitions of five saved analyses, unique IDs; not 600 independent transcripts or end-to-end browser benchmark",
+      "stage": "compact-only",
+      "episodes": 600,
+      "summary": {
+        "distinctWords": 5427,
+        "episodeCount": 600,
+        "newWords": 5427,
+        "totalWords": 5959800
+      },
+      "statisticsSchemaVersion": 2,
+      "vocabularyEntries": 5427,
+      "lemmaEpisodePairs": 1017120,
+      "publishSeconds": 8.623,
+      "countsSumRaw": 8109755,
+      "countsMinRaw": 87832,
+      "countsMaxRaw": 183389,
+      "catalogBytes": 177218,
+      "vocabularyBytes": 433452,
+      "highestDecodedEpisodeIndex": 599,
+      "temporaryExportRemovedOnCompletion": true
+    },
+    "compactAndFiltered": {
+      "kind": "synthetic statistics only: 120 repetitions of five saved analyses, unique IDs; not 600 independent transcripts or end-to-end browser benchmark",
+      "stage": "filtered",
+      "episodes": 600,
+      "summary": {
+        "distinctWords": 5427,
+        "episodeCount": 600,
+        "newWords": 5427,
+        "totalWords": 5959800
+      },
+      "statisticsSchemaVersion": 2,
+      "vocabularyEntries": 5121,
+      "lemmaEpisodePairs": 876480,
+      "publishSeconds": 9.168,
+      "countsSumRaw": 6940651,
+      "countsMinRaw": 81557,
+      "countsMaxRaw": 149629,
+      "catalogBytes": 177218,
+      "vocabularyBytes": 409914,
+      "highestDecodedEpisodeIndex": 599,
+      "temporaryExportRemovedOnCompletion": true
+    }
+  },
+  "scope": "File sizes are raw bytes, not measured hosting transfers. Synthetic600 repeats five saved analyses with unique IDs; no 600 independent transcripts, Pagefind/browser/archive/deployment assessment. Saved source episodes/analyses unchanged."
+}

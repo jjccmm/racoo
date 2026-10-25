@@ -1,6 +1,6 @@
 # Compact, filtered word-frequency publication
 
-**Status:** implementing
+**Status:** resolved
 
 ## Authorization and scope
 
@@ -30,3 +30,7 @@ The user requests local tickets followed immediately by implementation through t
 01 has no blockers. 02 is blocked by 01 because both change the same publication contract and browser consumer; each remains independently usable. Implementer subagents use separate branches/worktrees, apply the TDD skill at the existing seams, and merge the latest integration tip before reporting. A merger subagent integrates each completed ticket. The coordinator owns authoritative ticket statuses, plan and glossary alignment, deferred-option documentation, final checks and two-axis code review.
 
 Integration branch: codex/compact-filtered-statistics. Fixed review baseline: 143a37b. After both implementations, run the full fixture suite once, rebuild and check the real five-episode website, review Standards and Spec separately, fix findings, close tickets with evidence, commit and remove temporary worktrees.
+
+## Delivered
+
+Both tickets are resolved on the integration branch. See [completion report](../../docs/pilot/compact-filtered-statistics.md), [independent review axes](review.md) and per-ticket integrated commit evidence. Full fixture checks and real-five checks at both bases pass; source transcripts/analyses remain unchanged. Alphabetical/frequency-sorted files remain deferred.

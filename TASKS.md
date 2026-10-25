@@ -1,9 +1,9 @@
 # Nächste Arbeiten
 
-Aktuell: [kompakte und gefilterte Wortstatistik](.scratch/compact-filtered-statistics/spec.md), mit [zwei Umsetzungstickets](.scratch/compact-filtered-statistics/ticket-index.md). Alphabetische Wortlisten und nach Worthäufigkeit sortierte Dateien bleiben dokumentierte Optionen für später nachgewiesene Leistungsprobleme.
+Aktuell: [kompakte und gefilterte Wortstatistik](.scratch/compact-filtered-statistics/spec.md), mit [zwei abgeschlossenen Umsetzungstickets](.scratch/compact-filtered-statistics/ticket-index.md). Der [Abschlussbericht](docs/pilot/compact-filtered-statistics.md) enthält Größen, echte Browserbefunde und Prüfungen. Alphabetische Wortlisten und nach Worthäufigkeit sortierte Dateien bleiben dokumentierte Optionen für später nachgewiesene Leistungsprobleme.
 
-- [ ] Kompakte Folgenindex-/Anzahlpaare durch Export, Build und Browser führen.
-- [ ] Stoppwörter und eine gepflegte Zusatzliste aus Häufigkeitsdaten ausschließen; Hinweis anzeigen und den echten Fünferbuild prüfen.
+- [x] Kompakte Folgenindex-/Anzahlpaare durch Export, Build und Browser führen.
+- [x] Stoppwörter und eine gepflegte Zusatzliste aus Häufigkeitsdaten ausschließen; Hinweis anzeigen und den echten Fünferbuild prüfen.
 
 Aktueller Umfang: [lokaler Fünf-Folgen-Pilot](.scratch/local-five-episode-pilot/spec.md), aufgeteilt in [vier Tickets](.scratch/local-five-episode-pilot/ticket-index.md). Die frühere sekundengenaue Zeitmarken-/Audiohash-Abnahme ist durch den ausdrücklichen Nutzerwunsch ersetzt. Archivverarbeitung und öffentliche Veröffentlichung bleiben spätere Schritte.
 
