@@ -1,0 +1,24 @@
+{
+  "kind": "synthetic-statistics-only; 120 repetitions of five existing analysis/texts with unique episode IDs; not 600 independent episodes or end-to-end website benchmark",
+  "episodes": 600,
+  "words": 5959800,
+  "distinctWords": 5427,
+  "lemmaEpisodePairs": 1017120,
+  "publishSeconds": 8.54,
+  "countsSumRaw": 42889945,
+  "countsMeanRaw": 670155,
+  "countsMinRaw": 465392,
+  "countsMaxRaw": 966629,
+  "countsSumGzip": 2160627,
+  "countsMeanGzip": 33760,
+  "catalogBytes": 177218,
+  "vocabularyBytes": 433452,
+  "notes": "Gzip is a local compression estimate, not measured Pages delivery. Repeated vocabulary/text overestimates compressibility and does not model real vocabulary growth.",
+  "unimplemented_numeric_index_projection": {
+    "pair_bytes_current": 41796120,
+    "pair_bytes_numeric_indices": 7027568,
+    "pair_bytes_reduction_percent": 83.2,
+    "all_count_files_estimated_raw_bytes": 8121393,
+    "scope": "Accounting estimate for the same synthetic pair distribution; not a changed exporter or actual numeric-format export. Does not estimate additional catalog mapping bytes."
+  }
+}
