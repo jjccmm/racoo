@@ -1,6 +1,6 @@
 # Podcast Words V3 – Projektplan
 
-Stand: 25. Oktober 2026; lokaler Fünf-Folgen-Pilot mit temporärem Audio und groben Segmenten. Die aktuelle Umsetzung steht in der [Pilotspezifikation](.scratch/local-five-episode-pilot/spec.md).
+Stand: 25. Oktober 2026; lokaler Fünf-Folgen-Pilot mit temporärem Audio und groben Segmenten. Die aktuelle Ergänzung ist die [kompakte und gefilterte Wortstatistik](.scratch/compact-filtered-statistics/spec.md); der übrige Umfang steht in der [Pilotspezifikation](.scratch/local-five-episode-pilot/spec.md).
 
 Der Plan wurde im dokumentierten Interview gemeinsam bestätigt. Die [Planverfeinerung](docs/planning/refinement.md) hält die Entscheidungen fest; [TASKS.md](TASKS.md) enthält die nachweisorientierte Umsetzungsreihenfolge. Der [bestätigte Einrichtungsumfang](docs/planning/workspace-setup.md) ist die Grundlage der Workspace-Einrichtung.
 
@@ -71,12 +71,12 @@ Das Episoden-JSON ist die maßgebliche Quelle für Originaltext und Zeitmarken. 
 
 Zeitmarken beim Speichern auf sinnvolle Reihenfolge und Grenzen prüfen. Segmente erhalten vor der Indexierung stabile, innerhalb der Folge eindeutige IDs.
 
-Für die Statistik einheitlich spaCy mit `de_core_news_lg` und festgehaltener Modellversion verwenden. Alle alphabetischen Tokens einschließlich Stoppwörtern als Gesamtwörter zählen. Verschiedene und erstmals auftretende Wörter anhand kleingeschriebener Lemmata bestimmen; auch hier gehören Stoppwörter zum Bestand. Stoppwörter zusätzlich kennzeichnen. Die Definitionen auf der Webseite erklären. Originaltexte und Spracherkennung bleiben von dieser Aufbereitung unabhängig.
+Für die Statistik einheitlich spaCy mit `de_core_news_lg` und festgehaltener Modellversion verwenden. Alle alphabetischen Tokens einschließlich Stoppwörtern als Gesamtwörter zählen. Verschiedene und erstmals auftretende Wörter anhand kleingeschriebener Lemmata bestimmen; auch hier gehören Stoppwörter zum Bestand. Stoppwörter in der vollständigen Analyse kennzeichnen. Für die veröffentlichten Häufigkeitsvergleiche Stoppwörter und eine manuell gepflegte Zusatzliste ausschließen; diese Filter ändern weder die vollständigen Analysewerte noch den Bezugswert je 1.000 Gesamtwörter. Die Definitionen auf der Webseite erklären. Originaltexte und Spracherkennung bleiben von dieser Aufbereitung unabhängig.
 
 Die Analyse pro Folge zwischenspeichern und ihre Version festhalten. Eine geänderte Lemmatisierung berechnet nur die Analysen neu. Für die Veröffentlichung daraus erzeugen:
 
 - Katalog, Vokabular und Gesamt-/Episodenstatistiken;
-- sparsame Zuordnungen `Lemma → [(Episoden-ID, Anzahl)]`, zunächst in 64 Dateien je Podcast aufgeteilt; das Vokabular nennt die zuständige Datei;
+- sparsame Zuordnungen `Lemma → [(Folgenindex, Anzahl)]` im öffentlichen Statistikformat v2, weiterhin in 64 Dateien je Podcast nach Lemma-Hash aufgeteilt; der Folgenindex ist die nullbasierte Position im chronologischen Katalog desselben Veröffentlichungsstands, der die dauerhafte Episoden-ID enthält. Das Vokabular nennt die zuständige Datei;
 - Episodentranskripte und den separat erzeugten Pagefind-Index.
 
 Zählwerte als normale ausreichend große Ganzzahlen behandeln. Ein fehlender Eintrag für eine bekannte Wort-/Folgenkombination bedeutet null; ein fehlgeschlagener Dateiabruf ist ein Fehler und kein Nullwert.
@@ -103,7 +103,7 @@ Pagefind übernimmt Indexierung, bedarfsgerechtes Nachladen und lexikalische Suc
 
 ### Statistik und Wiedergabe
 
-Mehrere Grundformen auswählbar machen, mit begrenzten Vorschlägen statt einer vollständigen langen Auswahlliste. Stoppwörter in den Vorschlägen standardmäßig ausblenden und über einen Schalter einschließbar machen; dieser Schalter verändert die Gesamtzählungen und den Bezugswert des Verlaufs nicht. Häufigkeitsverläufe standardmäßig als Vorkommen je 1.000 Gesamtwörter der jeweiligen Folge zeigen, absolute Zahlen als Alternative anbieten. Bei null Gesamtwörtern keine Division ausführen und den Wert als nicht verfügbar kennzeichnen.
+Mehrere Grundformen auswählbar machen, mit begrenzten Vorschlägen statt einer vollständigen langen Auswahlliste. Stoppwörter und manuell ignorierte Grundformen aus Wortauswahl und veröffentlichten Häufigkeitsdateien ausschließen. Ein sichtbarer Hinweis erklärt diese Auswahl und die weiterhin vollständigen Gesamtzahlen; ein Stoppwortschalter entfällt. Häufigkeitsverläufe standardmäßig als Vorkommen je 1.000 Gesamtwörter der jeweiligen Folge zeigen, absolute Zahlen als Alternative anbieten. Bei null Gesamtwörtern keine Division ausführen und den Wert als nicht verfügbar kennzeichnen.
 
 Top-10-Folgen und Statistiken zu Gesamtwörtern, verschiedenen Wörtern und erstmals auftretenden Wörtern beibehalten. Erstes Auftreten chronologisch nach Veröffentlichungsdatum bestimmen; bei gleichem Datum stabil nach ID ordnen.
 
@@ -147,3 +147,7 @@ Die [ASR-Untersuchung](docs/research/asr-investigation.md) bewahrt die verworfen
 - [onnx-asr: lange Audios und Zeitstempel](https://istupakov.github.io/onnx-asr/usage/)
 - [Pagefind-Indexierung](https://pagefind.app/docs/node-api/), [deutsches Stemming](https://pagefind.app/docs/multilingual/) und [Such-API](https://pagefind.app/docs/api/)
 - [Vite auf GitHub Pages](https://vite.dev/guide/static-deploy.html#github-pages)
+
+## 6. Zurückgestellte Ladeoptionen
+
+Die vollständige Wortliste bleibt zunächst eine Datei; die 64 Zählpakete bleiben nach Lemma-Hash verteilt. Alphabetische Wortlisten mit Nachladen ab dem ersten Buchstaben und nach globaler Worthäufigkeit geordnete Zählpakete sind ausschließlich dokumentierte Optionen. Sie werden erst bei gemessenen Leistungsproblemen erneut bewertet und implementiert. Abwägungen und Messauslöser stehen im [Skalierungsbericht](docs/research/github-pages-600-episodes.md#zurückgestellte-optionen-bei-gemessenen-leistungsproblemen).
