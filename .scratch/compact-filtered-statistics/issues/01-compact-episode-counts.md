@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] Publish numeric episode-index/count pairs under public statistics schema v2, with deterministic chronological catalog mapping and stable IDs retained in the catalog.
 - [ ] Adapt all publishing/build/browser consumers together; preserve values above 255, absolute/normalized counts, zero rows and chronological tie handling.
@@ -14,3 +14,5 @@
 ## Comments
 
 Scope is the public statistics format. Source Episode/Analysis files and the existing 64 hash shards retain their roles. Coordinator owns PLAN, GLOSSARY, TASKS, deferred-option research and final integration evidence.
+
+Assigned to compact-statistics implementer in an isolated worktree.
