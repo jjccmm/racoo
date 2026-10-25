@@ -1,6 +1,6 @@
 # Skalierung auf 600 Folgen mit GitHub Pages
 
-Stand: 25. Oktober 2026. Einschätzung des bestehenden Codes und gemessener Pilotdateien; keine Architekturänderung oder Freigabe zur Archivtranskription. Die Grundentscheidung bleibt sinnvoll: lokal verarbeiten, statische Dateien veröffentlichen, im Browser suchen und auswerten. Ein echter 600-Folgen-Browser-/Deploymentnachweis steht aus.
+Stand: 25. Oktober 2026. Einschätzung des bestehenden Codes und gemessener Pilotdateien; Die Messungen unten beschreiben den damaligen Formatstand; die anschließende Entscheidung für kompakte, gefilterte Häufigkeitsdaten steht in der [aktuellen Spezifikation](../../.scratch/compact-filtered-statistics/spec.md). Keine Freigabe zur Archivtranskription. Die Grundentscheidung bleibt sinnvoll: lokal verarbeiten, statische Dateien veröffentlichen, im Browser suchen und auswerten. Ein echter 600-Folgen-Browser-/Deploymentnachweis steht aus.
 
 ## Hostinggrenzen und Traffic
 
@@ -41,9 +41,9 @@ Das ist ein Test des Statistikformats und Exporters. Er enthält keine 600 unabh
 
 Pagefind liefert Treffer-IDs zunächst getrennt von ihren asynchron nachzuladenden Details. Dieses vorhandene Ladeprinzip ist für den größeren Bestand passend; eine Produktangabe zu kurzen Webseiten wäre kein Leistungsnachweis für unsere langen Transkripte und den eigenen Wrapper. [Pagefind Search API](https://pagefind.app/docs/api/), [Pagefind](https://pagefind.app/)
 
-## Kleine sinnvolle Anpassungen vor dem Archivbetrieb
+## Historische Anpassungsvorschläge und aktueller Umfang
 
-1. **Zählpaare kompakter veröffentlichen.** Die dauerhaften Episoden-IDs bleiben im Originaldatensatz und Katalog. Innerhalb eines veröffentlichten Statistikstands kann ein Paar stattdessen einen kurzen Folgenindex enthalten, etwa `[123,12]`. Für exakt dieselbe synthetische Paarverteilung ergibt das 7.027.568 statt 41.796.120 Byte für die Paarwerte, also **83,2 % weniger Paarbytes**. Mit unveränderten Wortschlüsseln und Paketköpfen wären alle Zählpakete etwa **8,1 statt 42,9 MB** groß. Das ist eine Berechnung, kein implementierter Formatwechsel. Mit dieser Änderung könnten zunächst sogar die 64 Pakete bleiben.
+1. **Zählpaare kompakter veröffentlichen.** Die dauerhaften Episoden-IDs bleiben im Originaldatensatz und Katalog. Innerhalb eines veröffentlichten Statistikstands kann ein Paar stattdessen einen kurzen Folgenindex enthalten, etwa `[123,12]`. Für exakt dieselbe synthetische Paarverteilung ergibt das 7.027.568 statt 41.796.120 Byte für die Paarwerte, also **83,2 % weniger Paarbytes**. Mit unveränderten Wortschlüsseln und Paketköpfen wären alle Zählpakete etwa **8,1 statt 42,9 MB** groß. Das war eine Berechnung zum ursprünglichen Format. Der anschließende Auftrag setzt den kompakten Formatwechsel um und behält die 64 Hash-Pakete; ein aktueller Fünfernachweis wird getrennt dokumentiert.
 2. **Suchinstanz und geladene Zählpakete wiederverwenden.** Einen Worker je Datenstand nutzen, bei Fehlern bewusst erneuern und die bestehenden Abbruch-/Wiederholungsprüfungen erhalten. Zählpakete nach Dateipfad/Datenstand cachen. Die konkrete Verbesserung muss gemessen werden; kein Versprechen einer bestimmten Latenz.
 3. **Vokabular und lange Übersichten sparsam halten.** Wiederholte Feldnamen/Pfade im veröffentlichten Wortverzeichnis verkürzen; bei tatsächlich großer Datei gezielt aufteilen. Folgenübersichten seitenweise zeigen. Eine zusätzliche API folgt aus diesen Aufgaben nicht.
 4. **Echten 600er-Abnahmelauf durchführen.** Ganze Buildgröße, Wortlistengröße, größte Zählpakete, kalte/warme Suchlatenz und über alle Worker gemessene Transfers prüfen. Seltene und häufige Wörter, drei Begriffe, Nulltreffer, weitere Trefferseiten, fünf Statistikserien, Mobilansicht und Projektpfad abdecken. Präfix-/Wortformtreffer auch auf ihre praktische Suchqualität prüfen.
@@ -53,3 +53,25 @@ Mehr Zählpakete (beispielsweise 256) bleiben eine einfache Alternative, falls d
 ## Entscheidungsvorschlag
 
 Für 600 Folgen und ungefähr zehn tägliche Besucher **GitHub Pages, Pagefind und vorberechnete JSON-Dateien beibehalten**. Der größere Bestand erfordert voraussichtlich einige kleine Verbesserungen der Auslieferung und Browserarbeit. Ein neues Backend oder eine laufende Datenbank ist aus den gemessenen Größen nicht begründet. Die lokale Fünferabnahme und der synthetische Statistiktest ersetzen keinen echten 600-Folgen-Leistungsnachweis.
+
+## Zurückgestellte Optionen bei gemessenen Leistungsproblemen
+
+Die folgenden beiden Ideen sind **nur Dokumentation**. Die aktuelle Umsetzung behält eine vollständige, um ausgeschlossene Grundformen verkleinerte Wortliste und 64 nach Lemma-Hash verteilte Zählpakete. Mehr Besucher allein sind kein Anlass zum Umbau: Entscheidend sind gemessene Ladebytes, Wartezeiten und Browserarbeit mit dem echten Archiv.
+
+### Wortlisten nach Anfangsbuchstabe
+
+Möglich wäre eine Datei pro Anfangsbuchstabe, die ab dem ersten eingegebenen Zeichen geladen wird. Jeder Worteintrag behielte einen Verweis auf sein Zählpaket. Das senkt die erste übertragene Wortlistenmenge, verteilt sie aber ungleich: S und seltene Buchstaben haben unterschiedliche Dateigrößen. Umlaute, ß und Wörter mit anderen Schriften brauchen eine definierte Zuordnung, keine stillschweigende Beschränkung auf A–Z.
+
+Die heutigen Vorschläge suchen Teilzeichenfolgen an beliebiger Stelle. Wer etwa „geld“ eingibt, kann auch „kleingeld“ finden. Nur die G-Datei zu laden würde diese Eigenschaft ändern. Vor einer Umsetzung entweder bewusst auf Präfixvorschläge wechseln und das erklären oder eine zusätzliche geeignete Zuordnung für Teilzeichenfolgen planen. Dieses Zusatzproblem rechtfertigt derzeit keine neue Indexstruktur.
+
+**Auslöser:** Die tatsächliche gefilterte Wortliste überschreitet ein festgelegtes Ladebudget oder das Parsen/Filtern erzeugt auf dem dokumentierten mobilen Prüfprofil störende Verzögerungen. Vorher die Wortliste am echten Archiv messen.
+
+### Zählpakete nach globaler Worthäufigkeit
+
+Möglich wären weiterhin 64 Dateien, wobei Datei 0 die häufigsten und Datei 63 die seltensten Grundformen enthält. Die Wortliste nennt das zugehörige Paket. Wiederholte beliebte Wörter könnten dadurch häufiger aus demselben schon geladenen Paket kommen. Globale Auftretenshäufigkeit im Transkript ist allerdings keine Messung der tatsächlichen Nutzeranfragen.
+
+Die Häufigkeit bestimmt nicht unmittelbar die Dateigröße: Ein oft gesprochenes Wort in einer einzigen Folge hat weniger Folgenpaare als ein Wort mit je einem Vorkommen in 600 Folgen. Gleich viele Wörter pro Paket garantieren deshalb keine gleich großen Dateien. Eine Aufteilung müsste Dateigrößen und beobachtete Suchanfragen berücksichtigen. Nach neuen Folgen können sich Ränge und Paketzuordnungen ändern; Wortverzeichnis und Pakete müssen immer gemeinsam veröffentlicht und an denselben Datenstand gebunden werden.
+
+HTTP-Caching kann erneute Übertragungen vermeiden. Ein ausdrücklicher Browsercache bereits geparster Pakete würde zusätzlich erneutes Parsen verhindern; das sind unterschiedliche Maßnahmen. Dieser Auftrag führt keinen solchen Cache ein. Falls später nötig, muss er nach Veröffentlichungsstand und Dateipfad getrennt sein und Ladefehler dürfen nicht als gültige Leerdateien gespeichert werden.
+
+**Auslöser:** Wiederholte reale Wortauswahlen laden trotz des kompakten Formats zu viele Bytes oder verursachen messbar störende Lade-/Parsezeiten. Dann zunächst einen einfachen Cache gegen die Umverteilung vergleichen. Ohne diesen Befund bleibt die Hash-Verteilung bestehen.

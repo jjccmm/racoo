@@ -51,7 +51,10 @@ _Vermeiden_: Neue Wortformen, neu erkannte Wörter
 Die Anzahl der Vorkommen einer Grundform je 1.000 Gesamtwörter derselben Folge. Sie erlaubt einen Vergleich zwischen unterschiedlich langen Folgen.
 
 **Stoppwort**:
-Ein als häufiges Funktionswort gekennzeichnetes Wort, das bei der Wortauswahl zunächst ausgeblendet wird. Es bleibt Bestandteil der Gesamtwörter und der Grundformzählungen.
+Ein als häufiges Funktionswort gekennzeichnetes Wort. Es wird aus der Wortauswahl und dem Häufigkeitsvergleich ausgeschlossen, bleibt aber Bestandteil der Gesamtwörter, verschiedenen und neuen Wörter sowie der vollständigen Grundformanalyse.
+
+**Zusätzlich ignorierte Grundform**:
+Eine manuell gepflegte Grundform, die ebenso aus Wortauswahl und Häufigkeitsvergleich ausgeschlossen wird. Transkript, Stichwortsuche und Gesamtstatistiken bleiben vollständig.
 
 **Verfügbares Archiv**:
 Alle zum angegebenen Erfassungsstand nachgewiesenen und abrufbaren Folgen eines Podcasts. Bekannte Quellenlücken werden zusätzlich ausgewiesen.

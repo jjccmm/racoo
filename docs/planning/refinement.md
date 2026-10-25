@@ -45,3 +45,9 @@ Die Abschlussbestätigung umfasst diese zwei Regeln, den überarbeiteten `PLAN.m
 Geklärte Fachbegriffe stehen in `GLOSSARY.md`. Bestätigte Anforderungen werden unmittelbar in `PLAN.md` eingearbeitet; offene Vorschläge bleiben hier erkennbar offen. Ein ADR wird nur für eine schwer umkehrbare und ohne Kontext überraschende Abwägung angelegt.
 
 Der gemeinsame Interviewabschluss ist erfolgt. Die folgenden Produktetappen prüfen einen beschlossenen technischen Ansatz zuerst durch einen kleinen Funktionsnachweis, bevor damit der gesamte Bestand verarbeitet wird.
+
+## Ergänzung vom 25. Oktober 2026: veröffentlichte Häufigkeitsdaten
+
+Der neue ausdrückliche Auftrag ersetzt den Stoppwortschalter aus Q8: Stoppwörter und eine gepflegte Zusatzliste werden aus Wortauswahl und veröffentlichten Häufigkeitsdateien entfernt. Vollständige Analysen, Transkripte, Suche sowie Gesamt-/Verschiedene-/Neue-Wörter-Werte bleiben erhalten; je 1.000 Gesamtwörter bezieht sich weiter auf alle alphabetischen Tokens. Ein Website-Hinweis erklärt das. Die [Umsetzungsspezifikation](../../.scratch/compact-filtered-statistics/spec.md) hält den kompakten Folgenindex-Vertrag und die beiden Tickets fest.
+
+Alphabetisch aufgeteilte Wortlisten und nach globaler Worthäufigkeit sortierte Zähldateien bleiben Optionen für später nachgewiesene Leistungsprobleme.
