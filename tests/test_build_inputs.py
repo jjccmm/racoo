@@ -110,6 +110,12 @@ def test_default_build_uses_selected_pilot_and_requires_saved_analysis(tmp_path)
     # A saved source must be checked before it can be rebound to a web publication.
     prepared = tmp_path / ".cache/pilot-publication"
     vocabulary = json.loads((prepared / "stats/vocabulary.json").read_bytes())
+    assert "ein" not in {word["lemma"] for word in vocabulary["words"]}
+    statistics_manifest = json.loads((prepared / "stats/manifest.json").read_bytes())
+    assert statistics_manifest["frequencyExclusions"] == {
+        "automaticStopwords": "union-of-selected-analysis-flags",
+        "ignoredLemmas": ["äh", "ähm"],
+    }
     word = next(word for word in vocabulary["words"] if word["lemma"] == "hund")
     count_file = prepared / "stats" / word["shard"]
     valid_shard = json.loads(count_file.read_bytes())

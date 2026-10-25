@@ -1,0 +1,4 @@
+# Additional lemmas excluded from published word-frequency comparisons.
+# One alphabetic lemma per line. Transcripts and complete analyses stay unchanged.
+äh
+ähm

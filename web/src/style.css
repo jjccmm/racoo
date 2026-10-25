@@ -36,8 +36,6 @@ input:focus-visible, button:focus-visible { outline: 3px solid #286c58; outline-
 .player-controls a { color: #215d4d; font-weight: 700; }
 @media (max-width: 640px) { main { padding: 32px 20px; } .steps { grid-template-columns: 1fr; gap: 12px; } .example { padding: 18px; } }
 .word-suggestions { display: flex; flex-wrap: wrap; gap: .5rem; padding: 0; list-style: none; }
-.stopword-control { display: flex; align-items: center; gap: .5rem; margin-top: 1rem; }
-.stopword-control input { width: auto; }
 .counts-scroll { overflow-x: auto; }
 .frequency-mode { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; border: 0; padding: 0; margin: 1rem 0; }
 .frequency-mode legend { font-weight: 700; margin-bottom: .5rem; }
