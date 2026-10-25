@@ -107,6 +107,36 @@ def test_default_build_uses_selected_pilot_and_requires_saved_analysis(tmp_path)
     assert publication["episodeCount"] == 2
     assert publication["archiveComplete"] is False
 
+    # A saved source must be checked before it can be rebound to a web publication.
+    prepared = tmp_path / ".cache/pilot-publication"
+    vocabulary = json.loads((prepared / "stats/vocabulary.json").read_bytes())
+    word = next(word for word in vocabulary["words"] if word["lemma"] == "hund")
+    count_file = prepared / "stats" / word["shard"]
+    valid_shard = json.loads(count_file.read_bytes())
+    environment["PODCAST_WORDS_PUBLICATION_SOURCE"] = str(prepared)
+    defects = [
+        {**valid_shard, "schemaVersion": 1},
+        {**valid_shard, "publicationId": "f" * 64},
+        {**valid_shard, "counts": {"hund": [[2, 256]]}},
+        {**valid_shard, "counts": {"hund": [[0, 256, 1]]}},
+    ]
+    for defective in defects:
+        count_file.write_text(json.dumps(defective), encoding="utf-8")
+        rejected = subprocess.run(
+            command,
+            cwd=ROOT,
+            env=environment,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=180,
+        )
+        assert rejected.returncode != 0, rejected.stdout + rejected.stderr
+        assert any(
+            message in rejected.stdout + rejected.stderr
+            for message in ("statistics artifact", "Invalid lemma counts")
+        )
+
 
 def test_custom_episode_build_rejects_incompatible_recognition_configuration(tmp_path):
     fixtures = ROOT / "tests" / "fixtures"

@@ -78,7 +78,7 @@ def publish(directory: Path, episodes: list[Episode], analyses: dict[str, Analys
     shards: list[dict[str, list]] = [{} for _ in range(64)]
     catalog = []
     seen_lemmas: set[str] = set()
-    for episode in ordered:
+    for episode_index, episode in enumerate(ordered):
         analysis = analyses[episode.episode_id]
         new_words = set(analysis.lemmas) - seen_lemmas
         seen_lemmas.update(analysis.lemmas)
@@ -99,6 +99,10 @@ def publish(directory: Path, episodes: list[Episode], analyses: dict[str, Analys
             }
         )
         for lemma, item in sorted(analysis.lemmas.items()):
+            if item.count > 9_007_199_254_740_991:
+                raise ValueError(
+                    f"Count for {lemma} in {episode.episode_id} exceeds a safe integer"
+                )
             shard = int(hashlib.sha256(lemma.encode()).hexdigest(), 16) % 64
             entry = words.setdefault(
                 lemma,
@@ -111,11 +115,12 @@ def publish(directory: Path, episodes: list[Episode], analyses: dict[str, Analys
             )
             entry["stopword"] = entry["stopword"] or item.stopword
             entry["totalCount"] += item.count
-            shards[shard].setdefault(lemma, []).append([episode.episode_id, item.count])
+            shards[shard].setdefault(lemma, []).append([episode_index, item.count])
     vocabulary = sorted(words.values(), key=lambda item: item["lemma"])
     publication_id = hashlib.sha256(
         encoded(
             {
+                "schemaVersion": 2,
                 "catalog": catalog,
                 "vocabulary": vocabulary,
                 "shards": shards,
@@ -125,7 +130,7 @@ def publish(directory: Path, episodes: list[Episode], analyses: dict[str, Analys
             }
         )
     ).hexdigest()
-    envelope = {"schemaVersion": 1, "publicationId": publication_id}
+    envelope = {"schemaVersion": 2, "publicationId": publication_id}
     write_json(
         directory / "catalog.json",
         {

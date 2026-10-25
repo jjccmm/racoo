@@ -15,7 +15,7 @@ async function read(file: string, publicationId?: string) {
   const response = await fetch(`${import.meta.env.BASE_URL}stats/${file}`);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const value = await response.json();
-  if (value.schemaVersion !== 1 || !/^[a-f0-9]{64}$/.test(value.publicationId)
+  if (value.schemaVersion !== 2 || !/^[a-f0-9]{64}$/.test(value.publicationId)
       || (publicationId && value.publicationId !== publicationId)) throw new Error('Invalid statistics publication');
   return value;
 }

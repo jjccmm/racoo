@@ -19,3 +19,5 @@ uv run --frozen podcast-words schema --output schemas/episode-v2.schema.json
 ```
 
 Die getrennte [Grundformanalyse](analysis.md) verwendet weiterhin den Vertrag `Analysis` in `src/podcast_words/analysis.py`. Konsumierte Segmenttexte und Analysekonfiguration bestimmen ihre Gültigkeit. Den strukturellen Analyseexport über `podcast-words schema --kind analysis --output schemas/analysis-v1.schema.json` aktualisieren.
+
+Die daraus veröffentlichten Statistikdateien haben unabhängig davon `schemaVersion: 2`. Sparse Häufigkeiten verwenden `[episodeIndex, Anzahl]` statt wiederholter Episoden-IDs. Der Index ist die nullbasierte Position im chronologisch geordneten `episodes`-Array desselben Statistikkatalogs; dort bleibt die stabile `episodeId` erhalten. Katalog und Zähldateien müssen dieselbe Veröffentlichungs-ID tragen. Das genaue Zahlenformat und seine Fehlergrenzen stehen in [der Analyseanleitung](analysis.md#veröffentlichte-dateien-und-browser).

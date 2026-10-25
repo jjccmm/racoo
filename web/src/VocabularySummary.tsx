@@ -35,7 +35,7 @@ export function VocabularySummary() {
       const value = await response.json();
       const summary = value.summary as Summary | undefined;
       const episodes = value.episodes as Episode[] | undefined;
-      if (value.schemaVersion !== 1 || value.publicationId !== publication.publicationId
+      if (value.schemaVersion !== 2 || value.publicationId !== publication.publicationId
           || !summary || !episodes || !Array.isArray(episodes)
           || !validCount(summary.episodeCount) || !validCount(summary.totalWords)
           || !validCount(summary.distinctWords) || !validCount(summary.newWords)
