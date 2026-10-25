@@ -1,5 +1,10 @@
 # Nächste Arbeiten
 
+Aktuell: [kompakte und gefilterte Wortstatistik](.scratch/compact-filtered-statistics/spec.md), mit [zwei Umsetzungstickets](.scratch/compact-filtered-statistics/ticket-index.md). Alphabetische Wortlisten und nach Worthäufigkeit sortierte Dateien bleiben dokumentierte Optionen für später nachgewiesene Leistungsprobleme.
+
+- [ ] Kompakte Folgenindex-/Anzahlpaare durch Export, Build und Browser führen.
+- [ ] Stoppwörter und eine gepflegte Zusatzliste aus Häufigkeitsdaten ausschließen; Hinweis anzeigen und den echten Fünferbuild prüfen.
+
 Aktueller Umfang: [lokaler Fünf-Folgen-Pilot](.scratch/local-five-episode-pilot/spec.md), aufgeteilt in [vier Tickets](.scratch/local-five-episode-pilot/ticket-index.md). Die frühere sekundengenaue Zeitmarken-/Audiohash-Abnahme ist durch den ausdrücklichen Nutzerwunsch ersetzt. Archivverarbeitung und öffentliche Veröffentlichung bleiben spätere Schritte.
 
 - [x] Lokales FP32/GPU als einzigen aktiven ASR-Laufweg festlegen; etwa 25× Echtzeit als Planungswert. Die [Untersuchung](docs/research/asr-investigation.md) bewahrt CPU-/Colab-Messwerte und Hinweise zu FP32 auf Colab.
