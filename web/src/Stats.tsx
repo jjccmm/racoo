@@ -1,5 +1,7 @@
-import { lazy, Suspense, useRef, useState } from 'react';
+import { lazy, Suspense, useContext, useEffect, useState } from 'react';
+import { PlaybackContext } from './playback';
 import { loadPublication } from './publication';
+import { VocabularySummary } from './VocabularySummary';
 
 const Frequency = lazy(() => import('./Frequency').then((module) => ({ default: module.Frequency })));
 
@@ -20,73 +22,56 @@ async function read(file: string, publicationId?: string) {
   return value;
 }
 
+async function readData(): Promise<Data> {
+  const publication = await loadPublication();
+  const manifest = await read('manifest.json');
+  if (manifest.publicationId !== publication.publicationId || manifest.statisticsId !== publication.statisticsId
+      || manifest.podcastId !== publication.podcastId) throw new Error('Mismatched publication');
+  const [vocabulary, catalog] = await Promise.all([
+    read('vocabulary.json', manifest.publicationId), read('catalog.json', manifest.publicationId),
+  ]);
+  return { publicationId: manifest.publicationId, words: vocabulary.words, episodes: catalog.episodes };
+}
+
 export function Stats() {
-  const generation = useRef(0);
+  const onChoose = useContext(PlaybackContext);
   const [data, setData] = useState<Data>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  useEffect(() => {
+    let current = true;
+    readData().then((value) => { if (current) setData(value); })
+      .catch(() => { if (current) setError(true); })
+      .finally(() => { if (current) setLoading(false); });
+    return () => { current = false; };
+  }, [attempt]);
 
-  async function open() {
-    const current = ++generation.current;
-    setLoading(true);
-    setError(false);
-    try {
-      const publication = await loadPublication();
-      const manifest = await read('manifest.json');
-      if (manifest.publicationId !== publication.publicationId || manifest.statisticsId !== publication.statisticsId
-          || manifest.podcastId !== publication.podcastId) throw new Error('Mismatched publication');
-      const [vocabulary, catalog] = await Promise.all([
-        read('vocabulary.json', manifest.publicationId), read('catalog.json', manifest.publicationId),
-      ]);
-      if (current === generation.current) setData({ publicationId: manifest.publicationId, words: vocabulary.words, episodes: catalog.episodes });
-    } catch {
-      if (current === generation.current) setError(true);
-    } finally {
-      if (current === generation.current) setLoading(false);
-    }
-  }
-
-  return <section aria-labelledby="statistics-heading" className="example">
-    <h2 id="statistics-heading">Wortstatistik</h2>
-    <p>Exakte Zählungen kleingeschriebener Grundformen. Alle alphabetischen Wörter einschließlich Stoppwörtern zählen zu den Gesamtwörtern.</p>
-    {!data && <button onClick={open} disabled={loading}>
-      {error ? 'Wortstatistik erneut öffnen' : 'Wortstatistik öffnen'}
-    </button>}
-    {loading && <p aria-live="polite">Wortstatistik wird geladen …</p>}
-    {error && <p role="alert">Die Wortstatistik konnte nicht geladen werden. Bitte bewusst erneut öffnen.</p>}
+  return <>
+    {loading && <p role="status">Wortauswahl wird geladen …</p>}
+    {error && <><p role="alert">Die Wortstatistik konnte nicht geladen werden. Fehlende Daten sind kein Nullwert.</p><button onClick={() => { setLoading(true); setError(false); setAttempt((value) => value + 1); }}>Wortstatistik erneut laden</button></>}
     {data && <>
-      <p>Gesamtwörter einschließlich Stoppwörtern: {data.episodes.reduce((sum, episode) => sum + episode.totalWords, 0)}</p>
-      <h3>Verarbeitete Folgen</h3>
-      <p className="muted">Gemessene Zeiten je Folge. Die gemeinsame Modelleinrichtung ist separat im Verarbeitungsprotokoll erfasst.</p>
-      <div className="counts-scroll">
-        <table aria-label="Verarbeitete Folgen und Laufzeiten">
+      <p className="dataset-note">Pilot · {data.episodes.length} Folgen</p>
+      <Suspense fallback={<p role="status">Wortauswahl wird vorbereitet …</p>}><Frequency publicationId={data.publicationId} words={data.words} episodes={data.episodes} onChoose={onChoose} /></Suspense>
+      <details className="metadata"><summary>Verarbeitete Folgen und Laufzeiten</summary>
+        <p>Gesamtwörter einschließlich Stoppwörtern: {data.episodes.reduce((sum, episode) => sum + episode.totalWords, 0)}</p>
+        <p className="muted">Gemessene Zeiten je Folge. Die gemeinsame Modelleinrichtung ist separat im Verarbeitungsprotokoll erfasst.</p>
+        <div className="counts-scroll"><table aria-label="Verarbeitete Folgen und Laufzeiten">
           <thead><tr><th>Folge</th><th>Audiodauer</th><th>Download</th><th>Transkription</th><th>Gesamt</th></tr></thead>
           <tbody>{data.episodes.map((episode) => <tr key={episode.episodeId}>
-            <th scope="row">{episode.title}</th>
-            <td>{duration(episode.durationSeconds)}</td>
-            <td>{seconds(episode.timings?.downloadSeconds)}</td>
-            <td>{seconds(episode.timings?.transcriptionSeconds)}</td>
-            <td>{seconds(episode.timings?.totalSeconds)}</td>
+            <th scope="row">{episode.title}</th><td>{duration(episode.durationSeconds)}</td>
+            <td>{seconds(episode.timings?.downloadSeconds)}</td><td>{seconds(episode.timings?.transcriptionSeconds)}</td><td>{seconds(episode.timings?.totalSeconds)}</td>
           </tr>)}</tbody>
-        </table>
-      </div>
-      <Suspense fallback={<p aria-live="polite">Vergleich wird vorbereitet …</p>}>
-        <Frequency publicationId={data.publicationId} words={data.words} episodes={data.episodes} />
-      </Suspense>
+        </table></div>
+      </details>
     </>}
-  </section>;
+    <details className="metadata"><summary>Gesamtwörter und Wortschatz</summary><VocabularySummary /></details>
+  </>;
 }
-
-function seconds(value: number | undefined) {
-  return measured(value) ? `${value.toLocaleString('de-DE', { maximumFractionDigits: 1 })} s` : 'Nicht erfasst';
-}
-
+function seconds(value: number | undefined) { return measured(value) ? `${value.toLocaleString('de-DE', { maximumFractionDigits: 1 })} s` : 'Nicht erfasst'; }
 function duration(value: number | undefined) {
   if (!measured(value)) return 'Nicht erfasst';
   const whole = Math.floor(value);
   return `${Math.floor(whole / 3600)}:${String(Math.floor(whole / 60) % 60).padStart(2, '0')}:${String(whole % 60).padStart(2, '0')}`;
 }
-
-function measured(value: number | undefined): value is number {
-  return typeof value === 'number' && Number.isFinite(value) && value >= 0;
-}
+function measured(value: number | undefined): value is number { return typeof value === 'number' && Number.isFinite(value) && value >= 0; }

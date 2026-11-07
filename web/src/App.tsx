@@ -1,20 +1,15 @@
-import { SearchPanel } from './SearchPanel';
+import { Player } from './Player';
 import { Stats } from './Stats';
-import { VocabularySummary } from './VocabularySummary';
 import { PublicationState } from './PublicationState';
 
 export function App() {
   return <main>
-    <p className="eyebrow">Podcast Words / V3</p>
-    <h1>Eine erinnerte Stelle wiederfinden.</h1>
-    <p className="intro">Erinnerte Stichwörter führen zur gesprochenen Passage.</p>
+    <header><p className="eyebrow">Podcast Words / DAS PODCAST UFO</p>
+      <h1>Wörter führen zu Geschichten.</h1>
+      <p className="intro">Wähle bis zu fünf Wörter. Entdecke, in welchen Folgen sie vorkommen — und höre direkt hinein.</p>
+    </header>
+    <Player><Stats /></Player>
     <PublicationState />
-    <aside className="notice" aria-label="Entwicklungsstand">
-      <strong>Kontrollierter Pilot-Prüfstand</strong>
-      <p>Maschinelle Transkripte können Fehler enthalten. Sprungzeiten gelten für die verarbeitete Audiofassung und können bei abweichenden Fassungen, etwa durch Werbeeinblendungen, verschoben sein.</p>
-    </aside>
-    <SearchPanel />
-    <Stats />
-    <VocabularySummary />
+    <aside className="pilot-note" aria-label="Entwicklungsstand">Kontrollierter Pilot · Maschinelle Transkripte können Fehler enthalten. Sprungzeiten gelten für die verarbeitete Audiofassung; Werbung kann sie verschieben.</aside>
   </main>;
 }

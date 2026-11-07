@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { choose } from './helpers';
 
 test('mobile visitors can use search, the shared player, and both statistics views without page overflow', async ({ page }, testInfo) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -9,20 +10,17 @@ test('mobile visitors can use search, the shared player, and both statistics vie
   await page.goto('./');
 
   await expect(page.getByLabel('Veröffentlichungsstand')).toContainText('synthetic-podcast');
-  await page.getByRole('textbox', { name: /Stichwort/ }).fill('Münzen');
-  await page.getByRole('button', { name: 'Suchen', exact: true }).click();
+  await choose(page, 'münze');
   const result = page.getByRole('article').filter({ hasText: 'Synthetische Beispielfolge' });
   await expect(result).toBeVisible();
   await result.getByRole('button', { name: /Anhören ab/ }).click();
   await expect(page.getByRole('region', { name: 'Gemeinsamer Audioplayer' })).toBeVisible();
   await expect(page.getByRole('alert')).toContainText('Audio nicht verfügbar');
 
-  await page.getByRole('button', { name: 'Wortstatistik öffnen' }).click();
-  await page.getByRole('textbox', { name: 'Grundform suchen' }).fill('münze');
-  await page.getByRole('list', { name: 'Grundformvorschläge' }).getByRole('button', { name: 'münze', exact: true }).click();
   await expect(page.getByRole('region', { name: 'Grundformvergleich' })).toBeVisible();
-  await expect(page.getByRole('table', { name: 'Top 10: münze' })).toBeVisible();
-
+  await page.getByText('Diagrammdaten anzeigen', { exact: true }).click();
+  await expect(page.getByRole('table', { name: 'Vorkommen nach Folge' })).toBeVisible();
+  await page.getByText('Gesamtwörter und Wortschatz', { exact: true }).first().click();
   await page.getByRole('button', { name: 'Wortentwicklung öffnen' }).click();
   await expect(page.getByRole('table', { name: 'Chronologische Wortentwicklung je Folge' })).toBeVisible();
 
@@ -36,7 +34,7 @@ test('mobile visitors can use search, the shared player, and both statistics vie
   expect(requests.some((path) => path.endsWith('/stats/vocabulary.json'))).toBe(true);
   expect(requests.some((path) => path.endsWith('/stats/catalog.json'))).toBe(true);
   await expect(page.getByRole('link', { name: 'Fundstelle teilen' })).toBeVisible();
-  await page.screenshot({ path: testInfo.outputPath('ticket14-mobile-integrated.png'), fullPage: true });
+  await page.screenshot({ path: testInfo.outputPath('word-explorer-mobile-integrated.png'), fullPage: true });
 });
 
 test('direct episode/time links and production assets work at the selected deployment base', async ({ page }) => {

@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { choose, clearWords } from './helpers';
 import type { Route } from '@playwright/test';
 
 function longSilentWav(seconds: number) {
@@ -27,32 +28,33 @@ async function coarseEpisode(route: Route) {
   episode.audio.url = controlledAudioUrl;
   segment.start_seconds = 10;
   segment.end_seconds = 89;
-  segment.text += ` ${'Langer weiterer Gesprächskontext. '.repeat(120)}Abschluss des vollständigen Segments.`;
+  segment.text = segment.text.replace('Signal ', `Signal ${' '.repeat(650)}`);
+
   return route.fulfill({ response, json: episode });
 }
 
 async function search(page: import('@playwright/test').Page, query: string) {
-  await page.getByRole('textbox', { name: /Stichwort/ }).fill(query);
-  await page.getByRole('button', { name: 'Suchen', exact: true }).click();
-  await expect(page.getByRole('article').first()).toBeVisible();
+  await clearWords(page);
+  for (const lemma of query.toLocaleLowerCase('de-DE').split(' ')) await choose(page, lemma);
+  await expect(page.getByRole('article').first().locator('.passage').first()).toBeVisible();
 }
 
 test('repeated terms share one coarse jump with an advertising hint and expandable original text', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.route('**/episodes/coverage-complete.json', coarseEpisode);
   await page.goto('./');
-  await search(page, 'und');
+  await search(page, 'grüße');
   const hits = page.getByLabel('Fundstellen in passage').getByRole('button');
   await expect(hits).toHaveCount(1);
-  await expect(hits.first()).toContainText('· und');
+  await expect(hits.first()).toContainText('· grüße');
   await expect(hits.first()).toHaveAccessibleDescription(/Segmentanfang; Werbung/);
-  const completeText = page.getByText(/Abschluss des vollständigen Segments\.$/);
-  await expect(completeText).toBeHidden();
-  await page.getByText('Vollständiges Segment anzeigen', { exact: true }).click();
-  await expect(completeText).toBeVisible();
-
-  await search(page, 'Laterne Katzen Fenster');
-  await expect(page.getByRole('article').first().getByRole('button', { name: /fenster, katzen, laterne/ })).toHaveCount(1);
+  const full = page.getByRole('article').locator('.passage details');
+  await expect(full.locator('p')).toBeHidden();
+  await full.getByText('Vollständiges Segment anzeigen', { exact: true }).click();
+  await expect(full.locator('p')).toBeVisible();
+  expect((await page.getByRole('article').locator('.passage > p').textContent())!.length).toBeLessThan(500);
+  await search(page, 'laterne katze fenster');
+  await expect(page.getByRole('article').filter({ hasText: 'Abdeckung vollständig' }).getByRole('button', { name: /fenster, katze, laterne/ })).toHaveCount(1);
 
   await search(page, 'Grüße');
   const lateHit = page.getByRole('button', { name: /Anhören ab 0:10/ });
@@ -64,6 +66,8 @@ test('repeated terms share one coarse jump with an advertising hint and expandab
   expect(await media.evaluate((element: HTMLAudioElement) => element.currentTime)).toBeLessThan(12);
   expect(new URL(page.url()).searchParams.get('episode')).toBe('coverage-complete');
   expect(new URL(page.url()).searchParams.get('t')).toBe('10');
+  const player = await page.getByRole('region', { name: 'Gemeinsamer Audioplayer' }).boundingBox();
+  expect(player!.y).toBeGreaterThanOrEqual(0); expect(player!.y + player!.height).toBeLessThanOrEqual(844);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });
 
@@ -80,17 +84,17 @@ test('a shared episode/time link loads the player without autoplay and an unknow
   await page.getByRole('button', { name: '10 Sekunden zurück' }).click();
   expect(await media.evaluate((element: HTMLAudioElement) => element.currentTime)).toBe(80);
   await page.goto('./?episode=missing-episode&t=12');
-  await expect(page.getByRole('status')).toContainText('Episoden-ID ist im aktuellen Suchstand unbekannt');
+  await expect(page.getByRole('status').filter({ hasText: 'Episoden-ID' })).toContainText('Episoden-ID ist im aktuellen Suchstand unbekannt');
   await expect(page.locator('audio')).toHaveCount(0);
 });
 
 test('terms in successive transcript segments remain separate Fundstellen with original context', async ({ page }) => {
   await page.goto('./');
-  await search(page, 'Münzen Kleingeld');
+  await search(page, 'münze kleingeld');
   const result = page.getByRole('article').filter({ hasText: 'Synthetische Beispielfolge' });
   await expect(result).toHaveCount(1);
   await expect(result).toContainText('Ein Eimer voller Münzen steht neben dem Tisch.');
-  await expect(result.getByLabel('Fundstellen in segment-001').getByRole('button')).toContainText('münzen');
+  await expect(result.getByLabel('Fundstellen in segment-001').getByRole('button')).toContainText('münze');
   await expect(result).toContainText('Nach einer Pause sprechen wir über Kleingeld.');
   await expect(result.getByLabel('Fundstellen in segment-002').getByRole('button')).toContainText('kleingeld');
 });
@@ -98,10 +102,10 @@ test('terms in successive transcript segments remain separate Fundstellen with o
 test('failed audio shows the original episode source and player controls stay within the duration', async ({ page }) => {
   await page.route('https://example.org/fixture.mp3', (route) => route.abort());
   await page.goto('./');
-  await search(page, 'Fenster');
+  await search(page, 'fenster');
   await page.getByRole('article').first().getByRole('button', { name: /Anhören ab/ }).first().click();
   await expect(page.getByRole('alert')).toContainText('Audio nicht verfügbar');
-  await expect(page.getByRole('link', { name: 'Zur Episodenseite' })).toHaveAttribute('href', 'https://example.org/coverage-complete');
+  await expect(page.getByRole('link', { name: 'Zur Episodenseite', exact: true })).toHaveAttribute('href', 'https://example.org/coverage-complete');
   const media = page.locator('audio');
   await media.evaluate((element: HTMLAudioElement) => { element.currentTime = 89; });
   await page.getByRole('button', { name: '10 Sekunden vor' }).click();

@@ -11,7 +11,7 @@ npm.cmd --prefix web run build
 npm.cmd --prefix web run preview -- --port 4173 --strictPort
 ```
 
-Der normale Build verwendet die gespeicherten echten Pilottranskripte und Analysen. Er erzeugt `.cache/pilot-publication` cache-only, lädt kein ASR-/spaCy-Modell und kein Audio. Fehlende oder veraltete Analysen führen zu einem Fehler statt einem Wechsel auf Beispieldaten. Aufrufen: <http://127.0.0.1:4173/>. Unter „Wortstatistik öffnen“ stehen die fünf Folgen und ihre gemessenen Zeiten.
+Der normale Build verwendet die gespeicherten echten Pilottranskripte und Analysen. Er erzeugt `.cache/pilot-publication` cache-only, lädt kein ASR-/spaCy-Modell und kein Audio. Fehlende oder veraltete Analysen führen zu einem Fehler statt einem Wechsel auf Beispieldaten. Aufrufen: <http://127.0.0.1:4173/>. Die Wortauswahl öffnet automatisch; die fünf Folgen und ihre gemessenen Zeiten stehen unter dem Diagramm und den Ergebnissen im aufklappbaren Abschnitt „Verarbeitete Folgen und Laufzeiten“.
 
 ## Neu verarbeiten
 

@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { choose, search, clearWords } from './helpers';
 
 type RawResult = {
   id: string;
@@ -8,8 +9,7 @@ type RawResult = {
 
 test('finds a remembered word in the real built transcript index', async ({ page }) => {
   await page.goto('./');
-  await page.getByRole('textbox', { name: 'Stichwort' }).fill('Münzen');
-  await page.getByRole('button', { name: 'Suchen', exact: true }).click();
+  await choose(page, 'münze');
   const result = page.getByRole('article');
   await expect(result).toHaveCount(1);
   await expect(result).toContainText('Synthetische Beispielfolge — keine Podcastaufnahme');
@@ -39,20 +39,19 @@ test('the visible publication, search mapping and statistics share one stable id
     .toEqual(envelope.publication.episodeIds);
 });
 
-test('a mismatched publication identity is an explicit search error with no automatic retry', async ({ page }) => {
+test('a mismatched publication identity is an explicit startup error with a deliberate retry', async ({ page }) => {
   let requests = 0;
   await page.route('**/publication.json', (route) => {
     requests += 1;
     return route.fulfill({ json: { schemaVersion: 1, publicationId: 'a'.repeat(64), podcastId: 'synthetic-podcast', state: 'synthetic-fixture', archiveComplete: false, episodeCount: 17, episodeIds: [], searchIndexId: 'b'.repeat(64), statisticsId: 'c'.repeat(64), preparationId: null } });
   });
   await page.goto('./');
-  await expect(page.getByRole('alert')).toContainText('Veröffentlichungsstand konnte nicht geladen werden');
-  const initialRequests = requests;
-  await page.getByRole('textbox', { name: 'Stichwort' }).fill('Münzen');
-  await page.getByRole('button', { name: 'Suchen', exact: true }).click();
-  await expect(page.getByRole('alert').last()).toContainText('Die Suche konnte nicht geladen werden');
-  await page.waitForTimeout(250);
-  expect(requests).toBe(initialRequests + 1);
+  await expect(page.getByRole('alert').first()).toContainText('Wortstatistik konnte nicht geladen werden');
+  const initial = requests;
+  await page.waitForTimeout(250); expect(requests).toBe(initial);
+  await page.unroute('**/publication.json');
+  await page.getByRole('button', { name: 'Wortstatistik erneut laden' }).click();
+  await expect(page.getByRole('combobox')).toBeVisible();
 });
 
 test('the index maps every candidate to stable identity and date before fragment loads', async ({ page }) => {
@@ -83,52 +82,36 @@ test('a failed index request is an explicit error with a deliberate retry', asyn
     return route.fulfill({ status: 503, body: 'Index temporarily unavailable' });
   });
   await page.goto('./');
-  await page.getByRole('textbox', { name: 'Stichwort' }).fill('Münzen');
-  await page.getByRole('button', { name: 'Suchen', exact: true }).click();
-  await expect(page.getByRole('alert')).toContainText('Die Suche konnte nicht geladen werden');
+  await choose(page, 'münze');
+  await expect(page.getByRole('alert')).toContainText('Die Originalpassagen konnten nicht geladen werden');
   const failures = requests;
-  await expect(page.getByRole('status')).not.toContainText('Keine passende Folge');
+  await expect(page.getByRole('article')).toContainText('1 Vorkommen');
   await page.unroute('**/*.pf_index');
-  await page.getByRole('button', { name: 'Suchen', exact: true }).click();
+  await page.getByRole('button', { name: 'Passagen erneut laden' }).click();
   await expect(page.getByRole('article')).toContainText('Ein Eimer voller Münzen');
   expect(failures).toBe(1);
 });
 
-test('German word forms and subsequent queries keep the correct segment times', async ({ page }) => {
-  await page.goto('./');
-  const input = page.getByRole('textbox', { name: 'Stichwort' });
-  const submit = page.getByRole('button', { name: 'Suchen', exact: true });
-  await input.fill('Münze');
-  await submit.click();
+test('German word forms and changing selections keep correct segment times', async ({ page }) => {
+  await page.goto('./'); await choose(page, 'münze');
   await expect(page.getByRole('article')).toContainText('0:10');
-  await expect(page.getByRole('article')).toContainText('Ein Eimer voller Münzen steht neben dem Tisch.');
-  await input.fill('Kleingeld');
-  await submit.click();
+  await expect(page.getByRole('article').locator('mark')).toHaveText(['Münzen']);
+  await clearWords(page); await choose(page, 'kleingeld');
   await expect(page.getByRole('article')).toContainText('1:00');
-  await expect(page.getByRole('article')).toContainText('Nach einer Pause sprechen wir über Kleingeld.');
   await expect(page.getByRole('article')).not.toContainText('0:10');
-  await input.fill('Münzen');
-  await submit.click();
+  await clearWords(page); await choose(page, 'münze');
   await expect(page.getByRole('article')).toContainText('0:10');
   await expect(page.getByRole('article')).not.toContainText('1:00');
 });
 
-test('title-only words, no match and empty input remain distinct from an error', async ({ page }) => {
-  const files: string[] = [];
-  page.on('request', (request) => files.push(request.url()));
-  await page.goto('./');
-  await expect(page.getByRole('status')).toContainText('Ein Stichwort eingeben');
-  expect(files.filter((url) => url.includes('/search/'))).toEqual([]);
-  const input = page.getByRole('textbox', { name: 'Stichwort' });
-  const submit = page.getByRole('button', { name: 'Suchen', exact: true });
-  await input.fill('Titelgeheimnis');
-  await submit.click();
-  await expect(page.getByRole('status')).toContainText('Keine passende Folge gefunden');
-  await expect(page.getByRole('alert')).toHaveCount(0);
-  expect(files.filter((url) => url.endsWith('.pf_fragment'))).toEqual([]);
-  await input.fill('   ');
-  await submit.click();
-  await expect(page.getByRole('status')).toContainText('Ein Stichwort eingeben');
+test('title-only words and no matches stay empty without loading any details', async ({ page }) => {
+  const details: string[] = [];
+  page.on('request', (request) => { if (request.url().endsWith('.pf_fragment')) details.push(request.url()); });
+  await page.goto('./'); expect(details).toEqual([]);
+  expect((await search(page, 'Titelgeheimnis')).page!.total).toBe(0);
+  expect((await search(page, 'unauffindbareswort')).page!.total).toBe(0);
+  expect((await search(page, '   ')).page!.total).toBe(0);
+  expect(details).toEqual([]); await expect(page.getByRole('alert')).toHaveCount(0);
 });
 
 test('the pinned native API preserves independent query positions and segment anchors', async ({ page }) => {
@@ -176,13 +159,12 @@ for (const [description, pattern] of [
       return route.fulfill({ status: 503, body: 'Temporarily unavailable' });
     });
     await page.goto('./');
-    await page.getByRole('textbox', { name: 'Stichwort' }).fill('Münzen');
-    await page.getByRole('button', { name: 'Suchen', exact: true }).click();
-    await expect(page.getByRole('alert')).toContainText('Die Suche konnte nicht geladen werden');
+    await choose(page, 'münze');
+    await expect(page.getByRole('alert')).toContainText('Die Originalpassagen konnten nicht geladen werden');
     await page.waitForTimeout(250); // Observe that scheduled work does not start a retry loop.
     expect(requests).toBe(1);
     await page.unroute(pattern);
-    await page.getByRole('button', { name: 'Suchen', exact: true }).click();
+    await page.getByRole('button', { name: 'Passagen erneut laden' }).click();
     await expect(page.getByRole('article')).toContainText('Ein Eimer voller Münzen');
   });
 }
@@ -195,9 +177,8 @@ test('search loading is visible while the index manifest is pending', async ({ p
     await route.continue();
   });
   await page.goto('./');
-  await page.getByRole('textbox', { name: 'Stichwort' }).fill('Münzen');
-  await page.getByRole('button', { name: 'Suchen', exact: true }).click();
-  await expect(page.getByRole('status')).toHaveText('Suche läuft …');
+  await choose(page, 'münze');
+  await expect(page.getByRole('status')).toContainText('Originalpassagen werden geladen');
   release();
   await expect(page.getByRole('article')).toContainText('Ein Eimer voller Münzen');
 });
