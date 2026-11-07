@@ -33,4 +33,4 @@ Final coordinator runs the full fixture suite once, restores/rechecks the real f
 
 ## Coordination
 
-Single complete vertical implementation ticket, no blockers. Integration branch codex/word-explorer; implementer branch/worktree based on integration and merged by a merger subagent. Implementer owns web source/tests and current operation docs; coordinator owns PLAN/TASKS, authoritative tracker status and final evidence. Exploration findings on Pagefind highlighting are in C:/Users/User/AppData/Local/Temp/pw-word-explorer-passage-notes.md when available. Preserve the exact stored analyses/transcripts and processing contracts.
+Single complete vertical implementation ticket, no blockers. Integration branch codex/word-explorer; implementer branch/worktree based on integration and merged by a merger subagent. Implementer owns web source/tests and current operation docs; coordinator owns PLAN/TASKS, authoritative tracker status and final evidence. Verified Pagefind highlighting and bounded-loading findings are recorded in [the technical notes](../../docs/research/word-explorer-highlights.md). Preserve the exact stored analyses/transcripts and processing contracts.
