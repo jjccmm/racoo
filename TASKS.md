@@ -1,5 +1,10 @@
 # Nächste Arbeiten
 
+Aktuell: [Wortsuche mit zentralem Stapelbalkendiagramm](.scratch/word-explorer/spec.md), als [ein durchgängiges Ticket](.scratch/word-explorer/issues/01-word-explorer.md).
+
+- [ ] Ein Suchfeld mit Dropdown und Wortchips, absolute gestapelte Folgenzahlen und Top-10-/Alle-Umschaltung.
+- [ ] Top-Folgen mit Einzelzählungen, farbigen Fundstellen und gemeinsamem Player; echte Fünferdaten und beide Basispfade prüfen.
+
 Aktuell: [kompakte und gefilterte Wortstatistik](.scratch/compact-filtered-statistics/spec.md), mit [zwei abgeschlossenen Umsetzungstickets](.scratch/compact-filtered-statistics/ticket-index.md). Der [Abschlussbericht](docs/pilot/compact-filtered-statistics.md) enthält Größen, echte Browserbefunde und Prüfungen. Alphabetische Wortlisten und nach Worthäufigkeit sortierte Dateien bleiben dokumentierte Optionen für später nachgewiesene Leistungsprobleme.
 
 - [x] Kompakte Folgenindex-/Anzahlpaare durch Export, Build und Browser führen.
