@@ -1,0 +1,69 @@
+{
+  "base": "http://127.0.0.1:4173/",
+  "publicationId": "af03ca03487e746cbffc93fc6d972508cfc8bb7ef79393949a5143160ae1f70e",
+  "episodeCount": 5,
+  "exactTwoWordCountsAndRank": [
+    {
+      "title": "UFO001 Prolog",
+      "hund": 12,
+      "geld": 1,
+      "total": 13
+    },
+    {
+      "title": "UFO537 Festival",
+      "hund": 4,
+      "geld": 3,
+      "total": 7
+    },
+    {
+      "title": "UFO300 Moll",
+      "hund": 2,
+      "geld": 5,
+      "total": 7
+    },
+    {
+      "title": "UGO081 Freestyle Karate",
+      "hund": 0,
+      "geld": 4,
+      "total": 4
+    },
+    {
+      "title": "UFO Experiment (KI-generiert)",
+      "hund": 0,
+      "geld": 1,
+      "total": 1
+    }
+  ],
+  "chronological": [
+    "UFO001 Prolog",
+    "UGO081 Freestyle Karate",
+    "UFO300 Moll",
+    "UFO Experiment (KI-generiert)",
+    "UFO537 Festival"
+  ],
+  "oneInput": true,
+  "keyboardSelection": true,
+  "removeByChip": true,
+  "noPreselectionCountOrTextLoad": true,
+  "noNormalizedControls": true,
+  "chartBounds": {
+    "x": 116,
+    "y": 467.5625,
+    "width": 1208,
+    "height": 855.1875
+  },
+  "mobileNoOverflow": true,
+  "nativeSurfaceHighlights": [
+    "Euro-Münze",
+    "Euro-Münze",
+    "Münze",
+    "Münze",
+    "Münze"
+  ],
+  "realLemmaTotalDoesNotCollideWithChartTotals": true,
+  "screenshots": {
+    "desktop": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\word-explorer-root-desktop.png",
+    "mobile": "C:\\Users\\User\\Code\\podcast_words_v3\\.cache\\word-explorer-root-mobile.png"
+  },
+  "notes": "Actual saved five-episode counts, user-visible original native wordform hits; no online audio downloaded. Not independent human search-quality review."
+}

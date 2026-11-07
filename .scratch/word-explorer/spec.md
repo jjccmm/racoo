@@ -1,6 +1,6 @@
 # One-field word explorer
 
-**Status:** implementing
+**Status:** resolved
 **Baseline:** 3768558
 
 ## Authorization and goal
@@ -34,3 +34,7 @@ Final coordinator runs the full fixture suite once, restores/rechecks the real f
 ## Coordination
 
 Single complete vertical implementation ticket, no blockers. Integration branch codex/word-explorer; implementer branch/worktree based on integration and merged by a merger subagent. Implementer owns web source/tests and current operation docs; coordinator owns PLAN/TASKS, authoritative tracker status and final evidence. Verified Pagefind highlighting and bounded-loading findings are recorded in [the technical notes](../../docs/research/word-explorer-highlights.md). Preserve the exact stored analyses/transcripts and processing contracts.
+
+## Delivered
+
+The complete ticket is resolved on codex/word-explorer. See [completion report](../../docs/pilot/word-explorer.md) and [separate-axis review](review.md). Real-five and complete fixture checks pass; source transcripts/analyses are unchanged.
