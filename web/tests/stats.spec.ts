@@ -16,7 +16,7 @@ test('episode processing timings use the compact catalog without loading transcr
   });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('./');
-  await page.getByRole('button', { name: 'Wortstatistik öffnen' }).click();
+  await page.getByText('Verarbeitete Folgen und Laufzeiten', { exact: true }).click();
   const overview = page.getByRole('table', { name: 'Verarbeitete Folgen und Laufzeiten' });
   const measured = overview.getByRole('row').filter({ hasText: 'Abdeckung vollständig' });
   await expect(measured.getByRole('cell')).toHaveText(['1:01:05', '2,4 s', '140,5 s', '149,8 s']);
@@ -24,23 +24,4 @@ test('episode processing timings use the compact catalog without loading transcr
   await expect(legacy.getByRole('cell')).toHaveText(['Nicht erfasst', 'Nicht erfasst', 'Nicht erfasst', 'Nicht erfasst']);
   expect(transcripts).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
-});
-
-test('suggestions are bounded and comparison selection has a five-word limit', async ({ page }) => {
-  const shards: string[] = [];
-  page.on('request', (request) => { if (/\/stats\/counts\//.test(request.url())) shards.push(request.url()); });
-  await page.goto('./');
-  await page.getByRole('button', { name: 'Wortstatistik öffnen' }).click();
-  const suggestions = page.getByRole('list', { name: 'Grundformvorschläge' });
-  const buttons = suggestions.getByRole('button');
-  await expect(buttons).toHaveCount(10);
-  expect(shards).toEqual([]);
-
-  for (let index = 0; index < 5; index += 1) {
-    await buttons.nth(index).click();
-    await expect(page.getByRole('region', { name: 'Grundformvergleich' })).toBeVisible();
-  }
-  await expect(page.getByRole('list', { name: 'Ausgewählte Grundformen' }).getByRole('listitem')).toHaveCount(5);
-  await expect(buttons.nth(5)).toBeDisabled();
-  expect(shards).toHaveLength(5);
 });

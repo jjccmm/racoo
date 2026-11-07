@@ -18,7 +18,7 @@ npm.cmd --prefix web run build
 npm.cmd --prefix web run preview -- --port 4173 --strictPort
 ```
 
-Öffnen: <http://127.0.0.1:4173/>. Suche nach mehreren erinnerten Stichwörtern; unter „Wortstatistik öffnen“ lassen sich Grundformen vergleichen und Download-/Transkriptionszeiten je Folge ansehen. Grobe Segmente ersetzen Wortzeitstempel. Der Hinweis am Sprungknopf erklärt die mögliche Verschiebung durch Werbung. Audio wird nach der Transkription gelöscht.
+Öffnen: <http://127.0.0.1:4173/>. Die Wortauswahl öffnet automatisch: Bis zu fünf Grundformen im Autocomplete wählen, ihre absoluten Vorkommen als gestapelte Balken vergleichen und in den zehn Folgen mit der höchsten Summe markierte Originalpassagen anhören. „Top 10“ sortiert nach Summe, „Alle“ zeigt sämtliche Folgen chronologisch einschließlich Nullen. Gesamtzahlen und gemessene Verarbeitungszeiten stehen in den aufklappbaren Abschnitten darunter. Grobe Segmente ersetzen Wortzeitstempel. Der Hinweis am Sprungknopf erklärt die mögliche Verschiebung durch Werbung. Audio wird nach der Transkription gelöscht.
 
 - [Fünf-Folgen-Pilot](docs/pilot/local-five-episode-pilot.md): Auswahl, Befehle, tatsächliche Laufzeiten und Grenzen der Prüfung.
 - [Lokale FP32-Verarbeitung](docs/asr.md): GPU-Einrichtung, temporäres Audio, Wiederaufnahme und Messgrenzen.

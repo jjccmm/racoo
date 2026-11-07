@@ -1,76 +1,29 @@
 import { expect, test } from '@playwright/test';
+import { choose } from './helpers';
+async function openStatistics(page: import('@playwright/test').Page) { await page.goto('./'); await expect(page.getByRole('combobox', { name: 'Wörter suchen' })).toBeVisible(); }
 
-async function openStatistics(page: import('@playwright/test').Page) {
-  await page.goto('./');
-  await page.getByRole('button', { name: 'Wortstatistik öffnen' }).click();
-  await expect(page.getByRole('textbox', { name: 'Grundform suchen' })).toBeVisible();
-}
-
-async function choose(page: import('@playwright/test').Page, lemma: string) {
-  await page.getByRole('textbox', { name: 'Grundform suchen' }).fill(lemma);
-  await page.getByRole('button', { name: lemma, exact: true }).click();
-}
-
-test('a visitor compares multiple Grundformen, normalized rates and absolute occurrences', async ({ page }) => {
+test('excluded words are unavailable while complete word metrics remain accessible', async ({ page }) => {
   await openStatistics(page);
-  await choose(page, 'hund');
-  await choose(page, 'katze');
-
-  const chart = page.getByRole('region', { name: 'Grundformvergleich' });
-  await expect(chart).toBeVisible();
-  await expect(page.getByRole('radio', { name: 'Häufigkeit je 1.000 Gesamtwörter' })).toBeChecked();
-  const dog = page.getByRole('table', { name: 'Top 10: hund' });
-  await expect(dog.getByRole('row')).toHaveCount(11);
-  const titleSecrets = dog.getByRole('row').filter({ hasText: 'Titelgeheimnis' });
-  await expect(titleSecrets).toContainText('256');
-  await expect(titleSecrets).toContainText('269');
-  await expect(titleSecrets).toContainText('951,7');
-  await expect(dog.getByRole('row').filter({ hasText: 'Synthetische Beispielfolge' })).toContainText('0');
-  const cat = page.getByRole('table', { name: 'Top 10: katze' });
-  await expect(cat.getByRole('row').filter({ hasText: 'Paar D' })).toContainText('600');
-
-  await page.getByRole('radio', { name: 'Absolute Vorkommen' }).check();
-  await expect(page.getByRole('radio', { name: 'Absolute Vorkommen' })).toBeChecked();
-  await expect(dog.getByRole('row').filter({ hasText: 'Titelgeheimnis' })).toContainText('256');
-  await expect(cat.getByRole('row').filter({ hasText: 'Paar D' })).toContainText('3');
+  await page.getByRole('combobox').fill('ein');
+  await expect(page.getByRole('option', { name: 'ein', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('checkbox')).toHaveCount(0);
+  await expect(page.locator('.selection-note')).toContainText('Automatische Stoppwörter und Wörter aus einer manuell gepflegten Zusatzliste');
+  await page.getByText('Verarbeitete Folgen und Laufzeiten', { exact: true }).click();
+  await expect(page.getByText('Gesamtwörter einschließlich Stoppwörtern: 349')).toBeVisible();
 });
 
-test('excluded words are explained and unavailable while all-word metrics and rates stay complete', async ({ page }) => {
-  await openStatistics(page);
-  await choose(page, 'hund');
-  const total = page.getByText('Gesamtwörter einschließlich Stoppwörtern: 349');
-  await expect(total).toBeVisible();
-  await expect(page.getByRole('table', { name: 'Top 10: hund' })
-    .getByRole('row').filter({ hasText: 'Titelgeheimnis' })).toContainText('951,7');
-
-  await page.getByRole('textbox', { name: 'Grundform suchen' }).fill('ein');
-  await expect(page.getByRole('list', { name: 'Grundformvorschläge' })
-    .getByRole('button', { name: 'ein', exact: true })).toHaveCount(0);
-  await expect(page.getByRole('checkbox', { name: 'Stoppwörter in Vorschlägen einschließen' })).toHaveCount(0);
-  await expect(page.locator('.frequency')).toContainText('Automatische Stoppwörter und Wörter aus einer manuell gepflegten Zusatzliste');
-  await expect(page.locator('.frequency')).toContainText('Gesamtwörter, verschiedene und neue Wörter sowie der Nenner der normierten Häufigkeit enthalten weiterhin alle alphabetischen Wörter');
-  await expect(total).toBeVisible();
-  await expect(page.getByRole('table', { name: 'Top 10: hund' })
-    .getByRole('row').filter({ hasText: 'Titelgeheimnis' })).toContainText('269');
-  await expect(page.getByRole('table', { name: 'Top 10: hund' })
-    .getByRole('row').filter({ hasText: 'Titelgeheimnis' })).toContainText('951,7');
-  await expect(page.locator('input[name="frequency-mode"][value="normalized"]')).toBeChecked();
-});
-
-test('a zero-word episode has no normalized rate and a missing count remains zero', async ({ page }) => {
+test('a zero-word episode remains a chronological absolute zero', async ({ page }) => {
   await page.route('**/stats/catalog.json', async (route) => {
-    const response = await route.fetch();
-    const catalog = await response.json();
-    const empty = catalog.episodes.find((episode: { episodeId: string }) => episode.episodeId === 'synthetic-episode-001');
-    empty.totalWords = 0;
-    return route.fulfill({ response, json: catalog });
+    const response = await route.fetch(); const catalog = await response.json();
+    catalog.episodes.find((episode: { episodeId: string }) => episode.episodeId === 'synthetic-episode-001').totalWords = 0;
+    await route.fulfill({ response, json: catalog });
   });
-  await openStatistics(page);
-  await choose(page, 'hund');
-  const dog = page.getByRole('table', { name: 'Top 10: hund' });
-  const empty = dog.getByRole('row').filter({ hasText: 'Synthetische Beispielfolge' });
-  await expect(empty).toContainText('0');
-  await expect(empty).toContainText('Nicht verfügbar');
+  await openStatistics(page); await choose(page, 'hund');
+  await page.getByRole('button', { name: 'Alle', exact: true }).click();
+  await page.getByText('Diagrammdaten anzeigen', { exact: true }).click();
+  const row = page.getByRole('table', { name: 'Vorkommen nach Folge' }).getByRole('row').filter({ hasText: 'Synthetische Beispielfolge' });
+  await expect(row.getByRole('cell')).toHaveText(['0', '0']);
+  await expect(page.getByRole('radio')).toHaveCount(0);
 });
 
 test('a failed count shard remains an error rather than zero-valued results', async ({ page }) => {
@@ -78,10 +31,10 @@ test('a failed count shard remains an error rather than zero-valued results', as
   await openStatistics(page);
   await choose(page, 'hund');
   await expect(page.getByRole('alert')).toContainText('Fehlende Daten sind kein Nullwert');
-  await expect(page.getByRole('table', { name: 'Top 10: hund' })).toHaveCount(0);
+  await expect(page.getByRole('region', { name: 'Folgen mit den meisten Vorkommen' })).toHaveCount(0);
   await page.unroute('**/stats/counts/*.json');
   await page.getByRole('button', { name: 'Zählungen erneut laden' }).click();
-  await expect(page.getByRole('table', { name: 'Top 10: hund' })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Folgen mit den meisten Vorkommen' })).toBeVisible();
 });
 
 const invalidPairs: { name: string; pairs: unknown }[] = [
@@ -108,7 +61,7 @@ for (const { name, pairs } of invalidPairs) {
     await openStatistics(page);
     await choose(page, 'hund');
     await expect(page.getByRole('alert')).toContainText('Fehlende Daten sind kein Nullwert');
-    await expect(page.getByRole('table', { name: 'Top 10: hund' })).toHaveCount(0);
+    await expect(page.getByRole('region', { name: 'Folgen mit den meisten Vorkommen' })).toHaveCount(0);
   });
 }
 

@@ -1,6 +1,7 @@
 import type { Identity, SearchPage, SearchRequest, SearchResult, Segment } from './search';
 
 type Fragment = {
+  content: string; raw_content?: string; word_count: number;
   anchors: { id: string; location: number }[];
 };
 type Episode = {
@@ -28,7 +29,9 @@ globalThis.fetch = async (...arguments_: Parameters<typeof fetch>) => {
   }
 };
 
-async function search({ moduleUrl, episodes, terms, offset }: SearchRequest): Promise<SearchPage> {
+async function search({ moduleUrl, episodes, terms, offset, targetEpisodeIds }: SearchRequest): Promise<SearchPage> {
+  if (targetEpisodeIds?.length === 0) return { results: [], total: 0, terms };
+  const allowed = targetEpisodeIds === undefined ? undefined : new Set(targetEpisodeIds);
   const module = await import(/* @vite-ignore */ moduleUrl);
   const pagefind: Pagefind = module.createInstance({ language: 'de', basePath: new URL('.', moduleUrl).href });
   await pagefind.init();
@@ -42,6 +45,7 @@ async function search({ moduleUrl, episodes, terms, offset }: SearchRequest): Pr
     results.forEach((result, rank) => {
       const identity = episodes[result.id];
       if (!identity) throw new Error('Folge fehlt im Suchstand');
+      if (allowed && !allowed.has(identity.episodeId)) return;
       const candidate = union.get(result.id) ?? { result, identity, positionsByTerm: {}, rankSum: 0 };
       // Snapshot raw per-term positions before any detail object is loaded.
       candidate.positionsByTerm[term] = [...result.words];
@@ -64,25 +68,45 @@ async function search({ moduleUrl, episodes, terms, offset }: SearchRequest): Pr
     if (episode.episode_id !== identity.episodeId || episode.published_at !== identity.publishedAt) {
       throw new Error('Suchindex und Folgendetails stimmen nicht überein');
     }
-    const segmentFor = (position: number) => {
-      const anchor = fragment.anchors.filter((item) => item.location <= position).at(-1);
-      return anchor && episode.segments.find((segment) => segment.id === anchor.id)
-        ? anchor.id
-        : undefined;
-    };
-    const found = new Map<string, Set<string>>();
+    const indexedTokens = fragment.content.split(/[\r\n\s]+/g);
+    const anchors = [...fragment.anchors].sort((a, b) => a.location - b.location);
+    const originalTokens = new Map<string, RegExpExecArray[]>();
+    const found = new Map<string, Map<string, { start: number; end: number; terms: Set<string> }>>();
     for (const [term, positions] of Object.entries(positionsByTerm)) {
       for (const position of positions) {
-        const segmentId = segmentFor(position);
-        if (!segmentId) continue;
-        const matchedTerms = found.get(segmentId) ?? new Set<string>();
-        matchedTerms.add(term);
-        found.set(segmentId, matchedTerms);
+        const anchorIndex = anchors.indexOf(anchors.filter((item) => item.location <= position).at(-1)!);
+        const anchor = anchors[anchorIndex];
+        const segment = episode.segments.find((item) => item.id === anchor?.id);
+        if (!segment || !Number.isSafeInteger(position) || position < 0 || (fragment.raw_content ?? fragment.content).includes('\u200b')) throw new Error('Textpositionen stimmen nicht überein');
+        let tokens = originalTokens.get(segment.id);
+        if (!tokens) {
+          tokens = [...segment.text.matchAll(/\S+/gu)];
+          const endLocation = anchors[anchorIndex + 1]?.location ?? fragment.word_count;
+          if (!Number.isSafeInteger(anchor.location) || !Number.isSafeInteger(endLocation)
+              || tokens.length !== endLocation - anchor.location || tokens.some((token, index) => {
+                const indexed = indexedTokens[anchor.location + index];
+                return indexed !== token[0] && !(index === tokens!.length - 1 && indexed === `${token[0]}.`);
+              })) throw new Error('Originaltext und Suchpositionen stimmen nicht überein');
+          originalTokens.set(segment.id, tokens);
+        }
+        const token = tokens[position - anchor.location];
+        if (!token) throw new Error('Ungültige Textposition');
+        const leading = token[0].match(/^[^\p{L}\p{M}\p{N}]+/u)?.[0].length ?? 0;
+        const trailing = token[0].match(/[^\p{L}\p{M}\p{N}]+$/u)?.[0].length ?? 0;
+        const start = token.index + leading;
+        const end = token.index + token[0].length - trailing;
+        if (end <= start) throw new Error('Ungültige Wortmarkierung');
+        const ranges = found.get(segment.id) ?? new Map();
+        const key = `${start}:${end}`;
+        const range = ranges.get(key) ?? { start, end, terms: new Set<string>() };
+        range.terms.add(term); ranges.set(key, range); found.set(segment.id, ranges);
       }
     }
     const passages = episode.segments.flatMap((segment) => {
-      const matchedTerms = found.get(segment.id);
-      return matchedTerms ? [{ ...segment, terms: [...matchedTerms].sort() }] : [];
+      const ranges = found.get(segment.id);
+      if (!ranges) return [];
+      const highlights = [...ranges.values()].map((range) => ({ ...range, terms: [...range.terms].sort() })).sort((a, b) => a.start - b.start);
+      return [{ ...segment, highlights, terms: [...new Set(highlights.flatMap((range) => range.terms))].sort() }];
     });
     return {
       ...identity,

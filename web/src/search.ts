@@ -1,10 +1,11 @@
 import { loadPublication } from './publication';
 
 export type Segment = { id: string; text: string; start_seconds: number; end_seconds: number };
-export type Passage = Segment & { terms: string[] };
+export type Highlight = { start: number; end: number; terms: string[] };
+export type Passage = Segment & { terms: string[]; highlights: Highlight[] };
 export type Identity = { episodeId: string; publishedAt: string };
 type SearchIndex = { moduleUrl: string; episodes: Record<string, Identity> };
-export type SearchRequest = SearchIndex & { terms: string[]; offset: number };
+export type SearchRequest = SearchIndex & { terms: string[]; offset: number; targetEpisodeIds?: string[] };
 export type SearchResult = Identity & {
   searchId: string;
   title: string;
@@ -71,15 +72,15 @@ async function loadPage(request: SearchRequest, signal: AbortSignal): Promise<Se
   }
 }
 
-export async function searchEpisodes(query: string, signal: AbortSignal): Promise<SearchSession> {
+export async function searchEpisodes(query: string, signal: AbortSignal, options: { targetEpisodeIds?: string[] } = {}): Promise<SearchSession> {
   const terms = [...new Set(query.normalize('NFC').toLocaleLowerCase('de-DE').trim().split(/\s+/).filter(Boolean))].sort();
   const index = await loadIndex(AbortSignal.any([signal, AbortSignal.timeout(20000)]));
-  const initial = await loadPage({ ...index, terms, offset: 0 }, signal);
+  const initial = await loadPage({ ...index, ...options, terms, offset: 0 }, signal);
   let offset = initial.results.length;
   return {
     initial,
     async loadMore() {
-      const page = await loadPage({ ...index, terms, offset }, signal);
+      const page = await loadPage({ ...index, ...options, terms, offset }, signal);
       offset += page.results.length;
       return page;
     },
