@@ -7,8 +7,9 @@ test('mobile visitors can use search, the shared player, and both statistics vie
 
   const requests: string[] = [];
   page.on('request', (request) => requests.push(new URL(request.url()).pathname));
-  await page.goto('./');
+  await page.goto('./?podcast=podcast-ufo');
 
+  await page.getByText('Über die Daten', { exact: true }).click();
   await expect(page.getByLabel('Veröffentlichungsstand')).toContainText('synthetic-podcast');
   await choose(page, 'münze');
   const result = page.getByRole('article').filter({ hasText: 'Synthetische Beispielfolge' });

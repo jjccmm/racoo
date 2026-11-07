@@ -4,7 +4,7 @@ import { gunzipSync } from 'node:zlib';
 import { choose, search } from './helpers';
 
 /** A real controlled Pagefind index at the publication's HTTP boundary. */
-async function controlledText(page: Page) {
+async function controlledText(page: Page, extraPassages = false) {
   const binding = await page.evaluate(async () => {
     const manifest = await (await fetch('search/manifest.json')).json();
     const publication = await (await fetch('publication.json')).json();
@@ -17,6 +17,10 @@ async function controlledText(page: Page) {
     { id: 'unicode', text: '🙂  „Münzen“\tEuro-Münze\u00a0Wort/Teil.\nCafe\u0301 Straße <img src=x onerror=alert(1)>', start_seconds: 10, end_seconds: 30 },
     { id: 'final', text: 'Münze', start_seconds: 60, end_seconds: 70 },
   ];
+  if (extraPassages) segments.push(
+    { id: 'third', text: `Münze ${'Ein weiterer Gedanke. '.repeat(30)}`, start_seconds: 71, end_seconds: 79 },
+    { id: 'fourth', text: 'Noch eine Münze im Text.', start_seconds: 80, end_seconds: 89 },
+  );
   const created = await pagefind.createIndex();
   if (!created.index || created.errors.length) throw new Error(created.errors.join('\n'));
   try {
@@ -44,7 +48,7 @@ async function controlledText(page: Page) {
 }
 
 test('native positions mark whole original Unicode and compound tokens, merging shared term ranges', async ({ page }) => {
-  await page.goto('./'); const segments = await controlledText(page);
+  await page.goto('./?podcast=podcast-ufo'); const segments = await controlledText(page);
   const found = (await search(page, 'Münze Euro Wort Teil Straße', ['synthetic-episode-001'])).page!;
   expect(found.results).toHaveLength(1);
   const passages = found.results[0].passages;
@@ -56,7 +60,7 @@ test('native positions mark whole original Unicode and compound tokens, merging 
 });
 
 test('original text renders safely as text with the selected word color', async ({ page }) => {
-  await page.goto('./'); await controlledText(page); await choose(page, 'münze');
+  await page.goto('./?podcast=podcast-ufo'); await controlledText(page); await choose(page, 'münze');
   const card = page.getByRole('article');
   await expect(card.locator('mark')).toHaveText(['Münzen', 'Euro-Münze', 'Münze']);
   await expect(card).toContainText('<img src=x onerror=alert(1)>'); await expect(card.locator('img')).toHaveCount(0);
@@ -68,9 +72,29 @@ test('a source/index mismatch keeps exact counts and offers a passage retry with
   await page.route('**/episodes/synthetic-episode-001.json', async (route) => {
     const response = await route.fetch(); const data = await response.json(); data.segments[0].text = 'Anderer Text mit falschen Positionen.'; await route.fulfill({ response, json: data });
   });
-  await page.goto('./'); await choose(page, 'münze');
+  await page.goto('./?podcast=podcast-ufo'); await choose(page, 'münze');
   await expect(page.getByRole('alert')).toContainText('Originalpassagen konnten nicht geladen werden');
   await expect(page.getByRole('article')).toContainText('1 Vorkommen'); await expect(page.locator('mark')).toHaveCount(0);
   await page.unroute('**/episodes/synthetic-episode-001.json'); await page.getByRole('button', { name: 'Passagen erneut laden' }).click();
   await expect(page.locator('mark')).toHaveText(['Münzen']);
+});
+
+test('compact passages keep the first excerpts visible and disclose remaining original context', async ({ page }) => {
+  await page.goto('./?podcast=podcast-ufo');
+  const segments = await controlledText(page, true);
+  await choose(page, 'münze');
+  const card = page.getByRole('article');
+  await expect(card.locator('.passage:visible')).toHaveCount(2);
+  await expect(card.locator('.passage').nth(0).getByRole('button', { name: /Anhören ab 0:10/ })).toBeVisible();
+  await card.getByText('Weitere 2 Fundstellen', { exact: true }).click();
+  await expect(card.locator('.passage:visible')).toHaveCount(4);
+  const third = card.locator('.passage').nth(2);
+  await expect(third.locator(':scope > p')).toContainText('Münze');
+  expect((await third.locator(':scope > p').textContent())!.length).toBeLessThan(320);
+  await third.getByText('Vollständiges Segment anzeigen', { exact: true }).click();
+  await expect(third.locator('details p')).toHaveText(segments[2].text);
+  await expect(third.getByRole('button')).toHaveAccessibleDescription(/Segmentanfang; Werbung/);
+  await card.getByText('Weitere 2 Fundstellen', { exact: true }).click();
+  await expect(card.locator('.passage:visible')).toHaveCount(2);
+  await expect(card).toContainText('1 Vorkommen');
 });

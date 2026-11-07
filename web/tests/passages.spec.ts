@@ -42,11 +42,11 @@ async function search(page: import('@playwright/test').Page, query: string) {
 test('repeated terms share one coarse jump with an advertising hint and expandable original text', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.route('**/episodes/coverage-complete.json', coarseEpisode);
-  await page.goto('./');
+  await page.goto('./?podcast=podcast-ufo');
   await search(page, 'grüße');
   const hits = page.getByLabel('Fundstellen in passage').getByRole('button');
   await expect(hits).toHaveCount(1);
-  await expect(hits.first()).toContainText('· grüße');
+  await expect(hits.first()).toHaveAccessibleName(/· grüße/);
   await expect(hits.first()).toHaveAccessibleDescription(/Segmentanfang; Werbung/);
   const full = page.getByRole('article').locator('.passage details');
   await expect(full.locator('p')).toBeHidden();
@@ -89,19 +89,19 @@ test('a shared episode/time link loads the player without autoplay and an unknow
 });
 
 test('terms in successive transcript segments remain separate Fundstellen with original context', async ({ page }) => {
-  await page.goto('./');
+  await page.goto('./?podcast=podcast-ufo');
   await search(page, 'münze kleingeld');
   const result = page.getByRole('article').filter({ hasText: 'Synthetische Beispielfolge' });
   await expect(result).toHaveCount(1);
   await expect(result).toContainText('Ein Eimer voller Münzen steht neben dem Tisch.');
-  await expect(result.getByLabel('Fundstellen in segment-001').getByRole('button')).toContainText('münze');
+  await expect(result.getByLabel('Fundstellen in segment-001').getByRole('button')).toHaveAccessibleName(/münze/);
   await expect(result).toContainText('Nach einer Pause sprechen wir über Kleingeld.');
-  await expect(result.getByLabel('Fundstellen in segment-002').getByRole('button')).toContainText('kleingeld');
+  await expect(result.getByLabel('Fundstellen in segment-002').getByRole('button')).toHaveAccessibleName(/kleingeld/);
 });
 
 test('failed audio shows the original episode source and player controls stay within the duration', async ({ page }) => {
   await page.route('https://example.org/fixture.mp3', (route) => route.abort());
-  await page.goto('./');
+  await page.goto('./?podcast=podcast-ufo');
   await search(page, 'fenster');
   await page.getByRole('article').first().getByRole('button', { name: /Anhören ab/ }).first().click();
   await expect(page.getByRole('alert')).toContainText('Audio nicht verfügbar');

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test('a visitor sees pilot and per-episode vocabulary totals in stable chronological order', async ({ page }) => {
-  await page.goto('./');
+  await page.goto('./?podcast=podcast-ufo');
   await page.getByText('Gesamtwörter und Wortschatz', { exact: true }).first().click();
   await page.getByRole('button', { name: 'Wortentwicklung öffnen' }).click();
   const summary = page.getByRole('region', { name: 'Gesamtwörter und Wortschatz' });
@@ -20,7 +20,7 @@ test('a visitor sees pilot and per-episode vocabulary totals in stable chronolog
 });
 
 test('a zero-word episode remains visible with zero counts', async ({ page }) => {
-  await page.goto('./');
+  await page.goto('./?podcast=podcast-ufo');
   const publicationId = await page.evaluate(async () => (await (await fetch('publication.json')).json()).publicationId);
   await page.route('**/stats/catalog.json', (route) => route.fulfill({
     json: {

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test('one autocomplete builds absolute summed stacks and keeps chronological zero episodes', async ({ page }) => {
-  await page.goto('./');
+  await page.goto('./?podcast=podcast-ufo');
   const input = page.getByRole('combobox', { name: 'Wörter suchen' });
   await expect(input).toBeVisible();
   await expect(page.locator('input')).toHaveCount(1);
@@ -34,7 +34,7 @@ test('selected Grundformen highlight actual surface forms and load only the stat
     if (/\/episodes\/.+\.json$/.test(request.url())) records.push(decodeURIComponent(new URL(request.url()).pathname.split('/').at(-1)!));
     if (request.url().endsWith('.pf_fragment')) fragments.push(request.url());
   });
-  await page.goto('./');
+  await page.goto('./?podcast=podcast-ufo');
   const input = page.getByRole('combobox', { name: 'Wörter suchen' });
   await input.fill('münze');
   await page.getByRole('option', { name: 'münze', exact: true }).click();

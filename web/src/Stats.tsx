@@ -51,8 +51,8 @@ export function Stats() {
     {loading && <p role="status">Wortauswahl wird geladen …</p>}
     {error && <><p role="alert">Die Wortstatistik konnte nicht geladen werden. Fehlende Daten sind kein Nullwert.</p><button onClick={() => { setLoading(true); setError(false); setAttempt((value) => value + 1); }}>Wortstatistik erneut laden</button></>}
     {data && <>
-      <p className="dataset-note">Pilot · {data.episodes.length} Folgen</p>
       <Suspense fallback={<p role="status">Wortauswahl wird vorbereitet …</p>}><Frequency publicationId={data.publicationId} words={data.words} episodes={data.episodes} onChoose={onChoose} /></Suspense>
+      <p className="dataset-note">Pilot · {data.episodes.length} verarbeitete Folgen</p>
       <details className="metadata"><summary>Verarbeitete Folgen und Laufzeiten</summary>
         <p>Gesamtwörter einschließlich Stoppwörtern: {data.episodes.reduce((sum, episode) => sum + episode.totalWords, 0)}</p>
         <p className="muted">Gemessene Zeiten je Folge. Die gemeinsame Modelleinrichtung ist separat im Verarbeitungsprotokoll erfasst.</p>

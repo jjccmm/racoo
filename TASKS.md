@@ -1,5 +1,10 @@
 # Nächste Arbeiten
 
+Aktuell: [minimalistische Podcast-Auswahl und Suchansicht](.scratch/minimal-podcast-design/spec.md), mit [Gestaltungsticket](.scratch/minimal-podcast-design/issues/01-minimal-design.md) und [belegter Designrecherche](docs/research/minimal-podcast-design.md). Der [Abschlussbericht](docs/pilot/minimal-design.md) enthält die Bedienung und geprüften Grenzen.
+
+- [x] Startseite mit genauer Überschrift, Podcast-Cover und Sprechern; kompakter Suchkontext und Navigation.
+- [x] Neutrales Layout, moderne Wortfarben und kompakte Originalfundstellen; Verhalten und reale Mobil-/Desktop-Ansichten prüfen.
+
 Aktuell: [Wortsuche mit zentralem Stapelbalkendiagramm](.scratch/word-explorer/spec.md), als [abgeschlossenes Ticket](.scratch/word-explorer/issues/01-word-explorer.md). Der [Abschlussbericht](docs/pilot/word-explorer.md) enthält Bedienung, Prüfungen und verbleibende Archiventscheidungen.
 
 - [x] Ein Suchfeld mit Dropdown und Wortchips, absolute gestapelte Folgenzahlen und Top-10-/Alle-Umschaltung.

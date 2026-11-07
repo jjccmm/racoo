@@ -8,7 +8,7 @@ type RawResult = {
 };
 
 test('finds a remembered word in the real built transcript index', async ({ page }) => {
-  await page.goto('./');
+  await page.goto('./?podcast=podcast-ufo');
   await choose(page, 'münze');
   const result = page.getByRole('article');
   await expect(result).toHaveCount(1);
@@ -19,7 +19,7 @@ test('finds a remembered word in the real built transcript index', async ({ page
 });
 
 test('the visible publication, search mapping and statistics share one stable identity', async ({ page }) => {
-  await page.goto('./');
+  await page.goto('./?podcast=podcast-ufo');
   await expect(page.getByLabel('Veröffentlichungsstand')).toContainText('synthetic-podcast · 17 Folgen');
   const envelope = await page.evaluate(async () => {
     const publication = await (await fetch('publication.json')).json();
@@ -45,7 +45,7 @@ test('a mismatched publication identity is an explicit startup error with a deli
     requests += 1;
     return route.fulfill({ json: { schemaVersion: 1, publicationId: 'a'.repeat(64), podcastId: 'synthetic-podcast', state: 'synthetic-fixture', archiveComplete: false, episodeCount: 17, episodeIds: [], searchIndexId: 'b'.repeat(64), statisticsId: 'c'.repeat(64), preparationId: null } });
   });
-  await page.goto('./');
+  await page.goto('./?podcast=podcast-ufo');
   await expect(page.getByRole('alert').first()).toContainText('Wortstatistik konnte nicht geladen werden');
   const initial = requests;
   await page.waitForTimeout(250); expect(requests).toBe(initial);
@@ -59,7 +59,7 @@ test('the index maps every candidate to stable identity and date before fragment
   page.on('request', (request) => {
     if (request.url().endsWith('.pf_fragment')) fragments.push(request.url());
   });
-  await page.goto('./');
+  await page.goto('./?podcast=podcast-ufo');
   const identities = await page.evaluate(async () => {
     const manifest = await (await fetch('search/manifest.json')).json();
     const directory = `search/${manifest.indexId}/`;
@@ -81,7 +81,7 @@ test('a failed index request is an explicit error with a deliberate retry', asyn
     requests += 1;
     return route.fulfill({ status: 503, body: 'Index temporarily unavailable' });
   });
-  await page.goto('./');
+  await page.goto('./?podcast=podcast-ufo');
   await choose(page, 'münze');
   await expect(page.getByRole('alert')).toContainText('Die Originalpassagen konnten nicht geladen werden');
   const failures = requests;
@@ -93,7 +93,7 @@ test('a failed index request is an explicit error with a deliberate retry', asyn
 });
 
 test('German word forms and changing selections keep correct segment times', async ({ page }) => {
-  await page.goto('./'); await choose(page, 'münze');
+  await page.goto('./?podcast=podcast-ufo'); await choose(page, 'münze');
   await expect(page.getByRole('article')).toContainText('0:10');
   await expect(page.getByRole('article').locator('mark')).toHaveText(['Münzen']);
   await clearWords(page); await choose(page, 'kleingeld');
@@ -107,7 +107,7 @@ test('German word forms and changing selections keep correct segment times', asy
 test('title-only words and no matches stay empty without loading any details', async ({ page }) => {
   const details: string[] = [];
   page.on('request', (request) => { if (request.url().endsWith('.pf_fragment')) details.push(request.url()); });
-  await page.goto('./'); expect(details).toEqual([]);
+  await page.goto('./?podcast=podcast-ufo'); expect(details).toEqual([]);
   expect((await search(page, 'Titelgeheimnis')).page!.total).toBe(0);
   expect((await search(page, 'unauffindbareswort')).page!.total).toBe(0);
   expect((await search(page, '   ')).page!.total).toBe(0);
@@ -115,7 +115,7 @@ test('title-only words and no matches stay empty without loading any details', a
 });
 
 test('the pinned native API preserves independent query positions and segment anchors', async ({ page }) => {
-  await page.goto('./');
+  await page.goto('./?podcast=podcast-ufo');
   const evidence = await page.evaluate(async () => {
     const manifest = await (await fetch('search/manifest.json')).json();
     const moduleUrl = new URL(`search/${manifest.indexId}/pagefind.js`, location.href).href;
@@ -158,7 +158,7 @@ for (const [description, pattern] of [
       requests += 1;
       return route.fulfill({ status: 503, body: 'Temporarily unavailable' });
     });
-    await page.goto('./');
+    await page.goto('./?podcast=podcast-ufo');
     await choose(page, 'münze');
     await expect(page.getByRole('alert')).toContainText('Die Originalpassagen konnten nicht geladen werden');
     await page.waitForTimeout(250); // Observe that scheduled work does not start a retry loop.
@@ -176,7 +176,7 @@ test('search loading is visible while the index manifest is pending', async ({ p
     await pending;
     await route.continue();
   });
-  await page.goto('./');
+  await page.goto('./?podcast=podcast-ufo');
   await choose(page, 'münze');
   await expect(page.getByRole('status')).toContainText('Originalpassagen werden geladen');
   release();

@@ -1,13 +1,13 @@
 import { expect, test } from '@playwright/test';
 import { choose } from './helpers';
-async function openStatistics(page: import('@playwright/test').Page) { await page.goto('./'); await expect(page.getByRole('combobox', { name: 'Wörter suchen' })).toBeVisible(); }
+async function openStatistics(page: import('@playwright/test').Page) { await page.goto('./?podcast=podcast-ufo'); await expect(page.getByRole('combobox', { name: 'Wörter suchen' })).toBeVisible(); }
 
 test('excluded words are unavailable while complete word metrics remain accessible', async ({ page }) => {
   await openStatistics(page);
   await page.getByRole('combobox').fill('ein');
   await expect(page.getByRole('option', { name: 'ein', exact: true })).toHaveCount(0);
   await expect(page.getByRole('checkbox')).toHaveCount(0);
-  await expect(page.locator('.selection-note')).toContainText('Automatische Stoppwörter und Wörter aus einer manuell gepflegten Zusatzliste');
+  await expect(page.locator('.selection-note')).toContainText('Stoppwörter und manuell ausgeschlossene Wörter');
   await page.getByText('Verarbeitete Folgen und Laufzeiten', { exact: true }).click();
   await expect(page.getByText('Gesamtwörter einschließlich Stoppwörtern: 349')).toBeVisible();
 });

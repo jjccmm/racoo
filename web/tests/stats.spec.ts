@@ -15,7 +15,7 @@ test('episode processing timings use the compact catalog without loading transcr
     return route.fulfill({ response, json: catalog });
   });
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('./');
+  await page.goto('./?podcast=podcast-ufo');
   await page.getByText('Verarbeitete Folgen und Laufzeiten', { exact: true }).click();
   const overview = page.getByRole('table', { name: 'Verarbeitete Folgen und Laufzeiten' });
   const measured = overview.getByRole('row').filter({ hasText: 'Abdeckung vollständig' });

@@ -7,7 +7,8 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 type Word = { lemma: string; stopword: boolean; totalCount: number; shard: string };
 type Episode = { episodeId: string; title: string; publishedAt: string; totalWords: number; distinctWords: number };
 type Selected = Word & { color: string; token: number; state: 'loading' | 'ready' | 'error'; values: Map<string, number> };
-const COLORS = ['#215d4d', '#b64e29', '#345f9c', '#85508b', '#8c6810'];
+// Carbon categorical sequence; word labels retain neutral, high-contrast text.
+const COLORS = ['#6929c4', '#1192e8', '#005d5d', '#9f1853', '#fa4d56'];
 const normalize = (value: string) => value.normalize('NFC').toLocaleLowerCase('de-DE').trim();
 const identityOrder = (a: string, b: string) => a < b ? -1 : a > b ? 1 : 0;
 const count = (value: number) => value.toLocaleString('de-DE');
@@ -87,10 +88,10 @@ export function Frequency({ publicationId, words, episodes, onChoose }: { onChoo
 
   return <section className="frequency" aria-label="Wörter und Folgen erkunden">
     <div className="word-field" ref={field} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setOpened(false); }}>
-      <label htmlFor="lemma">Wörter suchen</label>
+      <div className="field-heading"><label htmlFor="lemma">Wörter suchen</label><span>Bis zu fünf Wörter</span></div>
       <input ref={input} id="lemma" role="combobox" aria-autocomplete="list" aria-expanded={opened && selected.length < 5} aria-controls="word-options"
         aria-activedescendant={opened && active >= 0 && suggestions[active] ? `word-option-${active}` : undefined}
-        value={query} placeholder="Zum Beispiel Eimer, Münze oder Kleingeld" autoComplete="off"
+        value={query} placeholder="Eimer, Münze, Kleingeld …" autoComplete="off"
         onFocus={() => { setOpened(true); setActive(-1); }}
         onChange={(event) => { setQuery(event.target.value); setOpened(true); setActive(-1); }}
         onKeyDown={(event) => {
@@ -108,31 +109,30 @@ export function Frequency({ publicationId, words, episodes, onChoose }: { onChoo
       </ul>}
     </div>
     <ul className="selected-words" aria-label="Ausgewählte Grundformen">{selected.map((word) => <li key={word.token}><button className="word-chip" style={wordStyle(word.color)} aria-label={`${word.lemma} entfernen`} onClick={() => remove(word)}>{word.lemma}<span aria-hidden="true"> ×</span></button></li>)}</ul>
-    <p className="muted selection-note">{selected.length === 5 ? 'Fünf Wörter ausgewählt. Entferne ein Wort, um ein anderes zu wählen. ' : ''}Automatische Stoppwörter und Wörter aus einer manuell gepflegten Zusatzliste sind von der Auswahl ausgeschlossen. Gesamtwörter, verschiedene und neue Wörter enthalten weiterhin alle alphabetischen Wörter.</p>
+    <p className="muted selection-note">{selected.length === 5 ? 'Fünf Wörter ausgewählt. Entferne ein Wort, um ein anderes zu wählen. ' : ''}Stoppwörter und manuell ausgeschlossene Wörter werden nicht angeboten.</p>
     {selected.some((word) => word.state === 'loading') && <p role="status">Wortzählungen werden geladen …</p>}
     {selected.filter((word) => word.state === 'error').map((word) => <div key={word.token}><p role="alert">Die Zählungen für {word.lemma} konnten nicht geladen werden. Fehlende Daten sind kein Nullwert.</p><button onClick={() => void load(word)}>Zählungen erneut laden</button></div>)}
     <section className="chart-panel" aria-label="Grundformvergleich">
-      <div className="chart-heading"><div><p className="eyebrow">Wörter im Verlauf</p><h2>Welche Folge erzählt davon?</h2><p className="muted">Absolute Vorkommen je Folge</p></div>
+      <div className="chart-heading"><div><h2>Vorkommen je Folge</h2><p className="muted">Absolute Anzahl der ausgewählten Wörter</p></div>
         <div className="view-toggle" aria-label="Folgen im Diagramm"><button aria-pressed={mode === 'top'} onClick={() => setMode('top')}>Top 10</button><button aria-pressed={mode === 'all'} onClick={() => setMode('all')}>Alle</button></div>
       </div>
       {ready && plotted.length > 3 && <p className="chart-scroll-note muted">Im Diagramm seitlich scrollen, um weitere Folgen zu sehen.</p>}
-      {!selected.length ? <div className="chart-empty"><strong>Ein Wort ist der Anfang.</strong><p>Wähle oben ein Wort. Hier siehst du die Folgen mit den meisten Vorkommen.</p><div className="empty-bars" aria-hidden="true">{[35, 65, 48, 90, 70, 45, 28].map((height, index) => <i key={index} style={{ height: `${height}%` }} />)}</div></div>
+      {!selected.length ? <div className="chart-empty"><p>Wähle ein Wort, um Folgen zu vergleichen.</p></div>
         : !ready ? <div className="chart-empty"><p>Das Diagramm wartet auf vollständige Zählungen.</p></div>
           : <><ul className="chart-legend" aria-label="Wörter im Diagramm">{selected.map((word) => <li key={word.token} style={wordStyle(word.color)}><i />{word.lemma}</li>)}</ul>
             {!ranked.length && <p role="status">Keine Vorkommen für die ausgewählten Wörter.</p>}
             <div className="frequency-chart-scroll"><div className="frequency-chart" style={{ width: `max(100%, ${Math.max(580, plotted.length * 95)}px)` }}>
-              <ResponsiveContainer width="100%" height={370}><BarChart data={plotted} margin={{ top: 20, right: 22, bottom: 55, left: 0 }} accessibilityLayer>
-                <CartesianGrid vertical={false} stroke="#dbe5df" /><XAxis dataKey="title" interval={0} angle={-25} textAnchor="end" height={85} tick={{ fontSize: 12 }} tickFormatter={(title: string) => title.length > 22 ? `${title.slice(0, 20)}…` : title} />
-                <YAxis allowDecimals={false} width={45} /><Tooltip labelStyle={{ fontWeight: 700 }} formatter={(value, name) => [value, name]} contentStyle={{ borderRadius: 10 }} labelFormatter={(label, payload) => `${label} · Summe ${payload[0]?.payload.total ?? 0}`} />
-                {selected.map((word) => <Bar key={word.token} dataKey={`series${word.token}`} name={word.lemma} stackId="words" fill={word.color} isAnimationActive={false} maxBarSize={72} />)}
+              <ResponsiveContainer width="100%" height={370}><BarChart data={plotted} margin={{ top: 20, right: 16, bottom: 40, left: 0 }} barCategoryGap="28%" accessibilityLayer>
+                <CartesianGrid vertical={false} stroke="#e7e7eb" strokeDasharray="3 4" /><XAxis dataKey="title" interval={0} angle={-25} textAnchor="end" height={85} axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#62626b' }} tickFormatter={(title: string) => title.length > 22 ? `${title.slice(0, 20)}…` : title} />
+                <YAxis allowDecimals={false} axisLine={false} tickLine={false} width={38} tick={{ fontSize: 11, fill: '#62626b' }} /><Tooltip itemStyle={{ color: '#202024' }} cursor={{ fill: '#f4f4f5' }} labelStyle={{ fontWeight: 600, color: '#202024' }} formatter={(value, name) => [value, name]} contentStyle={{ borderRadius: 6, border: '1px solid #e4e4e7', boxShadow: '0 4px 16px #0000000a', fontSize: 13 }} labelFormatter={(label, payload) => `${label} · Summe ${payload[0]?.payload.total ?? 0}`} />
+                {selected.map((word) => <Bar key={word.token} dataKey={`series${word.token}`} name={word.lemma} stackId="words" fill={word.color} stroke="#fff" strokeWidth={1} isAnimationActive={false} maxBarSize={52} />)}
               </BarChart></ResponsiveContainer>
             </div></div>
             <details className="chart-data"><summary>Diagrammdaten anzeigen</summary><div className="counts-scroll"><table aria-label="Vorkommen nach Folge"><thead><tr><th>Folge</th>{selected.map((word) => <th key={word.token}>{word.lemma}</th>)}<th>Summe</th></tr></thead><tbody>{plotted.map((episode) => <tr key={episode.episodeId}><th scope="row">{episode.title}</th>{selected.map((word) => <td key={word.token}>{count(word.values.get(episode.episodeId) ?? 0)}</td>)}<td>{count(episode.total)}</td></tr>)}</tbody></table></div></details>
           </>}
     </section>
     {ready && ranked.length > 0 && <section aria-label="Folgen mit den meisten Vorkommen" className="episode-results">
-      <h2>Die passenden Folgen</h2>
-      <p className="muted">Nach der Summe der ausgewählten Wörter · höchstens zehn Folgen</p>
+      <div className="results-heading"><h2>Passende Folgen</h2><span>Nach Gesamttreffern · Top 10</span></div>
       {ranked.map((episode, index) => <EpisodeCard
         key={episode.episodeId} episode={episode} index={index} words={selected}
         result={details.key === passageKey ? details.results?.find((item) => item.episodeId === episode.episodeId) : undefined}
@@ -164,28 +164,39 @@ function EpisodeCard({ episode, index, words, result, loading, error, onChoose }
     {loading && <p className="muted">Originalpassagen werden geladen …</p>}
     {error && <p className="muted">Originalpassagen derzeit nicht verfügbar.</p>}
     {!loading && !error && (result?.passages.length ? <>
-      <a className="episode-link" href={result.webpageUrl} target="_blank" rel="noreferrer">Zur Episodenseite ↗</a>
-      {result.passages.map((passage) => <div className="passage" key={passage.id}>
-        <PassageText passage={passage} words={words} />
-        <div className="occurrences" aria-label={`Fundstellen in ${passage.id}`}>
-          <button onClick={() => onChoose(result, passage)} aria-describedby={`jump-hint-${episode.episodeId}-${passage.id}`}>
-            Anhören ab {formatPlaybackTime(passage.start_seconds)} · {passage.terms.join(', ')}
-          </button>
-          <span className="muted" id={`jump-hint-${episode.episodeId}-${passage.id}`}>
-            Sprung zum Segmentanfang; Werbung kann die Zeit in der Online-Audiodatei verschieben.
-          </span>
-        </div>
-      </div>)}
+      <div className="passages">
+        {result.passages.slice(0, 2).map((passage) => <PassageRow key={passage.id} passage={passage} words={words} result={result} onChoose={onChoose} />)}
+        {result.passages.length > 2 && <details className="more-passages"><summary>Weitere {result.passages.length - 2} Fundstellen</summary>
+          {result.passages.slice(2).map((passage) => <PassageRow key={passage.id} passage={passage} words={words} result={result} onChoose={onChoose} />)}
+        </details>}
+      </div>
+      <div className="episode-footer"><span id={`jump-hint-${episode.episodeId}`}>Sprung zum Segmentanfang; Werbung kann die Zeit in der Online-Audiodatei verschieben.</span><a className="episode-link" href={result.webpageUrl} target="_blank" rel="noreferrer">Episodenseite ↗</a></div>
     </> : <p className="muted">Die Grundform wurde gezählt; die Textsuche findet dazu keine passende Originalpassage.</p>)}
   </article>;
 }
 
+function PassageRow({ passage, words, result, onChoose }: {
+  passage: Passage; words: Selected[]; result: SearchResult;
+  onChoose(episode: PlayerEpisode, passage: Passage): void;
+}) {
+  return <div className="passage">
+    <div className="occurrences" aria-label={`Fundstellen in ${passage.id}`}>
+      <button onClick={() => onChoose(result, passage)} aria-label={`Anhören ab ${formatPlaybackTime(passage.start_seconds)} · ${passage.terms.join(', ')}`} aria-describedby={`jump-hint-${result.episodeId}`}>
+        <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M4 2.5 13 8l-9 5.5z" fill="currentColor" /></svg>
+        {formatPlaybackTime(passage.start_seconds)}
+      </button>
+    </div>
+    <PassageText passage={passage} words={words} />
+  </div>;
+}
+
 function PassageText({ passage, words }: { passage: Passage; words: Selected[] }) {
-  const long = passage.text.length > 600;
+  const long = passage.text.length > 360;
   const first = passage.highlights[0]?.start ?? 0;
-  const start = long ? Math.max(0, first - 140) : 0;
-  const intendedEnd = long ? Math.min(passage.text.length, start + 440) : passage.text.length;
-  const end = passage.highlights.find((range) => range.start < intendedEnd && range.end > intendedEnd)?.end ?? intendedEnd;
+  let start = long ? Math.max(0, first - 85) : 0;
+  while (start > 0 && !/\s/u.test(passage.text[start - 1])) start--;
+  let end = long ? Math.min(passage.text.length, start + 280) : passage.text.length;
+  while (end < passage.text.length && !/\s/u.test(passage.text[end])) end++;
   function text(from: number, to: number) {
     const pieces = [];
     let cursor = from;
@@ -200,5 +211,5 @@ function PassageText({ passage, words }: { passage: Passage; words: Selected[] }
     pieces.push(passage.text.slice(cursor, to));
     return pieces;
   }
-  return <><p><span className="timestamp" aria-label="Episodenzeit">{formatPlaybackTime(passage.start_seconds)}</span>{start > 0 && '… '}{text(start, end)}{end < passage.text.length && ' …'}</p>{long && <details><summary>Vollständiges Segment anzeigen</summary><p>{text(0, passage.text.length)}</p></details>}</>;
+  return <><p>{start > 0 && '… '}{text(start, end)}{end < passage.text.length && ' …'}</p>{long && <details><summary>Vollständiges Segment anzeigen</summary><p>{text(0, passage.text.length)}</p></details>}</>;
 }

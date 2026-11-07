@@ -1,6 +1,6 @@
 # Podcast Words V3 – Projektplan
 
-Stand: 7. November 2026; lokaler Fünf-Folgen-Pilot mit zentralem Wortvergleich und groben Segmenten. Die aktuelle Oberfläche folgt dem [Wort-Explorer](.scratch/word-explorer/spec.md), aufbauend auf der [kompakten und gefilterten Wortstatistik](.scratch/compact-filtered-statistics/spec.md); der übrige Umfang steht in der [Pilotspezifikation](.scratch/local-five-episode-pilot/spec.md).
+Stand: 7. November 2026; lokaler Fünf-Folgen-Pilot mit Podcast-Auswahl, zentralem Wortvergleich und groben Segmenten. Die aktuelle Gestaltung folgt der [minimalen Podcast-Auswahl und Suchansicht](.scratch/minimal-podcast-design/spec.md), die Funktion dem [Wort-Explorer](.scratch/word-explorer/spec.md), aufbauend auf der [kompakten und gefilterten Wortstatistik](.scratch/compact-filtered-statistics/spec.md); der übrige Umfang steht in der [Pilotspezifikation](.scratch/local-five-episode-pilot/spec.md).
 
 Der Plan wurde im dokumentierten Interview gemeinsam bestätigt. Die [Planverfeinerung](docs/planning/refinement.md) hält die Entscheidungen fest; [TASKS.md](TASKS.md) enthält die nachweisorientierte Umsetzungsreihenfolge. Der [bestätigte Einrichtungsumfang](docs/planning/workspace-setup.md) ist die Grundlage der Workspace-Einrichtung.
 
@@ -87,6 +87,12 @@ Code, normalisierte Episodendaten und Analyseergebnisse im Projekt versionieren.
 
 Die Hauptanwendung bleibt eine Erinnerung wie **„Eimer Münzen Kleingeld“**. Der neue ausdrückliche Auftrag vom 7. November ersetzt die getrennte Freitextsuche und Häufigkeitsansicht durch ein gemeinsames Suchfeld mit Wortauswahl. Weder Zitat noch Wortreihenfolge werden vorausgesetzt.
 
+### Einstieg und Podcast-Kontext
+
+Die Startseite zeigt „Die Podcast Wort Suche“ und „Finde mit ein paar Schlüsselwörtern zu der gesuchten Folge“. Darunter stehen die verfügbaren Podcasts mit offiziellem Cover, Namen und Sprechern; zunächst nur DAS PODCAST UFO von Florentin Will und Stefan Titze. Ein Klick öffnet die Suchansicht mit kleiner Seitennavigation, kompaktem Podcast-Kontext und direkt anschließendem Suchfeld. `?podcast=podcast-ufo` funktioniert als statischer Root-/Projektpfad ohne Serverrouting; bestehende `?episode=…&t=…`-Links öffnen weiterhin direkt den Podcast.
+
+Die [Designrecherche](docs/research/minimal-podcast-design.md) begründet die neutrale Oberfläche, Typohierarchie, gezielte kategoriale Wortfarben und kompakte Fundstellen. Metadaten bleiben nachgeordnet aufklappbar.
+
 ### Ein Suchfeld und ausgewählte Wörter
 
 Ein zugängliches Suchfeld zeigt höchstens zehn passende Grundformen im Dropdown. Exakte Eingaben stehen vor Präfix- und übrigen Teilzeichenfolgentreffern; innerhalb der Gruppen zählen Gesamtvorkommen und anschließend die Grundform als Gleichstandsentscheid. Höchstens fünf Wörter auswählbar machen. Farbige Wortchips stehen direkt darunter und werden durch Anklicken entfernt. Tastatur, Escape, Außenklick und Touch unterstützen. Stoppwörter und manuell ignorierte Grundformen bleiben ausgeschlossen, mit einem knappen sichtbaren Hinweis.
@@ -105,7 +111,9 @@ Die exakten Grundformzahlen kommen aus der gespeicherten spaCy-Analyse. Pagefind
 
 Der vorhandene Pagefind-Index indexiert weiterhin vollständige Folgen mit Segmentankern. Stabile Identitäten, Datenstandsbindung, kopierte Positionen und bewusst wiederholbare Fehler beibehalten. Die bestehende interne Abdeckungssuche kann als Suchschnittstelle erhalten bleiben; die neue Hauptansicht ordnet nach exakten Gesamttreffern.
 
-Passagen öffnen auf Nutzeraktion einen gemeinsamen Online-Player am groben Segmentanfang. Den Werbehinweis unmittelbar am Sprungknopf, Vor-/Zurückspringen, Episodenlink und teilbare `?episode=…&t=…`-Links erhalten. Geteilte Links starten ohne Autoplay. Fehler sind sichtbare Fehler, keine Nullzählungen; Wiederholung erfolgt bewusst.
+Passagen öffnen auf Nutzeraktion einen gemeinsamen Online-Player am groben Segmentanfang. Einen gemeinsamen Werbehinweis unmittelbar bei den Fundstellen je Folge, zugänglich mit jedem Sprungknopf verknüpft, Vor-/Zurückspringen, Episodenlink und teilbare `?episode=…&t=…`-Links erhalten. Geteilte Links starten ohne Autoplay. Fehler sind sichtbare Fehler, keine Nullzählungen; Wiederholung erfolgt bewusst.
+
+Je Folge zunächst zwei kurze Originalausschnitte mit Zeit-/Abspielknopf zeigen; weitere Fundstellen und vollständige Segmente aufklappbar halten. Eine Vorschau schneidet an Wortgrenzen um echte Markierungen und erfindet keine feineren Zeiten.
 
 Wortschatzentwicklung, Gesamtzahlen und gemessene Verarbeitungszeiten bleiben als nachgeordnete einklappbare Informationen unter dem Hauptbereich verfügbar. Gesamt-/Verschiedene-/Neue-Wörter-Zählungen bleiben vollständig einschließlich Stoppwörtern. Root- und GitHub-Pages-Projektpfad müssen dieselbe Funktion bieten.
 

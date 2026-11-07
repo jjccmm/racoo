@@ -18,8 +18,9 @@ npm.cmd --prefix web run build
 npm.cmd --prefix web run preview -- --port 4173 --strictPort
 ```
 
-Öffnen: <http://127.0.0.1:4173/>. Die Wortauswahl öffnet automatisch: Bis zu fünf Grundformen im Autocomplete wählen, ihre absoluten Vorkommen als gestapelte Balken vergleichen und in den zehn Folgen mit der höchsten Summe markierte Originalpassagen anhören. „Top 10“ sortiert nach Summe, „Alle“ zeigt sämtliche Folgen chronologisch einschließlich Nullen. Gesamtzahlen und gemessene Verarbeitungszeiten stehen in den aufklappbaren Abschnitten darunter. Grobe Segmente ersetzen Wortzeitstempel. Der Hinweis am Sprungknopf erklärt die mögliche Verschiebung durch Werbung. Audio wird nach der Transkription gelöscht.
+Öffnen: <http://127.0.0.1:4173/>. Zuerst den Podcast mit Cover und Sprechern auswählen. Die Suchansicht ist auch direkt unter `?podcast=podcast-ufo` erreichbar: Bis zu fünf Grundformen im Autocomplete wählen, ihre absoluten Vorkommen als gestapelte Balken vergleichen und in den zehn Folgen mit der höchsten Summe markierte Originalpassagen anhören. „Top 10“ sortiert nach Summe, „Alle“ zeigt sämtliche Folgen chronologisch einschließlich Nullen. Pro Folge sind zunächst zwei kurze Originalpassagen sichtbar; weitere Stellen und vollständige Segmente sind aufklappbar. Gesamtzahlen und gemessene Verarbeitungszeiten stehen in den aufklappbaren Abschnitten darunter. Grobe Segmente ersetzen Wortzeitstempel. Der gemeinsame Hinweis bei den Fundstellen erklärt die mögliche Verschiebung durch Werbung. Audio wird nach der Transkription gelöscht.
 
+- [Designrecherche](docs/research/minimal-podcast-design.md): Primärquellen, Farbpalette und kompakte Fundstellen.
 - [Fünf-Folgen-Pilot](docs/pilot/local-five-episode-pilot.md): Auswahl, Befehle, tatsächliche Laufzeiten und Grenzen der Prüfung.
 - [Lokale FP32-Verarbeitung](docs/asr.md): GPU-Einrichtung, temporäres Audio, Wiederaufnahme und Messgrenzen.
 - [ASR-Untersuchung und Laufzeitvergleich](docs/research/asr-investigation.md): historische CPU-/Colab-Ergebnisse und Hinweise zu FP32 auf Colab.

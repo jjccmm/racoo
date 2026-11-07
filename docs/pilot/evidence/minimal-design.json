@@ -1,0 +1,33 @@
+{
+  "base": "http://127.0.0.1:4173/",
+  "episodes": 5,
+  "actualDataUnchanged": true,
+  "initialVisiblePassages": 2,
+  "expandedPassages": 6,
+  "expectedRank": [
+    "UFO001 Prolog",
+    "UFO537 Festival",
+    "UFO300 Moll",
+    "UGO081 Freestyle Karate",
+    "UFO Experiment (KI-generiert)"
+  ],
+  "expectedTotals": [
+    "13 Vorkommen",
+    "7 Vorkommen",
+    "7 Vorkommen",
+    "4 Vorkommen",
+    "1 Vorkommen"
+  ],
+  "directoryLoadsNoCorpus": true,
+  "originalCoverLoadsLocally": true,
+  "mobileNoPageOverflow": true,
+  "browserErrors": [],
+  "screenshots": [
+    "C:/Users/User/Code/podcast_words_v3/.cache/minimal-design-landing-desktop.png",
+    "C:/Users/User/Code/podcast_words_v3/.cache/minimal-design-landing-mobile.png",
+    "C:/Users/User/Code/podcast_words_v3/.cache/minimal-design-search-desktop.png",
+    "C:/Users/User/Code/podcast_words_v3/.cache/minimal-design-search-mobile.png",
+    "C:/Users/User/Code/podcast_words_v3/.cache/minimal-design-passages-desktop.png",
+    "C:/Users/User/Code/podcast_words_v3/.cache/minimal-design-passages-mobile.png"
+  ]
+}
