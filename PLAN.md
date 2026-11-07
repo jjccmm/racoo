@@ -1,6 +1,6 @@
 # Podcast Words V3 – Projektplan
 
-Stand: 25. Oktober 2026; lokaler Fünf-Folgen-Pilot mit temporärem Audio und groben Segmenten. Die aktuelle Ergänzung ist die [kompakte und gefilterte Wortstatistik](.scratch/compact-filtered-statistics/spec.md); der übrige Umfang steht in der [Pilotspezifikation](.scratch/local-five-episode-pilot/spec.md).
+Stand: 7. November 2026; lokaler Fünf-Folgen-Pilot mit zentralem Wortvergleich und groben Segmenten. Die aktuelle Oberfläche folgt dem [Wort-Explorer](.scratch/word-explorer/spec.md), aufbauend auf der [kompakten und gefilterten Wortstatistik](.scratch/compact-filtered-statistics/spec.md); der übrige Umfang steht in der [Pilotspezifikation](.scratch/local-five-episode-pilot/spec.md).
 
 Der Plan wurde im dokumentierten Interview gemeinsam bestätigt. Die [Planverfeinerung](docs/planning/refinement.md) hält die Entscheidungen fest; [TASKS.md](TASKS.md) enthält die nachweisorientierte Umsetzungsreihenfolge. Der [bestätigte Einrichtungsumfang](docs/planning/workspace-setup.md) ist die Grundlage der Workspace-Einrichtung.
 
@@ -71,7 +71,7 @@ Das Episoden-JSON ist die maßgebliche Quelle für Originaltext und Zeitmarken. 
 
 Zeitmarken beim Speichern auf sinnvolle Reihenfolge und Grenzen prüfen. Segmente erhalten vor der Indexierung stabile, innerhalb der Folge eindeutige IDs.
 
-Für die Statistik einheitlich spaCy mit `de_core_news_lg` und festgehaltener Modellversion verwenden. Alle alphabetischen Tokens einschließlich Stoppwörtern als Gesamtwörter zählen. Verschiedene und erstmals auftretende Wörter anhand kleingeschriebener Lemmata bestimmen; auch hier gehören Stoppwörter zum Bestand. Stoppwörter in der vollständigen Analyse kennzeichnen. Für die veröffentlichten Häufigkeitsvergleiche Stoppwörter und eine manuell gepflegte Zusatzliste ausschließen; diese Filter ändern weder die vollständigen Analysewerte noch den Bezugswert je 1.000 Gesamtwörter. Die Definitionen auf der Webseite erklären. Originaltexte und Spracherkennung bleiben von dieser Aufbereitung unabhängig.
+Für die Statistik einheitlich spaCy mit `de_core_news_lg` und festgehaltener Modellversion verwenden. Alle alphabetischen Tokens einschließlich Stoppwörtern als Gesamtwörter zählen. Verschiedene und erstmals auftretende Wörter anhand kleingeschriebener Lemmata bestimmen; auch hier gehören Stoppwörter zum Bestand. Stoppwörter in der vollständigen Analyse kennzeichnen. Für die veröffentlichten Häufigkeitsvergleiche Stoppwörter und eine manuell gepflegte Zusatzliste ausschließen; diese Filter ändern die vollständigen Analysewerte nicht. Die Oberfläche vergleicht ausschließlich absolute Vorkommen. Die Definitionen auf der Webseite erklären. Originaltexte und Spracherkennung bleiben von dieser Aufbereitung unabhängig.
 
 Die Analyse pro Folge zwischenspeichern und ihre Version festhalten. Eine geänderte Lemmatisierung berechnet nur die Analysen neu. Für die Veröffentlichung daraus erzeugen:
 
@@ -83,35 +83,31 @@ Zählwerte als normale ausreichend große Ganzzahlen behandeln. Ein fehlender Ei
 
 Code, normalisierte Episodendaten und Analyseergebnisse im Projekt versionieren. Modellgewichte und generierte Web-/Such-Builds gehören nicht in Git. Audio wird nur temporär zur Transkription benötigt und danach gelöscht. Öffentlich ausgelieferte Daten werden gezielt vom Build erstellt. Je Podcast eigene Datenbereiche und Suchindizes vorsehen.
 
-## 4. Suche, Statistik und Player
+## 4. Wörter auswählen, Folgen vergleichen und Passagen lesen
 
-### Stichwortsuche als Standard
+Die Hauptanwendung bleibt eine Erinnerung wie **„Eimer Münzen Kleingeld“**. Der neue ausdrückliche Auftrag vom 7. November ersetzt die getrennte Freitextsuche und Häufigkeitsansicht durch ein gemeinsames Suchfeld mit Wortauswahl. Weder Zitat noch Wortreihenfolge werden vorausgesetzt.
 
-Die Hauptanwendung ist eine Erinnerung wie **„Eimer Münzen Kleingeld“**. Weder ein exaktes Zitat noch eine bestimmte Wortreihenfolge werden vorausgesetzt.
+### Ein Suchfeld und ausgewählte Wörter
 
-- Pagefind indexiert beim Build eine vollständige Folge als ein virtuelles HTML-Dokument mit `lang="de"`. Segment-IDs verbinden Wortpositionen mit Zeitmarken. Die virtuelle Ergebnis-URL verweist auf die App; echte HTML-Folgenseiten sind nicht notwendig.
-- Die App zerlegt die Eingabe in unterschiedliche Stichwörter, ignoriert Groß-/Kleinschreibung sowie leere und doppelte Begriffe und sucht jeden Begriff separat über Pagefind.
-- Gefundene Folgen vereinigen. Zuerst nach Anzahl verschiedener passender Begriffe sortieren: bei drei Stichwörtern 3/3 vor 2/3 vor 1/3. Innerhalb derselben Gruppe die Summe der Pagefind-Ergebnisränge verwenden, kleinere Summe zuerst; danach Veröffentlichungsdatum absteigend und Episoden-ID als stabilen Gleichstandsentscheid.
-- Deutsches Stemming von Pagefind beibehalten. **Kein exakter Nachfilter** für normale Stichwörter: „Münzen“ darf einen passenden Wortformtreffer liefern. Suchtreffer sind keine exakten Lemma-Zählungen.
-- Anfangs nur die ersten zehn Ergebnisdetails laden; weitere auf Anforderung. Die vollständige Trefferabdeckung lässt sich bereits aus den Ergebnis-ID-Listen berechnen. Treffer mit nur einem Teil der Begriffe entsprechend kennzeichnen.
-- Pagefind-Ergebnis-IDs gelten nur innerhalb eines Indexstands und ersetzen keine Episoden-ID. Für die globale Sortierung vor dem Nachladen der ersten zehn Details eine kompakte, an denselben Indexstand gebundene Zuordnung zu Episoden-ID und Veröffentlichungsdatum erzeugen oder im Funktionsnachweis einen gleichwertigen Weg belegen. Nicht erst alle Ergebnisfragmente laden, um diese Metadaten zu erhalten.
-- Innerhalb geladener oder geöffneter Folgen anhand der Positionen passende Passagen bestimmen, mehrere nahe Begriffe bevorzugen und sämtliche Fundstellen zugänglich machen. Dafür die Pagefind-Anker verwenden; Standard-Subresults allein reichen für Segmentabsätze nicht aus.
-- Positionen je Stichwort getrennt erhalten. Im geprüften Pagefind-Stand werden geladene Fragmentobjekte zwischen Abfragen verändert; gemeinsam referenzierte `.data()`-Objekte sind deshalb keine gesicherten Positionskopien. Dies mit dem tatsächlich gesperrten Paketstand prüfen.
-- Keine globale Nähe-Sortierung erzwingen, die sämtliche Transkripte nachladen würde.
+Ein zugängliches Suchfeld zeigt höchstens zehn passende Grundformen im Dropdown. Exakte Eingaben stehen vor Präfix- und übrigen Teilzeichenfolgentreffern; innerhalb der Gruppen zählen Gesamtvorkommen und anschließend die Grundform als Gleichstandsentscheid. Höchstens fünf Wörter auswählbar machen. Farbige Wortchips stehen direkt darunter und werden durch Anklicken entfernt. Tastatur, Escape, Außenklick und Touch unterstützen. Stoppwörter und manuell ignorierte Grundformen bleiben ausgeschlossen, mit einem knappen sichtbaren Hinweis.
 
-Pagefind übernimmt Indexierung, bedarfsgerechtes Nachladen und lexikalische Suche einschließlich Stemming. Die App ergänzt Zusammenführen, Abdeckungsrangfolge, Segmentdarstellung und Audiosteuerung. Es gibt keine automatische Synonym- oder Bedeutungssuche: „Behälter voller Geldstücke“ muss nicht zu „Eimer Münzen“ passen. Semantische Suche und exakte Zitatsuche sind spätere Erweiterungen und keine Voraussetzung für die erste V3.
+### Absolutes gestapeltes Balkendiagramm
 
-### Statistik und Wiedergabe
+Das große Diagramm ist das Hauptelement: Folgen auf der sichtbaren X-Achse, absolute Vorkommen auf der Y-Achse und ein farbiger Stapel pro Wort. Normierte Werte und der frühere Umschalter je 1.000 Gesamtwörter entfallen auf ausdrücklichen Nutzerwunsch. Die Balkenhöhe zeigt die Summe aller ausgewählten Grundformen; längere Folgen können dadurch stärker vertreten sein.
 
-Mehrere Grundformen auswählbar machen, mit begrenzten Vorschlägen statt einer vollständigen langen Auswahlliste. Stoppwörter und manuell ignorierte Grundformen aus Wortauswahl und veröffentlichten Häufigkeitsdateien ausschließen. Ein sichtbarer Hinweis erklärt diese Auswahl und die weiterhin vollständigen Gesamtzahlen; ein Stoppwortschalter entfällt. Häufigkeitsverläufe standardmäßig als Vorkommen je 1.000 Gesamtwörter der jeweiligen Folge zeigen, absolute Zahlen als Alternative anbieten. Bei null Gesamtwörtern keine Division ausführen und den Wert als nicht verfügbar kennzeichnen.
+„Top 10“ zeigt höchstens zehn Folgen mit positiver Summe, absteigend nach Gesamttreffern und bei Gleichstand nach Datum absteigend sowie dauerhafter ID. „Alle“ zeigt jede Folge einschließlich Nullwerten chronologisch nach Datum und ID. Bei vielen Folgen horizontal innerhalb des Diagramms scrollen; die Seite selbst bleibt in der Gerätebreite. Farben bleiben je ausgewähltem Wort über Chips, Diagramm und Texte hinweg gleich.
 
-Top-10-Folgen und Statistiken zu Gesamtwörtern, verschiedenen Wörtern und erstmals auftretenden Wörtern beibehalten. Erstes Auftreten chronologisch nach Veröffentlichungsdatum bestimmen; bei gleichem Datum stabil nach ID ordnen.
+### Top-Folgen, Originaltext und Player
 
-Treffer zeigen Folgentitel, Datum, Originaltext, passende Begriffe und Zeitmarken. Über einen gemeinsamen Audio-Player ab dem groben Segmentanfang mit Vor-/Zurückspringen abspielen. Abspielen erfolgt nach Nutzeraktion. Nicht verfügbare Audios als Fehler anzeigen und den Episodenlink anbieten.
+Unter dem Diagramm stehen immer die zehn Folgen mit den meisten Gesamttreffern, unabhängig von der Diagrammansicht. Jede Folge zeigt alle ausgewählten Einzelzählungen einschließlich null und ihre Summe. Erst für diese Folgen Suchfragmente und Originaltranskripte laden; keine Vollarchivabrufe und keine Umordnung nach der internen Suchreihenfolge. Wörter im passenden Segmenttext farbig anhand tatsächlicher lexikalischer Fundstellen markieren. Lange Segmente mit lesbarem Ausschnitt und vollständig aufklappbarem Originaltext anzeigen. Sich ändernde Auswahlen dürfen keine veralteten Antworten einblenden.
 
-Folge und Audiostelle über URL-Parameter wie `?episode=…&t=…` teilen. Vite-Basispfad, Datenabrufe, Pagefind-Importe und Ergebnis-URLs müssen sowohl lokal als auch unter dem GitHub-Pages-Projektpfad funktionieren.
+Die exakten Grundformzahlen kommen aus der gespeicherten spaCy-Analyse. Pagefind liefert lexikalische Fundstellen mit deutschen Wortformen und Präfixtreffern; das sind unterschiedliche Aussagen. Ein knapper Hinweis erklärt mögliche Abweichungen, ohne Suchtreffer als exakte Zählungen auszugeben. Findet die Textsuche zu einer gezählten Grundform keine Passage, die richtige Zahl erhalten und den Unterschied sichtbar benennen. Keine automatische Synonym- oder Bedeutungssuche und keine neue Wortzeitauflösung hinzufügen.
 
-Zeitmarken gelten für die transkribierte Audiofassung. Später anders eingefügte Werbung kann Sprünge verschieben; diese Grenze knapp erklären. Eine aufwendige Synchronisation verschiedener Audiofassungen wird zunächst nicht aufgebaut.
+Der vorhandene Pagefind-Index indexiert weiterhin vollständige Folgen mit Segmentankern. Stabile Identitäten, Datenstandsbindung, kopierte Positionen und bewusst wiederholbare Fehler beibehalten. Die bestehende interne Abdeckungssuche kann als Suchschnittstelle erhalten bleiben; die neue Hauptansicht ordnet nach exakten Gesamttreffern.
+
+Passagen öffnen auf Nutzeraktion einen gemeinsamen Online-Player am groben Segmentanfang. Den Werbehinweis unmittelbar am Sprungknopf, Vor-/Zurückspringen, Episodenlink und teilbare `?episode=…&t=…`-Links erhalten. Geteilte Links starten ohne Autoplay. Fehler sind sichtbare Fehler, keine Nullzählungen; Wiederholung erfolgt bewusst.
+
+Wortschatzentwicklung, Gesamtzahlen und gemessene Verarbeitungszeiten bleiben als nachgeordnete einklappbare Informationen unter dem Hauptbereich verfügbar. Gesamt-/Verschiedene-/Neue-Wörter-Zählungen bleiben vollständig einschließlich Stoppwörtern. Root- und GitHub-Pages-Projektpfad müssen dieselbe Funktion bieten.
 
 ## 5. Aufbau, Veröffentlichung und Abnahme
 

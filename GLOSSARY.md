@@ -47,8 +47,8 @@ Die Menge unterschiedlicher kleingeschriebener Grundformen innerhalb des betrach
 Grundformen, die in einer Folge erstmals innerhalb des bis dahin veröffentlichten Bestands vorkommen. Die Reihenfolge richtet sich nach Veröffentlichungsdatum und bei Gleichstand nach der dauerhaften Folgenidentität.
 _Vermeiden_: Neue Wortformen, neu erkannte Wörter
 
-**Normierte Worthäufigkeit**:
-Die Anzahl der Vorkommen einer Grundform je 1.000 Gesamtwörter derselben Folge. Sie erlaubt einen Vergleich zwischen unterschiedlich langen Folgen.
+**Gesamttreffer**:
+Die Summe der Vorkommen aller ausgewählten Grundformen in einer Folge. Jede unterschiedliche ausgewählte Grundform trägt ihre vollständige Anzahl bei. Die Zahl bestimmt die Reihenfolge der Top-Folgen.
 
 **Stoppwort**:
 Ein als häufiges Funktionswort gekennzeichnetes Wort. Es wird aus der Wortauswahl und dem Häufigkeitsvergleich ausgeschlossen, bleibt aber Bestandteil der Gesamtwörter, verschiedenen und neuen Wörter sowie der vollständigen Grundformanalyse.

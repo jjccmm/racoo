@@ -51,3 +51,7 @@ Der gemeinsame Interviewabschluss ist erfolgt. Die folgenden Produktetappen prü
 Der neue ausdrückliche Auftrag ersetzt den Stoppwortschalter aus Q8: Stoppwörter und eine gepflegte Zusatzliste werden aus Wortauswahl und veröffentlichten Häufigkeitsdateien entfernt. Vollständige Analysen, Transkripte, Suche sowie Gesamt-/Verschiedene-/Neue-Wörter-Werte bleiben erhalten; je 1.000 Gesamtwörter bezieht sich weiter auf alle alphabetischen Tokens. Ein Website-Hinweis erklärt das. Die [Umsetzungsspezifikation](../../.scratch/compact-filtered-statistics/spec.md) hält den kompakten Folgenindex-Vertrag und die beiden Tickets fest.
 
 Alphabetisch aufgeteilte Wortlisten und nach globaler Worthäufigkeit sortierte Zähldateien bleiben Optionen für später nachgewiesene Leistungsprobleme.
+
+## Ergänzung vom 7. November 2026: ein Wort-Explorer
+
+Der Nutzer ersetzt die getrennten Such-/Statistikfelder und den normierten Vergleich: ein Dropdown-Suchfeld, entfernbare Wortchips, ein großes gestapeltes Balkendiagramm mit ausschließlich absoluten Zahlen sowie „Top 10“ nach Gesamttreffern und „Alle“ chronologisch. Darunter stehen die zehn besten Folgen mit exakten Einzelzahlen und farbigen Originalfundstellen. Wortformen/Präfixtreffer der Textsuche bleiben von exakten Grundformzahlen unterscheidbar. Laufzeiten und Wortschatzinformationen werden nachgeordnet einklappbar. Das [vollständige Ticket](../../.scratch/word-explorer/issues/01-word-explorer.md) und die [Spezifikation](../../.scratch/word-explorer/spec.md) halten Bedienung, Grenzen und Prüfungen fest.
