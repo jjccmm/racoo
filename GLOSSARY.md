@@ -54,7 +54,7 @@ Die Summe der Vorkommen aller ausgewählten Grundformen in einer Folge. Jede unt
 Ein als häufiges Funktionswort gekennzeichnetes Wort. Es wird aus der Wortauswahl und dem Häufigkeitsvergleich ausgeschlossen, bleibt aber Bestandteil der Gesamtwörter, verschiedenen und neuen Wörter sowie der vollständigen Grundformanalyse.
 
 **Zusätzlich ignorierte Grundform**:
-Eine manuell gepflegte Grundform, die ebenso aus Wortauswahl und Häufigkeitsvergleich ausgeschlossen wird. Transkript, Stichwortsuche und Gesamtstatistiken bleiben vollständig.
+Eine manuell gepflegte Grundform, die ebenso aus Wortauswahl und Häufigkeitsvergleich ausgeschlossen wird. Transkript, vollständiger Textindex und Gesamtstatistiken bleiben vollständig.
 
 **Verfügbares Archiv**:
 Alle zum angegebenen Erfassungsstand nachgewiesenen und abrufbaren Folgen eines Podcasts. Bekannte Quellenlücken werden zusätzlich ausgewiesen.
