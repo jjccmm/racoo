@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { searchEpisodes, type Passage, type SearchResult } from './search';
-import type { PlayerEpisode } from './playback';
+import { formatPlaybackTime, type PlayerEpisode } from './playback';
 import { countPairs } from './statistics';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
@@ -169,7 +169,7 @@ function EpisodeCard({ episode, index, words, result, loading, error, onChoose }
         <PassageText passage={passage} words={words} />
         <div className="occurrences" aria-label={`Fundstellen in ${passage.id}`}>
           <button onClick={() => onChoose(result, passage)} aria-describedby={`jump-hint-${episode.episodeId}-${passage.id}`}>
-            Anhören ab {time(passage.start_seconds)} · {passage.terms.join(', ')}
+            Anhören ab {formatPlaybackTime(passage.start_seconds)} · {passage.terms.join(', ')}
           </button>
           <span className="muted" id={`jump-hint-${episode.episodeId}-${passage.id}`}>
             Sprung zum Segmentanfang; Werbung kann die Zeit in der Online-Audiodatei verschieben.
@@ -180,7 +180,6 @@ function EpisodeCard({ episode, index, words, result, loading, error, onChoose }
   </article>;
 }
 
-function time(seconds: number) { return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`; }
 function PassageText({ passage, words }: { passage: Passage; words: Selected[] }) {
   const long = passage.text.length > 600;
   const first = passage.highlights[0]?.start ?? 0;
@@ -201,5 +200,5 @@ function PassageText({ passage, words }: { passage: Passage; words: Selected[] }
     pieces.push(passage.text.slice(cursor, to));
     return pieces;
   }
-  return <><p><span className="timestamp" aria-label="Episodenzeit">{time(passage.start_seconds)}</span>{start > 0 && '… '}{text(start, end)}{end < passage.text.length && ' …'}</p>{long && <details><summary>Vollständiges Segment anzeigen</summary><p>{text(0, passage.text.length)}</p></details>}</>;
+  return <><p><span className="timestamp" aria-label="Episodenzeit">{formatPlaybackTime(passage.start_seconds)}</span>{start > 0 && '… '}{text(start, end)}{end < passage.text.length && ' …'}</p>{long && <details><summary>Vollständiges Segment anzeigen</summary><p>{text(0, passage.text.length)}</p></details>}</>;
 }
