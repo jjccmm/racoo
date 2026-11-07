@@ -1,12 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { loadEpisode, type Passage } from './search';
 
-import { PlaybackContext, type PlayerEpisode } from './playback';
+import { PlaybackContext, formatPlaybackTime, type PlayerEpisode } from './playback';
 type EpisodeRecord = Awaited<ReturnType<typeof loadEpisode>>;
-
-function time(seconds: number) {
-  return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
-}
 
 export function Player({ children }: { children: ReactNode }) {
   const [player, setPlayer] = useState<PlayerEpisode | null>(null);
@@ -60,6 +56,9 @@ export function Player({ children }: { children: ReactNode }) {
   }, [player, targetTime, playRequested]);
 
   function choose(episode: PlayerEpisode, passage: Passage) {
+    active.current?.abort();
+    active.current = null;
+    setDirectState('idle');
     const url = new URL(window.location.href);
     url.searchParams.set('episode', episode.episodeId);
     url.searchParams.set('t', String(Math.round(passage.start_seconds)));
@@ -85,7 +84,7 @@ export function Player({ children }: { children: ReactNode }) {
     {directEpisode === 'error' && <p role="alert">Die geteilte Folge konnte nicht geladen werden. <button onClick={() => window.location.reload()}>Geteilte Folge erneut laden</button></p>}
     {player && <section className="player" aria-label="Gemeinsamer Audioplayer">
       <h2>Wiedergabe: {player.title}</h2>
-      <p>{time(targetTime)} · Sprung zum Segmentanfang. Werbung kann die Zeit in der Online-Audiodatei verschieben.</p>
+      <p>{formatPlaybackTime(targetTime)} · Sprung zum Segmentanfang. Werbung kann die Zeit in der Online-Audiodatei verschieben.</p>
       <audio ref={audio} src={player.audioUrl} controls preload="metadata" onError={() => setMediaError(true)} />
       <div className="player-controls">
         <button type="button" onClick={() => nudge(-10)}>10 Sekunden zurück</button>

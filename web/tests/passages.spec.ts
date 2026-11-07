@@ -113,3 +113,39 @@ test('failed audio shows the original episode source and player controls stay wi
   await page.getByRole('button', { name: '10 Sekunden zurück' }).click();
   expect(await media.evaluate((element: HTMLAudioElement) => element.currentTime)).toBeGreaterThanOrEqual(0);
 });
+
+test('a newer passage playback wins over a pending shared episode link', async ({ page }) => {
+  let release: () => void = () => {};
+  const pending = new Promise<void>((resolve) => { release = resolve; });
+  let held = false;
+  let released = false;
+  await page.route('**/episodes/coverage-complete.json', async (route) => {
+    const response = await route.fetch();
+    const episode = await response.json();
+    episode.audio.url = controlledAudioUrl;
+    held = true;
+    await pending;
+    await route.fulfill({ response, json: episode }).catch(() => {});
+    released = true;
+  });
+  await page.route('**/episodes/synthetic-episode-001.json', controlledEpisode);
+  await page.goto('./?episode=coverage-complete&t=68');
+  await expect.poll(() => held).toBe(true);
+  await expect(page.getByRole('status').filter({ hasText: 'Geteilte Folge wird geladen' })).toBeVisible();
+  await choose(page, 'münze');
+  await page.getByRole('article').getByRole('button', { name: /Anhören ab 0:10/ }).click();
+  const player = page.getByRole('region', { name: 'Gemeinsamer Audioplayer' });
+  await expect(player.getByRole('heading')).toContainText('Synthetische Beispielfolge');
+  await expect(page.getByRole('status').filter({ hasText: 'Geteilte Folge wird geladen' })).toHaveCount(0);
+  release();
+  await expect.poll(() => released).toBe(true);
+  await page.waitForTimeout(150); // Observe any late shared-link response after the newer play action.
+  await expect(player.getByRole('heading')).toContainText('Synthetische Beispielfolge');
+  await expect(page.getByRole('status').filter({ hasText: 'Geteilte Folge wird geladen' })).toHaveCount(0);
+  expect(new URL(page.url()).searchParams.get('episode')).toBe('synthetic-episode-001');
+  expect(new URL(page.url()).searchParams.get('t')).toBe('10');
+  await expect(player.getByRole('link', { name: 'Fundstelle teilen' })).toHaveAttribute('href', /episode=synthetic-episode-001&t=10/);
+  const media = player.locator('audio');
+  await expect.poll(() => media.evaluate((element: HTMLAudioElement) => element.currentTime)).toBeGreaterThanOrEqual(10);
+  expect(await media.evaluate((element: HTMLAudioElement) => element.currentTime)).toBeLessThan(15);
+});
