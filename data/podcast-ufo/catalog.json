@@ -26,6 +26,14 @@
       "sha256": "0b82c6155fdabc0a64cce25d63f54fe40441ea77785c7a7262c06113cbd70205",
       "path": "snapshots/20261108T190443323729Z-0b82c6155fda.xml",
       "item_count": 541
+    },
+    {
+      "fetched_at": "2026-11-08T21:28:04.211298Z",
+      "requested_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+      "resolved_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+      "sha256": "0b82c6155fdabc0a64cce25d63f54fe40441ea77785c7a7262c06113cbd70205",
+      "path": "snapshots/20261108T212804211298Z-0b82c6155fda.xml",
+      "item_count": 541
     }
   ],
   "episodes": [
@@ -14496,7 +14504,7 @@
       ],
       "source_status": "feed-listed",
       "audio_availability": "unverified",
-      "processing_status": "not-processed",
+      "processing_status": "completed",
       "source_evidence": [],
       "audio_probe": null,
       "identity_verifications": []

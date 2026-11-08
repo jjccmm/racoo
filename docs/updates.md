@@ -52,6 +52,8 @@ Der Build erzeugt eine gemeinsame App, `podcasts.json` als öffentliche Übersic
 
 Karten und Suchansicht zeigen **veröffentlichte/durchsuchbare Folgen von allen bekannten Katalogfolgen** und den Zeitpunkt des letzten erfolgreichen gespeicherten Feedimports. Das umfasst auch ergänzte oder aktuell nicht verfügbare bekannte Folgen im Nenner. Ein reiner Audit zählt nicht als Import; ein fehlgeschlagener Import ersetzt das letzte Erfolgsdatum nicht. Die Angaben aktualisieren sich mit der nächsten Veröffentlichung und sind keine Liveabfrage im Besucherbrowser.
 
+Der [echte Ein-Folgen-Test](pilot/update-limit-one.md) belegt den vollständigen Aufruf mit genau einer neuen GPU-Transkription, einer neuen Wortanalyse und automatischer Aufnahme in den Sechserbuild.
+
 ## Einen Podcast ergänzen
 
 In `podcasts.json` einen weiteren Eintrag mit eigener `id`, `name`, `speakers`, lokalem `cover`, `feed_url` und `directory` ergänzen. Beispiel:

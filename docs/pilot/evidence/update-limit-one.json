@@ -1,0 +1,123 @@
+{
+  "checkedAt": "2026-11-08T21:28:04.211298Z",
+  "codeRevision": "5093671713e1284afe1f40f20cca3ebc4b1546de",
+  "command": [
+    "uv",
+    "run",
+    "--frozen",
+    "--inexact",
+    "--extra",
+    "analysis",
+    "podcast-words",
+    "update",
+    "--podcast",
+    "podcast-ufo",
+    "--limit",
+    "1",
+    "--run-report",
+    ".cache/asr/limit-one-run.json"
+  ],
+  "exitStatus": 0,
+  "commandElapsedSeconds": 176.17309630010277,
+  "feed": {
+    "added": 0,
+    "updated": 541,
+    "itemCount": 541
+  },
+  "episode": {
+    "id": "ep-160703518cd26df69fda431ae0604fab",
+    "title": "UFO002 Fehlkäufe/Unwichtiges",
+    "audioSeconds": 4124.6563125,
+    "segmentCount": 14,
+    "wordCount": 13415,
+    "timings": {
+      "download_seconds": 3.422,
+      "transcription_seconds": 142.079,
+      "total_seconds": 151.453
+    }
+  },
+  "model": {
+    "model_parameters_lookup_download": {
+      "cache_status": "warm",
+      "elapsed_seconds": 0.235,
+      "wire_bytes_downloaded": null
+    },
+    "vad_lookup_download": {
+      "elapsed_seconds": 0.0,
+      "wire_bytes_downloaded": null
+    },
+    "encoder_decoder_session_initialization": {
+      "elapsed_seconds": 14.656
+    },
+    "vad_session_initialization": {
+      "elapsed_seconds": 0.172
+    },
+    "model_setup_total_including_imports_lookup_and_sessions_seconds": 17.797,
+    "model_setup_timing_note": "Outer setup includes runtime imports, cache lookups and nested ASR/VAD initialization; do not add sub-times again."
+  },
+  "runtime": {
+    "python": "3.12.9",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "processor": "Intel64 Family 6 Model 94 Stepping 3, GenuineIntel",
+    "logical_cpu_count": 8,
+    "execution_provider": "CUDAExecutionProvider",
+    "intra_op_num_threads": 4
+  },
+  "processingConfiguration": {
+    "model_id": "nvidia/parakeet-tdt-0.6b-v3",
+    "model_revision": "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+    "export_id": "istupakov/parakeet-tdt-0.6b-v3-onnx",
+    "export_revision": "8f23f0c03c8761650bdb5b40aaf3e40d2c15f1ce",
+    "quantization": "fp32",
+    "vad_id": "istupakov/silero-vad-onnx",
+    "vad_revision": "b3e3ee3cce4c11ceb63b1a0b229d916069c1ddf6",
+    "vad_options": {
+      "batch_size": 1,
+      "max_speech_duration_s": 20,
+      "min_speech_duration_ms": 250,
+      "min_silence_duration_ms": 100,
+      "speech_pad_ms": 0,
+      "threshold": 0.5
+    },
+    "intra_op_num_threads": 4,
+    "asr_provider": "CUDAExecutionProvider",
+    "vad_provider": "CPUExecutionProvider",
+    "preprocessing": "numpy-cpu",
+    "cuda_provider_options": {
+      "arena_extend_strategy": "kSameAsRequested",
+      "gpu_mem_limit": "3221225472",
+      "cudnn_conv_algo_search": "HEURISTIC",
+      "cudnn_conv_use_max_workspace": "0"
+    }
+  },
+  "verification": {
+    "inferenceRuns": 1,
+    "newTranscripts": 1,
+    "newAnalyses": 1,
+    "reusedAnalyses": 5,
+    "unchangedExistingTranscripts": 5,
+    "unchangedExistingAnalyses": 5,
+    "temporaryAudioRemaining": 0,
+    "catalogStatuses": {
+      "completed": 6,
+      "not-processed": 536
+    }
+  },
+  "browser": {
+    "passed": true,
+    "publishedEpisodes": 6,
+    "knownEpisodes": 542,
+    "episodeId": "ep-160703518cd26df69fda431ae0604fab",
+    "title": "UFO002 Fehlkäufe/Unwichtiges",
+    "word": "kaufen",
+    "exactCount": 21,
+    "highlightVisible": true,
+    "pageErrors": []
+  },
+  "publicData": {
+    "processed": 6,
+    "known": 542,
+    "lastCheckedAt": "2026-11-08T21:28:04.211298+00:00"
+  },
+  "boundary": "One actual update invocation after one-time analysis environment setup; package installation and preflight checks excluded from command timing. Local web build and browser verification followed separately; Pages builds automatically after publishing main."
+}
