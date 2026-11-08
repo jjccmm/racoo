@@ -9,12 +9,11 @@ test('configured directory shows coverage and the successful feed date without l
   await page.goto('./');
   const directory = page.getByRole('region', { name: 'Podcasts', exact: true });
   await expect(directory.getByRole('link')).toHaveCount(3);
-  await expect(directory).toContainText('1 von 3 bekannten Folgen durchsuchbar');
-  await expect(directory).toContainText('Feed geprüft am 8.11.2026');
+  await expect(directory).toContainText('1/3 Folgen durchsuchbar (Stand 8.11.2026)');
   expect(requests.some(path => /\/(search|stats)\//.test(path))).toBe(false);
   await directory.getByRole('link', { name: /Zweiter Testpodcast/ }).click();
   await expect(page.getByRole('heading', { name: 'Zweiter Testpodcast', exact: true })).toBeVisible();
-  await expect(page.getByText('1 von 1 bekannten Folgen durchsuchbar')).toBeVisible();
+  await expect(page.getByText('1/1 Folgen durchsuchbar (Stand 8.11.2026)')).toBeVisible();
   await choose(page, 'hund');
   await expect(page.getByRole('heading', { name: 'Nur im zweiten Podcast', exact: true })).toBeVisible();
   expect(requests.some(path => /podcasts\/podcast-ufo\/(search|stats)\//.test(path))).toBe(false);
@@ -34,7 +33,7 @@ test('empty and unknown podcasts have honest states without requesting search da
   const requests: string[] = [];
   page.on('request', request => requests.push(new URL(request.url()).pathname));
   await page.goto('./?podcast=empty-podcast');
-  await expect(page.getByText('0 von 0 bekannten Folgen durchsuchbar')).toBeVisible();
+  await expect(page.getByText('0/0 Folgen durchsuchbar (Stand 8.11.2026)')).toBeVisible();
   await expect(page.getByText(/Für diesen Podcast sind noch keine Folgen durchsuchbar/)).toBeVisible();
   expect(requests.some(path => /\/(search|stats)\//.test(path))).toBe(false);
   await page.goto('./?podcast=unknown');

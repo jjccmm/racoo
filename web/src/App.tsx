@@ -37,7 +37,7 @@ export function App() {
     {explorer && podcasts && !podcast && <p role="alert">Dieser Podcast ist nicht vorhanden. Über „Alle Podcasts“ kommst du zur Übersicht.</p>}
     {explorer && podcast && <>
       <header className="podcast-header">
-        <img src={`${home}${podcast.cover}`} width="48" height="48" alt="" />
+        <img src={`${home}${podcast.cover}`} width="64" height="64" alt="" />
         <div><h1>{podcast.name}</h1><p>{podcast.speakers.join(' & ')}</p><PodcastProgress podcast={podcast} /></div>
       </header>
       {podcast.episodeCount > 0 ? <>
@@ -53,7 +53,7 @@ export function App() {
         <div className="section-heading"><h2 id="podcasts-heading">Podcasts</h2><span>{String(podcasts.length).padStart(2, '0')}</span></div>
         {podcasts.map(item => <a className="podcast-card" href={`${home}?podcast=${encodeURIComponent(item.id)}`} key={item.id}>
           <img src={`${home}${item.cover}`} width="112" height="112" alt={`Cover von ${item.name}`} />
-          <div className="podcast-card-copy"><h3>{item.name}</h3><p>{item.speakers.join(' & ')}</p><PodcastProgress podcast={item} /><span>{item.episodeCount ? 'Folgen durchsuchen' : 'Podcast ansehen'}</span></div>
+          <div className="podcast-card-copy"><h3>{item.name}</h3><p>{item.speakers.join(' & ')}</p><PodcastProgress podcast={item} /></div>
           <span className="card-arrow" aria-hidden="true">→</span>
         </a>)}
       </section>

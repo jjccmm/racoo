@@ -67,7 +67,7 @@ In `podcasts.json` einen weiteren Eintrag mit eigener `id`, `name`, `speakers`, 
 }
 ```
 
-Das Cover unter `web/public/images/` ablegen. Pfade sind relativ zur Konfigurationsdatei (Cover relativ zu `web/public/`), IDs und Datenordner müssen eindeutig sein. Datenordner dürfen weder ineinander liegen noch den Konfigurationsordner verlassen. Dann `update --podcast weiterer-podcast --limit 10` mit den obigen uv-Analyseoptionen ausführen. Vor der ersten Verarbeitung erscheint der Podcast mit einem Leerzustand; ohne gespeicherten Feedimport steht dort „Feed noch nicht geprüft“. Python- oder React-Sondercode ist nicht nötig. Das deutsche Analysemodell gilt zunächst für alle konfigurierten Podcasts.
+Das Cover unter `web/public/images/` ablegen. Pfade sind relativ zur Konfigurationsdatei (Cover relativ zu `web/public/`), IDs und Datenordner müssen eindeutig sein. Datenordner dürfen weder ineinander liegen noch den Konfigurationsordner verlassen. Dann `update --podcast weiterer-podcast --limit 10` mit den obigen uv-Analyseoptionen ausführen. Vor der ersten Verarbeitung erscheint der Podcast mit einem Leerzustand; ohne gespeicherten Feedimport steht dort „Stand unbekannt“. Python- oder React-Sondercode ist nicht nötig. Das deutsche Analysemodell gilt zunächst für alle konfigurierten Podcasts.
 
 `?podcast=<id>` öffnet den Suchkontext. Alte Links nur mit `?episode=...&t=...` werden über die veröffentlichte ID-Zuordnung dem richtigen Podcast zugewiesen. Unbekannte Podcasts erhalten einen sichtbaren Fehler; Suchdaten anderer Podcasts werden nicht geladen.
 
