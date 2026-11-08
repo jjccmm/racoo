@@ -19,7 +19,7 @@ Keep normalized episode JSON and analysis results versioned as specified in the 
 
 When a data contract changes, update its producers, consumers, and representative fixtures together. Keep stable episode identity separate from feed metadata, display numbers, and search-index identifiers.
 
-Use package manifests for individual commands and `uv run --frozen python scripts/check.py` for the complete local/CI check. Routine checks use small fixtures without model downloads, audio downloads, or GPU access; validate real local GPU inference separately as integration work. Report which checks ran and any remaining integration gaps.
+Use package manifests for individual commands and `uv run --frozen python scripts/check.py` for the complete local check before pushing. GitHub Actions only builds and deploys the saved publication; run relevant tests locally during development. Routine checks use small fixtures without model downloads, audio downloads, or GPU access; validate real local GPU inference separately as integration work. Report which checks ran and any remaining integration gaps.
 
 Preserve the language of existing documentation. Add an ADR only when a hard-to-reverse, non-obvious trade-off needs its rationale recorded.
 

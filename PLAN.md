@@ -6,7 +6,7 @@ Der Plan wurde im dokumentierten Interview gemeinsam bestätigt. Die [Planverfei
 
 ## 1. Ziel und festgelegte Entscheidungen
 
-**Projektname: Racoo.** Repository: [jjccmm/racoo](https://github.com/jjccmm/racoo). Die [Pages-Einrichtung](docs/github-pages.md) beschreibt den vorbereiteten, nach erfolgreichen Prüfungen freischaltbaren Veröffentlichungsjob. Das vom Nutzer bereitgestellte Logo steht auf Start- und Podcastseite. Auf der Startseite steht das Logo groß und zentriert ohne Trennlinie. „Die“, „Podcast“, „Wort“ und „Suche“ erscheinen als ausgewählte Wörter, die passende Formen im Erklärungstext markieren. Ein kleines Suchfeld ergänzt weitere Wörter aus diesem Beispieltext; die eigentliche Folgensuche beginnt nach der Podcast-Auswahl. Die [Umsetzung](.scratch/interactive-landing/spec.md) hält die lokale Demo-Abgrenzung fest. Podcast-Cover haben einen dünnen Rand.
+**Projektname: Racoo.** Repository: [jjccmm/racoo](https://github.com/jjccmm/racoo). Die [Pages-Einrichtung](docs/github-pages.md) beschreibt den separat freischaltbaren Veröffentlichungsworkflow. Tests laufen vorab lokal; GitHub Actions baut und validiert ausschließlich die echte Veröffentlichung. Das vom Nutzer bereitgestellte Logo steht auf Start- und Podcastseite. Auf der Startseite steht das Logo groß und zentriert ohne Trennlinie. „Die“, „Podcast“, „Wort“ und „Suche“ erscheinen als ausgewählte Wörter, die passende Formen im Erklärungstext markieren. Ein kleines Suchfeld ergänzt weitere Wörter aus diesem Beispieltext; die eigentliche Folgensuche beginnt nach der Podcast-Auswahl. Die [Umsetzung](.scratch/interactive-landing/spec.md) hält die lokale Demo-Abgrenzung fest. Podcast-Cover haben einen dünnen Rand.
 
 Eine einfach zu betreibende Webseite, die Podcast-Folgen anhand erinnerter Stichwörter findet und Wortstatistiken zeigt. Ausgangspunkt ist DAS PODCAST UFO mit etwa zehn Besuchern pro Tag. Weitere Podcasts sollen später über dieselbe Pipeline und Datenformate hinzukommen können.
 
@@ -19,7 +19,7 @@ Eine einfach zu betreibende Webseite, die Podcast-Folgen anhand erinnerter Stich
 - **Betrieb:** Aktualisierung manuell lokal starten; Veröffentlichung nach einem Push über GitHub Pages. Keine laufende Datenbank, eigene API oder kostenpflichtige Recheninfrastruktur erforderlich.
 - **Reihenfolge:** Zuerst fünf repräsentative Folgen durch den vollständigen Ablauf bis zu Suche, Statistik, Player und GitHub-Pages-Build führen. Erst nach bestandener Pilotabnahme den gesamten verfügbaren Bestand transkribieren.
 - **Transkriptqualität:** Maschinell erzeugte Transkripte mit einem verständlichen Genauigkeitshinweis veröffentlichen. Vor der Archivverarbeitung eine Stichprobe auf ihre Eignung zum Wiederfinden erinnerter Passagen prüfen. Eine umfassende manuelle Transkriptkorrektur ist keine Voraussetzung für V3.
-- **Arbeitsumgebung:** Nach Abschluss der Planverfeinerung lauffähige Python- und React/TypeScript-Starterpakete mit gesperrten Abhängigkeiten, gezielten Prüfungen und CI einrichten. Modelldownloads und die vollständige Transkription sind nachgelagerte Aufgaben.
+- **Arbeitsumgebung:** Nach Abschluss der Planverfeinerung lauffähige Python- und React/TypeScript-Starterpakete mit gesperrten Abhängigkeiten, gezielten lokalen Prüfungen und automatischer Veröffentlichung einrichten. Modelldownloads und die vollständige Transkription sind nachgelagerte Aufgaben.
 
 ## 2. Datenfluss und Quellen
 
@@ -123,7 +123,7 @@ Wortschatzentwicklung, Gesamtzahlen und gemessene Verarbeitungszeiten bleiben al
 
 ### Umsetzung in Etappen
 
-1. **Arbeitsumgebung und Funktionsnachweise:** Lokales FP32-GPU-Paket, Web-App und CI mit gesperrten Abhängigkeiten betreiben. RSS-Katalog und Quelle für Folge 37 prüfen. Den bestätigten vollständigen FP32-Lauf als Betriebsbasis verwenden; die vereinfachte Pipeline und echte Suche/Statistik mit fünf Folgen nachweisen.
+1. **Arbeitsumgebung und Funktionsnachweise:** Lokales FP32-GPU-Paket und Web-App mit gesperrten Abhängigkeiten, lokalen Tests und separatem Veröffentlichungsworkflow betreiben. RSS-Katalog und Quelle für Folge 37 prüfen. Den bestätigten vollständigen FP32-Lauf als Betriebsbasis verwenden; die vereinfachte Pipeline und echte Suche/Statistik mit fünf Folgen nachweisen.
 2. **Durchgängiger Pilot:** Fünf repräsentative Folgen vollständig verarbeiten. Daraus spaCy-Analysen, Statistiken, aufgeteilte Wortzahlen und Pagefind-Index erzeugen. Stichwortsuche mit Teiltreffern, Kontext, Player, teilbaren Links und den vorgesehenen Statistiken bis zu einem GitHub-Pages-Build umsetzen. Lade- und Fehlerzustände sichtbar machen. Die unten festgelegte manuell geprüfte Stichprobe sowie Qualitäts- und Laufzeitgrenzen entscheiden über die Freigabe der Archivverarbeitung.
 3. **Archiv neu erzeugen:** Nach bestandener Pilotabnahme alle verfügbaren Folgen mit derselben festgehaltenen Modellkonfiguration verarbeiten. Wiederaufnahme, Zeitmarken und Vollständigkeit prüfen; Herkunft und Verarbeitungsstand nachvollziehbar speichern.
 4. **Vollständigen Datenstand prüfen:** Analysen, Statistiken und Suchindex für den vollständigen Bestand erzeugen. Alle Artefakte müssen denselben Datenstand referenzieren. Suchqualität, Ladeverhalten, Größe und Laufzeit am vollständigen Bestand erneut prüfen; Quellenlücken ausdrücklich ausweisen.

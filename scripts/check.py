@@ -1,4 +1,4 @@
-"""Run the same fixture-only checks locally and on both CI operating systems."""
+"""Run the full fixture-only checks locally before publishing changes."""
 
 import os
 import shutil

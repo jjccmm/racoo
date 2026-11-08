@@ -7,16 +7,20 @@ Stand: 8. November 2026. Repository: <https://github.com/jjccmm/racoo>. Das bish
 1. Repository öffnen und den Zugriff für Pages klären: GitHub Free unterstützt Pages bei öffentlichen Repositories; für ein privates Repository ist ein passender Tarif wie GitHub Pro nötig. Das Repository wurde durch die Umbenennung nicht öffentlich gemacht. Falls gewünscht, Sichtbarkeit unter **Settings → General → Danger Zone → Change repository visibility** auf Public ändern. Alternativ privat lassen und Pages mit einem passenden Tarif nutzen.
 2. Unter [Settings → Pages](https://github.com/jjccmm/racoo/settings/pages) bei **Build and deployment → Source** **GitHub Actions** auswählen.
 3. Unter [Settings → Secrets and variables → Actions → Variables](https://github.com/jjccmm/racoo/settings/variables/actions) eine **Repository variable** anlegen: Name `PAGES_ENABLED`, Wert `true` (kleingeschrieben). Dies ist eine normale Konfigurationsvariable, kein Secret. Sie schaltet den bereits vorbereiteten Veröffentlichungsjob frei.
-4. Unter [Actions → Workspace checks](https://github.com/jjccmm/racoo/actions/workflows/ci.yml) **Run workflow**, Branch **main**, **Run workflow** wählen.
-5. Warten, bis beide Offline-Prüfungen und **Build and deploy Racoo** erfolgreich sind. Der Job bzw. das Environment **github-pages** zeigt den endgültigen Website-Link. Ohne eigene Domain lautet die erwartete Adresse <https://jjccmm.github.io/racoo/>. Das ist bis zum ersten erfolgreichen Deployment eine Zieladresse, kein Nachweis einer laufenden Website.
+4. Unter [Actions → Deploy Racoo](https://github.com/jjccmm/racoo/actions/workflows/pages.yml) **Run workflow**, Branch **main**, **Run workflow** wählen.
+5. Warten, bis **Build and deploy Racoo** erfolgreich ist. Der Job bzw. das Environment **github-pages** zeigt den endgültigen Website-Link. Ohne eigene Domain lautet die erwartete Adresse <https://jjccmm.github.io/racoo/>. Das ist bis zum ersten erfolgreichen Deployment eine Zieladresse, kein Nachweis einer laufenden Website.
 
-Danach veröffentlichen weitere Pushes auf `main` automatisch, nachdem die Prüfungen auf Windows und Linux bestanden sind. Bei fehlgeschlagenen Prüfungen wird nicht veröffentlicht. `PAGES_ENABLED` entfernen oder auf `false` setzen stoppt zukünftige Veröffentlichungsjobs, entfernt aber keine bereits veröffentlichte Website.
+Danach veröffentlichen weitere Pushes auf `main` automatisch. Der Veröffentlichungsworkflow baut die Webseite und prüft ihre Veröffentlichungsdaten; er startet keine Python- oder Browser-Tests und wartet nicht auf Testworkflows. Bei fehlgeschlagenem Build oder ungültigen Veröffentlichungsdaten wird nicht veröffentlicht. Tests laufen lokal während der Entwicklung; vor einem Push auf `main` die passenden Prüfungen ausführen. `PAGES_ENABLED` entfernen oder auf `false` setzen stoppt zukünftige Veröffentlichungsjobs, entfernt aber keine bereits veröffentlichte Website.
+
+## Lokal prüfen, auf GitHub veröffentlichen
+
+GitHub Actions enthält ausschließlich den Workflow **Deploy Racoo**. Er läuft bei Pushes auf `main` oder manuell auf `main`, sofern `PAGES_ENABLED=true` gesetzt ist. Pull Requests starten keinen Workflow. Python- und Browser-Tests laufen lokal während der Entwicklung; vor einem Push die zur Änderung passenden Prüfungen ausführen. Der vollständige lokale Check ist in der [Entwicklungsanleitung](development.md) beschrieben.
 
 ## Was der Workflow veröffentlicht
 
-Der [Workflow](../.github/workflows/ci.yml) baut aus den gespeicherten echten Pilottranskripten und Analysen, ohne Audio, ASR-Modell oder spaCy-Modell zu laden. Der normale Stand enthält fünf Folgen. Die Routineprüfungen verwenden zuerst ihre synthetischen Fixtures; der Veröffentlichungsjob arbeitet danach in einem frischen Checkout und baut die echte Auswahl. Ein zusätzlicher Check lehnt synthetische und leere Veröffentlichungen ab. Nur `web/dist` wird als Pages-Artefakt hochgeladen.
+Der [Veröffentlichungsworkflow](../.github/workflows/pages.yml) baut aus den gespeicherten echten Pilottranskripten und Analysen, ohne Audio, ASR-Modell oder spaCy-Modell zu laden. Der normale Stand enthält fünf Folgen. Die lokalen Routineprüfungen verwenden synthetische Fixtures. Der Veröffentlichungsworkflow arbeitet in einem frischen Checkout und baut die echte Auswahl. Ein zusätzlicher Check lehnt synthetische und leere Veröffentlichungen ab. Nur `web/dist` wird als Pages-Artefakt hochgeladen.
 
-Der Basis-Pfad kommt von `actions/configure-pages`: aktuell `/racoo/`. Dadurch funktionieren Logos, Suchindex, Datenabrufe und Folge-/Zeitlinks unter dem Projektpfad. Die Browserprüfungen laufen lokal/CI ebenfalls gegen `/racoo/` und `/`. Für einen Projektpfad-Build von Hand:
+Der Basis-Pfad kommt von `actions/configure-pages`: aktuell `/racoo/`. Dadurch funktionieren Logos, Suchindex, Datenabrufe und Folge-/Zeitlinks unter dem Projektpfad. Die lokalen Browserprüfungen laufen ebenfalls gegen `/racoo/` und `/`. Für einen Projektpfad-Build von Hand:
 
 ```powershell
 npm.cmd --prefix web run build -- --base /racoo/

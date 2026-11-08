@@ -1,48 +1,16 @@
-name: Workspace checks
+name: Deploy Racoo
 
 on:
   push:
-  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  check:
-    name: Offline checks (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
-        with:
-          version: "0.10.9"
-          python-version: "3.12"
-          enable-cache: true
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .node-version
-          cache: npm
-          cache-dependency-path: web/package-lock.json
-      - run: uv sync --locked
-      - name: Prepare pinned FFmpeg fixture prerequisite
-        run: uv run --frozen python scripts/prepare_ci_ffmpeg.py
-      - run: uv run --frozen podcast-words doctor
-      - run: npm ci
-        working-directory: web
-      - run: npx playwright install --with-deps chromium --only-shell
-        working-directory: web
-      - run: uv run --frozen python scripts/check.py
-
   pages:
     name: Build and deploy Racoo
-    needs: check
     # Enable explicitly after configuring Settings > Pages > GitHub Actions.
     if: github.ref == 'refs/heads/main' && vars.PAGES_ENABLED == 'true'
     runs-on: ubuntu-latest
@@ -70,7 +38,7 @@ jobs:
           node-version-file: .node-version
           cache: npm
           cache-dependency-path: web/package-lock.json
-      - run: uv sync --locked
+      - run: uv sync --locked --no-dev
       - run: npm ci
         working-directory: web
       - name: Read Pages configuration
