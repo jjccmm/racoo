@@ -20,6 +20,7 @@ def main() -> int:
         "PODCAST_WORDS_ANALYSES": "tests/fixtures/analysis",
     }
     fixture_environment.pop("PODCAST_WORDS_PUBLICATION_SOURCE", None)
+    fixture_environment.pop("PW_MULTI_PODCAST", None)
     commands = [
         [sys.executable, "-m", "ruff", "check", "."],
         [sys.executable, "-m", "ruff", "format", "--check", "."],
@@ -56,7 +57,36 @@ def main() -> int:
         result = subprocess.run(command, cwd=ROOT, env=environment, check=False)
         if result.returncode:
             return result.returncode
-    return 0
+    fixture_config = ROOT / ".cache/multi-podcast-fixture/podcasts.json"
+    result = subprocess.run(
+        [sys.executable, "tests/site_fixture.py", "--output", str(fixture_config.parent)],
+        cwd=ROOT,
+        check=False,
+    )
+    if result.returncode:
+        return result.returncode
+    multi_environment = {
+        key: value for key, value in os.environ.items() if not key.startswith("PODCAST_WORDS_")
+    }
+    multi_environment["PODCAST_WORDS_CONFIG"] = str(fixture_config)
+    multi_environment["PW_MULTI_PODCAST"] = "1"
+    for base_path in ("/racoo/", "/"):
+        command = [npm, "--prefix", "web", "run", "build", "--", "--base", base_path]
+        print(f"\n> {' '.join(command)} (configured podcasts)", flush=True)
+        result = subprocess.run(command, cwd=ROOT, env=multi_environment, check=False)
+        if result.returncode:
+            return result.returncode
+        command = [npm, "--prefix", "web", "run", "test:browser", "--", "multi-podcast.spec.ts"]
+        result = subprocess.run(
+            command, cwd=ROOT, env={**multi_environment, "PW_BASE_PATH": base_path}, check=False
+        )
+        if result.returncode:
+            return result.returncode
+    # Leave the same small root fixture preview as before this check was extended.
+    result = subprocess.run(
+        [npm, "--prefix", "web", "run", "build"], cwd=ROOT, env=fixture_environment, check=False
+    )
+    return result.returncode
 
 
 if __name__ == "__main__":

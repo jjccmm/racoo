@@ -1,4 +1,5 @@
 import { loadPublication } from './publication';
+import { loadPodcasts } from './podcasts';
 
 export type Segment = { id: string; text: string; start_seconds: number; end_seconds: number };
 export type Highlight = { start: number; end: number; terms: string[] };
@@ -28,12 +29,20 @@ async function json(url: string, signal: AbortSignal) {
   return response.json();
 }
 
-async function loadIndex(signal: AbortSignal): Promise<SearchIndex> {
-  const publication = await loadPublication(signal);
-  const manifest = await json(`${base}search/manifest.json`, signal);
+async function loadIndex(signal: AbortSignal, dataBase?: string): Promise<SearchIndex> {
+  if (dataBase === undefined) {
+    const podcasts = await loadPodcasts(signal);
+    const params = new URLSearchParams(window.location.search);
+    const podcast = params.has('podcast') ? podcasts.find(item => item.id === params.get('podcast'))
+      : podcasts.find(item => item.episodeIds.includes(params.get('episode') ?? '')) ?? podcasts[0];
+    if (!podcast || !podcast.episodeCount) throw new Error('Für diesen Podcast ist kein Suchstand verfügbar');
+    dataBase = `${base}${podcast.dataPath}`;
+  }
+  const publication = await loadPublication(signal, dataBase);
+  const manifest = await json(`${dataBase}search/manifest.json`, signal);
   if (!/^[a-f0-9]{64}$/.test(manifest.indexId) || manifest.publicationId !== publication.publicationId
       || manifest.indexId !== publication.searchIndexId || manifest.podcastId !== publication.podcastId) throw new Error('Ungültiger Suchstand');
-  const directory = `${base}search/${manifest.indexId}/`;
+  const directory = `${dataBase}search/${manifest.indexId}/`;
   const mapping = await json(`${directory}episodes.json`, signal);
   if (mapping.indexId !== manifest.indexId || mapping.publicationId !== publication.publicationId) throw new Error('Suchindex und Folgenzuordnung stimmen nicht überein');
   const moduleUrl = new URL(`${directory}pagefind.js`, window.location.href).href;
@@ -72,9 +81,9 @@ async function loadPage(request: SearchRequest, signal: AbortSignal): Promise<Se
   }
 }
 
-export async function searchEpisodes(query: string, signal: AbortSignal, options: { targetEpisodeIds?: string[] } = {}): Promise<SearchSession> {
+export async function searchEpisodes(query: string, signal: AbortSignal, options: { targetEpisodeIds?: string[]; dataBase?: string } = {}): Promise<SearchSession> {
   const terms = [...new Set(query.normalize('NFC').toLocaleLowerCase('de-DE').trim().split(/\s+/).filter(Boolean))].sort();
-  const index = await loadIndex(AbortSignal.any([signal, AbortSignal.timeout(20000)]));
+  const index = await loadIndex(AbortSignal.any([signal, AbortSignal.timeout(20000)]), options.dataBase);
   const initial = await loadPage({ ...index, ...options, terms, offset: 0 }, signal);
   let offset = initial.results.length;
   return {
@@ -87,8 +96,8 @@ export async function searchEpisodes(query: string, signal: AbortSignal, options
   };
 }
 
-export async function loadEpisode(episodeId: string, signal: AbortSignal) {
-  const index = await loadIndex(signal);
+export async function loadEpisode(episodeId: string, signal: AbortSignal, dataBase?: string) {
+  const index = await loadIndex(signal, dataBase);
   const identity = Object.values(index.episodes).find((item) => item.episodeId === episodeId);
   if (!identity) return undefined;
   const response = await fetch(new URL(`episodes/${encodeURIComponent(episodeId)}.json`, index.moduleUrl), { signal });

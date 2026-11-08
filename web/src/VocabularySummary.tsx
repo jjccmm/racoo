@@ -20,7 +20,7 @@ function validCount(value: unknown): value is number {
   return Number.isSafeInteger(value) && (value as number) >= 0;
 }
 
-export function VocabularySummary() {
+export function VocabularySummary({ dataBase }: { dataBase: string }) {
   const [catalog, setCatalog] = useState<Catalog>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -29,8 +29,8 @@ export function VocabularySummary() {
     setLoading(true);
     setError(false);
     try {
-      const publication = await loadPublication();
-      const response = await fetch(`${import.meta.env.BASE_URL}stats/catalog.json`);
+      const publication = await loadPublication(undefined, dataBase);
+      const response = await fetch(`${dataBase}stats/catalog.json`);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const value = await response.json();
       const summary = value.summary as Summary | undefined;
@@ -64,12 +64,12 @@ export function VocabularySummary() {
     {error && <p role="alert">Die Wortentwicklung konnte nicht geladen werden. Bitte bewusst erneut öffnen.</p>}
     {catalog && <>
       <dl className="vocabulary-totals">
-        <div><dt>Gesamtwörter im Pilot</dt><dd>{count(catalog.summary.totalWords)}</dd></div>
-        <div><dt>Verschiedene Wörter im Pilot</dt><dd>{count(catalog.summary.distinctWords)}</dd></div>
-        <div><dt>Neue Wörter im Pilot</dt><dd>{count(catalog.summary.newWords)}</dd></div>
+        <div><dt>Gesamtwörter im Datenbestand</dt><dd>{count(catalog.summary.totalWords)}</dd></div>
+        <div><dt>Verschiedene Wörter im Datenbestand</dt><dd>{count(catalog.summary.distinctWords)}</dd></div>
+        <div><dt>Neue Wörter im Datenbestand</dt><dd>{count(catalog.summary.newWords)}</dd></div>
       </dl>
       {catalog.episodes.length === 0
-        ? <p>Keine Folgen im Pilot; alle Zählungen sind null.</p>
+        ? <p>Keine Folgen im Datenbestand; alle Zählungen sind null.</p>
         : <div className="counts-scroll">
           <table aria-label="Chronologische Wortentwicklung je Folge">
             <thead><tr><th>Folge</th><th>Gesamtwörter</th><th>Verschiedene Wörter</th><th>Neue Wörter</th></tr></thead>

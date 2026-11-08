@@ -49,8 +49,30 @@ def test_default_build_uses_selected_pilot_and_requires_saved_analysis(tmp_path)
     (data / "pilot-episodes.json").write_text(
         json.dumps([f"episodes/{entry.episode_id}.json" for entry in entries]), encoding="utf-8"
     )
+    (tmp_path / "podcasts.json").write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "podcasts": [
+                    {
+                        "id": "synthetic-podcast",
+                        "name": "Synthetic podcast",
+                        "speakers": ["Test"],
+                        "cover": "images/podcast-ufo.jpg",
+                        "feed_url": "https://example.org/feed",
+                        "directory": "data/podcast-ufo",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
     web = tmp_path / "web"
     web.mkdir()
+    (web / "public/images").mkdir(parents=True)
+    shutil.copyfile(
+        ROOT / "web/public/images/podcast-ufo.jpg", web / "public/images/podcast-ufo.jpg"
+    )
     (web / "index.html").write_text("<!doctype html><html><body>Pilot</body></html>")
     shutil.copyfile(ROOT / "pyproject.toml", tmp_path / "pyproject.toml")
     shutil.copyfile(ROOT / "uv.lock", tmp_path / "uv.lock")
@@ -101,14 +123,16 @@ def test_default_build_uses_selected_pilot_and_requires_saved_analysis(tmp_path)
         timeout=180,
     )
     assert result.returncode == 0, result.stdout + result.stderr
-    publication = json.loads((web / "dist/publication.json").read_bytes())
+    publication = json.loads(
+        (web / "dist/podcasts/synthetic-podcast/publication.json").read_bytes()
+    )
     assert publication["state"] == "selected-pilot"
     assert publication["episodeIds"] == ["synthetic-episode-001", "synthetic-episode-002"]
     assert publication["episodeCount"] == 2
     assert publication["archiveComplete"] is False
 
     # A saved source must be checked before it can be rebound to a web publication.
-    prepared = tmp_path / ".cache/pilot-publication"
+    prepared = tmp_path / ".cache/site-publication/synthetic-podcast/source"
     vocabulary = json.loads((prepared / "stats/vocabulary.json").read_bytes())
     assert "ein" not in {word["lemma"] for word in vocabulary["words"]}
     statistics_manifest = json.loads((prepared / "stats/manifest.json").read_bytes())

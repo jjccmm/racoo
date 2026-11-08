@@ -4,7 +4,7 @@ import { loadEpisode, type Passage } from './search';
 import { PlaybackContext, formatPlaybackTime, type PlayerEpisode } from './playback';
 type EpisodeRecord = Awaited<ReturnType<typeof loadEpisode>>;
 
-export function Player({ children }: { children: ReactNode }) {
+export function Player({ children, dataBase }: { children: ReactNode; dataBase: string }) {
   const [player, setPlayer] = useState<PlayerEpisode | null>(null);
   const [targetTime, setTargetTime] = useState(0);
   const [playRequested, setPlayRequested] = useState(false);
@@ -24,7 +24,7 @@ export function Player({ children }: { children: ReactNode }) {
     const controller = new AbortController();
     active.current?.abort();
     active.current = controller;
-    loadEpisode(episodeId, controller.signal).then((episode) => {
+    loadEpisode(episodeId, controller.signal, dataBase).then((episode) => {
       if (controller.signal.aborted) return;
       if (!episode) { setDirectState('unknown'); return; }
       setPlayer(playerFrom(episode));
@@ -32,7 +32,7 @@ export function Player({ children }: { children: ReactNode }) {
       setDirectState('idle');
     }).catch(() => { if (!controller.signal.aborted) setDirectState('error'); });
     return () => controller.abort();
-  }, []);
+  }, [dataBase]);
 
   useEffect(() => {
     const media = audio.current;

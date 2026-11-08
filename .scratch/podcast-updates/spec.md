@@ -17,6 +17,7 @@ Tests laufen ausschließlich lokal. Der einzige GitHub-Workflow baut und veröff
 2. [Begrenzte Verarbeitung](issues/02-pending-processing.md)
 3. [Gemeinsame Aktualisierung](issues/03-update-command.md)
 4. [Mehrere Podcasts veröffentlichen und anzeigen](issues/04-multi-podcast-site.md)
+5. [Unterstützende Windows-Dateisperrenkorrektur](issues/05-windows-atomic-write.md)
 
 ## Abnahme
 

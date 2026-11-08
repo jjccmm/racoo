@@ -2,6 +2,8 @@
 
 Fünf echte Folgen wurden am 25. Oktober 2026 neu mit Parakeet-TDT-0.6B-v3 **FP32 auf der lokalen GTX 1050 Ti** verarbeitet und mit spaCy 3.8.16 / de_core_news_lg 3.8.0 analysiert. Die [Auswahlliste](../../data/podcast-ufo/pilot-episodes.json) ist die gemeinsame Quelle für Suche und Statistik. [Maschinenlesbare Messwerte](evidence/local-five-episode-processing.json) halten Laufzeit und Grenzen fest.
 
+Aktueller Betrieb: Der [Update-Befehl und die Podcastkonfiguration](../updates.md) ersetzen die manuelle Pilotliste als Quelle des normalen Builds. Der folgende Bericht bewahrt den ursprünglichen Fünfernachweis; alle fünf Transkripte bleiben unverändert.
+
 ## Starten
 
 Vom Repositoryroot mit eingerichteter [Entwicklungsumgebung](../development.md):

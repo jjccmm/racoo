@@ -18,6 +18,14 @@
       "sha256": "9a6fb8b0807438637b28932bbd473afae33bb1b1ef9e45aff03875e24a7d0715",
       "path": "snapshots/20261017T065154903725Z-9a6fb8b08074.xml",
       "item_count": 537
+    },
+    {
+      "fetched_at": "2026-11-08T19:04:43.323729Z",
+      "requested_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+      "resolved_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+      "sha256": "0b82c6155fdabc0a64cce25d63f54fe40441ea77785c7a7262c06113cbd70205",
+      "path": "snapshots/20261108T190443323729Z-0b82c6155fda.xml",
+      "item_count": 541
     }
   ],
   "episodes": [
@@ -14562,6 +14570,114 @@
         "bytes_checked": 65536,
         "prefix_sha256": "a5a46ab2e328eb8b74accf5fdb0543b031c6db5bd086e52a7d7e9d91157b53fa"
       },
+      "identity_verifications": []
+    },
+    {
+      "episode_id": "ep-bf1d2b0899877fa31a614abdc496304a",
+      "source": {
+        "kind": "rss",
+        "key": "6aed9e9c4445547a1464d149",
+        "reference_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+        "guid": "6aed9e9c4445547a1464d149",
+        "guid_aliases": []
+      },
+      "title": "UFO541 Detektei",
+      "published_at": "2026-11-07T13:04:00Z",
+      "episode_number": 541,
+      "webpage_url": "https://shows.acast.com/podcast-ufo/episodes/ufo541-detektei",
+      "enclosures": [
+        {
+          "url": "https://sphinx.acast.com/p/acast/s/podcast-ufo/e/6aed9e9c4445547a1464d149/media.mp3",
+          "media_type": "audio/mpeg",
+          "length_bytes": 65472052
+        }
+      ],
+      "source_status": "feed-listed",
+      "audio_availability": "unverified",
+      "processing_status": "not-processed",
+      "source_evidence": [],
+      "audio_probe": null,
+      "identity_verifications": []
+    },
+    {
+      "episode_id": "ep-b15242fe1057d036880b65ce2c38f789",
+      "source": {
+        "kind": "rss",
+        "key": "6ae34d36d925811fc2c426fc",
+        "reference_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+        "guid": "6ae34d36d925811fc2c426fc",
+        "guid_aliases": []
+      },
+      "title": "UFO540 Tief",
+      "published_at": "2026-10-31T13:04:00Z",
+      "episode_number": 540,
+      "webpage_url": "https://shows.acast.com/podcast-ufo/episodes/ufo540",
+      "enclosures": [
+        {
+          "url": "https://sphinx.acast.com/p/acast/s/podcast-ufo/e/6ae34d36d925811fc2c426fc/media.mp3",
+          "media_type": "audio/mpeg",
+          "length_bytes": 70206275
+        }
+      ],
+      "source_status": "feed-listed",
+      "audio_availability": "unverified",
+      "processing_status": "not-processed",
+      "source_evidence": [],
+      "audio_probe": null,
+      "identity_verifications": []
+    },
+    {
+      "episode_id": "ep-af98feea5277474887fb5daf956b7324",
+      "source": {
+        "kind": "rss",
+        "key": "6ada44bef92693313c104c48",
+        "reference_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+        "guid": "6ada44bef92693313c104c48",
+        "guid_aliases": []
+      },
+      "title": "UFO539 Flugschlange",
+      "published_at": "2026-10-24T12:04:00Z",
+      "episode_number": 539,
+      "webpage_url": "https://shows.acast.com/podcast-ufo/episodes/ufo539-flugschlange",
+      "enclosures": [
+        {
+          "url": "https://sphinx.acast.com/p/acast/s/podcast-ufo/e/6ada44bef92693313c104c48/media.mp3",
+          "media_type": "audio/mpeg",
+          "length_bytes": 59451768
+        }
+      ],
+      "source_status": "feed-listed",
+      "audio_availability": "unverified",
+      "processing_status": "not-processed",
+      "source_evidence": [],
+      "audio_probe": null,
+      "identity_verifications": []
+    },
+    {
+      "episode_id": "ep-96f0c5f6a880b335bc221668186aca7d",
+      "source": {
+        "kind": "rss",
+        "key": "6ad077b3937a3c900ff0a93c",
+        "reference_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+        "guid": "6ad077b3937a3c900ff0a93c",
+        "guid_aliases": []
+      },
+      "title": "UFO538 Statement",
+      "published_at": "2026-10-17T12:04:00Z",
+      "episode_number": 538,
+      "webpage_url": "https://shows.acast.com/podcast-ufo/episodes/ufo538-statement",
+      "enclosures": [
+        {
+          "url": "https://sphinx.acast.com/p/acast/s/podcast-ufo/e/6ad077b3937a3c900ff0a93c/media.mp3",
+          "media_type": "audio/mpeg",
+          "length_bytes": 61393188
+        }
+      ],
+      "source_status": "feed-listed",
+      "audio_availability": "unverified",
+      "processing_status": "not-processed",
+      "source_evidence": [],
+      "audio_probe": null,
       "identity_verifications": []
     }
   ]

@@ -1,6 +1,6 @@
 # Nächste Arbeiten
 
-Aktuell: [Lokale Aktualisierung und mehrere Podcasts](.scratch/podcast-updates/spec.md), mit [vier Tickets](.scratch/podcast-updates/ticket-index.md). Implementierung auf `feature/podcast-updates`; Tests lokal, GitHub nur Veröffentlichung.
+Aktuell: [Lokale Aktualisierung und mehrere Podcasts](.scratch/podcast-updates/spec.md), mit [den Tickets](.scratch/podcast-updates/ticket-index.md). Implementierung auf `feature/podcast-updates`; Tests lokal, GitHub nur Veröffentlichung.
 
 - [x] [Vollton-Wörter und haus-Vorbelegung](.scratch/solid-search-design/spec.md): kontrastreiche Chips, getönter Hintergrund, weniger Linien, erkennbare Suchfelder und Diagramm ohne Datentabelle. [Abschluss und Prüfung](docs/pilot/solid-search-design.md).
 

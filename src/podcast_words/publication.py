@@ -2,7 +2,6 @@
 
 import argparse
 import json
-import os
 import shutil
 import tempfile
 from pathlib import Path, PurePath
@@ -12,7 +11,7 @@ from pydantic import ValidationError
 from podcast_words import analysis
 from podcast_words.catalog import Catalog, CatalogEpisode
 from podcast_words.contracts import Episode
-from podcast_words.json_io import write_json
+from podcast_words.json_io import replace_path, write_json
 from podcast_words.revisions import (
     digest,
     validate_compatible_processing,
@@ -138,20 +137,21 @@ def replace_generated_directory(staging: Path, output: Path) -> None:
             raise ValueError(f"Refusing to replace an unrecognized output directory: {output}")
         backup = Path(tempfile.mkdtemp(prefix=f".{output.name}-old-", dir=output.parent))
         backup.rmdir()
-        os.replace(output, backup)
+        replace_path(output, backup)
     try:
-        os.replace(staging, output)
+        replace_path(staging, output)
     except Exception:
         if backup is not None:
-            os.replace(backup, output)
+            replace_path(backup, output)
         raise
     if backup is not None:
         shutil.rmtree(backup)
 
 
-def prepare(arguments: argparse.Namespace) -> dict:
+def prepare(arguments: argparse.Namespace, *, episode_paths: list[Path] | None = None) -> dict:
     catalog = Catalog.model_validate_json(arguments.catalog.read_bytes())
-    episode_paths = relative_episode_paths(arguments.episodes)
+    if episode_paths is None:
+        episode_paths = relative_episode_paths(arguments.episodes)
     episodes, entries, derived = [], [], []
     for source_path in episode_paths:
         episode = Episode.model_validate_json(source_path.read_bytes())

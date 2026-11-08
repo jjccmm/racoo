@@ -51,7 +51,7 @@ jobs:
           uv run --frozen --no-sync python -c
           "import json; from pathlib import Path;
           p=json.loads(Path('web/dist/publication.json').read_text(encoding='utf-8'));
-          assert p['state']=='selected-pilot' and p['episodeCount']>0,
+          assert p['schemaVersion']==2 and p['state']=='published-corpus' and p['episodeCount']>0,
           'Only a real selected publication can be deployed'"
       - name: Upload the static website
         uses: actions/upload-pages-artifact@v5

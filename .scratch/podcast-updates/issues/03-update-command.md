@@ -1,6 +1,6 @@
 # 03: RSS, Transkription und Analyse mit einem Befehl
 
-Status: ready-for-agent
+Status: claimed
 Blocked by: 01, 02
 
 - [ ] update --podcast ID --limit 10 verwendet die Konfiguration und führt Import, Pending-Verarbeitung und benötigte Wortanalysen aus.

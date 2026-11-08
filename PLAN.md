@@ -21,6 +21,8 @@ Eine einfach zu betreibende Webseite, die Podcast-Folgen anhand erinnerter Stich
 - **Transkriptqualität:** Maschinell erzeugte Transkripte mit einem verständlichen Genauigkeitshinweis veröffentlichen. Vor der Archivverarbeitung eine Stichprobe auf ihre Eignung zum Wiederfinden erinnerter Passagen prüfen. Eine umfassende manuelle Transkriptkorrektur ist keine Voraussetzung für V3.
 - **Arbeitsumgebung:** Nach Abschluss der Planverfeinerung lauffähige Python- und React/TypeScript-Starterpakete mit gesperrten Abhängigkeiten, gezielten lokalen Prüfungen und automatischer Veröffentlichung einrichten. Modelldownloads und die vollständige Transkription sind nachgelagerte Aufgaben.
 
+Die [lokale Aktualisierung und mehrere Podcasts](.scratch/podcast-updates/spec.md) ergänzen einen begrenzten `update`-Befehl, eine versionierte Podcastkonfiguration und automatisch erzeugte Veröffentlichungen je Podcast. Die [Betriebsanleitung](docs/updates.md) beschreibt Wiederaufnahme, Konfiguration und Fortschrittsanzeige. Der normale Build nimmt alle fertig gespeicherten Folgen auf; die historische Fünfer-Auswahlliste bleibt als Pilotnachweis erhalten. Ein Update verarbeitet standardmäßig höchstens zehn fehlende verarbeitbare Folgen, älteste zuerst; Archivverarbeitung startet weiterhin nur durch einen bewusst ausgeführten lokalen Befehl.
+
 ## 2. Datenfluss und Quellen
 
 ```text

@@ -6,7 +6,7 @@ test('a visitor sees pilot and per-episode vocabulary totals in stable chronolog
   await page.getByText('Gesamtwörter und Wortschatz', { exact: true }).first().click();
   await page.getByRole('button', { name: 'Wortentwicklung öffnen' }).click();
   const summary = page.getByRole('region', { name: 'Gesamtwörter und Wortschatz' });
-  await expect(summary.getByText('Gesamtwörter im Pilot')).toBeVisible();
+  await expect(summary.getByText('Gesamtwörter im Datenbestand')).toBeVisible();
   await expect(summary.locator('dd')).toHaveText(['349', '42', '42']);
 
   const table = page.getByRole('table', { name: 'Chronologische Wortentwicklung je Folge' });
@@ -16,7 +16,7 @@ test('a visitor sees pilot and per-episode vocabulary totals in stable chronolog
   await expect(rows.nth(1)).toContainText('24');
   await expect(rows.nth(2)).toContainText('Paar A');
   await expect(rows.nth(3)).toContainText('Einzelne Laterne 1');
-  await expect(summary.getByText('Neue Wörter im Pilot')).toBeVisible();
+  await expect(summary.getByText('Neue Wörter im Datenbestand')).toBeVisible();
   await expect(summary.getByText('unterschiedliche kleingeschriebene Grundformen')).toBeVisible();
 });
 

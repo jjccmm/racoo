@@ -3,6 +3,7 @@
 import json
 import os
 import tempfile
+import time
 from collections.abc import Callable
 from pathlib import Path
 
@@ -24,6 +25,24 @@ def encode_json(value: object, *, indent: int | None = 2, sort_keys: bool = Fals
     return json.dumps(value, **options).encode("utf-8") + b"\n"
 
 
+def replace_path(source: Path, destination: Path) -> None:
+    # A short-lived Windows reader can deny delete sharing, even when this
+    # process has already closed its own stream. Keep the old JSON intact
+    # and retry only these bounded Windows permission/sharing failures.
+    for delay in (0.025, 0.075, 0.15, 0.25, None):
+        try:
+            os.replace(source, destination)
+            break
+        except PermissionError as error:
+            if (
+                os.name != "nt"
+                or getattr(error, "winerror", None) not in {5, 32, 33}
+                or delay is None
+            ):
+                raise
+            time.sleep(delay)
+
+
 def write_json(
     path: Path,
     value: object,
@@ -42,7 +61,7 @@ def write_json(
             os.fsync(stream.fileno())
         if validate is not None:
             validate(temporary.read_bytes())
-        os.replace(temporary, path)
+        replace_path(temporary, path)
     finally:
         if temporary is not None:
             temporary.unlink(missing_ok=True)

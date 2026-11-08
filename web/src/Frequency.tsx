@@ -13,7 +13,7 @@ const normalize = (value: string) => value.normalize('NFC').toLocaleLowerCase('d
 const identityOrder = (a: string, b: string) => a < b ? -1 : a > b ? 1 : 0;
 const count = (value: number) => value.toLocaleString('de-DE');
 
-export function Frequency({ publicationId, words, episodes, onChoose }: { onChoose(episode: PlayerEpisode, passage: Passage): void; publicationId: string; words: Word[]; episodes: Episode[] }) {
+export function Frequency({ dataBase, publicationId, words, episodes, onChoose }: { onChoose(episode: PlayerEpisode, passage: Passage): void; dataBase: string; publicationId: string; words: Word[]; episodes: Episode[] }) {
   const [query, setQuery] = useState('');
   const [opened, setOpened] = useState(false);
   const [active, setActive] = useState(-1);
@@ -47,12 +47,12 @@ export function Frequency({ publicationId, words, episodes, onChoose }: { onChoo
     const controller = new AbortController();
     requests.current.get(word.token)?.abort();
     requests.current.set(word.token, controller);
-    return readCounts(word, episodes, publicationId, controller.signal).then((values) => {
+    return readCounts(word, episodes, publicationId, controller.signal, dataBase).then((values) => {
       if (!controller.signal.aborted) setSelected((current) => current.map((item) => item.token === word.token ? { ...item, values, state: 'ready' } : item));
     }).catch(() => {
       if (!controller.signal.aborted) setSelected((current) => current.map((item) => item.token === word.token ? { ...item, state: 'error' } : item));
     }).finally(() => { if (requests.current.get(word.token) === controller) requests.current.delete(word.token); });
-  }, [publicationId, episodes]);
+  }, [publicationId, episodes, dataBase]);
 
   useEffect(() => { if (initialWord) void load(initialWord); }, [initialWord, load]);
 
@@ -80,11 +80,11 @@ export function Frequency({ publicationId, words, episodes, onChoose }: { onChoo
     if (!passageKey) return;
     const controller = new AbortController();
     const request = JSON.parse(passageKey) as { terms: string[]; ids: string[] };
-    searchEpisodes(request.terms.join(' '), controller.signal, { targetEpisodeIds: request.ids }).then((session) => {
+    searchEpisodes(request.terms.join(' '), controller.signal, { targetEpisodeIds: request.ids, dataBase }).then((session) => {
       if (!controller.signal.aborted) setDetails({ key: passageKey, results: session.initial.results });
     }).catch(() => { if (!controller.signal.aborted) setDetails({ key: passageKey, error: true }); });
     return () => controller.abort();
-  }, [passageKey, retry]);
+  }, [passageKey, retry, dataBase]);
   const passagesLoading = !!passageKey && (details.key !== passageKey || (!details.results && !details.error));
 
   return <section className="frequency" aria-label="Wörter und Folgen erkunden">
@@ -223,8 +223,8 @@ function PassageText({ passage, words }: { passage: Passage; words: Selected[] }
   return <><p>{start > 0 && '… '}{text(start, end)}{end < passage.text.length && ' …'}</p>{long && <details><summary>Vollständiges Segment anzeigen</summary><p>{text(0, passage.text.length)}</p></details>}</>;
 }
 
-async function readCounts(word: Word, episodes: Episode[], publicationId: string, signal: AbortSignal) {
-  const response = await fetch(`${import.meta.env.BASE_URL}stats/${word.shard}`, { signal });
+async function readCounts(word: Word, episodes: Episode[], publicationId: string, signal: AbortSignal, dataBase: string) {
+  const response = await fetch(`${dataBase}stats/${word.shard}`, { signal });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const shard = await response.json();
   if (shard.schemaVersion !== 2 || shard.publicationId !== publicationId || !shard.counts || typeof shard.counts !== 'object' || Array.isArray(shard.counts)) throw new Error('Invalid counts');

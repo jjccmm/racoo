@@ -18,7 +18,7 @@ GitHub Actions enthält ausschließlich den Workflow **Deploy Racoo**. Er läuft
 
 ## Was der Workflow veröffentlicht
 
-Der [Veröffentlichungsworkflow](../.github/workflows/pages.yml) baut aus den gespeicherten echten Pilottranskripten und Analysen, ohne Audio, ASR-Modell oder spaCy-Modell zu laden. Der normale Stand enthält fünf Folgen. Die lokalen Routineprüfungen verwenden synthetische Fixtures. Der Veröffentlichungsworkflow arbeitet in einem frischen Checkout und baut die echte Auswahl. Ein zusätzlicher Check lehnt synthetische und leere Veröffentlichungen ab. Nur `web/dist` wird als Pages-Artefakt hochgeladen.
+Der [Veröffentlichungsworkflow](../.github/workflows/pages.yml) baut aus den gespeicherten echten Pilottranskripten und Analysen, ohne Audio, ASR-Modell oder spaCy-Modell zu laden. Der normale Stand enthält fünf Folgen. Die [Podcastkonfiguration und lokale Aktualisierung](updates.md) bestimmen die gespeicherten Daten; der Build veröffentlicht automatisch alle vollständigen Katalogfolgen je konfiguriertem Podcast. Die lokalen Routineprüfungen verwenden synthetische Fixtures. Der Veröffentlichungsworkflow arbeitet in einem frischen Checkout und baut die echte Auswahl. Ein zusätzlicher Check verlangt die Zusammenfassung des konfigurierten Builds (`schemaVersion: 2`, `state: published-corpus`) mit mindestens einer Folge; synthetische Einzel-Korpus-Builds und ein leerer Gesamtbestand werden abgelehnt. Nur `web/dist` wird als Pages-Artefakt hochgeladen.
 
 Der Basis-Pfad kommt von `actions/configure-pages`: aktuell `/racoo/`. Dadurch funktionieren Logos, Suchindex, Datenabrufe und Folge-/Zeitlinks unter dem Projektpfad. Die lokalen Browserprüfungen laufen ebenfalls gegen `/racoo/` und `/`. Für einen Projektpfad-Build von Hand:
 

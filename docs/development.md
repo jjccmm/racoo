@@ -30,7 +30,7 @@ npm --prefix web run browser:install
 uv run --frozen python scripts/check.py
 ```
 
-Der gemeinsame Check läuft ohne Audio-, Modell- oder GPU-Zugriff. Er prüft Python-Lint und Format, die Datenvertragsgrenzen, die kleinen Beispieldateien, Dokumentationslinks und Notebooksyntax sowie Web-Lint, TypeScript, Produktionsbuilds am Root- und Projektpfad und echte Chromium-Prüfungen beider gebauten Pfade. Dabei werden Suchindex und Datenabrufe, direkte Folgen-/Zeitlinks, Playerzustände und die mobile Kombinationsansicht mit Statistikdiagramm geprüft. Am Ende baut der Check erneut den Root-Pfad für den normalen Preview-Befehl. Die Teilbefehle stehen in `pyproject.toml`, `web/package.json` und `scripts/check.py`.
+Der gemeinsame Check läuft ohne Audio-, Modell- oder GPU-Zugriff. Er prüft Python-Lint und Format, die Datenvertragsgrenzen, die kleinen Beispieldateien, Dokumentationslinks und Notebooksyntax sowie Web-Lint, TypeScript, Produktionsbuilds am Root- und Projektpfad und echte Chromium-Prüfungen beider gebauten Pfade sowie einen konfigurierten Zwei-Podcast-Bestand mit zusätzlichem Leerzustand. Dabei werden Suchindex und Datenabrufe, direkte Folgen-/Zeitlinks, Playerzustände und die mobile Kombinationsansicht mit Statistikdiagramm geprüft. Am Ende baut der Check erneut den Root-Pfad für den normalen Preview-Befehl. Die Teilbefehle stehen in `pyproject.toml`, `web/package.json` und `scripts/check.py`.
 
 Installationen benötigen einmalig Zugang zu PyPI, npm und dem Playwright-Browserdownload. `browser:install` installiert den zu Playwright 1.64.1 gehörenden Chromium-Headless-Shell-Browser; die Routineprüfungen verwenden anschließend den installierten Browser offline. Unter Linux können dessen Systembibliotheken zusätzlich installiert werden mit `npx playwright install --with-deps chromium --only-shell`. Nach der ersten Installation wurden `uv sync --locked --offline` und ein npm-CI-Lauf mit lokalem Cache und `--offline` erfolgreich geprüft. Ein frischer Rechner ohne gefüllten Cache benötigt weiterhin Netzwerkzugriff.
 
@@ -54,7 +54,7 @@ npm.cmd --prefix web run preview
 
 ## Ausgewählte Veröffentlichung
 
-Der normale Build bereitet automatisch die gespeicherten fünf Pilotfolgen aus `data/podcast-ufo/pilot-episodes.json` und ihren Analysen vor, ohne Modelle zu laden. Der vollständige Ablauf steht unter [lokaler Pilot](pilot/local-five-episode-pilot.md). Alternativ bereitet die öffentliche CLI aus einer expliziten JSON-Liste relativer Transkriptpfade eine ausgewählte, validierte Veröffentlichungsquelle vor. Katalogänderungen aktualisieren öffentliche Metadaten, ohne erkannten Text oder Zeiten zu ändern; gültige Analysen werden wiederverwendet. Die Vorbereitung liest keine ASR-Modelle:
+Der normale Build liest `podcasts.json` und bereitet alle vollständigen Katalogfolgen samt gespeicherten Analysen je Podcast vor, ohne Modelle zu laden. Bedienung und Erweiterung stehen unter [Podcasts aktualisieren](updates.md). Aktuell sind weiterhin fünf echte Folgen vollständig gespeichert. Der historische Fünfernachweis steht unter [lokaler Pilot](pilot/local-five-episode-pilot.md). Alternativ bereitet die öffentliche CLI aus einer expliziten JSON-Liste relativer Transkriptpfade eine ausgewählte, validierte Veröffentlichungsquelle vor. Katalogänderungen aktualisieren öffentliche Metadaten, ohne erkannten Text oder Zeiten zu ändern; gültige Analysen werden wiederverwendet. Die Vorbereitung liest keine ASR-Modelle:
 
 ```powershell
 $env:UV_CACHE_DIR = 'C:/Users/User/Code/podcast_words_v3/.uv-cache'

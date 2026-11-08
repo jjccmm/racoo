@@ -123,11 +123,64 @@ def existing_episode(path: Path) -> Episode | None:
         return None
 
 
-def process(arguments) -> int:
+def pending_selection(catalog: Catalog, output: Path, limit: int, order: str) -> dict:
+    if limit <= 0:
+        raise ValueError("limit must be positive")
+    if order not in {"oldest", "newest"}:
+        raise ValueError("order must be oldest or newest")
+    candidates, unavailable, completed, reconciled = [], [], [], []
+    for entry in catalog.episodes:
+        try:
+            metadata_for(catalog, entry)
+            if entry.source_status == "source-gap" or entry.audio_availability == "unavailable":
+                raise ValueError("audio source is unavailable")
+        except ValueError as error:
+            unavailable.append({"episode_id": entry.episode_id, "reason": str(error)})
+            continue
+        previous = existing_episode(output / f"{entry.episode_id}.json")
+        valid = previous is not None and (
+            previous.podcast_id == catalog.podcast_id
+            and previous.episode_id == entry.episode_id
+            and previous.source.kind == entry.source.kind
+            and previous.source.key == entry.source.key
+            and previous.source.guid in [entry.source.guid, *entry.source.guid_aliases]
+        )
+        if valid:
+            try:
+                validate_completed_episode(previous)
+            except ValueError:
+                valid = False
+        if valid:
+            completed.append(entry.episode_id)
+            if entry.processing_status != "completed":
+                entry.processing_status = "completed"
+                reconciled.append(entry.episode_id)
+        else:
+            candidates.append(entry)
+    # The stable ID settles date ties in both directions.
+    candidates.sort(key=lambda entry: entry.episode_id)
+    candidates.sort(key=lambda entry: entry.published_at, reverse=order == "newest")
+    return {
+        "selected": [entry.episode_id for entry in candidates[:limit]],
+        "already_completed": completed,
+        "unprocessable": unavailable,
+        "reconciled": reconciled,
+    }
+
+
+def run_processing(arguments) -> tuple[int, dict]:
     run_started = time.monotonic()
     try:
         catalog = Catalog.model_validate_json(arguments.catalog.read_bytes())
-        selected_ids = arguments.episode_id
+        pending = getattr(arguments, "pending", False)
+        if arguments.retranscribe and pending:
+            raise ValueError("pending processing cannot retranscribe completed episodes")
+        selection_report = (
+            pending_selection(catalog, arguments.output_dir, arguments.limit, arguments.order)
+            if pending
+            else {}
+        )
+        selected_ids = selection_report["selected"] if pending else arguments.episode_id
         if len(selected_ids) != len(set(selected_ids)):
             raise ValueError("episode IDs must be unique in a selected run")
         entries = [selection(catalog, identity) for identity in selected_ids]
@@ -136,13 +189,17 @@ def process(arguments) -> int:
                 arguments.run_report,
                 [
                     arguments.catalog,
-                    *[arguments.output_dir / f"{entry.episode_id}.json" for entry in entries],
+                    *[
+                        arguments.output_dir / f"{entry.episode_id}.json"
+                        for entry in catalog.episodes
+                    ],
                 ],
                 label="run report",
             )
+        if selection_report.get("reconciled"):
+            write_json(arguments.catalog, catalog.model_dump(mode="json"))
     except (OSError, ValidationError, ValueError) as error:
-        print(json.dumps({"ok": False, "error": str(error)}, ensure_ascii=True))
-        return 1
+        return 1, {"ok": False, "error": str(error)}
 
     config_revision = configuration_revision()
     transcriber = None
@@ -281,7 +338,7 @@ def process(arguments) -> int:
             break
 
     ok = all(result["status"] in {"completed", "skipped"} for result in results)
-    report = {"ok": ok, "selected": selected_ids, "results": results}
+    report = {"ok": ok, **selection_report, "selected": selected_ids, "results": results}
     runtime_measurements = {
         "schema_version": 1,
         "code_revision": os.environ.get("PODCAST_WORDS_CODE_REVISION"),
@@ -315,18 +372,11 @@ def process(arguments) -> int:
         try:
             write_json(arguments.run_report, runtime_measurements)
         except OSError as error:
-            print(
-                json.dumps(
-                    {
-                        "ok": False,
-                        "error": f"could not write run report {arguments.run_report}: {error}",
-                        "completed_artifacts_preserved": [
-                            item["output"] for item in results if item.get("status") == "completed"
-                        ],
-                    },
-                    ensure_ascii=True,
-                )
-            )
-            return 1
+            return 1, {**report, "ok": False, "error": f"could not write run report: {error}"}
+    return (130 if interrupted else (0 if ok else 1)), report
+
+
+def process(arguments) -> int:
+    status, report = run_processing(arguments)
     print(json.dumps(report, indent=2, ensure_ascii=True))
-    return 130 if interrupted else (0 if ok else 1)
+    return status

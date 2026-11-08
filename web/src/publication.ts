@@ -5,8 +5,8 @@ export type Publication = {
   statisticsId: string; preparationId: string | null;
 };
 
-export async function loadPublication(signal?: AbortSignal): Promise<Publication> {
-  const response = await fetch(`${import.meta.env.BASE_URL}publication.json`, { signal });
+export async function loadPublication(signal?: AbortSignal, dataBase = import.meta.env.BASE_URL): Promise<Publication> {
+  const response = await fetch(`${dataBase}publication.json`, { signal });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   const value = await response.json();
   if (value.schemaVersion !== 1 || !/^[a-f0-9]{64}$/.test(value.publicationId)

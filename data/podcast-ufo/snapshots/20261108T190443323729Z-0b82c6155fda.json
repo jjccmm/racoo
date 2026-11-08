@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "snapshot": {
+    "fetched_at": "2026-11-08T19:04:43.323729Z",
+    "requested_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+    "resolved_url": "https://feeds.acast.com/public/shows/podcast-ufo",
+    "sha256": "0b82c6155fdabc0a64cce25d63f54fe40441ea77785c7a7262c06113cbd70205",
+    "path": "snapshots/20261108T190443323729Z-0b82c6155fda.xml",
+    "item_count": 541
+  },
+  "findings": [],
+  "report_path": "snapshots/20261108T190443323729Z-0b82c6155fda.json"
+}

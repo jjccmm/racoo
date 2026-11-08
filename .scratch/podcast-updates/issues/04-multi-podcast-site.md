@@ -1,6 +1,6 @@
 # 04: Konfigurierte Podcasts statisch veröffentlichen und Fortschritt zeigen
 
-Status: ready-for-agent
+Status: claimed
 Blocked by: 01, 03
 
 - [ ] Normaler Build wählt alle gespeicherten vollständig verarbeiteten Folgen je konfiguriertem Podcast; keine manuelle Pilotliste mehr notwendig.
