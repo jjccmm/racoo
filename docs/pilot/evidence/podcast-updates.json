@@ -1,0 +1,49 @@
+{
+  "checkedAt": "2026-11-08",
+  "implementationCommit": "d45f1e31e24d44197978616d17226d9e2560a1ab",
+  "localChecks": {
+    "pythonPassed": 89,
+    "chromiumLegacyPassedPerBase": 68,
+    "chromiumConfiguredPassedPerBase": 4,
+    "bases": [
+      "/racoo/",
+      "/"
+    ],
+    "chromiumPassedTotal": 144,
+    "lintTypesContractsDocs": "passed"
+  },
+  "realSite": {
+    "passed": true,
+    "episodes": 5,
+    "knownEpisodes": 542,
+    "defaultHausCountProlog": 9,
+    "mobileWidth": 390,
+    "pageErrors": []
+  },
+  "catalog": {
+    "knownEpisodes": 542,
+    "processingStatuses": {
+      "completed": 5,
+      "not-processed": 537
+    },
+    "lastSuccessfulFeedImport": "2026-11-08T19:04:43.323729+00:00",
+    "newFeedEpisodes": 4
+  },
+  "publication": {
+    "schemaVersion": 2,
+    "state": "published-corpus",
+    "episodeCount": 5,
+    "podcastCount": 1
+  },
+  "realArtifactBytes": 2994046,
+  "pagesGuard": {
+    "actualWorkflowCommand": "passed",
+    "rejectsFixtureBuild": true,
+    "acceptsRealConfiguredBuild": true
+  },
+  "integrationLimits": [
+    "No real GPU batch started during this implementation; established FP32 inference is unchanged.",
+    "Archived episode 37 lacks a verified publication date and is explicitly unprocessable.",
+    "Independent human search-quality acceptance is still separate from archive processing."
+  ]
+}

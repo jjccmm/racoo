@@ -12,3 +12,5 @@ Blocked by: None
 Vom Nutzer beauftragt. Implementierung auf feature/podcast-updates; keine Änderungen auf main.
 
 Konfiguration, Pending-Auswahl und Wiederaufnahme an der öffentlichen CLI lokal geprüft; 36 bestehende und neue Grenzfälle erfolgreich, separater Update-/Site-Test anschließend ebenfalls erfolgreich. Integration auf dem Feature-Branch.
+
+Abgeschlossen und auf dem Feature-Branch integriert in `d45f1e3`. Vollständiger lokaler Check: 89 Python- und 144 Browserfälle; echter Fünferbuild und Pages-Guard bestanden. Siehe [Abschluss](../../../docs/pilot/podcast-updates.md).

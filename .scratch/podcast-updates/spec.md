@@ -1,6 +1,6 @@
 # Lokale Aktualisierung und mehrere Podcasts
 
-Status: claimed
+Status: resolved
 Branch: feature/podcast-updates
 
 Ein lokaler Befehl soll den konfigurierten RSS-Feed aktualisieren, bis zu zehn fehlende verarbeitbare Folgen transkribieren und ihre Wortanalysen ergänzen. Fertige Transkripte bleiben die Datenbasis; Audio wird wie bisher nach der Verarbeitung gelöscht. Pro Batch einmal FP32/GPU-Modellsetup. Die Reihenfolge ist standardmäßig älteste zuerst, optional neueste zuerst; das Limit zählt Versuche und vorhandene Transkripte verbrauchen es nicht. Fehler und nicht verarbeitbare Katalogeinträge werden mit Begründung ausgewiesen. Ein erneuter Lauf verwendet gültige Transkripte und Analysen.
@@ -22,3 +22,5 @@ Tests laufen ausschließlich lokal. Der einzige GitHub-Workflow baut und veröff
 ## Abnahme
 
 Öffentliche CLI an kleinen lokalen RSS-/Audio-Fixtures mit kontrollierter Modellgrenze prüfen; Wiederaufnahme, Limit, Reihenfolge, Fehler und Analysecache belegen. Zweiten synthetischen Podcast mit getrennten echten Pagefind-Indizes in gebauten Root-/Projektpfad-Webseiten prüfen, einschließlich Status, Leerzustand, Auswahl, Suche und direktem Playerlink. Vollständigen lokalen Check ausführen und echten Fünferbestand wieder bauen. Live-Feed nur als Metadatenabgleich aktualisieren. Grenzen und Bedienung dokumentieren.
+
+Alle erforderlichen Tickets sind auf dem Feature-Branch integriert; [Prüfung](review.md) und [Abschluss](../../docs/pilot/podcast-updates.md) liegen vor. main ist unverändert.
