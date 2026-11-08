@@ -40,7 +40,7 @@ def main() -> int:
         if result.returncode:
             return result.returncode
 
-    for base_path in ("/podcast_words_v3/", "/"):
+    for base_path in ("/racoo/", "/"):
         command = [npm, "--prefix", "web", "run", "build"]
         if base_path != "/":
             command.extend(["--", "--base", base_path])

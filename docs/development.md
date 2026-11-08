@@ -50,7 +50,7 @@ npm.cmd --prefix web run build
 npm.cmd --prefix web run preview
 ```
 
-`npm.cmd --prefix web run test:browser` prüft einen bereits erzeugten Build mit Playwright und startet dafür selbst einen lokalen Preview auf Port 4179. `PW_PORT` wählt bei Bedarf einen anderen Port. `PW_BASE_PATH=/podcast_words_v3/` erlaubt dieselben Prüfungen gegen einen zuvor mit diesem Basispfad gebauten Stand. Ein laufender anderer Preview wird nicht stillschweigend wiederverwendet. Der gemeinsame Check führt die Browserprüfungen für beide Basispfade mit Port 4214 aus.
+`npm.cmd --prefix web run test:browser` prüft einen bereits erzeugten Build mit Playwright und startet dafür selbst einen lokalen Preview auf Port 4179. `PW_PORT` wählt bei Bedarf einen anderen Port. `PW_BASE_PATH=/racoo/` erlaubt dieselben Prüfungen gegen einen zuvor mit diesem Basispfad gebauten Stand. Ein laufender anderer Preview wird nicht stillschweigend wiederverwendet. Der gemeinsame Check führt die Browserprüfungen für beide Basispfade mit Port 4214 aus.
 
 ## Ausgewählte Veröffentlichung
 
@@ -90,7 +90,7 @@ Die [ASR-Anleitung](asr.md) beschreibt die lokale GPU-Einrichtung, temporäres A
 
 ## CI und Prüfstand
 
-[GitHub Actions](../.github/workflows/ci.yml) installiert die gesperrten Abhängigkeiten auf Windows und Linux und führt denselben gemeinsamen Check aus. Der Workflow veröffentlicht nichts. Ohne Remote wurde noch kein gehosteter Actions-Lauf ausgelöst; die Prüfungen wurden lokal unter Windows ausgeführt.
+[GitHub Actions](../.github/workflows/ci.yml) installiert die gesperrten Abhängigkeiten auf Windows und Linux und führt denselben gemeinsamen Check aus. Der zusätzliche Pages-Job benötigt erfolgreiche Prüfungen, den Branch `main` und die Repositoryvariable `PAGES_ENABLED=true`. Die [Pages-Anleitung](github-pages.md) beschreibt die einmalige Einrichtung; der Job veröffentlicht ausschließlich den echten Build. Die Remote-Adresse ist `https://github.com/jjccmm/racoo.git`.
 
 Der Entwicklungsserver, das durch Vite kompilierte React-Modul und der gemeinsame Prüfdatenimport wurden lokal über HTTP geprüft. Die Produktions-Browserprüfungen laufen nun auf Root- und Projektpfad-Builds und umfassen eine synthetische 390-Pixel-Ansicht mit Suche, Player, Diagramm und Wortentwicklung. Diese Layoutprüfung misst keine realen Pilotlaufzeiten, Übertragungsbytes oder Speichergrenzen. Der Gesamtcheck baut zuletzt den Root-Pfad mit ausdrücklich synthetischen Fixtures. Für den echten Pilot danach `npm.cmd --prefix web run build` ausführen; erst dann zeigt der Preview wieder die fünf echten Folgen.
 
@@ -108,7 +108,7 @@ Beim schreibgeschützten Audit am 16. Oktober 2026 waren uv 0.10.9, Node 22.19.0
 
 - Playwright 1.64.1 verwendet unter Windows `taskkill`, um seinen Preview-Prozessbaum zu beenden. Browserchecks in dieser Agentumgebung benötigen die passenden Prozessberechtigungen; der gemeinsame Check kann Port 4214 über `PW_PORT` erhalten. Am 17. Oktober 2026 bestanden alle 35 Chromium-Fälle auf dem gebauten Root-Pfad sowie erneut auf dem Projektpfad. Der vollständige Offline-Check umfasste außerdem 67 Python-Tests.
 - Die vorhandene GTX 1050 Ti hat 4 GiB Speicher und Treiber 576.02. FP32 wurde mit dem gepinnten CUDA-11-Build von ORT 1.20.1 nachgewiesen; siehe [ASR](asr.md).
-- Das lokale Git-Repository ist auf `main` initialisiert. Es wurde kein Remote angelegt oder konfiguriert. Der eingeschränkte Agent läuft unter einer anderen Windows-SID als der Ordnerbesitzer. Falls Git deshalb „dubious ownership“ meldet, nur für den konkreten Aufruf den geprüften Repositorypfad übergeben, ohne globale Einstellungen zu ändern:
+- Der aktuelle Integrationsstand liegt auf `main`; `origin` zeigt auf `https://github.com/jjccmm/racoo.git`. Der eingeschränkte Agent läuft unter einer anderen Windows-SID als der Ordnerbesitzer. Falls Git deshalb „dubious ownership“ meldet, nur für den konkreten Aufruf den geprüften Repositorypfad übergeben, ohne globale Einstellungen zu ändern:
 
   ```powershell
   $repoPath = (Get-Location).Path

@@ -39,3 +39,56 @@ jobs:
       - run: npx playwright install --with-deps chromium --only-shell
         working-directory: web
       - run: uv run --frozen python scripts/check.py
+
+  pages:
+    name: Build and deploy Racoo
+    needs: check
+    # Enable explicitly after configuring Settings > Pages > GitHub Actions.
+    if: github.ref == 'refs/heads/main' && vars.PAGES_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          version: "0.10.9"
+          python-version: "3.12"
+          enable-cache: true
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: uv sync --locked
+      - run: npm ci
+        working-directory: web
+      - name: Read Pages configuration
+        id: pages
+        uses: actions/configure-pages@v6
+      - name: Build the saved real podcast publication
+        run: npm --prefix web run build -- --base "${{ steps.pages.outputs.base_path }}/"
+      - name: Reject a synthetic or empty publication
+        run: >-
+          uv run --frozen --no-sync python -c
+          "import json; from pathlib import Path;
+          p=json.loads(Path('web/dist/publication.json').read_text(encoding='utf-8'));
+          assert p['state']=='selected-pilot' and p['episodeCount']>0,
+          'Only a real selected publication can be deployed'"
+      - name: Upload the static website
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: web/dist
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

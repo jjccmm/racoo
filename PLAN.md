@@ -6,7 +6,7 @@ Der Plan wurde im dokumentierten Interview gemeinsam bestätigt. Die [Planverfei
 
 ## 1. Ziel und festgelegte Entscheidungen
 
-**Projektname: Racoo.** Das vom Nutzer bereitgestellte Logo steht auf Start- und Podcastseite. Auf der Startseite steht das Logo groß und zentriert ohne Trennlinie. „Die“, „Podcast“, „Wort“ und „Suche“ erscheinen als ausgewählte Wörter, die passende Formen im Erklärungstext markieren. Ein kleines Suchfeld ergänzt weitere Wörter aus diesem Beispieltext; die eigentliche Folgensuche beginnt nach der Podcast-Auswahl. Die [Umsetzung](.scratch/interactive-landing/spec.md) hält die lokale Demo-Abgrenzung fest. Podcast-Cover haben einen dünnen Rand.
+**Projektname: Racoo.** Repository: [jjccmm/racoo](https://github.com/jjccmm/racoo). Die [Pages-Einrichtung](docs/github-pages.md) beschreibt den vorbereiteten, nach erfolgreichen Prüfungen freischaltbaren Veröffentlichungsjob. Das vom Nutzer bereitgestellte Logo steht auf Start- und Podcastseite. Auf der Startseite steht das Logo groß und zentriert ohne Trennlinie. „Die“, „Podcast“, „Wort“ und „Suche“ erscheinen als ausgewählte Wörter, die passende Formen im Erklärungstext markieren. Ein kleines Suchfeld ergänzt weitere Wörter aus diesem Beispieltext; die eigentliche Folgensuche beginnt nach der Podcast-Auswahl. Die [Umsetzung](.scratch/interactive-landing/spec.md) hält die lokale Demo-Abgrenzung fest. Podcast-Cover haben einen dünnen Rand.
 
 Eine einfach zu betreibende Webseite, die Podcast-Folgen anhand erinnerter Stichwörter findet und Wortstatistiken zeigt. Ausgangspunkt ist DAS PODCAST UFO mit etwa zehn Besuchern pro Tag. Weitere Podcasts sollen später über dieselbe Pipeline und Datenformate hinzukommen können.
 
