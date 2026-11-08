@@ -71,3 +71,7 @@ Der nächste ausdrückliche Auftrag ersetzt den statischen Serifentitel: großes
 ## Ergänzung vom 8. November 2026: Vollton-Wörter und direkte erste Ergebnisse
 
 Der Nutzer wünscht vollflächig gefärbte Wortbuttons mit fetter schwarzer oder weißer Schrift entsprechend dem Farbkontrast, einen leicht getönten Hintergrund und weniger Trennlinien. Beide Wortfelder sollen als Suche erkennbar sein. Beim Öffnen der Podcast-Suchansicht ist „haus“ bereits ausgewählt; die Diagrammdatentabelle entfällt. Diese ausdrückliche Startauswahl ersetzt dort die frühere Regel ohne automatische Detailabrufe, bleibt aber auf die normalen statistischen Top-Folgen begrenzt. Die Startdemo bleibt ohne Podcast-Abrufe. Siehe [Spezifikation](../../.scratch/solid-search-design/spec.md).
+
+## Ergänzung vom 8. November 2026: kompakte Pill-Suche
+
+Unter beiden Logos weniger Abstand; ausgewählte Wörter erhalten vollständig gerundete Enden (Pill-/Kapselform). Der Beispielhinweis unter dem Startseitentext entfällt. Auf der Podcastseite stehen die Wortchips vor dem kleinen Suchfeld in derselben flexiblen Zeile. Die Beschriftung des Felds bleibt für assistive Technik erhalten; die bisherige Vorbelegung „haus“ und die Auswahlfunktionen bleiben bestehen.

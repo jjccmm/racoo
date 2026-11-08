@@ -65,7 +65,7 @@ export function LandingIntro() {
         <label className="visually-hidden" htmlFor="demo-word">Wort im Beispieltext suchen</label>
         <div className="search-input"><SearchIcon /><input type="search" ref={input} id="demo-word" role="combobox" aria-autocomplete="list" aria-controls="demo-options" aria-expanded={showOptions}
           aria-activedescendant={showOptions && active >= 0 && suggestions[active] ? `demo-option-${active}` : undefined}
-          aria-describedby="demo-hint" value={query} placeholder="Wort ausprobieren" autoComplete="off"
+          aria-describedby={selected.length === 5 ? 'demo-hint' : undefined} value={query} placeholder="Wort ausprobieren" autoComplete="off"
           onFocus={() => { setOpened(true); setActive(-1); }}
           onChange={(event) => { setQuery(event.target.value); setOpened(true); setActive(-1); }}
           onKeyDown={(event) => {
@@ -91,8 +91,6 @@ export function LandingIntro() {
       const item = selected.find((item) => item.key === byForm.get(normalize(piece)));
       return item ? <mark key={index} style={wordStyle(item.color)} title={words.get(item.key)!.label}>{piece}</mark> : piece;
     })}</p>
-    <p className="demo-hint" id="demo-hint" aria-live="polite">{selected.length < 5
-      ? 'Probier’s hier im Text aus – zum Beispiel mit „Folge“.'
-      : 'Fünf Wörter ausgewählt. Entferne eines, um ein anderes auszuprobieren.'}</p>
+    {selected.length === 5 && <p className="demo-hint" id="demo-hint" aria-live="polite">Fünf Wörter ausgewählt. Entferne eines, um ein anderes auszuprobieren.</p>}
   </section>;
 }

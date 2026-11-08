@@ -88,11 +88,13 @@ export function Frequency({ publicationId, words, episodes, onChoose }: { onChoo
   const passagesLoading = !!passageKey && (details.key !== passageKey || (!details.results && !details.error));
 
   return <section className="frequency" aria-label="Wörter und Folgen erkunden">
+    <div className="word-controls">
+    <ul className="selected-words" aria-label="Ausgewählte Grundformen">{selected.map((word) => <li key={word.token}><button className="word-chip" style={wordStyle(word.color)} aria-label={`${word.lemma} entfernen`} onClick={() => remove(word)}>{word.lemma}<span aria-hidden="true"> ×</span></button></li>)}</ul>
     <div className="word-field" ref={field} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setOpened(false); }}>
-      <div className="field-heading"><label htmlFor="lemma">Wörter suchen</label><span>Bis zu fünf Wörter</span></div>
+      <label className="visually-hidden" htmlFor="lemma">Wörter suchen</label>
       <div className="search-input"><SearchIcon /><input type="search" ref={input} id="lemma" role="combobox" aria-autocomplete="list" aria-expanded={opened && selected.length < 5} aria-controls="word-options"
         aria-activedescendant={opened && active >= 0 && suggestions[active] ? `word-option-${active}` : undefined}
-        value={query} placeholder="Eimer, Münze, Kleingeld …" autoComplete="off"
+        value={query} placeholder="Wort suchen" autoComplete="off"
         onFocus={() => { setOpened(true); setActive(-1); }}
         onChange={(event) => { setQuery(event.target.value); setOpened(true); setActive(-1); }}
         onKeyDown={(event) => {
@@ -109,7 +111,7 @@ export function Frequency({ publicationId, words, episodes, onChoose }: { onChoo
         {!suggestions.length && <li className="no-option">Keine passende Grundform.</li>}
       </ul>}
     </div>
-    <ul className="selected-words" aria-label="Ausgewählte Grundformen">{selected.map((word) => <li key={word.token}><button className="word-chip" style={wordStyle(word.color)} aria-label={`${word.lemma} entfernen`} onClick={() => remove(word)}>{word.lemma}<span aria-hidden="true"> ×</span></button></li>)}</ul>
+    </div>
     <p className="muted selection-note">{selected.length === 5 ? 'Fünf Wörter ausgewählt. Entferne ein Wort, um ein anderes zu wählen. ' : ''}Stoppwörter und manuell ausgeschlossene Wörter werden nicht angeboten.</p>
     {selected.some((word) => word.state === 'loading') && <p role="status">Wortzählungen werden geladen …</p>}
     {selected.filter((word) => word.state === 'error').map((word) => <div key={word.token}><p role="alert">Die Zählungen für {word.lemma} konnten nicht geladen werden. Fehlende Daten sind kein Nullwert.</p><button onClick={() => { setSelected((current) => current.map((item) => item.token === word.token ? { ...item, state: 'loading' } : item)); void load(word); }}>Zählungen erneut laden</button></div>)}
