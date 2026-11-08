@@ -5,6 +5,7 @@ import { PublicationState } from './PublicationState';
 const home = import.meta.env.BASE_URL;
 const podcastHref = `${home}?podcast=podcast-ufo`;
 const cover = `${home}images/podcast-ufo.jpg`;
+const logo = `${home}images/racoo-logo.png`;
 
 export function App() {
   const params = new URLSearchParams(window.location.search);
@@ -12,7 +13,7 @@ export function App() {
 
   return <main className={explorer ? 'workspace' : 'landing'}>
     <header className="site-header">
-      <a className="site-name" href={home}>Die Podcast Wort Suche</a>
+      <a className="site-brand" href={home} aria-label="Racoo – Startseite"><img src={logo} width="2172" height="724" alt="Racoo" /></a>
       {explorer && <a className="back-link" href={home}><span aria-hidden="true">←</span> Alle Podcasts</a>}
     </header>
     {explorer ? <>
@@ -29,7 +30,7 @@ export function App() {
       </footer>
     </> : <>
       <section className="landing-intro" aria-labelledby="page-heading">
-        <h1 id="page-heading">Die Podcast Wort Suche</h1>
+        <h1 id="page-heading">Die Podcast <mark className="brand-highlight">Wort</mark> Suche</h1>
         <p>Finde mit ein paar Schlüsselwörtern zu der gesuchten Folge</p>
       </section>
       <section className="podcast-directory" aria-labelledby="podcasts-heading">

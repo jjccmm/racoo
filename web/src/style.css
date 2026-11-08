@@ -24,14 +24,19 @@ button:disabled { cursor: default; opacity: .6; }
 :focus-visible { outline: 2px solid #005fcc; outline-offset: 4px; }
 [role="alert"] { color: #a2191f; }
 .muted { color: var(--muted); font-size: .81rem; }
-.site-header { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line); }
-.site-name { font-size: .83rem; font-weight: 600; letter-spacing: -.01em; text-decoration: none; padding: 10px 0; }
+.site-header { min-height: 92px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line); }
+.site-brand { display: inline-flex; flex-shrink: 0; align-items: center; padding: 8px 0; }
+.site-brand img { display: block; width: 204px; height: auto; }
+.landing .site-header { min-height: 124px; }
+.landing .site-brand img { width: 300px; }
+.brand-highlight { --word-color: #005d5d; }
+.podcast-card img, .podcast-header img { border: 1px solid var(--line); }
 .back-link { color: var(--muted); font-size: .78rem; text-decoration: none; padding: 10px 0; }
-.back-link:hover, .site-name:hover { text-decoration: underline; }
+.back-link:hover { text-decoration: underline; }
 .back-link span { margin-right: 7px; }
 .landing { max-width: 1040px; }
-.landing-intro { padding: 86px 0 66px; }
-.landing-intro h1 { font-size: clamp(2.25rem, 4.5vw, 3.3rem); font-weight: 600; margin-bottom: 20px; max-width: 750px; }
+.landing-intro { padding: 42px 0 58px; }
+.landing-intro h1 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.25rem, 4.5vw, 3.3rem); font-weight: 400; margin-bottom: 20px; max-width: 750px; }
 .landing-intro p { color: var(--muted); font-size: 1.06rem; margin-bottom: 0; max-width: 640px; }
 .section-heading { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); padding-bottom: 15px; }
 .section-heading span { color: var(--muted); font-size: .75rem; font-variant-numeric: tabular-nums; }
@@ -134,10 +139,12 @@ th, td { padding: .65rem; text-align: left; border-bottom: 1px solid var(--line)
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
 @media (max-width: 640px) {
   main { padding: 0 20px 28px; }
-  .site-header { min-height: 64px; }
-  .site-name { font-size: .76rem; }
+  .site-header { min-height: 78px; }
+  .site-brand img { width: 156px; }
+  .landing .site-header { min-height: 110px; }
+  .landing .site-brand img { width: 252px; }
   .back-link { font-size: .72rem; }
-  .landing-intro { padding: 57px 0 45px; }
+  .landing-intro { padding: 32px 0 40px; }
   .landing-intro h1 { font-size: 2.25rem; max-width: 340px; margin-bottom: 17px; }
   .landing-intro p { font-size: .98rem; line-height: 1.65; }
   .podcast-card { gap: 17px; padding: 23px 0; }

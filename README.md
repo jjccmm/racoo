@@ -1,6 +1,6 @@
-# Podcast Words V3
+# Racoo
 
-Statische Podcast-Suche und Wortstatistik, zunächst für **DAS PODCAST UFO**. Alle Folgen werden mit **Parakeet-TDT-0.6B-v3** neu transkribiert. Die Verarbeitung läuft lokal mit FP32 auf der GPU (Planungswert etwa 25× Echtzeit); die Webseite ist statisch für GitHub Pages geeignet. Der aktuelle Pilot läuft lokal.
+**Die Podcast Wort Suche** – statische Podcast-Suche und Wortstatistik, zunächst für **DAS PODCAST UFO**. Alle Folgen werden mit **Parakeet-TDT-0.6B-v3** neu transkribiert. Die Verarbeitung läuft lokal mit FP32 auf der GPU (Planungswert etwa 25× Echtzeit); die Webseite ist statisch für GitHub Pages geeignet. Der aktuelle Pilot läuft lokal.
 
 - [Projektplan](PLAN.md): Entscheidungen, Datenfluss, Umsetzung und Abnahme.
 - [Recherche zu Feed und Suche](docs/research/v3-feed-and-search.md): geprüfte Quellen und technische Grenzen, Stand 16. Oktober 2026.

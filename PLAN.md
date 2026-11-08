@@ -1,10 +1,12 @@
-# Podcast Words V3 – Projektplan
+# Racoo – Projektplan
 
-Stand: 7. November 2026; lokaler Fünf-Folgen-Pilot mit Podcast-Auswahl, zentralem Wortvergleich und groben Segmenten. Die aktuelle Gestaltung folgt der [minimalen Podcast-Auswahl und Suchansicht](.scratch/minimal-podcast-design/spec.md), die Funktion dem [Wort-Explorer](.scratch/word-explorer/spec.md), aufbauend auf der [kompakten und gefilterten Wortstatistik](.scratch/compact-filtered-statistics/spec.md); der übrige Umfang steht in der [Pilotspezifikation](.scratch/local-five-episode-pilot/spec.md).
+Stand: 8. November 2026; lokaler Fünf-Folgen-Pilot mit Podcast-Auswahl, zentralem Wortvergleich und groben Segmenten. Die aktuelle Gestaltung folgt der [minimalen Podcast-Auswahl und Suchansicht](.scratch/minimal-podcast-design/spec.md), die Funktion dem [Wort-Explorer](.scratch/word-explorer/spec.md), aufbauend auf der [kompakten und gefilterten Wortstatistik](.scratch/compact-filtered-statistics/spec.md); der übrige Umfang steht in der [Pilotspezifikation](.scratch/local-five-episode-pilot/spec.md).
 
 Der Plan wurde im dokumentierten Interview gemeinsam bestätigt. Die [Planverfeinerung](docs/planning/refinement.md) hält die Entscheidungen fest; [TASKS.md](TASKS.md) enthält die nachweisorientierte Umsetzungsreihenfolge. Der [bestätigte Einrichtungsumfang](docs/planning/workspace-setup.md) ist die Grundlage der Workspace-Einrichtung.
 
 ## 1. Ziel und festgelegte Entscheidungen
+
+**Projektname: Racoo.** Das vom Nutzer bereitgestellte Logo steht auf Start- und Podcastseite. Der Startseitentitel „Die Podcast Wort Suche“ verwendet Serifenschrift und markiert „Wort“ im selben Stil wie Originalfundstellen; Podcast-Cover haben einen dünnen Rand.
 
 Eine einfach zu betreibende Webseite, die Podcast-Folgen anhand erinnerter Stichwörter findet und Wortstatistiken zeigt. Ausgangspunkt ist DAS PODCAST UFO mit etwa zehn Besuchern pro Tag. Weitere Podcasts sollen später über dieselbe Pipeline und Datenformate hinzukommen können.
 

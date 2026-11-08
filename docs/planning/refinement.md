@@ -59,3 +59,7 @@ Der Nutzer ersetzt die getrennten Such-/Statistikfelder und den normierten Vergl
 ## Ergänzung vom 7. November 2026: reduzierte Gestaltung und Podcast-Einstieg
 
 Der Nutzer bestätigt die Suchfunktion und beauftragt eine belegte Designrecherche samt minimalistischer Überarbeitung. Die Startseite trägt exakt „Die Podcast Wort Suche“ und „Finde mit ein paar Schlüsselwörtern zu der gesuchten Folge“. Ein echter Podcast-Eintrag mit Cover und Sprechern führt zur reduzierten Suchansicht. Das Diagramm bleibt Hauptinhalt, Fundstellen werden durch kurze Vorschauen und aufklappbare weitere Stellen verdichtet. Die [Gestaltungsspezifikation](../../.scratch/minimal-podcast-design/spec.md) und [Recherche](../research/minimal-podcast-design.md) halten Ausführung und Quellen fest; Suchsemantik und Daten bleiben unverändert.
+
+## Ergänzung vom 8. November 2026: Racoo
+
+Der Projektname ist Racoo. Das bereitgestellte Original-Logo ersetzt den kleinen Textnamen in der Kopfzeile beider Ansichten. Auf der Startseite folgt darunter „Die Podcast Wort Suche“ in Serifenschrift; „Wort“ verwendet die vorhandene Fundstellenmarkierung mit dunkler türkiser Akzentfarbe. Beide Größen des Podcast-Covers erhalten einen dünnen Rand. Die bestehende Suche bleibt die Grundlage.

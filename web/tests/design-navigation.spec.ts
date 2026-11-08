@@ -21,7 +21,7 @@ test('the first screen offers the real podcast identity without loading the sear
   await expect(page).toHaveURL(/\?podcast=podcast-ufo$/);
   await expect(page.getByRole('heading', { name: 'DAS PODCAST UFO', exact: true })).toBeVisible();
   await expect(page.getByRole('combobox', { name: 'Wörter suchen' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Die Podcast Wort Suche', exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Racoo – Startseite', exact: true })).toBeVisible();
   await page.reload();
   await expect(page.getByRole('combobox')).toBeVisible();
   await page.getByRole('link', { name: 'Alle Podcasts' }).click();
