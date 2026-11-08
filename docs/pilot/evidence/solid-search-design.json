@@ -1,0 +1,88 @@
+{
+  "contrast": [
+    {
+      "text": "Die×",
+      "background": "rgb(105, 41, 196)",
+      "color": "rgb(255, 255, 255)",
+      "weight": "700",
+      "square": "none",
+      "contrast": 7.735002566718804
+    },
+    {
+      "text": "Podcast×",
+      "background": "rgb(17, 146, 232)",
+      "color": "rgb(0, 0, 0)",
+      "weight": "700",
+      "square": "none",
+      "contrast": 6.300626928106336
+    },
+    {
+      "text": "Wort×",
+      "background": "rgb(0, 93, 93)",
+      "color": "rgb(255, 255, 255)",
+      "weight": "700",
+      "square": "none",
+      "contrast": 7.709808615196638
+    },
+    {
+      "text": "Suche×",
+      "background": "rgb(159, 24, 83)",
+      "color": "rgb(255, 255, 255)",
+      "weight": "700",
+      "square": "none",
+      "contrast": 7.6930237621185995
+    },
+    {
+      "text": "Folge×",
+      "background": "rgb(250, 77, 86)",
+      "color": "rgb(0, 0, 0)",
+      "weight": "700",
+      "square": "none",
+      "contrast": 6.2607267224762415
+    }
+  ],
+  "viewports": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "defaultLabels": [
+        "UFO001 Prolog; haus: 9; Summe: 9",
+        "UGO081 Freestyle Karate; haus: 8; Summe: 8",
+        "UFO300 Moll; haus: 4; Summe: 4",
+        "UFO537 Festival; haus: 2; Summe: 2"
+      ],
+      "allIncludesZero": true,
+      "removeStaysRemoved": true,
+      "noPageOverflow": true
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "defaultLabels": [
+        "UFO001 Prolog; haus: 9; Summe: 9",
+        "UGO081 Freestyle Karate; haus: 8; Summe: 8",
+        "UFO300 Moll; haus: 4; Summe: 4",
+        "UFO537 Festival; haus: 2; Summe: 2"
+      ],
+      "allIncludesZero": true,
+      "removeStaysRemoved": true,
+      "noPageOverflow": true
+    },
+    {
+      "name": "narrow",
+      "width": 320,
+      "height": 800,
+      "defaultLabels": [
+        "UFO001 Prolog; haus: 9; Summe: 9",
+        "UGO081 Freestyle Karate; haus: 8; Summe: 8",
+        "UFO300 Moll; haus: 4; Summe: 4",
+        "UFO537 Festival; haus: 2; Summe: 2"
+      ],
+      "allIncludesZero": true,
+      "removeStaysRemoved": true,
+      "noPageOverflow": true
+    }
+  ]
+}

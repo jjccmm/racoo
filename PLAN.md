@@ -97,13 +97,13 @@ Die [Designrecherche](docs/research/minimal-podcast-design.md) begründet die ne
 
 ### Ein Suchfeld und ausgewählte Wörter
 
-Ein zugängliches Suchfeld zeigt höchstens zehn passende Grundformen im Dropdown. Exakte Eingaben stehen vor Präfix- und übrigen Teilzeichenfolgentreffern; innerhalb der Gruppen zählen Gesamtvorkommen und anschließend die Grundform als Gleichstandsentscheid. Höchstens fünf Wörter auswählbar machen. Farbige Wortchips stehen direkt darunter und werden durch Anklicken entfernt. Tastatur, Escape, Außenklick und Touch unterstützen. Stoppwörter und manuell ignorierte Grundformen bleiben ausgeschlossen, mit einem knappen sichtbaren Hinweis.
+Die Podcast-Suchansicht startet mit dem veröffentlichten Wort „haus“, falls vorhanden, und lädt dafür die normalen Zählungen und zugehörigen Top-Folgen. Entfernen bleibt während des Besuchs bestehen. Ein zugängliches Suchfeld mit Suchsymbol zeigt höchstens zehn passende Grundformen im Dropdown. Exakte Eingaben stehen vor Präfix- und übrigen Teilzeichenfolgentreffern; innerhalb der Gruppen zählen Gesamtvorkommen und anschließend die Grundform als Gleichstandsentscheid. Höchstens fünf Wörter auswählbar machen. Vollflächig gefärbte Wortchips mit fetter, je nach Helligkeit schwarzer oder weißer Schrift stehen direkt darunter und werden durch Anklicken entfernt. Die Startdemo verwendet dieselbe Darstellung. Ein leicht getönter Hintergrund und wenige Trennlinien halten die Oberfläche ruhig. Tastatur, Escape, Außenklick und Touch unterstützen. Stoppwörter und manuell ignorierte Grundformen bleiben ausgeschlossen, mit einem knappen sichtbaren Hinweis.
 
 ### Absolutes gestapeltes Balkendiagramm
 
 Das große Diagramm ist das Hauptelement: Folgen auf der sichtbaren X-Achse, absolute Vorkommen auf der Y-Achse und ein farbiger Stapel pro Wort. Normierte Werte und der frühere Umschalter je 1.000 Gesamtwörter entfallen auf ausdrücklichen Nutzerwunsch. Die Balkenhöhe zeigt die Summe aller ausgewählten Grundformen; längere Folgen können dadurch stärker vertreten sein.
 
-„Top 10“ zeigt höchstens zehn Folgen mit positiver Summe, absteigend nach Gesamttreffern und bei Gleichstand nach Datum absteigend sowie dauerhafter ID. „Alle“ zeigt jede Folge einschließlich Nullwerten chronologisch nach Datum und ID. Bei vielen Folgen horizontal innerhalb des Diagramms scrollen; die Seite selbst bleibt in der Gerätebreite. Farben bleiben je ausgewähltem Wort über Chips, Diagramm und Texte hinweg gleich.
+„Top 10“ zeigt höchstens zehn Folgen mit positiver Summe, absteigend nach Gesamttreffern und bei Gleichstand nach Datum absteigend sowie dauerhafter ID. „Alle“ zeigt jede Folge einschließlich Nullwerten chronologisch nach Datum und ID. Bei vielen Folgen horizontal innerhalb des Diagramms scrollen; die Seite selbst bleibt in der Gerätebreite. Farben bleiben je ausgewähltem Wort über Chips, Diagramm und Texte hinweg gleich. Die frühere aufklappbare Diagrammdatentabelle entfällt. Exakte Werte bleiben im Tooltip, den Folgenkarten und den zugänglichen Beschriftungen der sichtbaren Episodenachse verfügbar, einschließlich Nullfolgen.
 
 ### Top-Folgen, Originaltext und Player
 

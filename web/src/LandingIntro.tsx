@@ -1,5 +1,6 @@
-import { useRef, useState, type CSSProperties } from 'react';
-import { WORD_COLORS } from './word-colors';
+import { useRef, useState } from 'react';
+import { WORD_COLORS, wordStyle } from './word-colors';
+import { SearchIcon } from './SearchIcon';
 
 const INTRO = 'Du willst diese eine Podcast-Folge wiederfinden, erinnerst dich aber nur an ein paar Wörter? Die Suche zeigt dir, in welchen Folgen deine Schlüsselwörter am häufigsten vorkommen. Wähle den Podcast, in dem du suchen möchtest, und leg los!';
 const normalize = (value: string) => value.normalize('NFC').toLocaleLowerCase('de-DE').trim();
@@ -24,7 +25,6 @@ for (const piece of pieces) {
   words.get(key)!.count++;
 }
 type Selected = { key: string; color: string };
-const style = (color: string) => ({ '--word-color': color } as CSSProperties);
 
 export function LandingIntro() {
   const [selected, setSelected] = useState<Selected[]>(() => ['die', 'podcast', 'wort', 'suche'].map((key, index) => ({ key, color: WORD_COLORS[index] })));
@@ -57,19 +57,19 @@ export function LandingIntro() {
     <h1 id="page-heading" className="visually-hidden">Die Podcast Wort Suche</h1>
     <div className="demo-controls">
       <ul className="demo-selected" aria-label="Wörter im Beispieltext">{selected.map((item) => <li key={item.key}>
-        <button type="button" className="word-chip demo-chip" style={style(item.color)} aria-label={`${words.get(item.key)!.label} entfernen`} onClick={() => remove(item.key)}>
+        <button type="button" className="word-chip demo-chip" style={wordStyle(item.color)} aria-label={`${words.get(item.key)!.label} entfernen`} onClick={() => remove(item.key)}>
           {words.get(item.key)!.label}<span aria-hidden="true">×</span>
         </button>
       </li>)}</ul>
       <div className="demo-field" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setOpened(false); }}>
         <label className="visually-hidden" htmlFor="demo-word">Wort im Beispieltext suchen</label>
-        <input ref={input} id="demo-word" role="combobox" aria-autocomplete="list" aria-controls="demo-options" aria-expanded={showOptions}
+        <div className="search-input"><SearchIcon /><input type="search" ref={input} id="demo-word" role="combobox" aria-autocomplete="list" aria-controls="demo-options" aria-expanded={showOptions}
           aria-activedescendant={showOptions && active >= 0 && suggestions[active] ? `demo-option-${active}` : undefined}
-          aria-describedby="demo-hint" value={query} placeholder="+ Wort hinzufügen" autoComplete="off"
+          aria-describedby="demo-hint" value={query} placeholder="Wort ausprobieren" autoComplete="off"
           onFocus={() => { setOpened(true); setActive(-1); }}
           onChange={(event) => { setQuery(event.target.value); setOpened(true); setActive(-1); }}
           onKeyDown={(event) => {
-            if (event.key === 'Escape') { setOpened(false); setActive(-1); }
+            if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); setOpened(false); setActive(-1); }
             if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
               event.preventDefault(); setOpened(true);
               setActive((current) => suggestions.length ? event.key === 'ArrowDown' ? (current + 1) % suggestions.length : (current <= 0 ? suggestions.length : current) - 1 : -1);
@@ -77,7 +77,7 @@ export function LandingIntro() {
             if (event.key === 'Enter' && showOptions && suggestions.length) {
               event.preventDefault(); choose(suggestions[active >= 0 ? active : 0]);
             }
-          }} />
+          }} /></div>
         {showOptions && <ul id="demo-options" className="autocomplete demo-options" role="listbox" aria-label="Wörter im Beispieltext hinzufügen">
           {suggestions.map((word, index) => <li key={word.key} id={`demo-option-${index}`} role="option" aria-label={word.label} aria-selected={index === active}
             onPointerDown={(event) => event.preventDefault()} onPointerMove={() => setActive(index)} onClick={() => choose(word)}>
@@ -89,7 +89,7 @@ export function LandingIntro() {
     </div>
     <p className="demo-explanation" aria-label="So funktioniert Racoo">{pieces.map((piece, index) => {
       const item = selected.find((item) => item.key === byForm.get(normalize(piece)));
-      return item ? <mark key={index} style={style(item.color)} title={words.get(item.key)!.label}>{piece}</mark> : piece;
+      return item ? <mark key={index} style={wordStyle(item.color)} title={words.get(item.key)!.label}>{piece}</mark> : piece;
     })}</p>
     <p className="demo-hint" id="demo-hint" aria-live="polite">{selected.length < 5
       ? 'Probier’s hier im Text aus – zum Beispiel mit „Folge“.'

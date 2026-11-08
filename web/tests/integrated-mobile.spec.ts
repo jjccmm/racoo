@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { choose } from './helpers';
+import { choose, openExplorer } from './helpers';
 
 test('mobile visitors can use search, the shared player, and both statistics views without page overflow', async ({ page }, testInfo) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -7,7 +7,7 @@ test('mobile visitors can use search, the shared player, and both statistics vie
 
   const requests: string[] = [];
   page.on('request', (request) => requests.push(new URL(request.url()).pathname));
-  await page.goto('./?podcast=podcast-ufo');
+  await openExplorer(page);
 
   await page.getByText('Über die Daten', { exact: true }).click();
   await expect(page.getByLabel('Veröffentlichungsstand')).toContainText('synthetic-podcast');
@@ -19,8 +19,7 @@ test('mobile visitors can use search, the shared player, and both statistics vie
   await expect(page.getByRole('alert')).toContainText('Audio nicht verfügbar');
 
   await expect(page.getByRole('region', { name: 'Grundformvergleich' })).toBeVisible();
-  await page.getByText('Diagrammdaten anzeigen', { exact: true }).click();
-  await expect(page.getByRole('table', { name: 'Vorkommen nach Folge' })).toBeVisible();
+  await expect(page.getByText('Diagrammdaten anzeigen', { exact: true })).toHaveCount(0);
   await page.getByText('Gesamtwörter und Wortschatz', { exact: true }).first().click();
   await page.getByRole('button', { name: 'Wortentwicklung öffnen' }).click();
   await expect(page.getByRole('table', { name: 'Chronologische Wortentwicklung je Folge' })).toBeVisible();

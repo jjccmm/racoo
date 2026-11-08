@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import * as pagefind from 'pagefind';
 import { gunzipSync } from 'node:zlib';
-import { choose, search } from './helpers';
+import { choose, search, openExplorer } from './helpers';
 
 /** A real controlled Pagefind index at the publication's HTTP boundary. */
 async function controlledText(page: Page, extraPassages = false) {
@@ -48,7 +48,7 @@ async function controlledText(page: Page, extraPassages = false) {
 }
 
 test('native positions mark whole original Unicode and compound tokens, merging shared term ranges', async ({ page }) => {
-  await page.goto('./?podcast=podcast-ufo'); const segments = await controlledText(page);
+  await page.goto('./'); const segments = await controlledText(page);
   const found = (await search(page, 'Münze Euro Wort Teil Straße', ['synthetic-episode-001'])).page!;
   expect(found.results).toHaveLength(1);
   const passages = found.results[0].passages;
@@ -60,7 +60,7 @@ test('native positions mark whole original Unicode and compound tokens, merging 
 });
 
 test('original text renders safely as text with the selected word color', async ({ page }) => {
-  await page.goto('./?podcast=podcast-ufo'); await controlledText(page); await choose(page, 'münze');
+  await openExplorer(page); await controlledText(page); await choose(page, 'münze');
   const card = page.getByRole('article');
   await expect(card.locator('mark')).toHaveText(['Münzen', 'Euro-Münze', 'Münze']);
   await expect(card).toContainText('<img src=x onerror=alert(1)>'); await expect(card.locator('img')).toHaveCount(0);
@@ -72,7 +72,7 @@ test('a source/index mismatch keeps exact counts and offers a passage retry with
   await page.route('**/episodes/synthetic-episode-001.json', async (route) => {
     const response = await route.fetch(); const data = await response.json(); data.segments[0].text = 'Anderer Text mit falschen Positionen.'; await route.fulfill({ response, json: data });
   });
-  await page.goto('./?podcast=podcast-ufo'); await choose(page, 'münze');
+  await openExplorer(page); await choose(page, 'münze');
   await expect(page.getByRole('alert')).toContainText('Originalpassagen konnten nicht geladen werden');
   await expect(page.getByRole('article')).toContainText('1 Vorkommen'); await expect(page.locator('mark')).toHaveCount(0);
   await page.unroute('**/episodes/synthetic-episode-001.json'); await page.getByRole('button', { name: 'Passagen erneut laden' }).click();
@@ -80,7 +80,7 @@ test('a source/index mismatch keeps exact counts and offers a passage retry with
 });
 
 test('compact passages keep the first excerpts visible and disclose remaining original context', async ({ page }) => {
-  await page.goto('./?podcast=podcast-ufo');
+  await openExplorer(page);
   const segments = await controlledText(page, true);
   await choose(page, 'münze');
   const card = page.getByRole('article');

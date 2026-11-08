@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { openExplorer } from './helpers';
 
 test('episode processing timings use the compact catalog without loading transcripts', async ({ page }) => {
   const transcripts: string[] = [];
@@ -15,7 +16,8 @@ test('episode processing timings use the compact catalog without loading transcr
     return route.fulfill({ response, json: catalog });
   });
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('./?podcast=podcast-ufo');
+  await openExplorer(page);
+  transcripts.length = 0;
   await page.getByText('Verarbeitete Folgen und Laufzeiten', { exact: true }).click();
   const overview = page.getByRole('table', { name: 'Verarbeitete Folgen und Laufzeiten' });
   const measured = overview.getByRole('row').filter({ hasText: 'Abdeckung vollständig' });

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { choose } from './helpers';
-async function openStatistics(page: import('@playwright/test').Page) { await page.goto('./?podcast=podcast-ufo'); await expect(page.getByRole('combobox', { name: 'Wörter suchen' })).toBeVisible(); }
+import { choose, openExplorer, chartEpisodes } from './helpers';
+async function openStatistics(page: import('@playwright/test').Page) { await openExplorer(page); await expect(page.getByRole('combobox', { name: 'Wörter suchen' })).toBeVisible(); }
 
 test('excluded words are unavailable while complete word metrics remain accessible', async ({ page }) => {
   await openStatistics(page);
@@ -20,9 +20,7 @@ test('a zero-word episode remains a chronological absolute zero', async ({ page 
   });
   await openStatistics(page); await choose(page, 'hund');
   await page.getByRole('button', { name: 'Alle', exact: true }).click();
-  await page.getByText('Diagrammdaten anzeigen', { exact: true }).click();
-  const row = page.getByRole('table', { name: 'Vorkommen nach Folge' }).getByRole('row').filter({ hasText: 'Synthetische Beispielfolge' });
-  await expect(row.getByRole('cell')).toHaveText(['0', '0']);
+  await expect(chartEpisodes(page).filter({ hasText: 'Synthetische Beispielfolge' })).toHaveAttribute('aria-label', /hund: 0; Summe: 0$/);
   await expect(page.getByRole('radio')).toHaveCount(0);
 });
 
@@ -79,3 +77,39 @@ for (const defect of ['old schema', 'mixed publication']) {
     await expect(page.getByRole('alert')).toContainText('Fehlende Daten sind kein Nullwert');
   });
 }
+
+test('haus is loaded on entry, can be removed and is not restored by later interactions', async ({ page }) => {
+  await page.goto('./?podcast=podcast-ufo');
+  const chip = page.getByRole('button', { name: 'haus entfernen', exact: true });
+  await expect(chip).toBeVisible();
+  await expect(chartEpisodes(page)).toHaveCount(1);
+  await expect(chartEpisodes(page).first()).toHaveAttribute('aria-label', 'Titelgeheimnis — zweite synthetische Folge; haus: 1; Summe: 1');
+  await expect(page.getByRole('article')).toContainText('1 Vorkommen');
+  await chip.click();
+  await expect(page.getByRole('article')).toHaveCount(0);
+  await choose(page, 'münze');
+  await expect(page.getByRole('article')).toContainText('Synthetische Beispielfolge');
+  await expect(chip).toHaveCount(0);
+  await expect(page.getByRole('table', { name: 'Vorkommen nach Folge' })).toHaveCount(0);
+});
+
+test('removing the initial haus cancels a pending count and leaves the newer selection intact', async ({ page }) => {
+  let release: () => void = () => {};
+  const pending = new Promise<void>(resolve => { release = resolve; });
+  let held = false;
+  await page.route('**/stats/counts/*.json', async route => {
+    const response = await route.fetch();
+    const data = await response.json();
+    if (data.counts.haus) { held = true; await pending; }
+    await route.fulfill({ response, json: data }).catch(() => {});
+  });
+  await page.goto('./?podcast=podcast-ufo');
+  await expect.poll(() => held).toBe(true);
+  await page.getByRole('button', { name: 'haus entfernen' }).click();
+  await choose(page, 'münze');
+  await expect(page.getByRole('article')).toContainText('Synthetische Beispielfolge');
+  release();
+  await page.waitForTimeout(150);
+  await expect(page.getByRole('button', { name: 'haus entfernen' })).toHaveCount(0);
+  await expect(chartEpisodes(page).first()).toHaveAttribute('aria-label', /münze: 1; Summe: 1$/);
+});

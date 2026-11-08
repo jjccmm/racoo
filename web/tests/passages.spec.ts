@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { choose, clearWords } from './helpers';
+import { choose, clearWords, openExplorer } from './helpers';
 import type { Route } from '@playwright/test';
 
 function longSilentWav(seconds: number) {
@@ -42,7 +42,7 @@ async function search(page: import('@playwright/test').Page, query: string) {
 test('repeated terms share one coarse jump with an advertising hint and expandable original text', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.route('**/episodes/coverage-complete.json', coarseEpisode);
-  await page.goto('./?podcast=podcast-ufo');
+  await openExplorer(page);
   await search(page, 'grüße');
   const hits = page.getByLabel('Fundstellen in passage').getByRole('button');
   await expect(hits).toHaveCount(1);
@@ -89,7 +89,7 @@ test('a shared episode/time link loads the player without autoplay and an unknow
 });
 
 test('terms in successive transcript segments remain separate Fundstellen with original context', async ({ page }) => {
-  await page.goto('./?podcast=podcast-ufo');
+  await openExplorer(page);
   await search(page, 'münze kleingeld');
   const result = page.getByRole('article').filter({ hasText: 'Synthetische Beispielfolge' });
   await expect(result).toHaveCount(1);
@@ -101,7 +101,7 @@ test('terms in successive transcript segments remain separate Fundstellen with o
 
 test('failed audio shows the original episode source and player controls stay within the duration', async ({ page }) => {
   await page.route('https://example.org/fixture.mp3', (route) => route.abort());
-  await page.goto('./?podcast=podcast-ufo');
+  await openExplorer(page);
   await search(page, 'fenster');
   await page.getByRole('article').first().getByRole('button', { name: /Anhören ab/ }).first().click();
   await expect(page.getByRole('alert')).toContainText('Audio nicht verfügbar');
@@ -129,7 +129,7 @@ test('a newer passage playback wins over a pending shared episode link', async (
     released = true;
   });
   await page.route('**/episodes/synthetic-episode-001.json', controlledEpisode);
-  await page.goto('./?episode=coverage-complete&t=68');
+  await openExplorer(page, './?episode=coverage-complete&t=68');
   await expect.poll(() => held).toBe(true);
   await expect(page.getByRole('status').filter({ hasText: 'Geteilte Folge wird geladen' })).toBeVisible();
   await choose(page, 'münze');

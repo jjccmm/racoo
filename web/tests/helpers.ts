@@ -46,3 +46,18 @@ export async function clearWords(page: Page) {
   const chips = page.getByRole('list', { name: 'Ausgewählte Grundformen' }).getByRole('button');
   while (await chips.count()) await chips.first().click();
 }
+
+/** Start a selection-specific case after the normal, user-visible haus default. */
+export async function openExplorer(page: Page, url = './?podcast=podcast-ufo') {
+  await page.goto(url);
+  await expect(page.getByRole('combobox', { name: 'Wörter suchen' })).toBeVisible();
+  const house = page.getByRole('button', { name: 'haus entfernen', exact: true });
+  if (await house.count()) await house.click();
+  await expect(page.getByRole('list', { name: 'Ausgewählte Grundformen' }).getByRole('button')).toHaveCount(0);
+  await expect(page.getByRole('article')).toHaveCount(0);
+}
+
+/** The actual visible SVG episode labels carry full titles and exact counts. */
+export function chartEpisodes(page: Page) {
+  return page.getByRole('region', { name: 'Grundformvergleich' }).getByRole('img');
+}

@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { searchEpisodes, type Passage, type SearchResult } from './search';
 import { formatPlaybackTime, type PlayerEpisode } from './playback';
 import { countPairs } from './statistics';
-import { WORD_COLORS } from './word-colors';
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { WORD_COLORS, wordStyle } from './word-colors';
+import { SearchIcon } from './SearchIcon';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, type XAxisTickContentProps } from 'recharts';
 
 type Word = { lemma: string; stopword: boolean; totalCount: number; shard: string };
 type Episode = { episodeId: string; title: string; publishedAt: string; totalWords: number; distinctWords: number };
@@ -11,20 +12,23 @@ type Selected = Word & { color: string; token: number; state: 'loading' | 'ready
 const normalize = (value: string) => value.normalize('NFC').toLocaleLowerCase('de-DE').trim();
 const identityOrder = (a: string, b: string) => a < b ? -1 : a > b ? 1 : 0;
 const count = (value: number) => value.toLocaleString('de-DE');
-const wordStyle = (color: string) => ({ '--word-color': color } as CSSProperties);
 
 export function Frequency({ publicationId, words, episodes, onChoose }: { onChoose(episode: PlayerEpisode, passage: Passage): void; publicationId: string; words: Word[]; episodes: Episode[] }) {
   const [query, setQuery] = useState('');
   const [opened, setOpened] = useState(false);
   const [active, setActive] = useState(-1);
-  const [selected, setSelected] = useState<Selected[]>([]);
+  const [initialWord] = useState<Selected | undefined>(() => {
+    const word = words.find((word) => normalize(word.lemma) === 'haus');
+    return word ? { ...word, token: 1, color: WORD_COLORS[0], state: 'loading', values: new Map() } : undefined;
+  });
+  const [selected, setSelected] = useState<Selected[]>(() => initialWord ? [initialWord] : []);
   const [details, setDetails] = useState<{ key: string; results?: SearchResult[]; error?: boolean }>({ key: '' });
   const [retry, setRetry] = useState(0);
   const [mode, setMode] = useState<'top' | 'all'>('top');
   const field = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const requests = useRef(new Map<number, AbortController>());
-  const sequence = useRef(0);
+  const sequence = useRef(initialWord ? 1 : 0);
   const term = normalize(query);
   const suggestions = words.filter((word) => !selected.some((item) => item.lemma === word.lemma) && normalize(word.lemma).includes(term))
     .sort((a, b) => {
@@ -39,21 +43,19 @@ export function Frequency({ publicationId, words, episodes, onChoose }: { onChoo
     return () => { document.removeEventListener('pointerdown', dismiss); pending.forEach((controller) => controller.abort()); };
   }, []);
 
-  async function load(word: Selected) {
+  const load = useCallback((word: Selected) => {
     const controller = new AbortController();
+    requests.current.get(word.token)?.abort();
     requests.current.set(word.token, controller);
-    setSelected((current) => current.map((item) => item.token === word.token ? { ...item, state: 'loading' } : item));
-    try {
-      const response = await fetch(`${import.meta.env.BASE_URL}stats/${word.shard}`, { signal: controller.signal });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const shard = await response.json();
-      if (shard.schemaVersion !== 2 || shard.publicationId !== publicationId || !shard.counts || typeof shard.counts !== 'object' || Array.isArray(shard.counts)) throw new Error('Invalid counts');
-      const values = new Map<string, number>(countPairs(shard.counts[word.lemma], episodes.length).map(([index, value]) => [episodes[index].episodeId, value]));
+    return readCounts(word, episodes, publicationId, controller.signal).then((values) => {
       if (!controller.signal.aborted) setSelected((current) => current.map((item) => item.token === word.token ? { ...item, values, state: 'ready' } : item));
-    } catch {
+    }).catch(() => {
       if (!controller.signal.aborted) setSelected((current) => current.map((item) => item.token === word.token ? { ...item, state: 'error' } : item));
-    } finally { requests.current.delete(word.token); }
-  }
+    }).finally(() => { if (requests.current.get(word.token) === controller) requests.current.delete(word.token); });
+  }, [publicationId, episodes]);
+
+  useEffect(() => { if (initialWord) void load(initialWord); }, [initialWord, load]);
+
   function choose(word: Word) {
     if (selected.length >= 5 || selected.some((item) => item.lemma === word.lemma)) return;
     const item: Selected = { ...word, token: ++sequence.current, color: WORD_COLORS.find((color) => !selected.some((entry) => entry.color === color))!, values: new Map(), state: 'loading' };
@@ -88,19 +90,19 @@ export function Frequency({ publicationId, words, episodes, onChoose }: { onChoo
   return <section className="frequency" aria-label="Wörter und Folgen erkunden">
     <div className="word-field" ref={field} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setOpened(false); }}>
       <div className="field-heading"><label htmlFor="lemma">Wörter suchen</label><span>Bis zu fünf Wörter</span></div>
-      <input ref={input} id="lemma" role="combobox" aria-autocomplete="list" aria-expanded={opened && selected.length < 5} aria-controls="word-options"
+      <div className="search-input"><SearchIcon /><input type="search" ref={input} id="lemma" role="combobox" aria-autocomplete="list" aria-expanded={opened && selected.length < 5} aria-controls="word-options"
         aria-activedescendant={opened && active >= 0 && suggestions[active] ? `word-option-${active}` : undefined}
         value={query} placeholder="Eimer, Münze, Kleingeld …" autoComplete="off"
         onFocus={() => { setOpened(true); setActive(-1); }}
         onChange={(event) => { setQuery(event.target.value); setOpened(true); setActive(-1); }}
         onKeyDown={(event) => {
-          if (event.key === 'Escape') { setOpened(false); setActive(-1); }
+          if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); setOpened(false); setActive(-1); }
           if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
             event.preventDefault(); setOpened(true);
             setActive((current) => suggestions.length ? (current < 0 ? (event.key === 'ArrowDown' ? 0 : suggestions.length - 1) : (current + (event.key === 'ArrowDown' ? 1 : -1) + suggestions.length) % suggestions.length) : -1);
           }
           if (event.key === 'Enter' && opened && suggestions.length && selected.length < 5) { event.preventDefault(); choose(suggestions[active < 0 ? 0 : active]); }
-        }} />
+        }} /></div>
       {opened && selected.length < 5 && <ul id="word-options" role="listbox" aria-label="Grundformvorschläge" className="autocomplete">
         {suggestions.map((word, index) => <li id={`word-option-${index}`} role="option" aria-label={word.lemma} aria-selected={active === index} key={word.lemma}
           onPointerDown={(event) => event.preventDefault()} onClick={() => choose(word)}><span>{word.lemma}</span><small>{count(word.totalCount)} im Bestand</small></li>)}
@@ -110,7 +112,7 @@ export function Frequency({ publicationId, words, episodes, onChoose }: { onChoo
     <ul className="selected-words" aria-label="Ausgewählte Grundformen">{selected.map((word) => <li key={word.token}><button className="word-chip" style={wordStyle(word.color)} aria-label={`${word.lemma} entfernen`} onClick={() => remove(word)}>{word.lemma}<span aria-hidden="true"> ×</span></button></li>)}</ul>
     <p className="muted selection-note">{selected.length === 5 ? 'Fünf Wörter ausgewählt. Entferne ein Wort, um ein anderes zu wählen. ' : ''}Stoppwörter und manuell ausgeschlossene Wörter werden nicht angeboten.</p>
     {selected.some((word) => word.state === 'loading') && <p role="status">Wortzählungen werden geladen …</p>}
-    {selected.filter((word) => word.state === 'error').map((word) => <div key={word.token}><p role="alert">Die Zählungen für {word.lemma} konnten nicht geladen werden. Fehlende Daten sind kein Nullwert.</p><button onClick={() => void load(word)}>Zählungen erneut laden</button></div>)}
+    {selected.filter((word) => word.state === 'error').map((word) => <div key={word.token}><p role="alert">Die Zählungen für {word.lemma} konnten nicht geladen werden. Fehlende Daten sind kein Nullwert.</p><button onClick={() => { setSelected((current) => current.map((item) => item.token === word.token ? { ...item, state: 'loading' } : item)); void load(word); }}>Zählungen erneut laden</button></div>)}
     <section className="chart-panel" aria-label="Grundformvergleich">
       <div className="chart-heading"><div><h2>Vorkommen je Folge</h2><p className="muted">Absolute Anzahl der ausgewählten Wörter</p></div>
         <div className="view-toggle" aria-label="Folgen im Diagramm"><button aria-pressed={mode === 'top'} onClick={() => setMode('top')}>Top 10</button><button aria-pressed={mode === 'all'} onClick={() => setMode('all')}>Alle</button></div>
@@ -122,12 +124,18 @@ export function Frequency({ publicationId, words, episodes, onChoose }: { onChoo
             {!ranked.length && <p role="status">Keine Vorkommen für die ausgewählten Wörter.</p>}
             <div className="frequency-chart-scroll"><div className="frequency-chart" style={{ width: `max(100%, ${Math.max(580, plotted.length * 95)}px)` }}>
               <ResponsiveContainer width="100%" height={370}><BarChart data={plotted} margin={{ top: 20, right: 16, bottom: 40, left: 0 }} barCategoryGap="28%" accessibilityLayer>
-                <CartesianGrid vertical={false} stroke="#e7e7eb" strokeDasharray="3 4" /><XAxis dataKey="title" interval={0} angle={-25} textAnchor="end" height={85} axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#62626b' }} tickFormatter={(title: string) => title.length > 22 ? `${title.slice(0, 20)}…` : title} />
-                <YAxis allowDecimals={false} axisLine={false} tickLine={false} width={38} tick={{ fontSize: 11, fill: '#62626b' }} /><Tooltip itemStyle={{ color: '#202024' }} cursor={{ fill: '#f4f4f5' }} labelStyle={{ fontWeight: 600, color: '#202024' }} formatter={(value, name) => [value, name]} contentStyle={{ borderRadius: 6, border: '1px solid #e4e4e7', boxShadow: '0 4px 16px #0000000a', fontSize: 13 }} labelFormatter={(label, payload) => `${label} · Summe ${payload[0]?.payload.total ?? 0}`} />
+                <CartesianGrid vertical={false} stroke="#e7e7eb" strokeDasharray="3 4" /><XAxis dataKey="episodeId" interval={0} height={85} axisLine={false} tickLine={false} tick={({ x, y, payload }: XAxisTickContentProps) => {
+                  const episode = plotted.find((item) => item.episodeId === payload.value)!;
+                  const label = `${episode.title}; ${selected.map((word) => `${word.lemma}: ${count(word.values.get(episode.episodeId) ?? 0)}`).join('; ')}; Summe: ${count(episode.total)}`;
+                  return <g transform={`translate(${x},${y})`} role="img" aria-label={label}>
+                    <title>{label}</title><text y={12} transform="rotate(-25)" textAnchor="end" fill="#62626b" fontSize={11}>{episode.title.length > 22 ? `${episode.title.slice(0, 20)}…` : episode.title}</text>
+                  </g>;
+                }} />
+                <YAxis allowDecimals={false} axisLine={false} tickLine={false} width={38} tick={{ fontSize: 11, fill: '#62626b' }} /><Tooltip itemStyle={{ color: '#202024' }} cursor={{ fill: '#f4f4f5' }} labelStyle={{ fontWeight: 600, color: '#202024' }} formatter={(value, name) => [value, name]} contentStyle={{ borderRadius: 6, border: '1px solid #e4e4e7', boxShadow: '0 4px 16px #0000000a', fontSize: 13 }} labelFormatter={(label, payload) => `${payload[0]?.payload.title ?? label} · Summe ${payload[0]?.payload.total ?? 0}`} />
                 {selected.map((word) => <Bar key={word.token} dataKey={`series${word.token}`} name={word.lemma} stackId="words" fill={word.color} stroke="#fff" strokeWidth={1} isAnimationActive={false} maxBarSize={52} />)}
               </BarChart></ResponsiveContainer>
             </div></div>
-            <details className="chart-data"><summary>Diagrammdaten anzeigen</summary><div className="counts-scroll"><table aria-label="Vorkommen nach Folge"><thead><tr><th>Folge</th>{selected.map((word) => <th key={word.token}>{word.lemma}</th>)}<th>Summe</th></tr></thead><tbody>{plotted.map((episode) => <tr key={episode.episodeId}><th scope="row">{episode.title}</th>{selected.map((word) => <td key={word.token}>{count(word.values.get(episode.episodeId) ?? 0)}</td>)}<td>{count(episode.total)}</td></tr>)}</tbody></table></div></details>
+
           </>}
     </section>
     {ready && ranked.length > 0 && <section aria-label="Folgen mit den meisten Vorkommen" className="episode-results">
@@ -211,4 +219,12 @@ function PassageText({ passage, words }: { passage: Passage; words: Selected[] }
     return pieces;
   }
   return <><p>{start > 0 && '… '}{text(start, end)}{end < passage.text.length && ' …'}</p>{long && <details><summary>Vollständiges Segment anzeigen</summary><p>{text(0, passage.text.length)}</p></details>}</>;
+}
+
+async function readCounts(word: Word, episodes: Episode[], publicationId: string, signal: AbortSignal) {
+  const response = await fetch(`${import.meta.env.BASE_URL}stats/${word.shard}`, { signal });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  const shard = await response.json();
+  if (shard.schemaVersion !== 2 || shard.publicationId !== publicationId || !shard.counts || typeof shard.counts !== 'object' || Array.isArray(shard.counts)) throw new Error('Invalid counts');
+  return new Map<string, number>(countPairs(shard.counts[word.lemma], episodes.length).map(([index, value]) => [episodes[index].episodeId, value]));
 }

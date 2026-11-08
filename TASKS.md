@@ -1,5 +1,7 @@
 # Nächste Arbeiten
 
+- [x] [Vollton-Wörter und haus-Vorbelegung](.scratch/solid-search-design/spec.md): kontrastreiche Chips, getönter Hintergrund, weniger Linien, erkennbare Suchfelder und Diagramm ohne Datentabelle. [Abschluss und Prüfung](docs/pilot/solid-search-design.md).
+
 - [x] [Interaktiver Racoo-Einstieg](.scratch/interactive-landing/spec.md): großes zentriertes Logo, ausgewählte Wortchips und mitmarkierender Beispieltext. Der [Abschlussbericht](docs/pilot/interactive-landing.md) enthält Bedienung und Prüfnachweise.
 
 Aktuell: [minimalistische Podcast-Auswahl und Suchansicht](.scratch/minimal-podcast-design/spec.md), mit [Gestaltungsticket](.scratch/minimal-podcast-design/issues/01-minimal-design.md) und [belegter Designrecherche](docs/research/minimal-podcast-design.md). Der [Abschlussbericht](docs/pilot/minimal-design.md) enthält die Bedienung und geprüften Grenzen.

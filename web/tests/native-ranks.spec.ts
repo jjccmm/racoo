@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test('native rank lists match the independently recorded worked example', async ({ page }) => {
-  await page.goto('./?podcast=podcast-ufo');
+  await page.goto('./');
   const lists = await page.evaluate(async () => {
     const manifest = await (await fetch('search/manifest.json')).json();
     const directory = `search/${manifest.indexId}/`;
