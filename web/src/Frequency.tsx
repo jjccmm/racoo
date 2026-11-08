@@ -2,13 +2,12 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { searchEpisodes, type Passage, type SearchResult } from './search';
 import { formatPlaybackTime, type PlayerEpisode } from './playback';
 import { countPairs } from './statistics';
+import { WORD_COLORS } from './word-colors';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 type Word = { lemma: string; stopword: boolean; totalCount: number; shard: string };
 type Episode = { episodeId: string; title: string; publishedAt: string; totalWords: number; distinctWords: number };
 type Selected = Word & { color: string; token: number; state: 'loading' | 'ready' | 'error'; values: Map<string, number> };
-// Carbon categorical sequence; word labels retain neutral, high-contrast text.
-const COLORS = ['#6929c4', '#1192e8', '#005d5d', '#9f1853', '#fa4d56'];
 const normalize = (value: string) => value.normalize('NFC').toLocaleLowerCase('de-DE').trim();
 const identityOrder = (a: string, b: string) => a < b ? -1 : a > b ? 1 : 0;
 const count = (value: number) => value.toLocaleString('de-DE');
@@ -57,7 +56,7 @@ export function Frequency({ publicationId, words, episodes, onChoose }: { onChoo
   }
   function choose(word: Word) {
     if (selected.length >= 5 || selected.some((item) => item.lemma === word.lemma)) return;
-    const item: Selected = { ...word, token: ++sequence.current, color: COLORS.find((color) => !selected.some((entry) => entry.color === color))!, values: new Map(), state: 'loading' };
+    const item: Selected = { ...word, token: ++sequence.current, color: WORD_COLORS.find((color) => !selected.some((entry) => entry.color === color))!, values: new Map(), state: 'loading' };
     setSelected((current) => [...current, item]);
     setQuery(''); setOpened(false); setActive(-1);
     input.current?.focus();

@@ -6,7 +6,7 @@ Der Plan wurde im dokumentierten Interview gemeinsam bestätigt. Die [Planverfei
 
 ## 1. Ziel und festgelegte Entscheidungen
 
-**Projektname: Racoo.** Das vom Nutzer bereitgestellte Logo steht auf Start- und Podcastseite. Der Startseitentitel „Die Podcast Wort Suche“ verwendet Serifenschrift und markiert „Wort“ im selben Stil wie Originalfundstellen; Podcast-Cover haben einen dünnen Rand.
+**Projektname: Racoo.** Das vom Nutzer bereitgestellte Logo steht auf Start- und Podcastseite. Auf der Startseite steht das Logo groß und zentriert ohne Trennlinie. „Die“, „Podcast“, „Wort“ und „Suche“ erscheinen als ausgewählte Wörter, die passende Formen im Erklärungstext markieren. Ein kleines Suchfeld ergänzt weitere Wörter aus diesem Beispieltext; die eigentliche Folgensuche beginnt nach der Podcast-Auswahl. Die [Umsetzung](.scratch/interactive-landing/spec.md) hält die lokale Demo-Abgrenzung fest. Podcast-Cover haben einen dünnen Rand.
 
 Eine einfach zu betreibende Webseite, die Podcast-Folgen anhand erinnerter Stichwörter findet und Wortstatistiken zeigt. Ausgangspunkt ist DAS PODCAST UFO mit etwa zehn Besuchern pro Tag. Weitere Podcasts sollen später über dieselbe Pipeline und Datenformate hinzukommen können.
 
@@ -91,7 +91,7 @@ Die Hauptanwendung bleibt eine Erinnerung wie **„Eimer Münzen Kleingeld“**.
 
 ### Einstieg und Podcast-Kontext
 
-Die Startseite zeigt „Die Podcast Wort Suche“ und „Finde mit ein paar Schlüsselwörtern zu der gesuchten Folge“. Darunter stehen die verfügbaren Podcasts mit offiziellem Cover, Namen und Sprechern; zunächst nur DAS PODCAST UFO von Florentin Will und Stefan Titze. Ein Klick öffnet die Suchansicht mit kleiner Seitennavigation, kompaktem Podcast-Kontext und direkt anschließendem Suchfeld. `?podcast=podcast-ufo` funktioniert als statischer Root-/Projektpfad ohne Serverrouting; bestehende `?episode=…&t=…`-Links öffnen weiterhin direkt den Podcast.
+Die Startseite vermittelt die Idee interaktiv: „Die“, „Podcast“, „Wort“ und „Suche“ stehen als ausgewählte Chips über einem kurzen Erklärungstext mit zugeordneten Markierungen. Ein kleines Feld ergänzt weitere Wörter aus diesem Beispieltext, etwa „Folge“. Darunter stehen die verfügbaren Podcasts mit offiziellem Cover, Namen und Sprechern; zunächst nur DAS PODCAST UFO von Florentin Will und Stefan Titze. Ein Klick öffnet die Suchansicht mit kleiner Seitennavigation, kompaktem Podcast-Kontext und direkt anschließendem Suchfeld. `?podcast=podcast-ufo` funktioniert als statischer Root-/Projektpfad ohne Serverrouting; bestehende `?episode=…&t=…`-Links öffnen weiterhin direkt den Podcast.
 
 Die [Designrecherche](docs/research/minimal-podcast-design.md) begründet die neutrale Oberfläche, Typohierarchie, gezielte kategoriale Wortfarben und kompakte Fundstellen. Metadaten bleiben nachgeordnet aufklappbar.
 

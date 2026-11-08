@@ -27,17 +27,27 @@ button:disabled { cursor: default; opacity: .6; }
 .site-header { min-height: 92px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line); }
 .site-brand { display: inline-flex; flex-shrink: 0; align-items: center; padding: 8px 0; }
 .site-brand img { display: block; width: 204px; height: auto; }
-.landing .site-header { min-height: 124px; }
-.landing .site-brand img { width: 300px; }
-.brand-highlight { --word-color: #005d5d; }
+.landing .site-header { min-height: 0; border-bottom: 0; justify-content: center; padding-top: 16px; }
+.landing .site-brand { width: min(600px, 100%); padding: 0; }
+.landing .site-brand img { width: 100%; }
 .podcast-card img, .podcast-header img { border: 1px solid var(--line); }
 .back-link { color: var(--muted); font-size: .78rem; text-decoration: none; padding: 10px 0; }
 .back-link:hover { text-decoration: underline; }
 .back-link span { margin-right: 7px; }
 .landing { max-width: 1040px; }
-.landing-intro { padding: 42px 0 58px; }
-.landing-intro h1 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.25rem, 4.5vw, 3.3rem); font-weight: 400; margin-bottom: 20px; max-width: 750px; }
-.landing-intro p { color: var(--muted); font-size: 1.06rem; margin-bottom: 0; max-width: 640px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.landing-intro { padding: 16px 0 36px; text-align: center; }
+.demo-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; }
+.demo-selected { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.demo-selected .demo-chip { min-height: 44px; padding: 9px 13px; font-size: 1rem; border-radius: 8px; }
+.demo-field { position: relative; width: 190px; text-align: left; }
+.demo-field input { width: 100%; min-width: 0; min-height: 44px; padding: 9px 12px; border: 1px dashed #b5b5bf; border-radius: 8px; background: #fff; color: var(--ink); font-size: .84rem; }
+.demo-field input::placeholder { color: var(--muted); }
+.demo-field input:focus { border-style: solid; }
+.demo-field .demo-options { width: max(100%, 250px); left: 50%; transform: translateX(-50%); }
+.demo-explanation { max-width: 740px; margin: 26px auto 0; color: #4d4d56; font-size: 1.03rem; line-height: 1.9; text-wrap: pretty; }
+.demo-explanation mark { box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.demo-hint { color: var(--muted); font-size: .75rem; margin: 16px 0 0; }
 .section-heading { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); padding-bottom: 15px; }
 .section-heading span { color: var(--muted); font-size: .75rem; font-variant-numeric: tabular-nums; }
 .podcast-card { display: flex; align-items: center; gap: 28px; text-decoration: none; padding: 28px 0; border-bottom: 1px solid var(--line); transition: background-color .15s; }
@@ -141,12 +151,17 @@ th, td { padding: .65rem; text-align: left; border-bottom: 1px solid var(--line)
   main { padding: 0 20px 28px; }
   .site-header { min-height: 78px; }
   .site-brand img { width: 156px; }
-  .landing .site-header { min-height: 110px; }
-  .landing .site-brand img { width: 252px; }
+  .landing .site-header { min-height: 0; padding-top: 12px; }
+  .landing .site-brand { width: min(440px, 100%); }
   .back-link { font-size: .72rem; }
-  .landing-intro { padding: 32px 0 40px; }
-  .landing-intro h1 { font-size: 2.25rem; max-width: 340px; margin-bottom: 17px; }
-  .landing-intro p { font-size: .98rem; line-height: 1.65; }
+  .landing-intro { padding: 14px 0 30px; }
+  .demo-controls { gap: 12px; }
+  .demo-selected { display: grid; grid-template-columns: repeat(2, max-content); gap: 6px; }
+  .demo-selected li:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; }
+  .demo-selected .demo-chip { min-height: 40px; padding: 7px 10px; font-size: .9rem; gap: 6px; }
+  .demo-field { width: 210px; }
+  .demo-explanation { font-size: .95rem; line-height: 1.85; margin-top: 22px; }
+  .demo-hint { font-size: .71rem; margin-top: 14px; }
   .podcast-card { gap: 17px; padding: 23px 0; }
   .podcast-card img { width: 76px; height: 76px; }
   .podcast-card h3 { font-size: .9rem; }

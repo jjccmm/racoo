@@ -63,3 +63,7 @@ Der Nutzer bestätigt die Suchfunktion und beauftragt eine belegte Designrecherc
 ## Ergänzung vom 8. November 2026: Racoo
 
 Der Projektname ist Racoo. Das bereitgestellte Original-Logo ersetzt den kleinen Textnamen in der Kopfzeile beider Ansichten. Auf der Startseite folgt darunter „Die Podcast Wort Suche“ in Serifenschrift; „Wort“ verwendet die vorhandene Fundstellenmarkierung mit dunkler türkiser Akzentfarbe. Beide Größen des Podcast-Covers erhalten einen dünnen Rand. Die bestehende Suche bleibt die Grundlage.
+
+## Ergänzung vom 8. November 2026: interaktiver Einstieg
+
+Der nächste ausdrückliche Auftrag ersetzt den statischen Serifentitel: großes zentriertes Logo ohne Trennlinie, dann ausgewählte Wortchips „Die“, „Podcast“, „Wort“ und „Suche“. Die Farben markieren zugehörige Formen im kurzen Erklärungstext. Ein kleines Suchfeld erlaubt weitere Wörter aus diesem Text, etwa „Folge“ und „Folgen“. Die Startdemo arbeitet lokal mit expliziten Formen des festen Beispieltexts; die Podcast-Suche und ihre Stoppwortregeln bleiben getrennt. Die [Spezifikation](../../.scratch/interactive-landing/spec.md) dokumentiert Umfang und Nachweise.

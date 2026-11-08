@@ -1,0 +1,51 @@
+{
+  "base": "http://127.0.0.1:4173/",
+  "sizes": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "logo": {
+        "x": 420,
+        "y": 16,
+        "width": 600,
+        "height": 200
+      },
+      "podcastBottom": 675.125
+    },
+    "mobile": {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "logo": {
+        "x": 20,
+        "y": 12,
+        "width": 350,
+        "height": 116.65625
+      },
+      "podcastBottom": 766.53125
+    },
+    "narrow": {
+      "viewport": {
+        "width": 320,
+        "height": 800
+      },
+      "logo": {
+        "x": 20,
+        "y": 12,
+        "width": 280,
+        "height": 93.328125
+      },
+      "podcastBottom": 771.328125
+    }
+  },
+  "relatedForms": [
+    "Folge",
+    "Folgen"
+  ],
+  "mobileNoOverflow": true,
+  "browserErrors": [],
+  "realPodcastSearchStillWorks": true
+}

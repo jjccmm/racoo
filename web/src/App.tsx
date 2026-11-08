@@ -1,6 +1,7 @@
 import { Player } from './Player';
 import { Stats } from './Stats';
 import { PublicationState } from './PublicationState';
+import { LandingIntro } from './LandingIntro';
 
 const home = import.meta.env.BASE_URL;
 const podcastHref = `${home}?podcast=podcast-ufo`;
@@ -29,10 +30,7 @@ export function App() {
         </details>
       </footer>
     </> : <>
-      <section className="landing-intro" aria-labelledby="page-heading">
-        <h1 id="page-heading">Die Podcast <mark className="brand-highlight">Wort</mark> Suche</h1>
-        <p>Finde mit ein paar Schlüsselwörtern zu der gesuchten Folge</p>
-      </section>
+      <LandingIntro />
       <section className="podcast-directory" aria-labelledby="podcasts-heading">
         <div className="section-heading"><h2 id="podcasts-heading">Podcasts</h2><span>01</span></div>
         <a className="podcast-card" href={podcastHref}>
