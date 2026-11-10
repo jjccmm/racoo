@@ -1,13 +1,15 @@
 import { loadPublication } from './publication';
 import { loadPodcasts } from './podcasts';
+import { parseQuery } from './query';
 
 export type Segment = { id: string; text: string; start_seconds: number; end_seconds: number };
 export type Highlight = { start: number; end: number; terms: string[] };
 export type Passage = Segment & { terms: string[]; highlights: Highlight[] };
 export type Identity = { episodeId: string; publishedAt: string };
 type SearchIndex = { moduleUrl: string; episodes: Record<string, Identity> };
-export type SearchRequest = SearchIndex & { terms: string[]; offset: number; targetEpisodeIds?: string[] };
+export type SearchRequest = SearchIndex & { terms: string[]; offset: number; targetEpisodeIds?: string[]; mode?: 'counts' };
 export type SearchResult = Identity & {
+  segments: Segment[];
   searchId: string;
   title: string;
   matchedTerms: string[];
@@ -17,6 +19,10 @@ export type SearchResult = Identity & {
   audioUrl: string;
   durationSeconds: number;
   webpageUrl: string;
+};
+export type SearchOverview = {
+  terms: string[]; total: number;
+  episodes: (Identity & { counts: Record<string, number>; uniqueCount: number })[];
 };
 export type SearchPage = { results: SearchResult[]; total: number; terms: string[] };
 export type SearchSession = { initial: SearchPage; loadMore(): Promise<SearchPage> };
@@ -49,40 +55,57 @@ async function loadIndex(signal: AbortSignal, dataBase?: string): Promise<Search
   return { moduleUrl, episodes: mapping.episodes };
 }
 
-async function loadPage(request: SearchRequest, signal: AbortSignal): Promise<SearchPage> {
-  signal.throwIfAborted();
-  // A fresh worker isolates Pagefind's mutable cache and its fetch handling.
-  // A deliberate retry starts fresh after a failed chunk instead of reusing a
-  // cached failed load. The worker never changes the page's fetch function.
-  const worker = new Worker(new URL('./search-worker.ts', import.meta.url), { type: 'module' });
-  try {
-    return await new Promise<SearchPage>((resolve, reject) => {
-      const abort = () => { window.clearTimeout(timeout); reject(signal.reason); };
-      const timeout = window.setTimeout(() => {
-        signal.removeEventListener('abort', abort);
-        reject(new Error('Zeitlimit der Suche überschritten'));
-      }, 20000);
-      signal.addEventListener('abort', abort, { once: true });
-      worker.onmessage = (event: MessageEvent<{ page?: SearchPage; error?: string }>) => {
-        window.clearTimeout(timeout);
-        signal.removeEventListener('abort', abort);
-        if (event.data.error) reject(new Error(event.data.error));
-        else resolve(event.data.page!);
-      };
-      worker.onerror = () => {
-        window.clearTimeout(timeout);
-        signal.removeEventListener('abort', abort);
-        reject(new Error('Die Suchausführung konnte nicht geladen werden'));
-      };
-      worker.postMessage(request);
-    });
-  } finally {
-    worker.terminate();
+type Pending = { resolve(value: unknown): void; reject(error: Error): void; cleanup(): void };
+class SearchWorker {
+  worker = new Worker(new URL('./search-worker.ts', import.meta.url), { type: 'module' });
+  pending = new Map<number, Pending>();
+  sequence = 0;
+  constructor(readonly key: string) {
+    this.worker.onmessage = (event: MessageEvent<{ requestId: number; value?: unknown; error?: string }>) => {
+      const request = this.pending.get(event.data.requestId);
+      if (!request) return;
+      if (event.data.error) { this.dispose(new Error(event.data.error)); return; }
+      this.pending.delete(event.data.requestId); request.cleanup(); request.resolve(event.data.value);
+    };
+    this.worker.onerror = () => this.dispose(new Error('Die Suchausführung konnte nicht geladen werden'));
   }
+  dispose(error = new Error('Die Suche wurde beendet')) {
+    this.worker.terminate();
+    for (const request of this.pending.values()) { request.cleanup(); request.reject(error); }
+    this.pending.clear();
+    if (activeWorker === this) activeWorker = undefined;
+  }
+  call<T>(request: SearchRequest, signal: AbortSignal): Promise<T> {
+    signal.throwIfAborted();
+    return new Promise<T>((resolve, reject) => {
+      const id = ++this.sequence;
+      const abort = () => {
+        this.pending.get(id)?.cleanup(); this.pending.delete(id); reject(signal.reason);
+        if (!this.pending.size) this.dispose();
+      };
+      const timeout = window.setTimeout(() => this.dispose(new Error('Zeitlimit der Suche überschritten')), 20000);
+      this.pending.set(id, { resolve: value => resolve(value as T), reject,
+        cleanup: () => { clearTimeout(timeout); signal.removeEventListener('abort', abort); } });
+      signal.addEventListener('abort', abort, { once: true });
+      this.worker.postMessage({ ...request, requestId: id });
+    });
+  }
+}
+let activeWorker: SearchWorker | undefined;
+async function loadPage<T = SearchPage>(request: SearchRequest, signal: AbortSignal): Promise<T> {
+  signal.throwIfAborted();
+  if (activeWorker?.key !== request.moduleUrl) { activeWorker?.dispose(); activeWorker = new SearchWorker(request.moduleUrl); }
+  return activeWorker!.call<T>(request, signal);
+}
+
+/** Complete per-term counts before any result fragment or transcript is loaded. */
+export async function countEpisodes(terms: string[], signal: AbortSignal, dataBase: string): Promise<SearchOverview> {
+  const index = await loadIndex(signal, dataBase);
+  return loadPage<SearchOverview>({ ...index, terms, offset: 0, mode: 'counts' }, signal);
 }
 
 export async function searchEpisodes(query: string, signal: AbortSignal, options: { targetEpisodeIds?: string[]; dataBase?: string } = {}): Promise<SearchSession> {
-  const terms = [...new Set(query.normalize('NFC').toLocaleLowerCase('de-DE').trim().split(/\s+/).filter(Boolean))].sort();
+  const terms = parseQuery(query).terms.sort();
   const index = await loadIndex(AbortSignal.any([signal, AbortSignal.timeout(20000)]), options.dataBase);
   const initial = await loadPage({ ...index, ...options, terms, offset: 0 }, signal);
   let offset = initial.results.length;

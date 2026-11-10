@@ -1,4 +1,4 @@
-import type { Identity, SearchPage, SearchRequest, SearchResult, Segment } from './search';
+import type { Identity, SearchPage, SearchRequest, SearchResult, SearchOverview, Segment } from './search';
 
 type Fragment = {
   content: string; raw_content?: string; word_count: number;
@@ -12,6 +12,8 @@ type Episode = {
 };
 type RawResult = { id: string; words: number[]; data(): Promise<Fragment> };
 type Pagefind = { init(): Promise<void>; search(term: string): Promise<{ results: RawResult[] }> };
+let engine: Pagefind | undefined;
+const queries = new Map<string, { result: RawResult; words: number[] }[]>();
 
 // Pagefind 1.5.2 catches some index-download errors and otherwise returns an
 // empty match list. Capture failures inside this isolated worker so a failed
@@ -29,26 +31,35 @@ globalThis.fetch = async (...arguments_: Parameters<typeof fetch>) => {
   }
 };
 
-async function search({ moduleUrl, episodes, terms, offset, targetEpisodeIds }: SearchRequest): Promise<SearchPage> {
+async function search({ moduleUrl, episodes, terms, offset, targetEpisodeIds, mode }: SearchRequest): Promise<SearchPage | SearchOverview> {
+  fetchFailure = undefined;
   if (targetEpisodeIds?.length === 0) return { results: [], total: 0, terms };
   const allowed = targetEpisodeIds === undefined ? undefined : new Set(targetEpisodeIds);
-  const module = await import(/* @vite-ignore */ moduleUrl);
-  const pagefind: Pagefind = module.createInstance({ language: 'de', basePath: new URL('.', moduleUrl).href });
-  await pagefind.init();
+  if (!engine) {
+    const module = await import(/* @vite-ignore */ moduleUrl);
+    engine = module.createInstance({ language: 'de', basePath: new URL('.', moduleUrl).href });
+    await engine!.init();
+  }
   type Candidate = {
     result: RawResult; identity: Identity; positionsByTerm: Record<string, number[]>; rankSum: number;
   };
   const union = new Map<string, Candidate>();
   for (const term of terms) {
-    const { results } = await pagefind.search(term);
-    if (fetchFailure) throw fetchFailure;
-    results.forEach((result, rank) => {
+    let results = queries.get(term);
+    if (!results) {
+      const raw = await engine!.search(term);
+      if (fetchFailure) throw fetchFailure;
+      results = raw.results.map((result) => ({ result, words: [...new Set(result.words)] }));
+      if (queries.size >= 30) queries.delete(queries.keys().next().value!);
+      queries.set(term, results);
+    }
+    results.forEach(({ result, words }, rank) => {
       const identity = episodes[result.id];
       if (!identity) throw new Error('Folge fehlt im Suchstand');
       if (allowed && !allowed.has(identity.episodeId)) return;
       const candidate = union.get(result.id) ?? { result, identity, positionsByTerm: {}, rankSum: 0 };
       // Snapshot raw per-term positions before any detail object is loaded.
-      candidate.positionsByTerm[term] = [...result.words];
+      candidate.positionsByTerm[term] = [...words];
       candidate.rankSum += rank;
       union.set(result.id, candidate);
     });
@@ -59,6 +70,12 @@ async function search({ moduleUrl, episodes, terms, offset, targetEpisodeIds }: 
     Date.parse(b.identity.publishedAt) - Date.parse(a.identity.publishedAt) ||
     (a.identity.episodeId < b.identity.episodeId ? -1 : a.identity.episodeId > b.identity.episodeId ? 1 : 0),
   );
+  if (mode === 'counts') return {
+    terms, total: candidates.length, episodes: candidates.map(({ identity, positionsByTerm }) => ({
+      ...identity, counts: Object.fromEntries(terms.map((term) => [term, positionsByTerm[term]?.length ?? 0])),
+      uniqueCount: new Set(Object.values(positionsByTerm).flat()).size,
+    })),
+  };
   // Coverage and all global tie-breaks are settled before the first fragment.
   const results: SearchResult[] = await Promise.all(candidates.slice(offset, offset + 10).map(async ({ result, identity, positionsByTerm, rankSum }) => {
     const [fragment, episode]: [Fragment, Episode] = await Promise.all([
@@ -110,6 +127,7 @@ async function search({ moduleUrl, episodes, terms, offset, targetEpisodeIds }: 
     });
     return {
       ...identity,
+      segments: episode.segments,
       searchId: result.id,
       title: episode.title,
       matchedTerms: Object.keys(positionsByTerm),
@@ -127,10 +145,15 @@ async function search({ moduleUrl, episodes, terms, offset, targetEpisodeIds }: 
   return { results, total: candidates.length, terms };
 }
 
-globalThis.onmessage = async (event: MessageEvent<SearchRequest>) => {
-  try {
-    globalThis.postMessage({ page: await search(event.data) });
-  } catch (error) {
-    globalThis.postMessage({ error: error instanceof Error ? error.message : String(error) });
-  }
+// Serialize native calls: query-specific fragment caches must not race.
+let queue = Promise.resolve();
+globalThis.onmessage = (event: MessageEvent<SearchRequest & { requestId: number }>) => {
+  const request = event.data;
+  queue = queue.then(async () => {
+    try {
+      globalThis.postMessage({ requestId: request.requestId, value: await search(request) });
+    } catch (error) {
+      globalThis.postMessage({ requestId: request.requestId, error: error instanceof Error ? error.message : String(error) });
+    }
+  });
 };

@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+﻿import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
@@ -15,8 +15,9 @@ export default defineConfig({
         manifest: true,
         // The independent search/session interface supports lexical coverage probes
         // and tools without adding another field to the lemma explorer.
-        rolldownOptions: { input: { app: path.join(root, 'index.html'), search: path.join(root, 'src/search.ts') } },
+        rolldownOptions: { preserveEntrySignatures: 'strict', input: { app: path.join(root, 'index.html'), search: path.join(root, 'src/search.ts') } },
       } };
     },
   }],
 });
+
