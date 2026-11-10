@@ -1,6 +1,6 @@
 # Pagefind-Freitextsuche und helle vertikale Minimap
 
-Status: claimed
+Status: resolved
 Blocked by: none
 
 Am 10. November 2026 vom Nutzer zur Umsetzung beauftragt. Grundlage ist der [Plan](../../docs/planning/pagefind-and-minimap.md) samt [API-Nachweis](../../docs/research/pagefind-counting-2026-11-10.md). Integration auf `feature/pagefind-minimap`; Tests lokal, kein automatisches Merge/Deployment.
@@ -24,3 +24,5 @@ Am 10. November 2026 vom Nutzer zur Umsetzung beauftragt. Grundlage ist der [Pla
 ## Comments
 
 - 2026-11-10: Nutzer hat Plan und Umsetzung bestätigt. Die dokumentierte Präfix-/Grundformabweichung gehört zur neuen Suchsemantik. Keine Neutranskription erforderlich.
+
+- Umsetzung und Integration: `309441f`. Alle vier Tickets erfüllt. [Abnahme und Messgrenzen](../../docs/pilot/pagefind-minimap.md); Originaltranskripte unverändert, keine neue ASR und kein Main-Merge.

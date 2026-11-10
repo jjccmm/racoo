@@ -1,8 +1,8 @@
 # Aktuell
 
-- [ ] [Pagefind-Freitextsuche und helle Minimap](.scratch/pagefind-minimap/spec.md): [vier Tickets](.scratch/pagefind-minimap/ticket-index.md), Integration auf `feature/pagefind-minimap`.
+- [x] [Pagefind-Freitextsuche und helle Minimap](.scratch/pagefind-minimap/spec.md): [vier Tickets](.scratch/pagefind-minimap/ticket-index.md), Integration auf `feature/pagefind-minimap`; [Abnahme](docs/pilot/pagefind-minimap.md).
 
-# Nächste Arbeiten
+## Frühere Arbeiten
 
 - [x] [Echter Update-Lauf mit Limit 1](docs/pilot/update-limit-one.md): UFO002 lokal mit FP32/GPU verarbeitet, genau eine neue Analyse, bisherige fünf Datensätze erhalten und Sechserbuild/Suche geprüft.
 
