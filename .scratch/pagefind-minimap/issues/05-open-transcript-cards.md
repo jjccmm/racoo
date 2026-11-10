@@ -1,6 +1,6 @@
 # Direkt offene Transkriptkarten und kompakte Diagramme
 
-Status: claimed
+Status: resolved
 Blocked by: none
 
 Neue Nutzeranforderungen nach Abnahme der ersten Minimap-Version.
@@ -20,3 +20,5 @@ Neue Nutzeranforderungen nach Abnahme der ersten Minimap-Version.
 - Der Nutzerwunsch ersetzt die frühere Beschränkung auf einen optional geöffneten Leser. Originaldaten, globale Zählungen und sichtbarkeitsabhängige Detailabrufe bleiben erhalten.
 
 - Lokale Abnahme: 74 Python- und 120 Chromium-Prüfungen bestanden; Root-/Projektpfad und konfigurierte Podcasts. Echter 106er-Build, zehn Referenzsuchen, erste Fundstelle nach Resize und Desktop-/Mobilansicht geprüft. [Nachweise und Messgrenzen](../../../docs/pilot/open-transcript-cards.md).
+
+- 2026-11-10: Verfeinerung in `406aa04` auf `feature/pagefind-minimap` integriert. Alle fünf Tickets erfüllt; [Abnahme der offenen Transkriptkarten](../../../docs/pilot/open-transcript-cards.md) mit 74 Python-/120 Browserprüfungen und realem 106er-Bestand.

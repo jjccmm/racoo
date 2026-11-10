@@ -5,4 +5,4 @@
 - [03: Freitext, Ergebnisse und heller Minimap-Leser](issues/03-free-text-minimap.md) — resolved; Blocked by: 01, 02 (erfüllt)
 - [04: Lokale Integration und Dokumentation](issues/04-validation-cleanup.md) — resolved; Blocked by: 01, 02, 03 (erfüllt)
 
-- [05: Direkt offene Transkriptkarten und kompakte Diagramme](issues/05-open-transcript-cards.md) — claimed; Blocked by: none
+- [05: Direkt offene Transkriptkarten und kompakte Diagramme](issues/05-open-transcript-cards.md) — resolved; Blocked by: none
