@@ -10,7 +10,7 @@ async function submit(page, query) {
   await page.getByRole('searchbox', { name: 'Wörter suchen' }).fill(query);
   const start = performance.now();
   await page.getByRole('button', { name: 'Suchen', exact: true }).click();
-  await expect(page.getByRole('article').first().locator('.passage').first()).toBeVisible({ timeout: 30000 });
+  await expect(page.getByRole('article').first().locator('.transcript-reader').first()).toBeVisible({ timeout: 30000 });
   return Math.round(performance.now() - start);
 }
 async function api(page, query, target) {
@@ -50,6 +50,10 @@ async function main() {
       expect(original.passages.every(passage => passage.highlights.every(hit => hit.end > hit.start && hit.end <= passage.text.length))).toBe(true);
       searches.push({ query: item.query, expectedEpisodeId: item.id, expectedRank, total: ranked[expectedRank - 1]?.total, elapsedMs });
     }
+    await page.getByRole('button', { name: 'Alle', exact: true }).click();
+    await expect(page.getByRole('region', { name: 'Suchwortvergleich' }).getByRole('img')).toHaveCount(106);
+    await expect(page.locator('.recharts-xAxis text')).toHaveCount(0);
+    expect(await page.locator('.frequency-chart-scroll').evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
     const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, hasTouch: true });
     const phone = await mobile.newPage(); phone.on('pageerror', error => errors.push(error.message));
     const cdp = await mobile.newCDPSession(phone);
@@ -74,7 +78,7 @@ async function main() {
     await cdp.send('Emulation.setCPUThrottlingRate', { rate: 1 });
     await submit(phone, 'urlaub kratzeis eis');
     const card = phone.getByRole('article').filter({ has: phone.getByRole('heading', { name: 'UFO070 Kratzeis', exact: true }) });
-    await card.scrollIntoViewIfNeeded(); await card.getByRole('button', { name: /Transkript öffnen/ }).click();
+    await card.scrollIntoViewIfNeeded();
     const reader = card.getByRole('region', { name: /Transkript:/ }); await reader.scrollIntoViewIfNeeded();
     const map = reader.getByRole('scrollbar'), text = reader.getByRole('region', { name: 'Vollständiger Transkripttext' });
     await expect(reader.locator('.reader-segment')).toHaveCount(11);

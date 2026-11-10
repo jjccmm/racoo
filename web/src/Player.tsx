@@ -4,7 +4,7 @@ import { loadEpisode, type Passage } from './search';
 import { PlaybackContext, formatPlaybackTime, type PlayerEpisode } from './playback';
 type EpisodeRecord = Awaited<ReturnType<typeof loadEpisode>>;
 
-export function Player({ children, dataBase }: { children: ReactNode; dataBase: string }) {
+export function Player({ children, dataBase, podcastId }: { children: ReactNode; dataBase: string; podcastId: string }) {
   const [player, setPlayer] = useState<PlayerEpisode | null>(null);
   const [targetTime, setTargetTime] = useState(0);
   const [playRequested, setPlayRequested] = useState(false);
@@ -15,6 +15,8 @@ export function Player({ children, dataBase }: { children: ReactNode; dataBase: 
   const active = useRef<AbortController | null>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
   const appliedTimeline = useRef('');
+  const generation = useRef(0);
+  const trigger = useRef<HTMLElement | null>(null);
   useEffect(() => () => active.current?.abort(), []);
 
   useEffect(() => {
@@ -39,11 +41,13 @@ export function Player({ children, dataBase }: { children: ReactNode; dataBase: 
     if (!player || !media) return;
     const key = `${player.episodeId}:${targetTime}`;
     if (appliedTimeline.current === key) return;
+    const currentGeneration = generation.current;
     const syncTimeline = () => {
+      if (currentGeneration !== generation.current || audio.current !== media) return;
       media.currentTime = clamp(targetTime, Number.isFinite(media.duration) ? media.duration : player.durationSeconds);
       appliedTimeline.current = key;
       if (playRequested) {
-        void media.play().catch(() => setMediaError(true));
+        void media.play().catch(() => { if (generation.current === currentGeneration && audio.current === media) setMediaError(true); });
         setPlayRequested(false);
       }
     };
@@ -55,19 +59,35 @@ export function Player({ children, dataBase }: { children: ReactNode; dataBase: 
     return () => media.removeEventListener('loadedmetadata', syncTimeline);
   }, [player, targetTime, playRequested]);
 
-  function choose(episode: PlayerEpisode, passage: Passage) {
+  function choose(episode: PlayerEpisode, position: Passage | number) {
+    const start = clamp(typeof position === 'number' ? position : position.start_seconds, episode.durationSeconds);
+    generation.current++;
+    trigger.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     active.current?.abort();
     active.current = null;
     setDirectState('idle');
     const url = new URL(window.location.href);
     url.searchParams.set('episode', episode.episodeId);
-    url.searchParams.set('t', String(Math.round(passage.start_seconds)));
+    url.searchParams.set('t', String(Math.round(start)));
     window.history.replaceState(null, '', url);
     setMediaError(false);
-    setTargetTime(passage.start_seconds);
+    setTargetTime(start);
     appliedTimeline.current = '';
     setPlayer(episode);
     setPlayRequested(true);
+  }
+
+  function close() {
+    generation.current++;
+    active.current?.abort(); active.current = null;
+    audio.current?.pause();
+    if (audio.current) { audio.current.removeAttribute('src'); audio.current.load(); }
+    setPlayer(null); setPlayRequested(false); setMediaError(false); setDirectState('idle');
+    appliedTimeline.current = '';
+    const url = new URL(location.href);
+    url.searchParams.set('podcast', podcastId); url.searchParams.delete('episode'); url.searchParams.delete('t');
+    history.replaceState(null, '', url);
+    requestAnimationFrame(() => { if (trigger.current?.isConnected) trigger.current.focus({ preventScroll: true }); });
   }
 
   function nudge(seconds: number) {
@@ -83,8 +103,8 @@ export function Player({ children, dataBase }: { children: ReactNode; dataBase: 
     {directEpisode === 'unknown' && <p role="status">Diese Episoden-ID ist im aktuellen Suchstand unbekannt.</p>}
     {directEpisode === 'error' && <p role="alert">Die geteilte Folge konnte nicht geladen werden. <button onClick={() => window.location.reload()}>Geteilte Folge erneut laden</button></p>}
     {player && <section className="player" aria-label="Gemeinsamer Audioplayer">
-      <h2>Wiedergabe: {player.title}</h2>
-      <p>{formatPlaybackTime(targetTime)} · Sprung zum Segmentanfang. Werbung kann die Zeit in der Online-Audiodatei verschieben.</p>
+      <div className="player-heading"><h2>Wiedergabe: {player.title}</h2><button className="player-close" type="button" onClick={close} aria-label="Player schließen">×</button></div>
+      <p>{formatPlaybackTime(targetTime)} · {targetTime === 0 ? 'Wiedergabe ab Anfang.' : 'Sprung zum Beginn des Textabschnitts.'} Werbung kann die Zeit in der Online-Audiodatei verschieben.</p>
       <audio ref={audio} src={player.audioUrl} controls preload="metadata" onError={() => setMediaError(true)} />
       <div className="player-controls">
         <button type="button" onClick={() => nudge(-10)}>10 Sekunden zurück</button>

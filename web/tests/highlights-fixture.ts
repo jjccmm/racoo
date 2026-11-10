@@ -18,7 +18,7 @@ export async function controlledText(page: Page, extraPassages = false) {
   ];
   if (extraPassages) segments.push(
     { id: 'third', text: `Münze ${'Ein weiterer Gedanke. '.repeat(30)}`, start_seconds: 71, end_seconds: 79 },
-    { id: 'fourth', text: 'Noch eine Münze im Text.', start_seconds: 80, end_seconds: 89 },
+    { id: 'fourth', text: 'Noch eine Münze im Text. Spätfund.', start_seconds: 80, end_seconds: 89 },
   );
   const created = await pagefind.createIndex();
   if (!created.index || created.errors.length) throw new Error(created.errors.join('\n'));

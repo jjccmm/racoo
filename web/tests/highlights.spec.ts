@@ -36,11 +36,11 @@ test('a source/index mismatch keeps exact counts and offers a passage retry with
   await expect(page.locator('mark')).toHaveText(['Münzen']);
 });
 
-test('compact excerpts open the complete chronological original transcript', async ({ page }) => {
+test('complete original transcripts are directly open without duplicate excerpts', async ({ page }) => {
   await openExplorer(page); const segments = await controlledText(page, true); await choose(page, 'münze');
   const card = page.getByRole('article');
-  await expect(card.locator('.passage')).toHaveCount(2);
-  await card.getByRole('button', { name: /Transkript öffnen/ }).click();
+  await expect(card.locator('.passage')).toHaveCount(0);
+  await expect(card.getByRole('button', { name: /Transkript öffnen/ })).toHaveCount(0);
   const reader = card.getByRole('region', { name: /Transkript:/ });
   await expect(reader.locator('.reader-segment')).toHaveCount(4);
   expect((await reader.locator('.reader-segment').nth(2).locator('p').allTextContents()).join('')).toBe(segments[2].text);

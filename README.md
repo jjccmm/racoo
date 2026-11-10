@@ -10,11 +10,11 @@ npm.cmd --prefix web run build
 npm.cmd --prefix web run preview -- --port 4174 --strictPort
 ```
 
-Die lokale Seite ist unter <http://127.0.0.1:4174/> erreichbar. Auf der Startseite die Freitextdemo ausprobieren und einen Podcast auswählen. In der Podcastsuche bis zu fünf Stichwörter eingeben, Enter drücken und die Suchwort-Treffer je Folge vergleichen. „Top 10“ zeigt die höchsten Summen; „Alle“ enthält auch Nullfolgen in chronologischer Reihenfolge. Eine Folge öffnet den vollständigen Transkriptleser mit heller vertikaler Minimap und Navigation zwischen markierten Stellen.
+Die lokale Seite ist unter <http://127.0.0.1:4174/> erreichbar. Auf der Startseite die Freitextdemo ausprobieren und einen Podcast auswählen. In der Podcastsuche bis zu fünf Stichwörter eingeben, Enter drücken und die Suchwort-Treffer je Folge vergleichen. „Top 10“ zeigt die höchsten Summen; „Alle“ enthält auch Nullfolgen in chronologischer Reihenfolge. Jede Trefferfolge zeigt direkt eine vollständige Transkriptkarte mit allen Angaben und heller vertikaler Minimap. Der Text springt zur ersten passenden Fundstelle. Diagramme passen ohne horizontales Scrollen in die verfügbare Breite.
 
 Pagefind berücksichtigt Wortformen und Wortanfänge. Die Zahlen sind Suchtreffer, keine exakten Grundformzählungen. Überschneidende Suchbegriffe können dieselbe Textposition zu mehreren Balkenserien beitragen lassen. Die Navigation zählt dagegen eindeutige Stellen. Stoppwörter und die [gepflegte Zusatzliste](config/search-rules.json) werden in der Anfrage ignoriert. spaCy, Sprachmodellinstallation, Vokabular und Zählshards sind nicht erforderlich.
 
-Audio wird nach der lokalen Transkription gelöscht. Sprungknöpfe verwenden grobe Segmentanfänge; Werbung kann die aktuelle Online-Audiozeit verschieben. Maschinelle Transkripte können Fehler enthalten.
+Audio wird nach der lokalen Transkription gelöscht. Zeitknöpfe starten am Beginn des jeweiligen Textabschnitts, der Headerknopf bei 0:00; Werbung kann die aktuelle Online-Audiozeit verschieben. Der gemeinsame Player lässt sich schließen. Maschinelle Transkripte können Fehler enthalten.
 
 - [Betrieb und weitere Podcasts](docs/updates.md)
 - [Lokale FP32-/GPU-Einrichtung](docs/asr.md)

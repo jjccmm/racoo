@@ -135,7 +135,7 @@ for (const [description, pattern, countError] of [
 
 test('repeated successful searches reuse index bindings and original episode records', async ({ page }) => {
   await openExplorer(page); await choose(page, 'münze');
-  await expect(page.getByRole('article').locator('.passage')).toBeVisible();
+  await expect(page.getByRole('article').locator('.transcript-reader')).toBeVisible();
   const requests: string[] = []; page.on('request', request => requests.push(request.url()));
   await page.getByRole('searchbox').fill('kleingeld'); await page.getByRole('button', { name: 'Suchen', exact: true }).click();
   await expect(page.getByRole('article')).toContainText('Nach einer Pause');

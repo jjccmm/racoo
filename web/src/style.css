@@ -56,7 +56,6 @@ button:disabled { cursor: default; opacity: .6; }
 .search-input { position: relative; }
 .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #526d65; pointer-events: none; }
 input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
-.episode-counts li::before { content: ""; width: 7px; height: 7px; flex-shrink: 0; background: var(--word-color); border-radius: 2px; }
 .selection-note { margin: 10px 0 0; font-size: .73rem; }
 .chart-panel { margin-top: 27px; padding: 24px 22px 8px; border-radius: 14px; background: #fff; }
 .chart-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
@@ -64,14 +63,13 @@ input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
 .view-toggle { display: flex; flex-shrink: 0; padding: 3px; gap: 2px; background: #f3f3f5; border: 1px solid #e6e6eb; border-radius: 6px; }
 .view-toggle button { background: transparent; border: 1px solid transparent; color: var(--muted); padding: 6px 14px; font-size: .78rem; }
 .view-toggle [aria-pressed="true"] { background: white; border-color: #dcdce2; color: var(--ink); }
-.chart-scroll-note { display: none; }
 .chart-empty { min-height: 170px; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--muted); font-size: .85rem; }
 .chart-empty p { margin: 0; }
-.chart-legend, .episode-counts { display: flex; flex-wrap: wrap; list-style: none; padding: 0; }
+.chart-legend { display: flex; flex-wrap: wrap; list-style: none; padding: 0; }
 .chart-legend { gap: 12px 20px; margin: 24px 0 0 38px; font-size: .8rem; }
 .chart-legend li { display: flex; align-items: center; gap: 7px; }
 .chart-legend i { width: 8px; height: 8px; background: var(--word-color); border-radius: 2px; }
-.frequency-chart-scroll, .counts-scroll { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
+.counts-scroll { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
 .frequency-chart { height: 370px; }
 summary { cursor: pointer; padding: 11px 0; color: var(--muted); font-weight: 400; font-size: .78rem; }
 summary:hover { color: var(--ink); }
@@ -79,26 +77,8 @@ summary:hover { color: var(--ink); }
 .results-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding-bottom: 8px; }
 .results-heading > span { color: var(--muted); font-size: .73rem; }
 .episode-card { padding: 24px 0; }
-.episode-heading { display: flex; align-items: baseline; gap: 15px; }
 .rank { color: #70707a; font-variant-numeric: tabular-nums; font-size: .73rem; min-width: 19px; }
-.episode-heading > div { flex: 1; min-width: 0; }
-.episode-heading h3 { font-size: .95rem; }
-.episode-heading time { color: var(--muted); font-size: .72rem; }
-.episode-heading > strong { font-size: .79rem; font-weight: 500; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.episode-counts { gap: 8px 18px; margin: 11px 0 15px 34px; font-size: .78rem; }
-.episode-counts li { display: flex; align-items: center; gap: 6px; }
-.episode-counts strong { font-weight: 600; margin-left: 2px; font-variant-numeric: tabular-nums; }
-.passages { margin-left: 34px; }
-.passage { display: grid; grid-template-columns: 74px minmax(0, 1fr); column-gap: 14px; align-items: start; padding: 8px 0; }
-.passage > p { grid-column: 2; margin: 2px 0 0; overflow-wrap: anywhere; font-size: .9375rem; line-height: 1.65; max-width: 75ch; }
-.passage > details { grid-column: 2; min-width: 0; }
-.passage details p { font-size: .9375rem; line-height: 1.7; overflow-wrap: anywhere; max-width: 75ch; }
-.passage details summary { padding: 5px 0; font-size: .72rem; }
 mark { background: color-mix(in srgb, var(--word-color) 13%, white); color: #202024; border-bottom: 1px solid var(--word-color); border-radius: 1px; padding: 0 1px; font-weight: 600; }
-.occurrences button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; width: 74px; padding: 6px; border-color: #e1e1e7; background: #fafafa; font-size: .73rem; font-variant-numeric: tabular-nums; }
-.occurrences button:hover { background: #eeeef2; }
-.episode-footer { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 20px; margin: 10px 0 0 34px; color: var(--muted); font-size: .69rem; }
-.episode-link { white-space: nowrap; }
 .player { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); width: min(1128px, calc(100% - 32px)); z-index: 3; padding: 13px 18px; border: 1px solid #d4d4db; border-radius: 8px; background: #fff; box-shadow: 0 4px 20px #00000012; }
 main:has(.player) { padding-bottom: 270px; }
 .player h2 { font-size: .9rem; margin: 0 0 5px; }
@@ -142,18 +122,8 @@ th, td { padding: .65rem; text-align: left; border-bottom: 1px solid var(--line)
   .chart-heading h2 { font-size: 1rem; }
   .chart-heading .muted { font-size: .72rem; }
   .view-toggle button { padding: 6px 12px; }
-  .chart-scroll-note { display: block; margin: 14px 0 0; font-size: .7rem; }
   .chart-legend { margin-top: 18px; }
   .results-heading { align-items: flex-start; flex-direction: column; gap: 5px; }
-  .episode-heading { flex-wrap: wrap; gap: 5px 10px; }
-  .episode-heading > div { min-width: 72%; }
-  .episode-heading > strong { margin-left: 29px; }
-  .episode-counts, .passages, .episode-footer { margin-left: 0; }
-  .episode-counts { margin-top: 12px; }
-  .passage { grid-template-columns: 65px minmax(0, 1fr); column-gap: 10px; }
-  .occurrences button { width: 65px; }
-  .passage > p, .passage details p { font-size: .9375rem; }
-  .episode-footer { font-size: .68rem; }
   .player { bottom: 0; width: 100%; padding: 12px; border-radius: 0; }
   main:has(.player) { padding-bottom: 300px; }
 }
@@ -173,14 +143,8 @@ th, td { padding: .65rem; text-align: left; border-bottom: 1px solid var(--line)
 .intro-search input { font-size: clamp(1rem, 3.3vw, 1.55rem); font-family: Georgia, serif; padding-block: 15px; }
 .demo-caption { color: var(--muted); font-size: .73rem; margin: 10px 0 0; }
 .demo-explanation { margin-top: 22px; }
-.episode-counts .coverage { color: var(--muted); }
-.episode-counts .coverage::before { display: none; }
-.episode-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin: 14px 0 0 34px; font-size: .76rem; }
-.episode-actions button { border-radius: 999px; background: #e9eeeb; border-color: transparent; font-size: .76rem; }
-.episode-actions button:hover { background: #dde6df; }
 .transcript-reader { min-width: 0; margin: 20px 0 0; background: #fff; border-radius: 12px; overflow: clip; box-shadow: 0 3px 22px #173a2510; }
 .reader-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; padding: 11px 16px; }
-.reader-toolbar h4 { margin: 0; font-size: .88rem; font-weight: 650; }
 .match-navigation { display: flex; align-items: center; gap: 6px; }
 .match-navigation span { color: var(--muted); font-size: .72rem; min-width: 85px; text-align: right; margin-right: 5px; font-variant-numeric: tabular-nums; }
 .match-navigation button { min-width: 36px; min-height: 36px; padding: 4px 8px; border-color: #e1e7e3; background: #f6f8f6; }
@@ -196,7 +160,6 @@ th, td { padding: .65rem; text-align: left; border-bottom: 1px solid var(--line)
 .reader-segment mark[data-current="true"] { outline: 2px solid #304c3d; outline-offset: 2px; }
 .reader-caption { margin: 0; padding: 11px 16px 13px; color: var(--muted); font-size: .69rem; }
 .transcript-minimap { min-width: 0; background: #edf1ee; display: flex; flex-direction: column; padding: 8px 6px; gap: 7px; }
-.map-label, .map-end { color: #52685b; font-size: .61rem; text-align: center; }
 .map-surface { position: relative; flex: 1; min-height: 0; border-radius: 4px; background: #e8eeea; cursor: ns-resize; touch-action: none; user-select: none; }
 .map-surface canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .map-thumb { position: absolute; left: 0; width: 100%; border: 1px solid #759384; border-radius: 3px; background: #769c891c; pointer-events: none; }
@@ -205,17 +168,14 @@ th, td { padding: .65rem; text-align: left; border-bottom: 1px solid var(--line)
   .query-form input { font-size: .88rem; padding-right: 9px; min-height: 48px; }
   .search-submit { min-height: 46px; padding-inline: 15px; font-size: .83rem; }
   .intro-search input { padding-right: 13px; }
-  .episode-actions { margin-left: 0; }
   .reader-layout { grid-template-columns: minmax(0, 1fr) 48px; }
   .reader-toolbar { padding: 10px; }
-  .reader-toolbar h4 { font-size: .81rem; }
   .match-navigation { gap: 3px; }
   .match-navigation span { min-width: auto; font-size: .66rem; }
   .match-navigation button { min-width: 34px; }
   .transcript { padding: 13px 12px 28px; }
   .reader-segment p { font-size: .9rem; line-height: 1.75; }
   .transcript-minimap { padding-inline: 3px; }
-  .map-label { font-size: .48rem; }
   .reader-caption { font-size: .65rem; padding-inline: 10px; }
 }
 
@@ -223,3 +183,34 @@ th, td { padding: .65rem; text-align: left; border-bottom: 1px solid var(--line)
 .reader-legend li { display: inline-flex; align-items: center; gap: 6px; }
 .reader-legend i { width: 7px; height: 7px; border-radius: 2px; background: var(--word-color); }
 .reader-legend span { font-variant-numeric: tabular-nums; color: var(--muted); }
+
+/* Complete episode cards, directly open, with one responsive chart width. */
+.frequency-chart-scroll { width: 100%; min-width: 0; overflow: hidden; }
+.frequency-chart { width: 100%; min-width: 0; }
+.transcript-card { padding: 0; margin: 18px 0; background: #fff; border-radius: 12px; box-shadow: 0 3px 22px #173a2510; overflow: clip; }
+.transcript-card-header { padding: 20px 20px 4px; }
+.transcript-card-heading { display: flex; align-items: flex-start; gap: 12px; }
+.transcript-card-heading > div { flex: 1; min-width: 0; }
+.transcript-card-heading h3 { font-size: 1rem; }
+.transcript-card-heading .rank { margin-top: 3px; }
+.episode-meta { color: var(--muted); font-size: .73rem; margin: 5px 0 0; }
+.episode-meta a { display: inline-block; margin-left: 14px; }
+.episode-start { min-height: 40px; border-radius: 999px; padding: 7px 12px; background: #edf3ef; border-color: transparent; color: #225d4a; font-size: .74rem; white-space: nowrap; }
+.episode-summary { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 12px 0; font-size: .76rem; }
+.episode-summary strong { font-weight: 600; }
+.episode-summary > span { color: var(--muted); }
+.transcript-card .reader-legend { padding: 0; }
+.transcript-card .transcript-reader { margin: 0; box-shadow: none; border-radius: 0; }
+.reader-placeholder { min-height: clamp(350px, 62dvh, 640px); padding: 30px 20px; }
+.transcript-minimap { gap: 0; }
+.player-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.player-heading h2 { padding-top: 4px; }
+.player-close { min-width: 34px; min-height: 34px; padding: 2px 8px; border-radius: 50%; background: #f4f6f5; line-height: 1; font-size: 1.2rem; }
+@media (max-width: 640px) {
+  .transcript-card-header { padding: 15px 12px 4px; }
+  .transcript-card-heading { flex-wrap: wrap; gap: 6px 10px; }
+  .transcript-card-heading > div { min-width: 75%; }
+  .episode-start { margin: 6px 0 0 29px; }
+  .episode-meta a { margin-left: 10px; }
+  .episode-summary { margin-block: 10px; }
+}

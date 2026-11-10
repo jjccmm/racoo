@@ -24,13 +24,12 @@ test('overlapping terms keep independent series but one highlighted position', a
   await openExplorer(page); await choose(page, 'Münze Münzen');
   const card = page.getByRole('article');
   await expect(card).toContainText('2 Suchwort-Treffer');
-  await expect(card.locator('.episode-counts')).toContainText('2/2 Suchwörter');
+  await expect(card.locator('.episode-summary')).toContainText('2/2 Suchwörter');
   await expect(card.locator('mark')).toHaveCount(1);
-  await card.getByRole('button', { name: /Transkript öffnen · 1 Fundstelle/ }).click();
   const reader = card.getByRole('region', { name: /Transkript:/ });
   await expect(reader.locator('mark')).toHaveCount(1);
   await expect(reader.locator('mark')).toHaveAttribute('data-terms', 'münze münzen');
-  await expect(reader.getByRole('status')).toContainText('1 Fundstelle');
+  await expect(reader.getByRole('status')).toContainText('1/1');
   await clearWords(page); await expect(page.getByRole('article')).toHaveCount(0);
 });
 
@@ -39,3 +38,19 @@ test('a term named total cannot overwrite the chart sum or metadata', async ({ p
   await expect(chartEpisodes(page)).toHaveCount(1);
   await expect(chartEpisodes(page)).toHaveAccessibleName(/Synthetische Beispielfolge.*; total: 2; Summe: 2/);
 });
+
+
+for (const width of [320, 390, 1280]) {
+  test(`both chart modes fit the viewport without scrolling at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 844 }); await openExplorer(page); await choose(page, 'Laterne Katzen Fenster');
+    const chart = page.locator('.frequency-chart-scroll');
+    await expect(chartEpisodes(page)).toHaveCount(10);
+    for (const mode of ['Top 10', 'Alle']) {
+      await page.getByRole('button', { name: mode, exact: true }).click();
+      await expect(chartEpisodes(page)).toHaveCount(mode === 'Alle' ? 17 : 10);
+      expect(await chart.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
+      expect(await page.locator('.frequency-chart').evaluate(element => element.getBoundingClientRect().width <= element.parentElement!.clientWidth + 1)).toBe(true);
+    }
+    await expect(page.getByText(/Im Diagramm seitlich scrollen/)).toHaveCount(0);
+  });
+}

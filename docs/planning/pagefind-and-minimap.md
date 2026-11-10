@@ -151,3 +151,7 @@ Der Canvas ist rein visuell. Text bleibt echter, auswählbarer DOM-Text; Treffer
 5. **Lokal abnehmen und regulär veröffentlichen.** Echte Daten und kleine Prüfkorpora unter `/` und `/racoo/`, mehrere/leer konfigurierte Podcasts, 320/390 px sowie Desktop, Tastatur, Touch, kaputte Suchdateien und Audiofehler abdecken. Bestehende Projektziele verwenden: auf dokumentiertem Mobilprofil erste Ergebnisse innerhalb von fünf Sekunden, warme Suche innerhalb einer Sekunde und bis zum ersten Ergebnis höchstens 10 MB anstreben. Tatsächliche Bytes, CPU-/Netzprofil und Cachezustand protokollieren. Kein behaupteter 600-Folgen-Nachweis, solange kein unabhängiger echter Korpus dieser Größe geprüft ist.
 
 Zuerst also nachweisen, dass die neue Bedeutung von „Treffer“ zum Nutzungsziel passt. Der restliche Umbau wird dadurch kleiner; der Nutzen der Minimap lässt sich unabhängig davon behalten.
+
+## Bestätigter UI-Nachtrag
+
+Der spätere Nutzerwunsch ersetzt Kurzausschnitte/optionalen Einzelleser durch direkt offene Transkriptkarten, entfernt rechte Minimap-Farbspuren und Labels, ergänzt Start-/Schließen-Aktionen und macht Diagramme ohne horizontales Scrollen. [Ticket](../../.scratch/pagefind-minimap/issues/05-open-transcript-cards.md) und [Abnahme](../pilot/open-transcript-cards.md).

@@ -12,7 +12,7 @@ export function TranscriptMinimap({ scroller, transcript, words, active, onHit, 
     if (!map || !drawing || !viewport || !scroll || !text) return;
     const ctx = drawing.getContext('2d'); if (!ctx) return;
     let frame = 0, scrollFrame = 0;
-    let lines: { y: number; width: number }[] = [], hits: Hit[] = [], segments: number[] = [];
+    let lines: { y: number; width: number }[] = [], hits: Hit[] = [];
     let drag: { id: number; start: number; offset: number; moved: boolean } | undefined;
     const events = new AbortController();
     const signal = events.signal;
@@ -38,32 +38,28 @@ export function TranscriptMinimap({ scroller, transcript, words, active, onHit, 
       ctx!.setTransform(density, 0, 0, density, 0, 0);
       ctx!.clearRect(0, 0, width, height);
       const scale = height / Math.max(1, scroll!.scrollHeight);
-      const lane = width < 65 ? 3 : 4, textWidth = Math.max(10, width - 12 - words.length * lane);
+      const textWidth = Math.max(10, width - 10);
       ctx!.fillStyle = '#617b6c35';
       for (const line of lines) ctx!.fillRect(5, Math.round(line.y * scale), line.width * textWidth, 1);
-      ctx!.fillStyle = '#70887955';
-      for (const y of segments) ctx!.fillRect(0, Math.round(y * scale), width, 1);
-      // Separate lanes prevent overlapping query colors from hiding each other.
-      const occupied = new Set<string>();
-      for (const hit of hits) for (const term of hit.terms) {
-        const index = words.findIndex(word => word.term === term); if (index < 0) continue;
-        const y = Math.floor(hit.y * scale / 3) * 3;
-        ctx!.fillStyle = words[index].color;
-        ctx!.fillRect(5 + hit.x * textWidth, y, Math.max(3, hit.width * textWidth), 2);
-        const key = `${index}:${y}`;
-        if (!occupied.has(key)) { ctx!.fillRect(width - 3 - (words.length - index) * lane, y, lane - 1, 3); occupied.add(key); }
+      for (const hit of hits) {
+        const colors = words.filter(word => hit.terms.includes(word.term));
+        const y = Math.round(hit.y * scale), markWidth = Math.min(textWidth, Math.max(3, colors.length * 2, hit.width * textWidth));
+        const x = Math.min(width - 5 - markWidth, 5 + hit.x * textWidth);
+        colors.forEach((word, index) => {
+          ctx!.fillStyle = word.color;
+          ctx!.fillRect(x + index * markWidth / colors.length, y - 1, markWidth / colors.length, 2);
+        });
         if (hit.id === active) {
           ctx!.strokeStyle = '#213e34'; ctx!.lineWidth = 1;
-          ctx!.strokeRect(.5, Math.max(.5, y - 2.5), width - 1, 7);
+          ctx!.strokeRect(x - 1.5, y - 2.5, markWidth + 3, 5);
         }
       }
       updateViewport();
     }
     function measure() {
       const offset = scroll!.scrollTop - scroll!.getBoundingClientRect().top;
-      lines = []; hits = []; segments = [];
+      lines = []; hits = [];
       const range = document.createRange();
-      for (const segment of text!.querySelectorAll<HTMLElement>('.reader-segment')) segments.push(segment.getBoundingClientRect().top + offset);
       for (const paragraph of text!.querySelectorAll<HTMLParagraphElement>('p')) {
         const bounds = paragraph.getBoundingClientRect();
         range.selectNodeContents(paragraph);
@@ -129,10 +125,8 @@ export function TranscriptMinimap({ scroller, transcript, words, active, onHit, 
     return () => { events.abort(); observer.disconnect(); densityQuery?.removeEventListener('change', densityChanged); cancelAnimationFrame(frame); cancelAnimationFrame(scrollFrame); };
   }, [scroller, transcript, words, active, onHit]);
   return <aside className="transcript-minimap" aria-label="Fundstellenübersicht">
-    <span className="map-label" aria-hidden="true">Übersicht</span>
     <div className="map-surface" ref={surface} role="scrollbar" tabIndex={0} aria-label="Position im Transkript" aria-controls={controls} aria-orientation="vertical" aria-valuemin={0} aria-valuemax={100} aria-valuenow={0}>
       <canvas ref={canvas} aria-hidden="true" /><div className="map-thumb" ref={thumb} aria-hidden="true" />
     </div>
-    <span className="map-end" aria-hidden="true">Ende</span>
   </aside>;
 }

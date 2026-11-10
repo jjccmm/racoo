@@ -14,13 +14,12 @@ test('mobile visitors can use search, the shared player, and transcript reader a
   await choose(page, 'münze');
   const result = page.getByRole('article').filter({ hasText: 'Synthetische Beispielfolge' });
   await expect(result).toBeVisible();
-  await result.getByRole('button', { name: /Anhören ab/ }).click();
+  await result.getByRole('button', { name: 'Anhören ab 0:10', exact: true }).click();
   await expect(page.getByRole('region', { name: 'Gemeinsamer Audioplayer' })).toBeVisible();
   await expect(page.getByRole('alert')).toContainText('Audio nicht verfügbar');
 
   await expect(page.getByRole('region', { name: 'Suchwortvergleich' })).toBeVisible();
   await expect(page.getByText('Diagrammdaten anzeigen', { exact: true })).toHaveCount(0);
-  await result.getByRole('button', { name: /Transkript öffnen/ }).click();
   await expect(result.getByRole('scrollbar')).toHaveAttribute('aria-orientation', 'vertical');
 
   const dimensions = await page.evaluate(() => ({

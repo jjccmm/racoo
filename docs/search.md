@@ -20,12 +20,18 @@ Top 10 nach Gesamtsumme absteigend, dann Datum absteigend und ID. Alle nach Datu
 
 ## Leser und Minimap
 
-„Transkript öffnen“ erweitert eine Folge. Alle Originalsegmente chronologisch anzeigen und die nativen Positionen über geprüfte Segmentanker in UTF-16-Bereiche des Originaltexts übersetzen. Bei nicht übereinstimmenden Textständen keine Markierungen erfinden. Vorherige/nächste Fundstelle zählt die eindeutigen Bereiche. Schließen gibt den Tastaturfokus an die öffnende Schaltfläche zurück.
+Jede Trefferfolge erscheint direkt als offene Transkriptkarte. Ihr Header enthält Titel, Datum, Dauer, Rang, Einzelzählungen, Gesamtsumme, Suchabdeckung und Episodenlink. Originaltexte werden weiterhin sichtbarkeitsabhängig geladen; mehrere geladene Karten bleiben zugleich offen. Nach dem Laden springt nur das jeweilige Textfenster zur ersten Fundstelle des ersten eingegebenen Wortes mit Treffern. Die Suche behält ihren Tastaturfokus.
 
-Die helle Minimap ist auch mobil vertikal. Graue Zeilen zeigen Textstruktur, farbige Spuren die Stichwörter, ein Rahmen den sichtbaren Bereich. Klick navigiert zur nahen Fundstelle oder Textposition, Ziehen verschiebt den Lesebereich. Pfeile, Bild auf/ab, Pos1/Ende und die normale Scrollgeste bleiben verfügbar. Der Canvas ist dekorativ; der Originaltext bleibt auswählbarer DOM-Text.
+Alle Originalsegmente chronologisch anzeigen und native Positionen über geprüfte Anker in Originaltextbereiche übersetzen. Der interne Begriff „Segment“ wird in der Oberfläche durch verständliche Zeit-/Textstellen ersetzt. Bei nicht übereinstimmenden Textständen keine Markierungen erfinden. Vorherige/nächste Fundstelle zählt eindeutige Bereiche.
 
-Nach Umbruch/Resize die Layoutpositionen neu messen; beim Scrollen nur den sichtbaren Rahmen aktualisieren. Canvas-Pixeldichte an Display/Zoom anpassen. Die Karte ist eine Textübersicht, keine genaue Audiozeitleiste. Sie lädt oder startet kein Audio. Die separate Abspielaktion nutzt wie bisher den gespeicherten Segmentanfang samt Werbehinweis.
+Die helle Minimap ist auch mobil vertikal. Graue Zeilen zeigen Textstruktur, farbige Markierungen im Miniaturtext die Stichwörter, ein Rahmen den sichtbaren Bereich. Separate rechte Farbspuren und die Beschriftungen Übersicht/Ende entfallen. Klick navigiert zur nahen Fundstelle oder Textposition, Ziehen verschiebt den Lesebereich. Pfeile, Bild auf/ab, Pos1/Ende und die normale Scrollgeste bleiben verfügbar. Der Canvas ist dekorativ; der Originaltext bleibt auswählbarer DOM-Text.
+
+Nach Umbruch/Resize die Layoutpositionen neu messen und die aktive Fundstelle bei Breitenänderungen sichtbar halten; beim Scrollen nur den sichtbaren Rahmen aktualisieren. Canvas-Pixeldichte an Display/Zoom anpassen. Die Karte ist eine Textübersicht, keine genaue Audiozeitleiste. Sie lädt oder startet kein Audio. Die Zeitknöpfe starten am Beginn des jeweiligen Textabschnitts samt Werbehinweis. Der Headerknopf startet die ganze Folge bei 0:00. Der gemeinsame Player lässt sich schließen: Audio stoppen/freigeben, ausstehende Antworten entwerten, Folge-/Zeitparameter aus dem Link entfernen und den Fokus zurückgeben.
 
 ## Prüfung
 
 `scripts/check.py` verwendet kleine echte Pagefind-Indizes unter beiden Basispfaden und zusätzliche konfigurierte Podcasts. Browserfälle decken wiederholte/überlappende Begriffe, Titel-Ausschluss, Unicode/Komposita, Stoppwörter, komplette Rohzählungen, Ladefehler, Abbruch, Textabgleich, Minimap-/Fokusnavigation sowie gemeinsame Wiedergabe ab. Ein echter 106er-Lauf ergänzt die Fixtures. 600 unabhängige Folgen und reale Mobilgeräte bleiben separate Mess-/Qualitätsnachweise.
+
+## Diagrammbreite
+
+Top10 und Alle verwenden immer die verfügbare Breite ohne horizontales Scrollen. Mehr Folgen ergeben schmalere Balken; weiße Umrandungen dürfen dünne Balken nicht überdecken. Die sichtbaren Titel werden bei Platzmangel reduziert und bei mehr als dreißig Folgen in Alle ganz ausgeblendet. Werte und vollständige Folgentitel bleiben im Tooltip und in zugänglichen Beschriftungen verfügbar.

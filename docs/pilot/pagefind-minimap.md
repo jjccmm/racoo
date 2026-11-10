@@ -1,5 +1,7 @@
 # Pagefind-Freitextsuche und helle vertikale Minimap
 
+Die spätere [Verfeinerung der Transkriptkarten](open-transcript-cards.md) ersetzt Kurzvorschau und optionalen Einzelleser; dieser Bericht bewahrt die ursprüngliche Abnahme.
+
 Stand: 10. November 2026. Integrationscommit `309441f`. Umsetzung auf `feature/pagefind-minimap` nach dem bestätigten [Plan](../planning/pagefind-and-minimap.md) und [vier Tickets](../../.scratch/pagefind-minimap/spec.md). Die Anwendung verwendet Pagefind 1.5.2 als gemeinsame Such-/Zählquelle und einen vollständigen Leser mit heller Minimap. Die 106 Originaltranskripte blieben bytegleich; es gab keine neue ASR-Verarbeitung und keine Audioabrufe für die Abnahme.
 
 ## Resultierender Ablauf

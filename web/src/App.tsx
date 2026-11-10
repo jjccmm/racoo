@@ -42,7 +42,7 @@ export function App() {
         <div><h1>{podcast.name}</h1><p>{podcast.speakers.join(' & ')}</p><PodcastProgress podcast={podcast} /></div>
       </header>
       {podcast.episodeCount > 0 ? <>
-        <Player key={podcast.id} dataBase={dataBase}><Stats dataBase={dataBase} /></Player>
+        <Player key={podcast.id} dataBase={dataBase} podcastId={podcast.id}><Stats dataBase={dataBase} /></Player>
         <footer className="workspace-footer"><details className="publication-details"><summary>Über die Daten</summary>
           <PublicationState dataBase={dataBase} />
           <p className="pilot-note">Maschinelle Transkripte können Fehler enthalten. Sprungzeiten gelten für die verarbeitete Audiofassung; Werbung kann sie verschieben.</p>
