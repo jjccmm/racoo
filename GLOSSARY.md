@@ -1,6 +1,6 @@
-# Podcast Words
+# Racoo
 
-Begriffe für die Suche nach Podcast-Passagen und die Analyse gesprochener Wörter. Suche und Wortstatistik beschreiben unterschiedliche Eigenschaften desselben Transkripts.
+Begriffe für das Wiederfinden von Podcastfolgen anhand erinnerter Stichwörter.
 
 ## Sprache
 
@@ -8,53 +8,41 @@ Begriffe für die Suche nach Podcast-Passagen und die Analyse gesprochener Wört
 Eine fortlaufende Sendung mit einem eigenen Folgenbestand.
 
 **Folge**:
-Eine einzelne veröffentlichte Ausgabe eines Podcasts, einschließlich Sonderfolgen. Titel und angezeigte Folgennummer können sich ändern, ohne dass daraus eine andere Folge wird.
-_Vermeiden_: Folgennummer als Synonym für die Folge
+Eine einzelne veröffentlichte Ausgabe einschließlich Sonderfolgen, deren Identität unabhängig von Titel, Nummer und Audioquelle bleibt.
 
 **Transkript**:
-Die verschriftlichte Sprache einer bestimmten Audiofassung einer Folge mit zugehörigen Zeitmarken.
+Der gespeicherte maschinelle Text einer verarbeiteten Audiofassung mit groben Segmentzeiten.
 
 **Folgenidentität**:
-Die dauerhafte Zuordnung einer Folge unabhängig von wechselnden Titeln, angezeigten Nummern oder Bezugsquellen. Zwei Quellen derselben Folge begründen keine zwei Folgen.
+Die dauerhafte Zuordnung einer Folge unabhängig von wechselnden Titeln, Nummern oder Bezugsquellen.
 
 **Segment**:
-Ein zeitlich begrenzter Abschnitt eines Transkripts mit seinem Text und seiner Start- und Endzeit.
-
-**Fundstelle**:
-Eine Passage innerhalb einer Folge, an der mindestens ein gesuchtes Stichwort oder eine von der Suche berücksichtigte Wortform vorkommt. Eine Folge kann mehrere Fundstellen enthalten.
-_Vermeiden_: Treffer ohne Unterscheidung zwischen Folge und Passage
+Ein zeitlich begrenzter Abschnitt eines Transkripts mit Originaltext, Start und Ende.
 
 **Stichwort**:
-Ein unterschiedlicher Suchbegriff aus der Eingabe. Wiederholungen und Unterschiede in der Groß- und Kleinschreibung erzeugen kein zusätzliches Stichwort.
+Ein unterschiedlicher wirksamer Suchbegriff aus einer Freitexteingabe. Unterschiede in Groß-/Kleinschreibung und wiederholte Eingaben erzeugen kein zusätzliches Stichwort.
 
-**Suchabdeckung**:
-Der Anteil unterschiedlicher eingegebener Stichwörter, die in einer Folge gefunden werden, etwa zwei von drei. Die Häufigkeit eines einzelnen Stichworts erhöht die Suchabdeckung nicht.
-
-**Grundform**:
-Die für die Wortstatistik verwendete sprachliche Grundform eines erkannten Worts. Ihre Zählung ist von den Wortformtreffern der Suche zu unterscheiden.
-_Vermeiden_: Suchtreffer als Synonym für die Grundformzählung
-
-**Quellenlücke**:
-Eine bekannte historische Folge, für die noch keine abrufbare Audioquelle bestätigt wurde. Sie ist von einer verfügbaren, aber noch nicht verarbeiteten Folge zu unterscheiden.
-
-**Gesamtwörter**:
-Die Anzahl aller alphabetischen Wörter eines Transkripts einschließlich Stoppwörtern. Mehrere Vorkommen desselben Worts zählen jeweils einzeln.
-
-**Verschiedene Wörter**:
-Die Menge unterschiedlicher kleingeschriebener Grundformen innerhalb des betrachteten Bestands einschließlich Stoppwörtern.
-
-**Neue Wörter**:
-Grundformen, die in einer Folge erstmals innerhalb des bis dahin veröffentlichten Bestands vorkommen. Die Reihenfolge richtet sich nach Veröffentlichungsdatum und bei Gleichstand nach der dauerhaften Folgenidentität.
-_Vermeiden_: Neue Wortformen, neu erkannte Wörter
+**Suchwort-Treffer**:
+Eine Textposition, die zu einem bestimmten Stichwort passt, einschließlich berücksichtigter Wortformen und Wortanfänge. Dieselbe Position kann zu mehreren Stichwörtern passen.
+_Vermeiden_: exakte Grundformvorkommen
 
 **Gesamttreffer**:
-Die Summe der Vorkommen aller ausgewählten Grundformen in einer Folge. Jede unterschiedliche ausgewählte Grundform trägt ihre vollständige Anzahl bei. Die Zahl bestimmt die Reihenfolge der Top-Folgen.
+Die Summe der Suchwort-Treffer aller unterschiedlichen wirksamen Stichwörter einer Folge. Eine zu mehreren Stichwörtern passende Textposition trägt zu jeder zugehörigen Einzelzählung bei.
+
+**Fundstelle**:
+Eine eindeutige markierte Textposition innerhalb einer Folge, die zu mindestens einem Stichwort passt. Überlappende Suchwort-Treffer bilden für die Navigation eine einzige Fundstelle.
+
+**Suchabdeckung**:
+Die Anzahl unterschiedlicher wirksamer Stichwörter mit Treffern in einer Folge, bezogen auf die Anzahl eingegebener wirksamer Stichwörter.
 
 **Stoppwort**:
-Ein als häufiges Funktionswort gekennzeichnetes Wort. Es wird aus der Wortauswahl und dem Häufigkeitsvergleich ausgeschlossen, bleibt aber Bestandteil der Gesamtwörter, verschiedenen und neuen Wörter sowie der vollständigen Grundformanalyse.
+Ein häufiges Funktionswort aus der gepflegten Ausschlussliste, das in der Anfrage ignoriert wird. Der Originaltext bleibt vollständig.
 
-**Zusätzlich ignorierte Grundform**:
-Eine manuell gepflegte Grundform, die ebenso aus Wortauswahl und Häufigkeitsvergleich ausgeschlossen wird. Transkript, vollständiger Textindex und Gesamtstatistiken bleiben vollständig.
+**Zusätzlich ignoriertes Suchwort**:
+Ein manuell ausgeschlossener normalisierter Suchbegriff, der ebenso wie ein Stoppwort aus der Anfrage entfällt.
+
+**Quellenlücke**:
+Eine bekannte historische Folge ohne bestätigte abrufbare Audioquelle, im Unterschied zu einer noch nicht verarbeiteten verfügbaren Folge.
 
 **Verfügbares Archiv**:
-Alle zum angegebenen Erfassungsstand nachgewiesenen und abrufbaren Folgen eines Podcasts. Bekannte Quellenlücken werden zusätzlich ausgewiesen.
+Alle zum angegebenen Erfassungsstand nachgewiesenen und abrufbaren Folgen eines Podcasts.
