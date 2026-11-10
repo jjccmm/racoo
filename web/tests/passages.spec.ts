@@ -48,13 +48,13 @@ test('repeated terms share one coarse jump with an advertising hint and expandab
   await expect(hits).toHaveCount(1);
   await expect(hits.first()).toHaveAccessibleName(/· grüße/);
   await expect(hits.first()).toHaveAccessibleDescription(/Segmentanfang; Werbung/);
-  const full = page.getByRole('article').locator('.passage details');
-  await expect(full.locator('p')).toBeHidden();
-  await full.getByText('Vollständiges Segment anzeigen', { exact: true }).click();
-  await expect(full.locator('p')).toBeVisible();
+  await page.getByRole('article').getByRole('button', { name: /Transkript öffnen/ }).click();
+  await expect(page.getByRole('region', { name: 'Vollständiger Transkripttext' })).toContainText('Signal');
   expect((await page.getByRole('article').locator('.passage > p').textContent())!.length).toBeLessThan(500);
   await search(page, 'laterne katze fenster');
-  await expect(page.getByRole('article').filter({ hasText: 'Abdeckung vollständig' }).getByRole('button', { name: /fenster, katze, laterne/ })).toHaveCount(1);
+  const complete = page.getByRole('article').filter({ hasText: 'Abdeckung vollständig' });
+  await complete.scrollIntoViewIfNeeded();
+  await expect(complete.getByRole('button', { name: /fenster, katze, laterne/ })).toHaveCount(1);
 
   await search(page, 'Grüße');
   const lateHit = page.getByRole('button', { name: /Anhören ab 0:10/ });

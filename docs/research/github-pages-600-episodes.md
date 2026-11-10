@@ -1,5 +1,7 @@
 # Skalierung auf 600 Folgen mit GitHub Pages
 
+Historischer Stand der früheren Statistikarchitektur. Die aktive [Pagefind-Suchzählung](../search.md) verwendet keine Vokabulare oder Zählpakete; alte Messwerte bleiben als Vergleich erhalten.
+
 Stand: 25. Oktober 2026. Einschätzung des bestehenden Codes und gemessener Pilotdateien; Die Messungen unten beschreiben den damaligen Formatstand; die anschließende Entscheidung für kompakte, gefilterte Häufigkeitsdaten steht in der [aktuellen Spezifikation](../../.scratch/compact-filtered-statistics/spec.md). Keine Freigabe zur Archivtranskription. Die Grundentscheidung bleibt sinnvoll: lokal verarbeiten, statische Dateien veröffentlichen, im Browser suchen und auswerten. Ein echter 600-Folgen-Browser-/Deploymentnachweis steht aus.
 
 ## Hostinggrenzen und Traffic
@@ -37,7 +39,7 @@ Das ist ein Test des Statistikformats und Exporters. Er enthält keine 600 unabh
 - [Frequency.tsx](../../web/src/Frequency.tsx) durchsucht diese Liste bei jeder Eingabe mit `filter(...).slice(0,10)`. Bei Auswahl lädt und parst es das zuständige vollständige Zählpaket. Für unterschiedliche Wörter desselben Pakets gibt es keinen eigenen Cache bereits geparster Pakete; der HTTP-Cache kann helfen. Die eigentlichen Diagrammwerte sind mit höchstens 5 × 600 Punkten überschaubar.
 - [search.ts](../../web/src/search.ts) erzeugt für jede Suche und Nachladeseite einen neuen Worker. Das isoliert bewusst Fehlerzustände, verwirft aber die bereits initialisierte Pagefind-Instanz. Die vorhandene gedrosselte Fünfermessung lag bereits bei etwa 3,0 s erster Suche und 1,9 s wiederholter Suche; 600 Folgen sind kein automatischer Geschwindigkeitsnachweis.
 - [search-worker.ts](../../web/src/search-worker.ts) bestimmt die globale Rangfolge aus Kandidaten und lädt erst für höchstens zehn angezeigte Treffer Pagefind-Fragmente und vollständige Folgen-JSONs. Bei bisheriger mittlerer Textlänge sind zehn Folgen-JSONs rund 630 KB, unabhängig davon, ob der Bestand 60 oder 600 Folgen umfasst. Suchindexteile und Fragmente kommen hinzu. Häufige Wörter und mehrere Begriffe benötigen trotzdem einen Messfall mit dem großen Index.
-- Die beiden Folgenübersichten in [Stats.tsx](../../web/src/Stats.tsx) und [VocabularySummary.tsx](../../web/src/VocabularySummary.tsx) rendern derzeit alle Folgen. 600 Zeilen sind vor allem ein Bedienproblem; einfache Seitennavigation oder Filter reichen zunächst aus.
+- Die beiden Folgenübersichten in [Stats.tsx](../../web/src/Stats.tsx) und [VocabularySummary.tsx](https://github.com/jjccmm/racoo/blob/5172e992ffec43f75e516aedc4a0de566f840ab8/web/src/VocabularySummary.tsx) rendern derzeit alle Folgen. 600 Zeilen sind vor allem ein Bedienproblem; einfache Seitennavigation oder Filter reichen zunächst aus.
 
 Pagefind liefert Treffer-IDs zunächst getrennt von ihren asynchron nachzuladenden Details. Dieses vorhandene Ladeprinzip ist für den größeren Bestand passend; eine Produktangabe zu kurzen Webseiten wäre kein Leistungsnachweis für unsere langen Transkripte und den eigenen Wrapper. [Pagefind Search API](https://pagefind.app/docs/api/), [Pagefind](https://pagefind.app/)
 

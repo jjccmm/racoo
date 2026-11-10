@@ -17,7 +17,6 @@ def main() -> int:
     fixture_environment = {
         **os.environ,
         "PODCAST_WORDS_EPISODES": "tests/fixtures/search-corpus.json",
-        "PODCAST_WORDS_ANALYSES": "tests/fixtures/analysis",
     }
     fixture_environment.pop("PODCAST_WORDS_PUBLICATION_SOURCE", None)
     fixture_environment.pop("PW_MULTI_PODCAST", None)

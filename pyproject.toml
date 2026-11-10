@@ -10,9 +10,6 @@ dependencies = [
     "onnxruntime-gpu==1.20.1",
 ]
 
-[project.optional-dependencies]
-analysis = ["spacy==3.8.16"]
-
 [project.scripts]
 podcast-words = "podcast_words.cli:main"
 

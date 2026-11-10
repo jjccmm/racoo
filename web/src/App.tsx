@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Player } from './Player';
 import { Stats } from './Stats';
 import { PublicationState } from './PublicationState';
-import { LandingIntro } from './LandingIntro';
+import { LandingIntro, DEMO_QUERY } from './LandingIntro';
 import { loadPodcasts, type Podcast } from './podcasts';
 import { PodcastProgress } from './PodcastProgress';
 
@@ -10,6 +10,7 @@ const home = import.meta.env.BASE_URL;
 const logo = `${home}images/racoo-logo.png`;
 
 export function App() {
+  const [landingQuery, setLandingQuery] = useState(DEMO_QUERY);
   const [podcasts, setPodcasts] = useState<Podcast[]>();
   const [error, setError] = useState(false);
   const [attempt, setAttempt] = useState(0);
@@ -31,7 +32,7 @@ export function App() {
       <a className="site-brand" href={home} aria-label="Racoo – Startseite"><img src={logo} width="2172" height="724" alt="Racoo" /></a>
       {explorer && <a className="back-link" href={home}><span aria-hidden="true">←</span> Alle Podcasts</a>}
     </header>
-    {!explorer && <LandingIntro />}
+    {!explorer && <LandingIntro onQuery={setLandingQuery} />}
     {!podcasts && !error && <p role="status">Podcasts werden geladen …</p>}
     {error && <div role="alert"><p>Die Podcastübersicht konnte nicht geladen werden.</p><button onClick={() => { setError(false); setAttempt(value => value + 1); }}>Podcastübersicht erneut laden</button></div>}
     {explorer && podcasts && !podcast && <p role="alert">Dieser Podcast ist nicht vorhanden. Über „Alle Podcasts“ kommst du zur Übersicht.</p>}
@@ -51,7 +52,7 @@ export function App() {
     {!explorer && podcasts && <>
       <section className="podcast-directory" aria-labelledby="podcasts-heading">
         <div className="section-heading"><h2 id="podcasts-heading">Podcasts</h2><span>{String(podcasts.length).padStart(2, '0')}</span></div>
-        {podcasts.map(item => <a className="podcast-card" href={`${home}?podcast=${encodeURIComponent(item.id)}`} key={item.id}>
+        {podcasts.map(item => <a className="podcast-card" href={`${home}?podcast=${encodeURIComponent(item.id)}${landingQuery.trim() && landingQuery !== DEMO_QUERY ? `&q=${encodeURIComponent(landingQuery)}` : ''}`} key={item.id}>
           <img src={`${home}${item.cover}`} width="112" height="112" alt={`Cover von ${item.name}`} />
           <div className="podcast-card-copy"><h3>{item.name}</h3><p>{item.speakers.join(' & ')}</p><PodcastProgress podcast={item} /></div>
           <span className="card-arrow" aria-hidden="true">→</span>

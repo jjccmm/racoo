@@ -13,7 +13,7 @@ export function PublicationState({ dataBase }: { dataBase: string }) {
   }, [dataBase]);
   return <aside className="notice" aria-label="Veröffentlichungsstand">
     <strong>{publication
-      ? `Datensatz: ${publication.state === 'selected-pilot' ? 'ausgewählter Datenbestand' : 'synthetische Beispieldaten'}`
+      ? `Datensatz: ${publication.state === 'published-corpus' ? 'ausgewählter Datenbestand' : 'synthetische Beispieldaten'}`
       : error ? 'Veröffentlichungsstand nicht verfügbar' : 'Veröffentlichungsstand wird geladen …'}</strong>
     {publication && <p>{publication.podcastId} · {publication.episodeCount} Folgen · Veröffentlichung {publication.publicationId.slice(0, 12)}</p>}
     {error && <p role="alert">Der Veröffentlichungsstand konnte nicht geladen werden. Bitte später erneut laden.</p>}

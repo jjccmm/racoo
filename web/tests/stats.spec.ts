@@ -4,7 +4,7 @@ import { openExplorer } from './helpers';
 test('episode processing timings use the compact catalog without loading transcripts', async ({ page }) => {
   const transcripts: string[] = [];
   page.on('request', (request) => { if (/\/episodes\/.+\.json$/.test(request.url())) transcripts.push(request.url()); });
-  await page.route('**/stats/catalog.json', async (route) => {
+  await page.route('**/catalog.json', async (route) => {
     const response = await route.fetch();
     const catalog = await response.json();
     const episode = catalog.episodes.find((entry: { episodeId: string }) => entry.episodeId === 'coverage-complete');

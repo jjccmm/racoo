@@ -1,7 +1,6 @@
 """Configured updates cross the real RSS/audio/filesystem CLI boundaries."""
 
 import json
-from types import SimpleNamespace
 
 import onnxruntime
 import pytest
@@ -9,7 +8,7 @@ from asr_fixtures import audio_server, install_external_recognizer, wave_bytes
 from test_catalog import feed_server, item, rss
 from test_processing import make_catalog
 
-from podcast_words import analysis, transcribe
+from podcast_words import transcribe
 from podcast_words.catalog import Catalog
 from podcast_words.cli import main
 from podcast_words.podcasts import read_configuration
@@ -42,17 +41,6 @@ def model_boundary(monkeypatch, tmp_path):
         lambda: ["CUDAExecutionProvider", "CPUExecutionProvider"],
     )
     install_external_recognizer(monkeypatch, tmp_path)
-    calls = []
-
-    def load_model():
-        calls.append(True)
-        return lambda text: [
-            SimpleNamespace(lemma_=word.lower().strip("."), is_alpha=True, is_stop=False)
-            for word in text.split()
-        ]
-
-    monkeypatch.setattr(analysis, "load_model", load_model)
-    return calls
 
 
 @pytest.mark.parametrize("defect", ["duplicate", "traversal", "absolute", "nested"])
@@ -120,11 +108,13 @@ def test_pending_limit_resume_order_and_unprocessable_entries(tmp_path, capsys, 
         assert catalog_path.read_bytes() == before
 
 
-def test_update_imports_processes_analyzes_and_repairs_analysis_without_audio(
-    tmp_path, capsys, model_boundary
+def test_update_imports_processes_and_resumes_without_nlp(
+    tmp_path, capsys, model_boundary, monkeypatch
 ):
+    import sys
+
+    monkeypatch.setitem(sys.modules, "spacy", None)
     config = tmp_path / "podcasts.json"
-    directory = tmp_path / "data/fixture-podcast"
     with audio_server(wave_bytes()) as (url, response):
         body = rss(item("first", "First", url), item("second", "Second", url))
         with feed_server({"/feed": (200, {"Content-Type": "application/rss+xml"}, body)}) as host:
@@ -144,17 +134,17 @@ def test_update_imports_processes_analyzes_and_repairs_analysis_without_audio(
             first = json.loads(capsys.readouterr().out)
             assert first["feed"]["added"] == 2
             assert len(first["processing"]["selected"]) == 1
-            assert len(first["analysis"]["computed"]) == 1
+            assert first["searchable_episode_count"] == 1
+            assert "analysis" not in first
             assert main(args) == 0
-            assert len(json.loads(capsys.readouterr().out)["analysis"]["reused"]) == 1
-            missing = next((directory / "analyses").glob("*.json"))
-            missing.unlink()
+            assert json.loads(capsys.readouterr().out)["searchable_episode_count"] == 2
+            directory = tmp_path / "data/fixture-podcast"
+            before = {p.name: p.read_bytes() for p in (directory / "episodes").glob("*.json")}
             assert main(args) == 0
             resumed = json.loads(capsys.readouterr().out)
             assert resumed["processing"]["selected"] == []
-            assert len(resumed["analysis"]["computed"]) == 1
             assert response["requests"] == 2
-            assert len(model_boundary) == 3
+            assert not (directory / "analyses").exists()
             assert (
                 main(["prepare-site", "--config", str(config), "--output", str(tmp_path / "site")])
                 == 0
@@ -163,7 +153,9 @@ def test_update_imports_processes_analyzes_and_repairs_analysis_without_audio(
             assert site["podcasts"][0]["episodeCount"] == 2
             assert site["podcasts"][0]["knownEpisodeCount"] == 2
             assert site["podcasts"][0]["lastCheckedAt"]
-            assert len(model_boundary) == 3  # cache-only publication never loads NLP
+            assert before == {
+                p.name: p.read_bytes() for p in (directory / "episodes").glob("*.json")
+            }
             assert not list((tmp_path / "cache").rglob("*.wav"))
             assert not list((tmp_path / "cache").rglob("*.mp3"))
 
@@ -176,47 +168,7 @@ def test_update_feed_failure_stops_before_processing(tmp_path, capsys, model_bou
         report = json.loads(capsys.readouterr().out)
         assert report["feed"]["ok"] is False
         assert "processing" not in report
-        assert model_boundary == []
         assert not (tmp_path / "data/fixture-podcast/catalog.json").exists()
-
-
-def test_update_analysis_failure_preserves_transcript_and_resumes_without_download(
-    tmp_path, capsys, model_boundary, monkeypatch
-):
-    config = tmp_path / "podcasts.json"
-    loader = analysis.load_model
-
-    def unavailable_model():
-        raise ValueError("analysis model unavailable")
-
-    with audio_server(wave_bytes()) as (url, response):
-        with feed_server({"/feed": (200, {}, rss(item("first", "First", url)))}) as host:
-            configuration(config, host + "/feed")
-            args = [
-                "update",
-                "--config",
-                str(config),
-                "--podcast",
-                "fixture-podcast",
-                "--limit",
-                "1",
-                "--cache-dir",
-                str(tmp_path / "cache"),
-            ]
-            monkeypatch.setattr(analysis, "load_model", unavailable_model)
-            assert main(args) == 1
-            failed = json.loads(capsys.readouterr().out)
-            assert failed["processing"]["ok"] is True
-            assert "analysis model unavailable" in failed["error"]
-            transcript = next((tmp_path / "data/fixture-podcast/episodes").glob("*.json"))
-            saved = transcript.read_bytes()
-            monkeypatch.setattr(analysis, "load_model", loader)
-            assert main(args) == 0
-            resumed = json.loads(capsys.readouterr().out)
-            assert resumed["processing"]["selected"] == []
-            assert len(resumed["analysis"]["computed"]) == 1
-            assert transcript.read_bytes() == saved
-            assert response["requests"] == 1
 
 
 def test_pending_download_failure_limits_attempted_episodes_and_retries(

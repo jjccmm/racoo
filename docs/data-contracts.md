@@ -1,34 +1,38 @@
-# Episodendaten und Analyse
+# Episodendaten und statische Veröffentlichung
 
-Das Python-Modell in `src/podcast_words/contracts.py` ist die ausführbare Quelle für Episode **Schema 2**. Der strukturelle Export liegt unter `schemas/episode-v2.schema.json`; Python prüft zusätzlich Beziehungen wie Reihenfolge, eindeutige IDs und Grenzen der Audiodauer. Historische Forschungsergebnisse sind keine aktiven Episode-Eingaben.
+## Gespeicherte Episode
 
-Eine Episode enthält ihre stabile Podcast-/Folgenidentität, Quellenmetadaten, Modell-/Exportrevision und Laufzeitkonfiguration. `audio` enthält ausschließlich `url` und `duration_seconds`. Die öffentliche URL kann später eine andere Werbung enthalten; es gibt keinen gespeicherten Audiohash und keinen erneuten Abgleich.
+Das Python-Modell `Episode` in [`contracts.py`](../src/podcast_words/contracts.py) ist die ausführbare Quelle für Episode **Schema 2**; [`schemas/episode-v2.schema.json`](../schemas/episode-v2.schema.json) ist sein struktureller Export. Python prüft zusätzlich Reihenfolge, eindeutige IDs, Segment-/Audiodauergrenzen und endliche Laufzeiten.
 
-`segments` enthält ausschließlich `id`, `text`, `start_seconds` und `end_seconds`. Zeitwerte sind Sekunden auf der beim Transkribieren verarbeiteten Folge. Sprachabschnitte werden in Reihenfolge verbunden, solange ihre gemeinsame Zeitspanne höchstens 300 Sekunden bleibt. Der gesamte erkannte Text bleibt erhalten; feine Wort-/Tokenzeitpunkte werden weder angefordert noch gespeichert. Suche verwendet Segmentanker, Wortzählung nur die Texte.
+Eine Episode enthält stabile Podcast-/Folgenidentität, Herkunft, Titel/Datum, Modell-/Exportrevision, Verarbeitungszeitpunkt und Laufzeitkonfiguration. `audio` hat `url` und `duration_seconds`. Die öffentliche URL darf später andere Werbung liefern; ein Audiohash oder erneuter Abgleich gehört nicht zum Vertrag.
 
-`timings` enthält gemessene, endliche und nichtnegative `download_seconds`, `transcription_seconds` und `total_seconds`. Die genauen Messgrenzen stehen in [ASR](asr.md). Im kompakten öffentlichen Statistikkatalog heißen die Felder `durationSeconds` sowie `timings.downloadSeconds`, `timings.transcriptionSeconds`, `timings.totalSeconds`. Dadurch kann die Folgenübersicht ihre Zeiten anzeigen, ohne alle Transkripte zu laden.
+`segments` enthält ausschließlich `id`, `text`, `start_seconds`, `end_seconds`. Chronologische grobe Abschnitte mit höchstens 300 Sekunden, vollständiger Originaltext, keine Wort-/Tokenzeitpunkte. Der Text bleibt Datenbasis für Suche, Highlightbereiche und Minimap.
 
-`configuration_revision` beschreibt die festgehaltene Transkriptionskonfiguration, `transcript_revision` den gespeicherten Text-/Segmentstand samt Konfiguration. Es gibt keine an Audio-Bytes gebundene `input_revision`. Analyse- und Buildhashes bleiben sinnvoll: Sie erkennen veraltete Ableitungen des gespeicherten Textes, ohne MP3s zu behalten oder abzurufen.
+`timings` speichert gemessene nichtnegative `download_seconds`, `transcription_seconds`, `total_seconds`. Gemeinsames Modellsetup steht im ASR-Bericht. [Messgrenzen](asr.md)
 
-Die Herkunft unterscheidet RSS, einzeln geprüfte Ergänzungen und synthetische Prüfdaten. RSS benötigt eine GUID. Der separate [Folgenkatalog](catalog.md) hält Identitäten und belegte Aliase fest. Ein Katalogeintrag ersetzt kein validiertes Transkript.
-
-Die kontrollierten Sucheingaben stehen in [der Korpusliste](../tests/fixtures/search-corpus.json). Sie sind ausdrücklich synthetisch; ihre Zeiten sind Testwerte. Routinechecks laden weder Audio noch Modelle. Modell, Schema, Produzenten, Verbraucher und aktive Prüfdaten bei Vertragsänderungen gemeinsam aktualisieren:
+`configuration_revision` bindet die ASR-Einstellungen, `transcript_revision` den Text-/Segmentstand samt Konfiguration. Sie und die Buildhashes bleiben sinnvoll, unabhängig von Online-Audioänderungen. [Identität](adr/0001-stabile-folgenidentitaet.md)
 
 ```powershell
 uv run --frozen podcast-words schema --output schemas/episode-v2.schema.json
 ```
 
-Die getrennte [Grundformanalyse](analysis.md) verwendet weiterhin den Vertrag `Analysis` in `src/podcast_words/analysis.py`. Konsumierte Segmenttexte und Analysekonfiguration bestimmen ihre Gültigkeit. Den strukturellen Analyseexport über `podcast-words schema --kind analysis --output schemas/analysis-v1.schema.json` aktualisieren.
+## Konfiguration und vorbereitete Quellen
 
-Die daraus veröffentlichten Statistikdateien haben unabhängig davon `schemaVersion: 2`. Sparse Häufigkeiten verwenden `[episodeIndex, Anzahl]` statt wiederholter Episoden-IDs. Der Index ist die nullbasierte Position im chronologisch geordneten `episodes`-Array desselben Statistikkatalogs; dort bleibt die stabile `episodeId` erhalten. Katalog und Zähldateien müssen dieselbe Veröffentlichungs-ID tragen. Das genaue Zahlenformat und seine Fehlergrenzen stehen in [der Analyseanleitung](analysis.md#veröffentlichte-dateien-und-browser).
+[`podcasts.json`](../podcasts.json) verwendet `Podcasts` aus [`podcasts.py`](../src/podcast_words/podcasts.py): Schema 1, eindeutige IDs und sichere getrennte Datenordner. Je Podcast Katalog, RSS-Snapshots und `episodes/`. Die frühere Analysis und ihre Schema-/Cachedateien sind entfernt; für einen fertigen durchsuchbaren Bestand genügt ein validiertes Transkript mit passendem Katalogstatus.
 
-Vokabular und Häufigkeitsdateien schließen spaCy-Stoppwortlemmata aus allen ausgewählten Analysen sowie die [gepflegte Zusatzliste](../src/podcast_words/ignored_lemmas.txt) aus. Der Katalog und die gespeicherte Analysis behalten alle alphabetischen Wörter. `manifest.json` enthält die effektive Regel unter `frequencyExclusions`; ihre normalisierte manuelle Liste ist Bestandteil der Statistik-ID, auch bei im Bestand nicht vorkommenden Einträgen. Die vollständige Stichwortsuche wird davon nicht gefiltert. Pflege, Override und erneute Veröffentlichung ohne Neuanalyse stehen in [der Anleitung](analysis.md#zusätzliche-ignorierte-grundformen-pflegen).
+`prepare-site` validiert alle abgeschlossenen Episoden, aktualisiert öffentliche Feedmetadaten und erzeugt `episodes.json`, Episodenkopien, `catalog.json` und `manifest.json` unter `.cache/site-publication/<id>/source`. Vorbereitungsschema 2, `generatedBy: podcast-words publish`, `state: published-corpus`, `preparationId`, IDs und Transkriptionsrevisionen. Weder ein Sprachmodell noch alte Analysen werden geladen. Unbekannte Ausgabeverzeichnisse nicht überschreiben; erkennbare generierte Quellen atomar ersetzen.
 
+## Öffentliche Dateien
 
-## Konfigurierte Mehr-Podcast-Veröffentlichung
+- Root `podcasts.json`, Schema 1: `id`, `name`, `speakers`, `cover`, `dataPath`, `knownEpisodeCount`, `episodeCount`, `lastCheckedAt`, `episodeIds`. Interne Cachepfade werden nicht veröffentlicht.
+- Root `publication.json`, Schema 2: Gesamtstatus `published-corpus` oder `synthetic-fixture`, `episodeCount`, `podcastCount`. Der Pages-Schutz veröffentlicht nur echte nichtleere Korpora.
+- Je `podcasts/<id>/publication.json`, **Schema 2**: `publicationId`, `podcastId`, `state`, `archiveComplete:false`, `episodeCount`, `episodeIds`, `searchIndexId`, `catalogId`, `searchRulesId`, `preparationId`.
+- Je Podcast `catalog.json`, Schema 2: Veröffentlichung/Hash, Podcast-ID, optionale Quellensnapshotdaten und `episodes` mit stabiler `episodeId`, Titel, Datum, Audiodauer und `timings.downloadSeconds`, `transcriptionSeconds`, `totalSeconds`. Kein Gesamtwort-/Lemmafeld.
+- `search-rules.json`, Schema 1: `publicationId`, `searchRulesId`, `stopwords`, `ignoredWords`. Ursprung ist die gepflegte [Konfiguration](../config/search-rules.json).
+- `search/manifest.json` und `search/<indexId>/episodes.json` binden Index und stabile IDs an dieselbe `publicationId`. Unter dem Index liegen die nativen Pagefind-Dateien und lazy Original-Episoden-JSONs.
 
-`podcasts.json` im Repository verwendet den Python-Vertrag `Podcasts` aus `src/podcast_words/podcasts.py`. Der normale Build erzeugt daraus eine öffentliche Übersicht mit `schemaVersion: 1`, Namen, Sprechern, Cover, `dataPath`, `episodeCount`, `knownEpisodeCount`, `lastCheckedAt` und den veröffentlichten `episodeIds`. Interne Daten-/Cachepfade werden nicht ausgeliefert. Ein ausdrücklich synthetischer konfigurierter Prüfkorpus setzt `synthetic_fixture: true` und wird vom Pages-Schutz abgelehnt.
+`publicationId` bindet Suchindex, Metadatenkatalog, Suchregeln und Vorbereitungsstand gemeinsam. ID-/Metadaten-/Schemaabweichungen sind Fehler. Es gibt keine öffentlichen `stats/`, Vokabulare oder Zählpakete. Der Browser berechnet die [Suchwort-Treffer](search.md) pro Anfrage aus den Indexpositionen.
 
-Unter `podcasts/<id>/` behält jeder Podcast seine eigene Veröffentlichung mit `schemaVersion: 1`, ihre gebundenen Such-/Statistikdateien und den Katalog. Die Root-Datei `publication.json` hat dagegen `schemaVersion: 2` und fasst den Gesamtbestand zusammen (`state: published-corpus`, `podcastCount`, `episodeCount`). Die Oberfläche lädt nach der Auswahl ausschließlich den gewählten Datenbereich. Bestehende Folge-/Zeitlinks werden über die öffentliche ID-Zuordnung aufgelöst; IDs müssen deshalb auch podcastübergreifend eindeutig sein.
+Der sichtbare Nenner umfasst alle bekannten Katalogfolgen einschließlich Quellenlücken; der Zähler ausschließlich die veröffentlichten gültigen Transkripte. `lastCheckedAt` ist der letzte erfolgreiche gespeicherte Feedimport, kein Build-/Transkriptionsdatum. Alte `?episode=…&t=…`-Links werden über die podcastübergreifend eindeutigen IDs aufgelöst.
 
-Der Zähler auf der Oberfläche bezieht sich auf die tatsächlich veröffentlichten, vollständig geprüften Folgen. Der Nenner umfasst alle bekannten Katalogfolgen einschließlich historischer Ergänzungen und Quellenlücken. `lastCheckedAt` ist der letzte erfolgreiche gespeicherte Feedimport, unabhängig von Transkriptions- und Veröffentlichungsdatum. Siehe [Betrieb und Erweiterung](updates.md).
+Explizite Prüfkorpora über `PODCAST_WORDS_EPISODES` behalten eine einzelne synthetische Veröffentlichung am Root; konfigurierte Tests kennzeichnen ihren Gesamtbestand mit `synthetic_fixture:true`. Die gewöhnliche Webseite lädt nur den ausgewählten Podcast.

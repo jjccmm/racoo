@@ -8,7 +8,6 @@ from pathlib import Path, PurePath
 
 from pydantic import ValidationError
 
-from podcast_words import analysis
 from podcast_words.catalog import Catalog, CatalogEpisode
 from podcast_words.contracts import Episode
 from podcast_words.json_io import replace_path, write_json
@@ -94,7 +93,10 @@ def revisions(episode: Episode) -> tuple[Episode, bool]:
     return revised, legacy is not None
 
 
-def public_catalog(catalog: Catalog, entries: list[CatalogEpisode]) -> dict:
+def public_catalog(
+    catalog: Catalog, entries: list[CatalogEpisode], episodes: list[Episode]
+) -> dict:
+    records = {episode.episode_id: episode for episode in episodes}
     latest = catalog.snapshots[-1] if catalog.snapshots else None
     snapshot = None
     if latest:
@@ -104,7 +106,7 @@ def public_catalog(catalog: Catalog, entries: list[CatalogEpisode]) -> dict:
             "itemCount": latest.item_count,
         }
     return {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "podcastId": catalog.podcast_id,
         "sourceSnapshot": snapshot,
         "episodes": [
@@ -117,6 +119,12 @@ def public_catalog(catalog: Catalog, entries: list[CatalogEpisode]) -> dict:
                 "webpageUrl": str(item.webpage_url) if item.webpage_url else None,
                 "sourceStatus": item.source_status,
                 "audioAvailability": item.audio_availability,
+                "durationSeconds": records[item.episode_id].audio.duration_seconds,
+                "timings": {
+                    "downloadSeconds": records[item.episode_id].timings.download_seconds,
+                    "transcriptionSeconds": records[item.episode_id].timings.transcription_seconds,
+                    "totalSeconds": records[item.episode_id].timings.total_seconds,
+                },
             }
             for item in entries
         ],
@@ -170,11 +178,6 @@ def prepare(arguments: argparse.Namespace, *, episode_paths: list[Path] | None =
         raise ValueError("Duplicate selected episode identity")
 
     output = arguments.output.resolve()
-    analyses = arguments.analyses.resolve()
-    if output == analyses or output in analyses.parents:
-        raise ValueError(
-            "Analysis cache must be outside the generated publication source directory"
-        )
     output.parent.mkdir(parents=True, exist_ok=True)
     staging = Path(tempfile.mkdtemp(prefix=f".{output.name}-staging-", dir=output.parent))
     try:
@@ -189,23 +192,7 @@ def prepare(arguments: argparse.Namespace, *, episode_paths: list[Path] | None =
             corpus_path,
             [f"episodes/{episode.episode_id}.json" for episode in episodes],
         )
-        analysis_result = analysis.analyze(
-            argparse.Namespace(
-                episodes=corpus_path,
-                output=analyses,
-                publish=staging / "stats",
-                analysis_version=arguments.analysis_version,
-                cache_only=arguments.cache_only,
-                ignored_lemmas=getattr(arguments, "ignored_lemmas", None),
-            )
-        )
-        analysis_data = {
-            episode.episode_id: analysis.Analysis.model_validate_json(
-                (analyses / f"{episode.episode_id}.json").read_bytes()
-            ).model_dump(mode="json")
-            for episode in episodes
-        }
-        source_catalog = public_catalog(catalog, entries)
+        source_catalog = public_catalog(catalog, entries, episodes)
         revisions_by_episode = {
             episode.episode_id: {
                 "configurationRevision": episode.transcription.configuration_revision,
@@ -217,8 +204,6 @@ def prepare(arguments: argparse.Namespace, *, episode_paths: list[Path] | None =
             {
                 "catalog": source_catalog,
                 "episodes": [episode.model_dump(mode="json") for episode in episodes],
-                "analyses": analysis_data,
-                "analysisVersion": arguments.analysis_version,
                 "processingConfiguration": processing_revision,
             }
         )
@@ -226,15 +211,14 @@ def prepare(arguments: argparse.Namespace, *, episode_paths: list[Path] | None =
         write_json(
             staging / "manifest.json",
             {
-                "schemaVersion": 1,
+                "schemaVersion": 2,
                 "generatedBy": "podcast-words publish",
                 "preparationId": preparation_id,
                 "podcastId": catalog.podcast_id,
-                "state": "selected-pilot",
+                "state": "published-corpus",
                 "archiveComplete": False,
                 "episodeIds": [episode.episode_id for episode in episodes],
                 "derivedRevisionEpisodeIds": derived,
-                "analysisVersion": arguments.analysis_version,
                 "sourceSnapshotSha256": (
                     source_catalog["sourceSnapshot"]["sha256"]
                     if source_catalog["sourceSnapshot"]
@@ -247,7 +231,7 @@ def prepare(arguments: argparse.Namespace, *, episode_paths: list[Path] | None =
     except BaseException:
         shutil.rmtree(staging, ignore_errors=True)
         raise
-    return {"ok": True, "preparationId": preparation_id, "analysis": analysis_result}
+    return {"ok": True, "preparationId": preparation_id, "episodeCount": len(episodes)}
 
 
 def publish(arguments: argparse.Namespace) -> int:

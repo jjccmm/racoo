@@ -1,0 +1,104 @@
+{
+  "date": "2026-11-10",
+  "base": "http://127.0.0.1:4174/",
+  "episodeCount": 106,
+  "searches": [
+    {
+      "query": "massagesessel hotline massage",
+      "expectedEpisodeId": "ep-9fc90dc95a4e7c5633f4c62489665cf2",
+      "expectedRank": 1,
+      "total": 55,
+      "elapsedMs": 453
+    },
+    {
+      "query": "butter falten sonnencreme",
+      "expectedEpisodeId": "ep-8c3cf057f4cd494721dc22b56ae5ddfc",
+      "expectedRank": 1,
+      "total": 12,
+      "elapsedMs": 192
+    },
+    {
+      "query": "beatles rettungsequipment songtexte",
+      "expectedEpisodeId": "ep-4e22f6d5c692e3e62564621fdcd8bcb2",
+      "expectedRank": 1,
+      "total": 11,
+      "elapsedMs": 162
+    },
+    {
+      "query": "lehnen position schulter",
+      "expectedEpisodeId": "ep-5f478c2c998d108b9c1a08d27898a417",
+      "expectedRank": 1,
+      "total": 17,
+      "elapsedMs": 187
+    },
+    {
+      "query": "wunder bezeugen fettarm",
+      "expectedEpisodeId": "ep-5764a1149f18a8f68698fb45bb405264",
+      "expectedRank": 1,
+      "total": 39,
+      "elapsedMs": 184
+    },
+    {
+      "query": "chrome",
+      "expectedEpisodeId": "ep-1cb9cafaf35776bee1f11db5dd2a5376",
+      "expectedRank": 1,
+      "total": 5,
+      "elapsedMs": 88
+    },
+    {
+      "query": "gebärdensprache",
+      "expectedEpisodeId": "ep-a5383bfb9a5e2a2eda93d51616a0c004",
+      "expectedRank": 1,
+      "total": 7,
+      "elapsedMs": 94
+    },
+    {
+      "query": "epic",
+      "expectedEpisodeId": "ep-30d06bfb875bc1a4ee69900710485a11",
+      "expectedRank": 1,
+      "total": 4,
+      "elapsedMs": 98
+    },
+    {
+      "query": "kratzeis",
+      "expectedEpisodeId": "ep-6b752f2bcd2309d5e5812f8d76088e7d",
+      "expectedRank": 1,
+      "total": 7,
+      "elapsedMs": 87
+    },
+    {
+      "query": "münzfach",
+      "expectedEpisodeId": "ep-160703518cd26df69fda431ae0604fab",
+      "expectedRank": 1,
+      "total": 2,
+      "elapsedMs": 92
+    }
+  ],
+  "topFiveMatches": 10,
+  "mobile": {
+    "viewport": "390x844",
+    "deviceScaleFactor": 2,
+    "hasTouch": true,
+    "cpuSlowdown": 4,
+    "rttMs": 150,
+    "downloadBytesPerSecond": 200000,
+    "uploadBytesPerSecond": 62500,
+    "cache": "fresh context, HTTP cache disabled; second query reuses application caches",
+    "timing": "Suchen click until first original passage is rendered",
+    "coldMs": 4016,
+    "warmMs": 457,
+    "beforeSearchBytes": 218860,
+    "throughFirstResultBytes": 994305,
+    "warmAdditionalBytes": 0,
+    "observedIndexBodyBytes": 152983,
+    "byteScope": "BrowserContext request.sizes responseBodySize, including observed dedicated-worker requests; headers excluded",
+    "note": "CDP page-target CPU/network emulation on a local Windows desktop; no physical mobile-device or internet guarantee",
+    "verticalMinimap": true,
+    "touchTapScrolled": true,
+    "keyboardEndpoints": true,
+    "highDpiCanvas": true,
+    "mobileOverflow": false,
+    "audioStartedByMinimap": false
+  },
+  "errors": []
+}

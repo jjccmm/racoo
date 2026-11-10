@@ -1,0 +1,28 @@
+{
+  "date": "2026-11-10",
+  "episodeCount": 106,
+  "knownEpisodes": 542,
+  "transcriptsUnchanged": true,
+  "pythonTests": 74,
+  "browserTests": 106,
+  "browserRuns": [
+    {
+      "base": "/racoo/",
+      "legacyCases": 49,
+      "configuredCases": 4
+    },
+    {
+      "base": "/",
+      "legacyCases": 49,
+      "configuredCases": 4
+    }
+  ],
+  "pagefindVersion": "1.5.2",
+  "publicBytes": 17206019,
+  "previousPublicBytes": 22424703,
+  "noStatsArtifacts": true,
+  "deployGuardPassedLocally": true,
+  "lockCheck": "uv lock --check --offline passed",
+  "asrRerun": false,
+  "independentHumanQualityReview": false
+}

@@ -6,7 +6,7 @@ export type Segment = { id: string; text: string; start_seconds: number; end_sec
 export type Highlight = { start: number; end: number; terms: string[] };
 export type Passage = Segment & { terms: string[]; highlights: Highlight[] };
 export type Identity = { episodeId: string; publishedAt: string };
-type SearchIndex = { moduleUrl: string; episodes: Record<string, Identity> };
+type SearchIndex = { publicationId: string; moduleUrl: string; episodes: Record<string, Identity> };
 export type SearchRequest = SearchIndex & { terms: string[]; offset: number; targetEpisodeIds?: string[]; mode?: 'counts' };
 export type SearchResult = Identity & {
   segments: Segment[];
@@ -21,7 +21,7 @@ export type SearchResult = Identity & {
   webpageUrl: string;
 };
 export type SearchOverview = {
-  terms: string[]; total: number;
+  publicationId: string; terms: string[]; total: number;
   episodes: (Identity & { counts: Record<string, number>; uniqueCount: number })[];
 };
 export type SearchPage = { results: SearchResult[]; total: number; terms: string[] };
@@ -35,7 +35,8 @@ async function json(url: string, signal: AbortSignal) {
   return response.json();
 }
 
-async function loadIndex(signal: AbortSignal, dataBase?: string): Promise<SearchIndex> {
+let cachedIndex: { key: string; value: SearchIndex } | undefined;
+async function loadIndex(signal: AbortSignal, dataBase?: string, expectedPublicationId?: string): Promise<SearchIndex> {
   if (dataBase === undefined) {
     const podcasts = await loadPodcasts(signal);
     const params = new URLSearchParams(window.location.search);
@@ -44,7 +45,11 @@ async function loadIndex(signal: AbortSignal, dataBase?: string): Promise<Search
     if (!podcast || !podcast.episodeCount) throw new Error('Für diesen Podcast ist kein Suchstand verfügbar');
     dataBase = `${base}${podcast.dataPath}`;
   }
+  signal.throwIfAborted();
+  const key = new URL(dataBase, location.href).href;
+  if (cachedIndex?.key === key && (!expectedPublicationId || cachedIndex.value.publicationId === expectedPublicationId)) return cachedIndex.value;
   const publication = await loadPublication(signal, dataBase);
+  if (expectedPublicationId && publication.publicationId !== expectedPublicationId) throw new Error('Der Datenstand hat sich geändert. Bitte lade die Seite neu.');
   const manifest = await json(`${dataBase}search/manifest.json`, signal);
   if (!/^[a-f0-9]{64}$/.test(manifest.indexId) || manifest.publicationId !== publication.publicationId
       || manifest.indexId !== publication.searchIndexId || manifest.podcastId !== publication.podcastId) throw new Error('Ungültiger Suchstand');
@@ -52,7 +57,9 @@ async function loadIndex(signal: AbortSignal, dataBase?: string): Promise<Search
   const mapping = await json(`${directory}episodes.json`, signal);
   if (mapping.indexId !== manifest.indexId || mapping.publicationId !== publication.publicationId) throw new Error('Suchindex und Folgenzuordnung stimmen nicht überein');
   const moduleUrl = new URL(`${directory}pagefind.js`, window.location.href).href;
-  return { moduleUrl, episodes: mapping.episodes };
+  const value = { publicationId: publication.publicationId, moduleUrl, episodes: mapping.episodes };
+  cachedIndex = { key, value };
+  return value;
 }
 
 type Pending = { resolve(value: unknown): void; reject(error: Error): void; cleanup(): void };
@@ -73,6 +80,7 @@ class SearchWorker {
     this.worker.terminate();
     for (const request of this.pending.values()) { request.cleanup(); request.reject(error); }
     this.pending.clear();
+    if (cachedIndex?.value.moduleUrl === this.key) cachedIndex = undefined;
     if (activeWorker === this) activeWorker = undefined;
   }
   call<T>(request: SearchRequest, signal: AbortSignal): Promise<T> {
@@ -99,14 +107,14 @@ async function loadPage<T = SearchPage>(request: SearchRequest, signal: AbortSig
 }
 
 /** Complete per-term counts before any result fragment or transcript is loaded. */
-export async function countEpisodes(terms: string[], signal: AbortSignal, dataBase: string): Promise<SearchOverview> {
-  const index = await loadIndex(signal, dataBase);
-  return loadPage<SearchOverview>({ ...index, terms, offset: 0, mode: 'counts' }, signal);
+export async function countEpisodes(terms: string[], signal: AbortSignal, dataBase: string, publicationId?: string): Promise<SearchOverview> {
+  const index = await loadIndex(signal, dataBase, publicationId);
+  return loadPage<SearchOverview>({ ...index, terms: parseQuery(terms.join(' ')).terms, offset: 0, mode: 'counts' }, signal);
 }
 
-export async function searchEpisodes(query: string, signal: AbortSignal, options: { targetEpisodeIds?: string[]; dataBase?: string } = {}): Promise<SearchSession> {
+export async function searchEpisodes(query: string, signal: AbortSignal, options: { targetEpisodeIds?: string[]; dataBase?: string; publicationId?: string } = {}): Promise<SearchSession> {
   const terms = parseQuery(query).terms.sort();
-  const index = await loadIndex(AbortSignal.any([signal, AbortSignal.timeout(20000)]), options.dataBase);
+  const index = await loadIndex(AbortSignal.any([signal, AbortSignal.timeout(20000)]), options.dataBase, options.publicationId);
   const initial = await loadPage({ ...index, ...options, terms, offset: 0 }, signal);
   let offset = initial.results.length;
   return {

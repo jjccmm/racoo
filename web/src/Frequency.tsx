@@ -1,232 +1,144 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { searchEpisodes, type Passage, type SearchResult } from './search';
-import { formatPlaybackTime, type PlayerEpisode } from './playback';
-import { countPairs } from './statistics';
-import { WORD_COLORS, wordStyle } from './word-colors';
-import { SearchIcon } from './SearchIcon';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, type XAxisTickContentProps } from 'recharts';
+import { countEpisodes, searchEpisodes, type SearchOverview, type SearchResult, type Passage } from './search';
+import type { SearchData, EpisodeMetadata } from './catalog';
+import { parseQuery } from './query';
+import { SearchIcon } from './SearchIcon';
+import { WORD_COLORS, wordStyle } from './word-colors';
+import { formatPlaybackTime, type PlayerEpisode } from './playback';
+import { HighlightedText, type ColoredTerm } from './HighlightedText';
+import { TranscriptReader } from './TranscriptReader';
 
-type Word = { lemma: string; stopword: boolean; totalCount: number; shard: string };
-type Episode = { episodeId: string; title: string; publishedAt: string; totalWords: number; distinctWords: number };
-type Selected = Word & { color: string; token: number; state: 'loading' | 'ready' | 'error'; values: Map<string, number> };
-const normalize = (value: string) => value.normalize('NFC').toLocaleLowerCase('de-DE').trim();
-const identityOrder = (a: string, b: string) => a < b ? -1 : a > b ? 1 : 0;
 const count = (value: number) => value.toLocaleString('de-DE');
-
-export function Frequency({ dataBase, publicationId, words, episodes, onChoose }: { onChoose(episode: PlayerEpisode, passage: Passage): void; dataBase: string; publicationId: string; words: Word[]; episodes: Episode[] }) {
-  const [query, setQuery] = useState('');
-  const [opened, setOpened] = useState(false);
-  const [active, setActive] = useState(-1);
-  const [initialWord] = useState<Selected | undefined>(() => {
-    const word = words.find((word) => normalize(word.lemma) === 'haus');
-    return word ? { ...word, token: 1, color: WORD_COLORS[0], state: 'loading', values: new Map() } : undefined;
-  });
-  const [selected, setSelected] = useState<Selected[]>(() => initialWord ? [initialWord] : []);
-  const [details, setDetails] = useState<{ key: string; results?: SearchResult[]; error?: boolean }>({ key: '' });
-  const [retry, setRetry] = useState(0);
+const order = (a: string, b: string) => a < b ? -1 : a > b ? 1 : 0;
+type Submission = { id: number; terms: string[]; ignored: string[]; error?: string };
+function prepare(query: string, excluded: string[], id: number): Submission {
+  try { return { ...parseQuery(query, excluded), id }; }
+  catch (error) { return { id, terms: [], ignored: [], error: (error as Error).message }; }
+}
+export function Frequency({ dataBase, data, onChoose }: { dataBase: string; data: SearchData; onChoose(episode: PlayerEpisode, passage: Passage): void }) {
+  const [query, setQuery] = useState(() => new URLSearchParams(location.search).get('q') ?? '');
+  const [submission, setSubmission] = useState(() => prepare(query, data.excluded, 0));
+  const [overview, setOverview] = useState<{ id: number; value?: SearchOverview; error?: string }>({ id: -1 });
   const [mode, setMode] = useState<'top' | 'all'>('top');
-  const field = useRef<HTMLDivElement>(null);
-  const input = useRef<HTMLInputElement>(null);
-  const requests = useRef(new Map<number, AbortController>());
-  const sequence = useRef(initialWord ? 1 : 0);
-  const term = normalize(query);
-  const suggestions = words.filter((word) => !selected.some((item) => item.lemma === word.lemma) && normalize(word.lemma).includes(term))
-    .sort((a, b) => {
-      const priority = (lemma: string) => lemma === term ? 0 : lemma.startsWith(term) ? 1 : 2;
-      return priority(normalize(a.lemma)) - priority(normalize(b.lemma)) || b.totalCount - a.totalCount || identityOrder(a.lemma, b.lemma);
-    }).slice(0, 10);
-
+  const [opened, setOpened] = useState<string>();
+  const words = useMemo(() => submission.terms.map((term, index) => ({ term, color: WORD_COLORS[index] })), [submission]);
   useEffect(() => {
-    const dismiss = (event: PointerEvent) => { if (!field.current?.contains(event.target as Node)) setOpened(false); };
-    document.addEventListener('pointerdown', dismiss);
-    const pending = requests.current;
-    return () => { document.removeEventListener('pointerdown', dismiss); pending.forEach((controller) => controller.abort()); };
-  }, []);
-
-  const load = useCallback((word: Selected) => {
+    if (!submission.terms.length) return;
     const controller = new AbortController();
-    requests.current.get(word.token)?.abort();
-    requests.current.set(word.token, controller);
-    return readCounts(word, episodes, publicationId, controller.signal, dataBase).then((values) => {
-      if (!controller.signal.aborted) setSelected((current) => current.map((item) => item.token === word.token ? { ...item, values, state: 'ready' } : item));
-    }).catch(() => {
-      if (!controller.signal.aborted) setSelected((current) => current.map((item) => item.token === word.token ? { ...item, state: 'error' } : item));
-    }).finally(() => { if (requests.current.get(word.token) === controller) requests.current.delete(word.token); });
-  }, [publicationId, episodes, dataBase]);
-
-  useEffect(() => { if (initialWord) void load(initialWord); }, [initialWord, load]);
-
-  function choose(word: Word) {
-    if (selected.length >= 5 || selected.some((item) => item.lemma === word.lemma)) return;
-    const item: Selected = { ...word, token: ++sequence.current, color: WORD_COLORS.find((color) => !selected.some((entry) => entry.color === color))!, values: new Map(), state: 'loading' };
-    setSelected((current) => [...current, item]);
-    setQuery(''); setOpened(false); setActive(-1);
-    input.current?.focus();
-    void load(item);
-  }
-  function remove(word: Selected) {
-    requests.current.get(word.token)?.abort();
-    setSelected((current) => current.filter((item) => item.token !== word.token));
-  }
-  const ready = selected.length > 0 && selected.every((word) => word.state === 'ready');
-  const chronological = episodes.map((episode) => ({ ...episode,
-    total: selected.reduce((sum, word) => sum + (word.values.get(episode.episodeId) ?? 0), 0),
-    ...Object.fromEntries(selected.map((word) => [`series${word.token}`, word.values.get(episode.episodeId) ?? 0])),
-  })).sort((a, b) => Date.parse(a.publishedAt) - Date.parse(b.publishedAt) || identityOrder(a.episodeId, b.episodeId));
-  const ranked = chronological.filter((episode) => episode.total > 0).sort((a, b) => b.total - a.total || Date.parse(b.publishedAt) - Date.parse(a.publishedAt) || identityOrder(a.episodeId, b.episodeId)).slice(0, 10);
-  const plotted = mode === 'top' ? ranked : chronological;
-  const passageKey = ready && ranked.length ? JSON.stringify({ tokens: selected.map((word) => word.token), terms: selected.map((word) => word.lemma), ids: ranked.map((episode) => episode.episodeId) }) : '';
-  useEffect(() => {
-    if (!passageKey) return;
-    const controller = new AbortController();
-    const request = JSON.parse(passageKey) as { terms: string[]; ids: string[] };
-    searchEpisodes(request.terms.join(' '), controller.signal, { targetEpisodeIds: request.ids, dataBase }).then((session) => {
-      if (!controller.signal.aborted) setDetails({ key: passageKey, results: session.initial.results });
-    }).catch(() => { if (!controller.signal.aborted) setDetails({ key: passageKey, error: true }); });
+    countEpisodes(submission.terms, controller.signal, dataBase, data.publicationId).then(value => {
+      if (!controller.signal.aborted) setOverview({ id: submission.id, value });
+    }).catch(error => { if (!controller.signal.aborted) setOverview({ id: submission.id, error: (error as Error).message }); });
     return () => controller.abort();
-  }, [passageKey, retry, dataBase]);
-  const passagesLoading = !!passageKey && (details.key !== passageKey || (!details.results && !details.error));
-
+  }, [submission, dataBase, data.publicationId]);
+  const ready = !!overview.value && overview.id === submission.id && !!words.length;
+  const failed = overview.id === submission.id && overview.error;
+  const counts = new Map(ready ? overview.value!.episodes.map(episode => [episode.episodeId, episode]) : []);
+  const chronological = data.episodes.map(episode => {
+    const found = counts.get(episode.episodeId);
+    const values = words.map(word => found?.counts[word.term] ?? 0);
+    return { ...episode, total: values.reduce((a, b) => a + b, 0), coverage: values.filter(Boolean).length,
+      uniqueCount: found?.uniqueCount ?? 0, ...Object.fromEntries(values.map((value, index) => [`series${index}`, value])) };
+  }).sort((a, b) => Date.parse(a.publishedAt) - Date.parse(b.publishedAt) || order(a.episodeId, b.episodeId));
+  const ranked = chronological.filter(episode => episode.total > 0).sort((a, b) => b.total - a.total || Date.parse(b.publishedAt) - Date.parse(a.publishedAt) || order(a.episodeId, b.episodeId)).slice(0, 10);
+  const plotted = mode === 'top' ? ranked : chronological;
+  function submit() {
+    const next = prepare(query, data.excluded, submission.id + 1);
+    setSubmission(next); setOpened(undefined);
+    const url = new URL(location.href);
+    if (query.trim()) url.searchParams.set('q', query.trim()); else url.searchParams.delete('q');
+    history.replaceState(null, '', url);
+  }
   return <section className="frequency" aria-label="Wörter und Folgen erkunden">
-    <div className="word-controls">
-    <ul className="selected-words" aria-label="Ausgewählte Grundformen">{selected.map((word) => <li key={word.token}><button className="word-chip" style={wordStyle(word.color)} aria-label={`${word.lemma} entfernen`} onClick={() => remove(word)}>{word.lemma}<span aria-hidden="true"> ×</span></button></li>)}</ul>
-    <div className="word-field" ref={field} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setOpened(false); }}>
-      <label className="visually-hidden" htmlFor="lemma">Wörter suchen</label>
-      <div className="search-input"><SearchIcon /><input type="search" ref={input} id="lemma" role="combobox" aria-autocomplete="list" aria-expanded={opened && selected.length < 5} aria-controls="word-options"
-        aria-activedescendant={opened && active >= 0 && suggestions[active] ? `word-option-${active}` : undefined}
-        value={query} placeholder="Wort suchen" autoComplete="off"
-        onFocus={() => { setOpened(true); setActive(-1); }}
-        onChange={(event) => { setQuery(event.target.value); setOpened(true); setActive(-1); }}
-        onKeyDown={(event) => {
-          if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); setOpened(false); setActive(-1); }
-          if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-            event.preventDefault(); setOpened(true);
-            setActive((current) => suggestions.length ? (current < 0 ? (event.key === 'ArrowDown' ? 0 : suggestions.length - 1) : (current + (event.key === 'ArrowDown' ? 1 : -1) + suggestions.length) % suggestions.length) : -1);
-          }
-          if (event.key === 'Enter' && opened && suggestions.length && selected.length < 5) { event.preventDefault(); choose(suggestions[active < 0 ? 0 : active]); }
-        }} /></div>
-      {opened && selected.length < 5 && <ul id="word-options" role="listbox" aria-label="Grundformvorschläge" className="autocomplete">
-        {suggestions.map((word, index) => <li id={`word-option-${index}`} role="option" aria-label={word.lemma} aria-selected={active === index} key={word.lemma}
-          onPointerDown={(event) => event.preventDefault()} onClick={() => choose(word)}><span>{word.lemma}</span><small>{count(word.totalCount)} im Bestand</small></li>)}
-        {!suggestions.length && <li className="no-option">Keine passende Grundform.</li>}
-      </ul>}
-    </div>
-    </div>
-    <p className="muted selection-note">{selected.length === 5 ? 'Fünf Wörter ausgewählt. Entferne ein Wort, um ein anderes zu wählen. ' : ''}Stoppwörter und manuell ausgeschlossene Wörter werden nicht angeboten.</p>
-    {selected.some((word) => word.state === 'loading') && <p role="status">Wortzählungen werden geladen …</p>}
-    {selected.filter((word) => word.state === 'error').map((word) => <div key={word.token}><p role="alert">Die Zählungen für {word.lemma} konnten nicht geladen werden. Fehlende Daten sind kein Nullwert.</p><button onClick={() => { setSelected((current) => current.map((item) => item.token === word.token ? { ...item, state: 'loading' } : item)); void load(word); }}>Zählungen erneut laden</button></div>)}
-    <section className="chart-panel" aria-label="Grundformvergleich">
-      <div className="chart-heading"><div><h2>Vorkommen je Folge</h2><p className="muted">Absolute Anzahl der ausgewählten Wörter</p></div>
+    <form role="search" className="query-form" onSubmit={event => { event.preventDefault(); submit(); }}>
+      <div className="search-input"><SearchIcon /><label className="visually-hidden" htmlFor="podcast-query">Wörter suchen</label>
+        <input type="search" id="podcast-query" value={query} autoComplete="off" maxLength={250} placeholder="Eimer Münzen Kleingeld" aria-describedby="search-help" onChange={event => setQuery(event.target.value)} />
+      </div><button className="search-submit" type="submit">Suchen</button>
+    </form>
+    <p className="muted selection-note" id="search-help">Bis zu fünf Stichwörter. Wortformen und Wortanfänge können passen. Stoppwörter und manuell ausgeschlossene Wörter werden ignoriert.</p>
+    {submission.ignored.length > 0 && <p className="muted" role="status">Ignoriert: {submission.ignored.join(', ')}</p>}
+    {submission.error && <p role="alert">{submission.error}</p>}
+    {!!words.length && !ready && !failed && <p role="status">Suchwort-Treffer werden ermittelt …</p>}
+    {failed && <div><p role="alert">Die Suche konnte nicht ausgeführt werden. Fehlende Daten sind kein Nullwert. {overview.error}</p><button onClick={() => setSubmission(current => ({ ...current, id: current.id + 1 }))}>Suche erneut laden</button>{overview.error?.includes('Datenstand') && <button onClick={() => location.reload()}>Seite neu laden</button>}</div>}
+    <section className="chart-panel" aria-label="Suchwortvergleich">
+      <div className="chart-heading"><div><h2>Suchwort-Treffer je Folge</h2><p className="muted">Absolute Anzahl der passenden Textpositionen je Suchwort</p></div>
         <div className="view-toggle" aria-label="Folgen im Diagramm"><button aria-pressed={mode === 'top'} onClick={() => setMode('top')}>Top 10</button><button aria-pressed={mode === 'all'} onClick={() => setMode('all')}>Alle</button></div>
       </div>
-      {ready && plotted.length > 3 && <p className="chart-scroll-note muted">Im Diagramm seitlich scrollen, um weitere Folgen zu sehen.</p>}
-      {!selected.length ? <div className="chart-empty"><p>Wähle ein Wort, um Folgen zu vergleichen.</p></div>
-        : !ready ? <div className="chart-empty"><p>Das Diagramm wartet auf vollständige Zählungen.</p></div>
-          : <><ul className="chart-legend" aria-label="Wörter im Diagramm">{selected.map((word) => <li key={word.token} style={wordStyle(word.color)}><i />{word.lemma}</li>)}</ul>
-            {!ranked.length && <p role="status">Keine Vorkommen für die ausgewählten Wörter.</p>}
+      {!words.length ? <div className="chart-empty"><p>{submission.ignored.length ? 'Ergänze ein aussagekräftiges Stichwort.' : 'An welche Wörter erinnerst du dich?'}</p></div>
+        : !ready ? <div className="chart-empty"><p>{failed ? 'Die Suche ist noch nicht vollständig.' : 'Das Diagramm wartet auf die Suchergebnisse.'}</p></div>
+          : <>
+            <ul className="chart-legend" aria-label="Wörter im Diagramm">{words.map(word => <li key={word.term} style={wordStyle(word.color)}><i />{word.term}</li>)}</ul>
+            {!ranked.length && <p role="status">Keine Treffer für diese Stichwörter.</p>}
+            {plotted.length > 3 && <p className="chart-scroll-note muted">Im Diagramm seitlich scrollen, um weitere Folgen zu sehen.</p>}
             <div className="frequency-chart-scroll"><div className="frequency-chart" style={{ width: `max(100%, ${Math.max(580, plotted.length * 95)}px)` }}>
               <ResponsiveContainer width="100%" height={370}><BarChart data={plotted} margin={{ top: 20, right: 16, bottom: 40, left: 0 }} barCategoryGap="28%" accessibilityLayer>
-                <CartesianGrid vertical={false} stroke="#e7e7eb" strokeDasharray="3 4" /><XAxis dataKey="episodeId" interval={0} height={85} axisLine={false} tickLine={false} tick={({ x, y, payload }: XAxisTickContentProps) => {
-                  const episode = plotted.find((item) => item.episodeId === payload.value)!;
-                  const label = `${episode.title}; ${selected.map((word) => `${word.lemma}: ${count(word.values.get(episode.episodeId) ?? 0)}`).join('; ')}; Summe: ${count(episode.total)}`;
-                  return <g transform={`translate(${x},${y})`} role="img" aria-label={label}>
-                    <title>{label}</title><text y={12} transform="rotate(-25)" textAnchor="end" fill="#62626b" fontSize={11}>{episode.title.length > 22 ? `${episode.title.slice(0, 20)}…` : episode.title}</text>
-                  </g>;
-                }} />
-                <YAxis allowDecimals={false} axisLine={false} tickLine={false} width={38} tick={{ fontSize: 11, fill: '#62626b' }} /><Tooltip itemStyle={{ color: '#202024' }} cursor={{ fill: '#f4f4f5' }} labelStyle={{ fontWeight: 600, color: '#202024' }} formatter={(value, name) => [value, name]} contentStyle={{ borderRadius: 6, border: '1px solid #e4e4e7', boxShadow: '0 4px 16px #0000000a', fontSize: 13 }} labelFormatter={(label, payload) => `${payload[0]?.payload.title ?? label} · Summe ${payload[0]?.payload.total ?? 0}`} />
-                {selected.map((word) => <Bar key={word.token} dataKey={`series${word.token}`} name={word.lemma} stackId="words" fill={word.color} stroke="#fff" strokeWidth={1} isAnimationActive={false} maxBarSize={52} />)}
+                <CartesianGrid vertical={false} stroke="#e7ece9" strokeDasharray="3 4" /><XAxis dataKey="episodeId" interval={0} height={85} axisLine={false} tickLine={false} tick={({ x, y, payload }: XAxisTickContentProps) => {
+                  const episode = plotted.find(item => item.episodeId === payload.value)!;
+                  const label = `${episode.title}; ${words.map(word => `${word.term}: ${count(counts.get(episode.episodeId)?.counts[word.term] ?? 0)}`).join('; ')}; Summe: ${count(episode.total)}`;
+                  return <g transform={`translate(${x},${y})`} role="img" aria-label={label}><title>{label}</title><text y={12} transform="rotate(-25)" textAnchor="end" fill="#62626b" fontSize={11}>{episode.title.length > 22 ? `${episode.title.slice(0, 20)}…` : episode.title}</text></g>;
+                }} /><YAxis allowDecimals={false} axisLine={false} tickLine={false} width={38} tick={{ fontSize: 11, fill: '#62626b' }} />
+                <Tooltip cursor={{ fill: '#f4f6f5' }} contentStyle={{ borderRadius: 8, border: '1px solid #dce4df', fontSize: 13 }} labelFormatter={(label, payload) => `${payload[0]?.payload.title ?? label} · Summe ${payload[0]?.payload.total ?? 0}`} />
+                {words.map((word, index) => <Bar key={word.term} dataKey={`series${index}`} name={word.term} stackId="words" fill={word.color} stroke="#fff" strokeWidth={1} isAnimationActive={false} maxBarSize={52} />)}
               </BarChart></ResponsiveContainer>
             </div></div>
-
           </>}
     </section>
-    {ready && ranked.length > 0 && <section aria-label="Folgen mit den meisten Vorkommen" className="episode-results">
-      <div className="results-heading"><h2>Passende Folgen</h2><span>Nach Gesamttreffern · Top 10</span></div>
-      {ranked.map((episode, index) => <EpisodeCard
-        key={episode.episodeId} episode={episode} index={index} words={selected}
-        result={details.key === passageKey ? details.results?.find((item) => item.episodeId === episode.episodeId) : undefined}
-        loading={passagesLoading} error={details.key === passageKey && !!details.error} onChoose={onChoose}
-      />)}
+    {ready && ranked.length > 0 && <section aria-label="Folgen mit den meisten Treffern" className="episode-results">
+      <div className="results-heading"><h2>Passende Folgen</h2><span>Nach Suchwort-Treffern · Top 10</span></div>
+      {ranked.map((episode, index) => <EpisodeCard key={`${episode.episodeId}:${submission.id}`} episode={episode} index={index} words={words}
+        counts={counts.get(episode.episodeId)?.counts ?? {}} dataBase={dataBase} publicationId={data.publicationId}
+        opened={opened === episode.episodeId} onToggle={() => setOpened(current => current === episode.episodeId ? undefined : episode.episodeId)} onChoose={onChoose} />)}
+      <p className="muted">Jedes Suchwort wird einzeln gezählt. Dieselbe Textstelle kann zu mehreren Suchwörtern passen; die Fundstellennavigation fasst solche Überschneidungen zusammen.</p>
     </section>}
-    {ready && ranked.length > 0 && <p className="muted">Die Zahlen zählen Grundformen. Markierungen zeigen gefundene Wortformen und können davon abweichen; auch verwandte Formen und Wortanfänge können passen.</p>}
-    {passagesLoading && <p role="status">Originalpassagen werden geladen …</p>}
-    {details.key === passageKey && details.error && <div><p role="alert">Die Originalpassagen konnten nicht geladen werden. Die exakten Zählungen bleiben erhalten.</p><button onClick={() => { setDetails({ key: passageKey }); setRetry((value) => value + 1); }}>Passagen erneut laden</button></div>}
   </section>;
 }
+function Excerpt({ passage, words }: { passage: Passage; words: ColoredTerm[] }) {
+  let from = Math.max(0, (passage.highlights[0]?.start ?? 0) - 85);
+  while (from > 0 && !/\s/u.test(passage.text[from - 1])) from--;
+  let to = Math.min(passage.text.length, from + 280);
+  while (to < passage.text.length && !/\s/u.test(passage.text[to])) to++;
+  return <p>{from > 0 && '… '}<HighlightedText text={passage.text} highlights={passage.highlights} words={words} from={from} to={to} />{to < passage.text.length && ' …'}</p>;
+}
 
-function EpisodeCard({ episode, index, words, result, loading, error, onChoose }: {
-  episode: Episode & { total: number }; index: number; words: Selected[];
-  result?: SearchResult; loading: boolean; error: boolean;
-  onChoose(episode: PlayerEpisode, passage: Passage): void;
+type RankedEpisode = EpisodeMetadata & { total: number; coverage: number; uniqueCount: number };
+/** Counts are global; original passages load when their card approaches the viewport. */
+function EpisodeCard({ episode, index, words, counts, dataBase, publicationId, opened, onToggle, onChoose }: {
+  episode: RankedEpisode; index: number; words: ColoredTerm[]; counts: Record<string, number>; dataBase: string; publicationId: string;
+  opened: boolean; onToggle(): void; onChoose(episode: PlayerEpisode, passage: Passage): void;
 }) {
-  return <article className="episode-card">
-    <div className="episode-heading">
-      <span className="rank">{String(index + 1).padStart(2, '0')}</span>
-      <div><h3>{episode.title}</h3>
-        <time dateTime={episode.publishedAt}>{new Date(episode.publishedAt).toLocaleDateString('de-DE', { timeZone: 'UTC' })}</time>
-      </div>
-      <strong>{count(episode.total)} Vorkommen</strong>
-    </div>
-    <ul className="episode-counts">{words.map((word) => <li key={word.token} style={wordStyle(word.color)}>
-      {word.lemma} <strong>{count(word.values.get(episode.episodeId) ?? 0)}</strong>
-    </li>)}</ul>
-    {loading && <p className="muted">Originalpassagen werden geladen …</p>}
-    {error && <p className="muted">Originalpassagen derzeit nicht verfügbar.</p>}
-    {!loading && !error && (result?.passages.length ? <>
-      <div className="passages">
-        {result.passages.slice(0, 2).map((passage) => <PassageRow key={passage.id} passage={passage} words={words} result={result} onChoose={onChoose} />)}
-        {result.passages.length > 2 && <details className="more-passages"><summary>Weitere {result.passages.length - 2} Fundstellen</summary>
-          {result.passages.slice(2).map((passage) => <PassageRow key={passage.id} passage={passage} words={words} result={result} onChoose={onChoose} />)}
-        </details>}
-      </div>
-      <div className="episode-footer"><span id={`jump-hint-${episode.episodeId}`}>Sprung zum Segmentanfang; Werbung kann die Zeit in der Online-Audiodatei verschieben.</span><a className="episode-link" href={result.webpageUrl} target="_blank" rel="noreferrer">Episodenseite ↗</a></div>
-    </> : <p className="muted">Die Grundform wurde gezählt; die Textsuche findet dazu keine passende Originalpassage.</p>)}
+  const element = useRef<HTMLElement>(null), button = useRef<HTMLButtonElement>(null);
+  const [visible, setVisible] = useState(index === 0);
+  const [result, setResult] = useState<SearchResult>();
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const shouldLoad = visible || opened, query = words.map(word => word.term).join(' ');
+  useEffect(() => {
+    if (visible || !element.current) return;
+    const observer = new IntersectionObserver(entries => { if (entries.some(entry => entry.isIntersecting)) setVisible(true); }, { rootMargin: '180px' });
+    observer.observe(element.current); return () => observer.disconnect();
+  }, [visible]);
+  useEffect(() => {
+    if (!shouldLoad) return;
+    const controller = new AbortController();
+    searchEpisodes(query, controller.signal, { dataBase, publicationId, targetEpisodeIds: [episode.episodeId] }).then(session => {
+      const found = session.initial.results[0];
+      if (!found) throw new Error('Die gezählten Suchpositionen fehlen im Textstand');
+      if (!controller.signal.aborted) setResult(found);
+    }).catch(() => { if (!controller.signal.aborted) setError(true); });
+    return () => controller.abort();
+  }, [shouldLoad, query, episode.episodeId, dataBase, publicationId, attempt]);
+  return <article className="episode-card" ref={element}>
+    <div className="episode-heading"><span className="rank">{String(index + 1).padStart(2, '0')}</span><div><h3>{episode.title}</h3><time dateTime={episode.publishedAt}>{new Date(episode.publishedAt).toLocaleDateString('de-DE', { timeZone: 'UTC' })}</time></div><strong>{count(episode.total)} Suchwort-Treffer</strong></div>
+    <ul className="episode-counts">{words.map(word => <li key={word.term} style={wordStyle(word.color)}>{word.term} <strong>{count(counts[word.term] ?? 0)}</strong></li>)}<li className="coverage">{episode.coverage}/{words.length} Suchwörter</li></ul>
+    {result ? <>
+      <div className="passages">{result.passages.slice(0, 2).map(passage => <div className="passage" key={passage.id}>
+        <div className="occurrences" aria-label={`Fundstellen in ${passage.id}`}><button onClick={() => onChoose(result, passage)} aria-label={`Anhören ab ${formatPlaybackTime(passage.start_seconds)} · ${passage.terms.join(', ')}`} aria-describedby={`jump-hint-${episode.episodeId}`}>▶ {formatPlaybackTime(passage.start_seconds)}</button></div>
+        <Excerpt passage={passage} words={words} />
+      </div>)}</div>
+      <div className="episode-actions"><button ref={button} aria-expanded={opened} onClick={onToggle}>{opened ? 'Transkript schließen' : 'Transkript öffnen'} · {episode.uniqueCount} {episode.uniqueCount === 1 ? 'Fundstelle' : 'Fundstellen'}</button><a href={result.webpageUrl} target="_blank" rel="noreferrer">Episodenseite ↗</a></div>
+      {opened && <TranscriptReader result={result} words={words} onChoose={onChoose} onClose={() => { onToggle(); requestAnimationFrame(() => button.current?.focus()); }} />}
+    </> : error ? <div><p role="alert">Die Originalpassagen konnten nicht geladen werden. Die Suchwort-Zählungen bleiben erhalten.</p><button onClick={() => { setError(false); setAttempt(value => value + 1); }}>Passagen erneut laden</button></div>
+      : <p className="muted">{shouldLoad ? 'Originalpassagen werden geladen …' : 'Originalpassagen erscheinen beim Öffnen dieser Folge.'}</p>}
+    <p className="episode-footer" id={`jump-hint-${episode.episodeId}`}>Sprung zum Segmentanfang; Werbung kann die Zeit in der Online-Audiodatei verschieben.</p>
   </article>;
-}
-
-function PassageRow({ passage, words, result, onChoose }: {
-  passage: Passage; words: Selected[]; result: SearchResult;
-  onChoose(episode: PlayerEpisode, passage: Passage): void;
-}) {
-  return <div className="passage">
-    <div className="occurrences" aria-label={`Fundstellen in ${passage.id}`}>
-      <button onClick={() => onChoose(result, passage)} aria-label={`Anhören ab ${formatPlaybackTime(passage.start_seconds)} · ${passage.terms.join(', ')}`} aria-describedby={`jump-hint-${result.episodeId}`}>
-        <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M4 2.5 13 8l-9 5.5z" fill="currentColor" /></svg>
-        {formatPlaybackTime(passage.start_seconds)}
-      </button>
-    </div>
-    <PassageText passage={passage} words={words} />
-  </div>;
-}
-
-function PassageText({ passage, words }: { passage: Passage; words: Selected[] }) {
-  const long = passage.text.length > 360;
-  const first = passage.highlights[0]?.start ?? 0;
-  let start = long ? Math.max(0, first - 85) : 0;
-  while (start > 0 && !/\s/u.test(passage.text[start - 1])) start--;
-  let end = long ? Math.min(passage.text.length, start + 280) : passage.text.length;
-  while (end < passage.text.length && !/\s/u.test(passage.text[end])) end++;
-  function text(from: number, to: number) {
-    const pieces = [];
-    let cursor = from;
-    for (const range of passage.highlights) {
-      if (range.start < from || range.end > to) continue;
-      pieces.push(passage.text.slice(cursor, range.start));
-      const colors = range.terms.map((term) => words.find((word) => word.lemma === term)?.color).filter((color): color is string => !!color);
-      const background = colors.length > 1 ? `linear-gradient(180deg, ${colors.map((color, index) => `${color}33 ${index * 100 / colors.length}%, ${color}33 ${(index + 1) * 100 / colors.length}%`).join(', ')})` : undefined;
-      pieces.push(<mark key={range.start} title={range.terms.join(', ')} style={{ ...wordStyle(colors[0]), background }}>{passage.text.slice(range.start, range.end)}</mark>);
-      cursor = range.end;
-    }
-    pieces.push(passage.text.slice(cursor, to));
-    return pieces;
-  }
-  return <><p>{start > 0 && '… '}{text(start, end)}{end < passage.text.length && ' …'}</p>{long && <details><summary>Vollständiges Segment anzeigen</summary><p>{text(0, passage.text.length)}</p></details>}</>;
-}
-
-async function readCounts(word: Word, episodes: Episode[], publicationId: string, signal: AbortSignal, dataBase: string) {
-  const response = await fetch(`${dataBase}stats/${word.shard}`, { signal });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const shard = await response.json();
-  if (shard.schemaVersion !== 2 || shard.publicationId !== publicationId || !shard.counts || typeof shard.counts !== 'object' || Array.isArray(shard.counts)) throw new Error('Invalid counts');
-  return new Map<string, number>(countPairs(shard.counts[word.lemma], episodes.length).map(([index, value]) => [episodes[index].episodeId, value]));
 }

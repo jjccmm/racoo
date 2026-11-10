@@ -1,7 +1,7 @@
 import path from 'node:path';
 import type { ResolvedConfig } from 'vite';
 
-export type BuildInputs = { source?: string; episodes: string; analyses: string };
+export type BuildInputs = { source?: string; episodes: string };
 const selected = new WeakMap<ResolvedConfig, BuildInputs>();
 
 /** Explicit single-publication inputs for fixtures and controlled source builds. */
@@ -19,7 +19,6 @@ export function buildInputs(config: ResolvedConfig): BuildInputs {
   const inputs = {
     source,
     episodes: source ? path.join(source, 'episodes.json') : path.resolve(root, episodesSetting!),
-    analyses: path.resolve(root, process.env.PODCAST_WORDS_ANALYSES ?? 'tests/fixtures/analysis'),
   };
   selected.set(config, inputs);
   return inputs;

@@ -24,7 +24,6 @@ def create_fixture(output: Path) -> Path:
         entries = []
         if fixture:
             values = json.loads((ROOT / "tests/fixtures" / fixture).read_bytes())
-            original_id = values["episode_id"]
             values["podcast_id"] = identity
             if identity == "second-podcast":
                 values["episode_id"] = "second-episode"
@@ -34,11 +33,6 @@ def create_fixture(output: Path) -> Path:
                 directory / "episodes" / f"{episode.episode_id}.json",
                 episode.model_dump(mode="json"),
             )
-            analysis = json.loads(
-                (ROOT / "tests/fixtures/analysis" / f"{original_id}.json").read_bytes()
-            )
-            analysis.update(podcast_id=identity, episode_id=episode.episode_id)
-            write_json(directory / "analyses" / f"{episode.episode_id}.json", analysis)
             entry = CatalogEpisode(
                 episode_id=episode.episode_id,
                 source=episode.source,

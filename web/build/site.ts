@@ -4,7 +4,6 @@ import { spawnSync } from 'node:child_process';
 import type { Plugin, ResolvedConfig } from 'vite';
 import { buildInputs } from './inputs.ts';
 import { writeSearchIndex } from './search-index.ts';
-import { writeStatistics } from './statistics.ts';
 import { writePublication, checkArtifactBudget } from './publication.ts';
 
 type Podcast = { id: string; name: string; speakers: string[]; cover: string; dataPath: string;
@@ -23,7 +22,6 @@ export function podcastSite(): Plugin {
       if (legacy) {
         const inputs = buildInputs(config);
         await writeSearchIndex(config, inputs, dist);
-        await writeStatistics(config, inputs, dist);
         await writePublication(config, inputs, dist);
         const publication = JSON.parse(await readFile(path.join(dist, 'publication.json'), 'utf8'));
         podcasts = [{ id: 'podcast-ufo', name: 'DAS PODCAST UFO', speakers: ['Florentin Will', 'Stefan Titze'],
@@ -42,9 +40,8 @@ export function podcastSite(): Plugin {
           if (!podcast.source) continue;
           const directory = path.join(dist, podcast.dataPath);
           await mkdir(directory, { recursive: true });
-          const inputs = { source: podcast.source, episodes: path.join(podcast.source, 'episodes.json'), analyses: '' };
+          const inputs = { source: podcast.source, episodes: path.join(podcast.source, 'episodes.json') };
           await writeSearchIndex(config, inputs, directory);
-          await writeStatistics(config, inputs, directory);
           await writePublication(config, inputs, directory);
         }
         await writeFile(path.join(dist, 'publication.json'), JSON.stringify({ schemaVersion: 2,

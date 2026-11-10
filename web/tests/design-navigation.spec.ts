@@ -1,82 +1,24 @@
 import { expect, test } from '@playwright/test';
 
-test.use({ hasTouch: true });
-
-test('the first screen offers the real podcast identity without loading the search corpus', async ({ page }) => {
-  const requests: string[] = [];
-  page.on('request', (request) => requests.push(new URL(request.url()).pathname));
+test('landing demo is free text, highlights its explanation and loads no podcast index', async ({ page }) => {
+  const requests: string[] = []; page.on('request', request => requests.push(request.url()));
   await page.goto('./');
-  await expect(page.getByRole('list', { name: 'Wörter im Beispieltext', exact: true })).toBeVisible();
-  await expect(page.getByLabel('So funktioniert Racoo')).toContainText('Du willst diese eine Podcast-Folge wiederfinden');
-  const podcast = page.getByRole('link', { name: /DAS PODCAST UFO.*Florentin Will.*Stefan Titze/ });
-  await expect(podcast).toBeVisible();
-  const cover = podcast.getByRole('img');
-  await expect(cover).toHaveJSProperty('naturalWidth', 320);
-  const bounds = await podcast.boundingBox();
-  expect(bounds!.y + bounds!.height).toBeLessThan(720);
-  await expect(page.getByRole('combobox', { name: 'Wörter suchen', exact: true })).toHaveCount(0);
-  await expect(page.getByRole('combobox', { name: 'Wort im Beispieltext suchen' })).toBeVisible();
-  expect(requests.filter((path) => /\/(stats|search)\/|\/publication\.json$/.test(path))).toEqual([]);
-  await podcast.focus();
-  await page.keyboard.press('Enter');
-  await expect(page).toHaveURL(/\?podcast=podcast-ufo$/);
-  await expect(page.getByRole('heading', { name: 'DAS PODCAST UFO', exact: true })).toBeVisible();
-  await expect(page.getByRole('combobox', { name: 'Wörter suchen' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Racoo – Startseite', exact: true })).toBeVisible();
-  await page.reload();
-  await expect(page.getByRole('combobox')).toBeVisible();
-  await page.getByRole('link', { name: 'Alle Podcasts' }).click();
-  await expect(page.getByRole('list', { name: 'Wörter im Beispieltext', exact: true })).toBeVisible();
-  await page.goBack();
-  await expect(page.getByRole('combobox')).toBeVisible();
+  const field = page.getByRole('searchbox', { name: 'Wörter im Beispieltext suchen' });
+  await expect(field).toHaveValue('Die Podcast Wort Suche');
+  await expect(page.getByRole('combobox')).toHaveCount(0);
+  await expect(page.locator('.demo-explanation mark')).not.toHaveCount(0);
+  await field.fill('Folge');
+  await expect(page.locator('.demo-explanation mark')).toHaveText(['Folge', 'Folgen']);
+  expect(requests.some(url => /\/(search|stats)\//.test(url))).toBe(false);
+  await page.getByRole('link', { name: /DAS PODCAST UFO/ }).click();
+  await expect(page.getByRole('searchbox', { name: 'Wörter suchen' })).toHaveValue('Folge');
+  expect(new URL(page.url()).searchParams.get('q')).toBe('Folge');
 });
 
-test('mobile podcast selection keeps the first screen and search in the viewport', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('./');
-  const podcast = page.getByRole('link', { name: /DAS PODCAST UFO.*Florentin Will/ });
-  const bounds = await podcast.boundingBox();
-  expect(bounds!.y + bounds!.height).toBeLessThan(844);
-  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
-  await podcast.tap();
-  const input = page.getByRole('combobox');
-  await expect(input).toBeVisible();
-  const searchBounds = await input.boundingBox();
-  expect(searchBounds!.y + searchBounds!.height).toBeLessThan(350);
-  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
-  await expect(page.getByRole('heading', { name: 'Die Podcast Wort Suche', exact: true })).toHaveCount(0);
-});
-
-test('the introduction adds related word forms, removes highlights and needs no corpus downloads', async ({ page }) => {
-  const requests: string[] = [];
-  page.on('request', (request) => requests.push(new URL(request.url()).pathname));
-  await page.goto('./');
-  const chips = page.getByRole('list', { name: 'Wörter im Beispieltext', exact: true });
-  await expect(chips.getByRole('button')).toHaveText(['Die×', 'Podcast×', 'Wort×', 'Suche×']);
-  const explanation = page.getByLabel('So funktioniert Racoo');
-  await expect(explanation.locator('mark[title="Wort"]')).toHaveText(['Wörter', 'Schlüsselwörter']);
-  const input = page.getByRole('combobox', { name: 'Wort im Beispieltext suchen' });
-  await input.fill('FOLGEN');
-  await expect(page.getByRole('option')).toHaveAccessibleName('Folge');
-  await input.press('ArrowDown');
-  await input.press('Enter');
-  await expect(chips.getByRole('button')).toHaveCount(5);
-  await expect(explanation.locator('mark[title="Folge"]')).toHaveText(['Folge', 'Folgen']);
-  const color = await chips.getByRole('button', { name: 'Folge entfernen' }).evaluate(element => getComputedStyle(element).getPropertyValue('--word-color'));
-  expect(await explanation.locator('mark[title="Folge"]').first().evaluate(element => getComputedStyle(element).getPropertyValue('--word-color'))).toBe(color);
-  await expect(page.getByText('Fünf Wörter ausgewählt. Entferne eines, um ein anderes auszuprobieren.', { exact: true })).toBeVisible();
-  await chips.getByRole('button', { name: 'Wort entfernen' }).click();
-  await expect(explanation.locator('mark[title="Wort"]')).toHaveCount(0);
-  await expect(explanation).toContainText('Schlüsselwörter');
-  await input.fill('WO\u0308RTER');
-  await page.getByRole('option', { name: 'Wort', exact: true }).tap();
-  await expect(explanation.locator('mark[title="Wort"]')).toHaveText(['Wörter', 'Schlüsselwörter']);
-  await chips.getByRole('button', { name: 'Folge entfernen' }).click();
-  await input.fill('Banane');
-  await expect(page.getByText('Kein weiteres passendes Wort im Beispieltext.', { exact: true })).toBeVisible();
-  await input.press('Enter');
-  await expect(chips.getByRole('button')).toHaveCount(4);
-  await input.press('Escape');
-  await expect(page.getByRole('listbox')).toHaveCount(0);
-  expect(requests.filter(path => /\/(stats|search)\/|\/publication\.json$/.test(path))).toEqual([]);
+test('unmodified demo is not a real query and mobile entry stays within the screen', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 720 }); await page.goto('./');
+  await page.getByRole('link', { name: /DAS PODCAST UFO/ }).click();
+  await expect(page.getByRole('searchbox', { name: 'Wörter suchen' })).toHaveValue('');
+  await expect(page.getByRole('article')).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });

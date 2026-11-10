@@ -3,7 +3,7 @@ import type { SearchPage, SearchSession } from '../src/search';
 
 type Probe = Window & { searchSession?: SearchSession; searchAbort?: AbortController; searchPromise?: Promise<SearchSession> };
 
-/** Public built module/session contract, independent of the explorer's lemma-only UI. */
+/** Public built module/session contract, independent of the explorer UI. */
 export async function beginSearch(page: Page, query: string, targets?: string[]) {
   await page.evaluate(async ({ query, targets }) => {
     const browser = window as Probe;
@@ -37,27 +37,21 @@ export async function more(page: Page): Promise<{ page?: SearchPage; error?: str
     catch (error) { return { error: String(error) }; }
   });
 }
-export async function choose(page: Page, lemma: string) {
-  await page.getByRole('combobox', { name: 'Wörter suchen' }).fill(lemma);
-  await page.getByRole('option', { name: lemma, exact: true }).click();
-  await expect(page.getByRole('button', { name: `${lemma} entfernen` })).toBeVisible();
+export async function choose(page: Page, word: string) {
+  const input = page.getByRole('searchbox', { name: 'Wörter suchen' });
+  const before = await input.inputValue();
+  await input.fill([before, word].filter(Boolean).join(' '));
+  await page.getByRole('button', { name: 'Suchen', exact: true }).click();
 }
 export async function clearWords(page: Page) {
-  const chips = page.getByRole('list', { name: 'Ausgewählte Grundformen' }).getByRole('button');
-  while (await chips.count()) await chips.first().click();
-}
-
-/** Start a selection-specific case after the normal, user-visible haus default. */
-export async function openExplorer(page: Page, url = './?podcast=podcast-ufo') {
-  await page.goto(url);
-  await expect(page.getByRole('combobox', { name: 'Wörter suchen' })).toBeVisible();
-  const house = page.getByRole('button', { name: 'haus entfernen', exact: true });
-  if (await house.count()) await house.click();
-  await expect(page.getByRole('list', { name: 'Ausgewählte Grundformen' }).getByRole('button')).toHaveCount(0);
+  await page.getByRole('searchbox', { name: 'Wörter suchen' }).fill('');
+  await page.getByRole('button', { name: 'Suchen', exact: true }).click();
   await expect(page.getByRole('article')).toHaveCount(0);
 }
-
-/** The actual visible SVG episode labels carry full titles and exact counts. */
+export async function openExplorer(page: Page, url = './?podcast=podcast-ufo') {
+  await page.goto(url);
+  await expect(page.getByRole('searchbox', { name: 'Wörter suchen' })).toBeVisible();
+}
 export function chartEpisodes(page: Page) {
-  return page.getByRole('region', { name: 'Grundformvergleich' }).getByRole('img');
+  return page.getByRole('region', { name: 'Suchwortvergleich' }).getByRole('img');
 }

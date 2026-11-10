@@ -13,6 +13,7 @@ type Episode = {
 type RawResult = { id: string; words: number[]; data(): Promise<Fragment> };
 type Pagefind = { init(): Promise<void>; search(term: string): Promise<{ results: RawResult[] }> };
 let engine: Pagefind | undefined;
+const records = new Map<string, Episode>();
 const queries = new Map<string, { result: RawResult; words: number[] }[]>();
 
 // Pagefind 1.5.2 catches some index-download errors and otherwise returns an
@@ -31,7 +32,7 @@ globalThis.fetch = async (...arguments_: Parameters<typeof fetch>) => {
   }
 };
 
-async function search({ moduleUrl, episodes, terms, offset, targetEpisodeIds, mode }: SearchRequest): Promise<SearchPage | SearchOverview> {
+async function search({ moduleUrl, episodes, terms, offset, targetEpisodeIds, mode, publicationId }: SearchRequest): Promise<SearchPage | SearchOverview> {
   fetchFailure = undefined;
   if (targetEpisodeIds?.length === 0) return { results: [], total: 0, terms };
   const allowed = targetEpisodeIds === undefined ? undefined : new Set(targetEpisodeIds);
@@ -49,7 +50,10 @@ async function search({ moduleUrl, episodes, terms, offset, targetEpisodeIds, mo
     if (!results) {
       const raw = await engine!.search(term);
       if (fetchFailure) throw fetchFailure;
-      results = raw.results.map((result) => ({ result, words: [...new Set(result.words)] }));
+      results = raw.results.map((result) => {
+        if (!Array.isArray(result.words) || result.words.some(position => !Number.isSafeInteger(position) || position < 0)) throw new Error('Ungültige Suchpositionen');
+        return { result, words: [...new Set(result.words)] };
+      });
       if (queries.size >= 30) queries.delete(queries.keys().next().value!);
       queries.set(term, results);
     }
@@ -57,7 +61,7 @@ async function search({ moduleUrl, episodes, terms, offset, targetEpisodeIds, mo
       const identity = episodes[result.id];
       if (!identity) throw new Error('Folge fehlt im Suchstand');
       if (allowed && !allowed.has(identity.episodeId)) return;
-      const candidate = union.get(result.id) ?? { result, identity, positionsByTerm: {}, rankSum: 0 };
+      const candidate = union.get(result.id) ?? { result, identity, positionsByTerm: Object.create(null), rankSum: 0 };
       // Snapshot raw per-term positions before any detail object is loaded.
       candidate.positionsByTerm[term] = [...words];
       candidate.rankSum += rank;
@@ -71,7 +75,7 @@ async function search({ moduleUrl, episodes, terms, offset, targetEpisodeIds, mo
     (a.identity.episodeId < b.identity.episodeId ? -1 : a.identity.episodeId > b.identity.episodeId ? 1 : 0),
   );
   if (mode === 'counts') return {
-    terms, total: candidates.length, episodes: candidates.map(({ identity, positionsByTerm }) => ({
+    publicationId, terms, total: candidates.length, episodes: candidates.map(({ identity, positionsByTerm }) => ({
       ...identity, counts: Object.fromEntries(terms.map((term) => [term, positionsByTerm[term]?.length ?? 0])),
       uniqueCount: new Set(Object.values(positionsByTerm).flat()).size,
     })),
@@ -80,11 +84,14 @@ async function search({ moduleUrl, episodes, terms, offset, targetEpisodeIds, mo
   const results: SearchResult[] = await Promise.all(candidates.slice(offset, offset + 10).map(async ({ result, identity, positionsByTerm, rankSum }) => {
     const [fragment, episode]: [Fragment, Episode] = await Promise.all([
       result.data(),
-      fetch(new URL(`episodes/${encodeURIComponent(identity.episodeId)}.json`, moduleUrl)).then((response) => response.json()),
+      records.get(identity.episodeId) ?? fetch(new URL(`episodes/${encodeURIComponent(identity.episodeId)}.json`, moduleUrl)).then((response) => response.json()),
     ]);
     if (episode.episode_id !== identity.episodeId || episode.published_at !== identity.publishedAt) {
       throw new Error('Suchindex und Folgendetails stimmen nicht überein');
     }
+    records.delete(identity.episodeId);
+    if (records.size >= 20) records.delete(records.keys().next().value!);
+    records.set(identity.episodeId, episode);
     const indexedTokens = fragment.content.split(/[\r\n\s]+/g);
     const anchors = [...fragment.anchors].sort((a, b) => a.location - b.location);
     const originalTokens = new Map<string, RegExpExecArray[]>();

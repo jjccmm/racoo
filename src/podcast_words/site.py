@@ -1,9 +1,8 @@
-"""Prepare configured podcast publications from saved transcripts and analyses."""
+"""Prepare configured podcast publications from saved transcripts."""
 
 import argparse
 from pathlib import Path
 
-from podcast_words import analysis
 from podcast_words.catalog import Catalog
 from podcast_words.contracts import Episode
 from podcast_words.json_io import write_json
@@ -49,11 +48,7 @@ def prepare_site(configuration: Path, output: Path) -> dict:
                 argparse.Namespace(
                     catalog=catalog_path,
                     episodes=None,
-                    analyses=directory / "analyses",
                     output=destination / "source",
-                    analysis_version=analysis.ANALYSIS_VERSION,
-                    cache_only=True,
-                    ignored_lemmas=None,
                 ),
                 episode_paths=paths,
             )

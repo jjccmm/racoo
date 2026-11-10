@@ -35,7 +35,7 @@ uv run --frozen podcast-words transcribe --metadata docs/research/evidence/ufo53
 
 Der Ablauf lautet: Feed-/Katalogeintrag → temporärer Download → FFmpeg → CPU-VAD und Parakeet FP32/CUDA → grobe Textsegmente → validiertes Episoden-JSON → Audio löschen. Auch bei Fehlern werden temporäre MP3-/WAV-Dateien entfernt. Modellgewichte bleiben im Cache. Fertige Transkripte werden bei Wiederaufnahme ohne Download, Hashprüfung oder Abgleich mit der Online-MP3 verwendet.
 
-Etwa fünfminütige Segmente enthalten nur ID, Text, Start und Ende. Der Lader fordert keine Wortzeitpunkte an. Sprachabschnitte werden zusammengefasst, bevor eine gemeinsame Zeitspanne von 300 Sekunden überschritten würde; der erkannte Text bleibt in Reihenfolge erhalten. Pagefind braucht Text und Segmentanker, spaCy nur die Texte.
+Etwa fünfminütige Segmente enthalten nur ID, Text, Start und Ende. Der Lader fordert keine Wortzeitpunkte an. Sprachabschnitte werden zusammengefasst, bevor eine gemeinsame Zeitspanne von 300 Sekunden überschritten würde; der erkannte Text bleibt in Reihenfolge erhalten. Pagefind verwendet Text und Segmentanker für Suche, Zählungen und Minimap.
 
 Der Player springt zum Segmentanfang. Die öffentliche Acast-Quelle darf inzwischen andere Werbung enthalten. Ein sichtbarer Hinweis unmittelbar bei jedem Sprungknopf erklärt diese Ungenauigkeit. Es gibt weder Dateiauswahl noch Fassungsprüfung oder Wiedergabesperre wegen anderer Dauer.
 

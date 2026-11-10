@@ -1,6 +1,6 @@
 # Working in Podcast Words V3
 
-This project builds a static podcast passage search and word-statistics site, backed by an offline transcription pipeline.
+This project builds a static podcast passage search with per-query match counts, backed by an offline transcription pipeline.
 
 ## Context
 
@@ -10,13 +10,14 @@ This project builds a static podcast passage search and word-statistics site, ba
 - Continuing the planning interview: read [docs/planning/refinement.md](docs/planning/refinement.md) for confirmed decisions and the current frontier.
 - Updating podcasts or adding a podcast: read [docs/updates.md](docs/updates.md) for configuration, bounded processing, resumption and the static publication layout.
 - Running local commands or setting up tools: read [docs/development.md](docs/development.md), including this Windows host's npm, uv-cache, and scoped Git-ownership handling.
-- Changing feed import or search: consult [the source research](docs/research/v3-feed-and-search.md). Its observations are dated; verify mutable facts when needed.
+- Changing search, counts, query exclusions or minimap: read [the active search contract](docs/search.md) and [publication contracts](docs/data-contracts.md). Pagefind term-position pairs define chart counts; unique positions define reader navigation. [The release-specific research](docs/research/pagefind-counting-2026-11-10.md) records engine limits.
+- Changing feed import: consult [the source research](docs/research/v3-feed-and-search.md). Verify mutable source facts when needed.
 - Changing ASR or audio playback: read [local FP32 operation](docs/asr.md) and the [investigation](docs/research/asr-investigation.md). The active pipeline is local FP32/CUDA; audio is temporary and is deleted after processing. Playback starts at coarse segment boundaries and can shift because of advertising. For Pagefind positions, consult [runtime findings](docs/research/runtime-and-search-contracts.md).
 - Changing episode JSON: read [data contracts](docs/data-contracts.md); Python is authoritative and the JSON Schema export must stay in sync.
 
 ## Data and validation
 
-Keep normalized episode JSON and analysis results versioned as specified in the plan. Keep model weights, caches, and generated web/search builds untracked. Download audio once per processing run and delete it afterward, including on failure. The stored transcript is the data basis; never hash-match it against later online audio. Active Episode schema v2 contains coarse segments without word timestamps and measured processing timings. The original pilot interfaces are in `.scratch/local-five-episode-pilot/spec.md`; configured updates and multi-podcast publication are specified in `.scratch/podcast-updates/spec.md`.
+Keep normalized episode JSON and the episode catalog versioned as specified in the plan. Keep model weights, caches, and generated web/search builds untracked. Download audio once per processing run and delete it afterward, including on failure. The stored transcript is the data basis; never hash-match it against later online audio. Active Episode schema v2 contains coarse segments without word timestamps and measured processing timings. The active implementation scope is `.scratch/pagefind-minimap/spec.md`; configured updates and multi-podcast publication are specified in `.scratch/podcast-updates/spec.md`. NLP analysis and count shards are retired.
 
 When a data contract changes, update its producers, consumers, and representative fixtures together. Keep stable episode identity separate from feed metadata, display numbers, and search-index identifiers.
 

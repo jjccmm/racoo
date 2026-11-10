@@ -18,7 +18,7 @@ GitHub Actions enthält ausschließlich den Workflow **Deploy Racoo**. Er läuft
 
 ## Was der Workflow veröffentlicht
 
-Der [Veröffentlichungsworkflow](../.github/workflows/pages.yml) baut aus den gespeicherten echten Pilottranskripten und Analysen, ohne Audio, ASR-Modell oder spaCy-Modell zu laden. Der normale Stand enthält fünf Folgen. Die [Podcastkonfiguration und lokale Aktualisierung](updates.md) bestimmen die gespeicherten Daten; der Build veröffentlicht automatisch alle vollständigen Katalogfolgen je konfiguriertem Podcast. Die lokalen Routineprüfungen verwenden synthetische Fixtures. Der Veröffentlichungsworkflow arbeitet in einem frischen Checkout und baut die echte Auswahl. Ein zusätzlicher Check verlangt die Zusammenfassung des konfigurierten Builds (`schemaVersion: 2`, `state: published-corpus`) mit mindestens einer Folge; synthetische Einzel-Korpus-Builds und ein leerer Gesamtbestand werden abgelehnt. Nur `web/dist` wird als Pages-Artefakt hochgeladen.
+Der [Veröffentlichungsworkflow](../.github/workflows/pages.yml) baut aus den gespeicherten echten Transkripten, ohne Audio oder Modelle zu laden. Der aktuelle Bestand enthält 106 Folgen. Die [Podcastkonfiguration und lokale Aktualisierung](updates.md) bestimmen die gespeicherten Daten; der Build veröffentlicht automatisch alle vollständigen Katalogfolgen je konfiguriertem Podcast. Die lokalen Routineprüfungen verwenden synthetische Fixtures. Der Veröffentlichungsworkflow arbeitet in einem frischen Checkout und baut die echte Auswahl. Ein zusätzlicher Check verlangt die Zusammenfassung des konfigurierten Builds (`schemaVersion: 2`, `state: published-corpus`) mit mindestens einer Folge; synthetische Einzel-Korpus-Builds und ein leerer Gesamtbestand werden abgelehnt. Nur `web/dist` wird als Pages-Artefakt hochgeladen.
 
 Der Basis-Pfad kommt von `actions/configure-pages`: aktuell `/racoo/`. Dadurch funktionieren Logos, Suchindex, Datenabrufe und Folge-/Zeitlinks unter dem Projektpfad. Die lokalen Browserprüfungen laufen ebenfalls gegen `/racoo/` und `/`. Für einen Projektpfad-Build von Hand:
 
@@ -28,7 +28,7 @@ npm.cmd --prefix web run build -- --base /racoo/
 
 Nach einer Umbenennung oder eigenen Domain die tatsächliche Pages-Adresse aus dem Environment verwenden. GitHub leitet alte Repository-Links weiter, alte Pages-Projektadressen hingegen nicht automatisch. Einen späteren Domainwechsel deshalb bewusst konfigurieren.
 
-Die Veröffentlichung enthält weiterhin den Fünf-Folgen-Pilot; Archivtranskription und menschliche Suchqualitätsabnahme bleiben gesonderte Aufgaben.
+Weitere lokal gespeicherte Folgen erscheinen mit der nächsten Veröffentlichung. Menschliche Suchqualitätsabnahme und die vollständige Archivabdeckung bleiben gesonderte Prüfungen.
 
 ## Quellen
 

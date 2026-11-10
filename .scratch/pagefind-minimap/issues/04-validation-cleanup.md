@@ -1,6 +1,6 @@
 # Lokale Integration und Dokumentation
 
-Status: ready-for-agent
+Status: claimed
 Blocked by: 01, 02, 03
 
 ## Acceptance criteria

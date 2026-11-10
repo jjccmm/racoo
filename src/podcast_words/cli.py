@@ -10,7 +10,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from podcast_words import analysis, catalog
+from podcast_words import catalog
 from podcast_words.contracts import Episode
 from podcast_words.revisions import validate_compatible_processing
 
@@ -80,7 +80,7 @@ def main(argv: list[str] | None = None) -> int:
     corpus_validation.add_argument("--episodes", type=Path, required=True)
     corpus_validation.add_argument("--compatible-processing", action="store_true")
     schema = commands.add_parser("schema", help="Print or save a structural JSON Schema")
-    schema.add_argument("--kind", choices=["episode", "analysis"], default="episode")
+    schema.add_argument("--kind", choices=["episode"], default="episode")
     schema.add_argument("--output", type=Path)
     transcription = commands.add_parser(
         "transcribe", help="Transcribe identified audio locally with FP32 on CUDA"
@@ -105,7 +105,7 @@ def main(argv: list[str] | None = None) -> int:
     processing.add_argument("--retranscribe", action="store_true")
     processing.add_argument("--run-report", type=Path)
     updating = commands.add_parser(
-        "update", help="Refresh one configured feed, process missing episodes and analyze"
+        "update", help="Refresh one configured feed, process missing episodes"
     )
     updating.add_argument("--config", type=Path, default=Path("podcasts.json"))
     updating.add_argument("--podcast", required=True)
@@ -123,19 +123,8 @@ def main(argv: list[str] | None = None) -> int:
     )
     publication.add_argument("--catalog", type=Path, required=True)
     publication.add_argument("--episodes", type=Path, required=True)
-    publication.add_argument("--analyses", type=Path, required=True)
     publication.add_argument("--output", type=Path, required=True)
-    publication.add_argument("--analysis-version", default=analysis.ANALYSIS_VERSION)
-    publication.add_argument(
-        "--ignored-lemmas",
-        type=Path,
-        help="Override the shipped additional frequency-exclusion list (UTF-8, one lemma per line)",
-    )
-    publication.add_argument(
-        "--cache-only", action="store_true", help="Require valid saved analyses; never load a model"
-    )
     catalog.add_parser(commands)
-    analysis.add_parser(commands)
     arguments = parser.parse_args(argv)
     if arguments.command == "update":
         from podcast_words.updates import update
@@ -151,8 +140,6 @@ def main(argv: list[str] | None = None) -> int:
             return 1
         print(json.dumps(result, ensure_ascii=True))
         return 0
-    if arguments.command == "analyze":
-        return analysis.run(arguments)
     if arguments.command == "catalog":
         return catalog.run(arguments)
     if arguments.command == "doctor":
@@ -185,7 +172,7 @@ def main(argv: list[str] | None = None) -> int:
         from podcast_words.publication import publish
 
         return publish(arguments)
-    model = analysis.Analysis if arguments.kind == "analysis" else Episode
+    model = Episode
     content = json.dumps(model.model_json_schema(), indent=2, ensure_ascii=False) + "\n"
     if arguments.output:
         arguments.output.parent.mkdir(parents=True, exist_ok=True)
