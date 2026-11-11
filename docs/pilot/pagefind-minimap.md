@@ -18,7 +18,7 @@ uv run --frozen --inexact podcast-words update --podcast podcast-ufo --limit 10 
 
 ## Bedienung und Zählregel
 
-Die Startseite ersetzt die Chips durch die bearbeitbare Freitextdemo `Die Podcast Wort Suche`. Eine geänderte Eingabe wird zur Podcastansicht übernommen. Dort bis fünf wirksame Begriffe eingeben und Enter/Suchen drücken. Die gepflegten [Stopp-/Zusatzlisten](../../config/search-rules.json) filtern nur die Anfrage und nennen ignorierte Wörter sichtbar.
+Die Startseite ersetzt die Chips durch die bearbeitbare Freitextdemo `Die Podcast Wort Suche`. Eine geänderte Eingabe wird zur Podcastansicht übernommen. Dort bis fünf wirksame Begriffe eingeben und Enter/Suchen drücken. Die gepflegten [Stopp-/Zusatzlisten](../research/evidence/retired-search-rules.json) filtern nur die Anfrage und nennen ignorierte Wörter sichtbar.
 
 Alle Rohtreffer jedes Begriffs werden global vor der Top-10-Auswahl gezählt. Eine Balkenserie zählt passende Pagefind-Positionen, einschließlich Wortformen/Präfixen. Die Summe kann dieselbe Position für verschiedene Begriffe mehrfach enthalten. Der Leser navigiert hingegen eindeutige markierte Stellen; keine exakten Grundformzahlen oder Gesamt-/Neuwortzahlen behaupten. Die Recherche zeigt etwa `Münze` → `Münzfach`; im echten Test liefert `gebärdensprache` sieben Pagefind-Treffer statt früher fünf spaCy-Grundformvorkommen. [Suchvertrag](../search.md)
 

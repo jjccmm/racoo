@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { loadEpisode, type Passage } from './search';
 
-import { PlaybackContext, formatPlaybackTime, type PlayerEpisode } from './playback';
+import { PlaybackContext, type PlayerEpisode } from './playback';
 type EpisodeRecord = Awaited<ReturnType<typeof loadEpisode>>;
 
 export function Player({ children, dataBase, podcastId }: { children: ReactNode; dataBase: string; podcastId: string }) {
@@ -90,12 +90,6 @@ export function Player({ children, dataBase, podcastId }: { children: ReactNode;
     requestAnimationFrame(() => { if (trigger.current?.isConnected) trigger.current.focus({ preventScroll: true }); });
   }
 
-  function nudge(seconds: number) {
-    if (!audio.current || !player) return;
-    const duration = Number.isFinite(audio.current.duration) ? audio.current.duration : player.durationSeconds;
-    audio.current.currentTime = clamp(audio.current.currentTime + seconds, duration);
-  }
-
   const directEpisode = directState === 'unknown' ? 'unknown' : directState === 'error' ? 'error' : null;
   return <PlaybackContext.Provider value={choose}>
     {children}
@@ -103,14 +97,9 @@ export function Player({ children, dataBase, podcastId }: { children: ReactNode;
     {directEpisode === 'unknown' && <p role="status">Diese Episoden-ID ist im aktuellen Suchstand unbekannt.</p>}
     {directEpisode === 'error' && <p role="alert">Die geteilte Folge konnte nicht geladen werden. <button onClick={() => window.location.reload()}>Geteilte Folge erneut laden</button></p>}
     {player && <section className="player" aria-label="Gemeinsamer Audioplayer">
-      <div className="player-heading"><h2>Wiedergabe: {player.title}</h2><button className="player-close" type="button" onClick={close} aria-label="Player schließen">×</button></div>
-      <p>{formatPlaybackTime(targetTime)} · {targetTime === 0 ? 'Wiedergabe ab Anfang.' : 'Sprung zum Beginn des Textabschnitts.'} Werbung kann die Zeit in der Online-Audiodatei verschieben.</p>
+      <div className="player-heading"><h2>Wiedergabe: {player.title}</h2><button className="player-close" type="button" onClick={close} aria-label="Player schließen"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg></button></div>
+      <p>Werbung kann die Zeit in der Online-Audiodatei verschieben.</p>
       <audio ref={audio} src={player.audioUrl} controls preload="metadata" onError={() => setMediaError(true)} />
-      <div className="player-controls">
-        <button type="button" onClick={() => nudge(-10)}>10 Sekunden zurück</button>
-        <button type="button" onClick={() => nudge(10)}>10 Sekunden vor</button>
-        <a href={shareHref(player.episodeId, targetTime)}>Fundstelle teilen</a>
-      </div>
       {mediaError && <p role="alert">Audio nicht verfügbar. <a href={player.webpageUrl} target="_blank" rel="noreferrer">Zur Episodenseite</a></p>}
     </section>}
   </PlaybackContext.Provider>;
@@ -126,11 +115,4 @@ function playerFrom(episode: NonNullable<EpisodeRecord>): PlayerEpisode {
 
 function clamp(seconds: number, duration: number) {
   return Number.isFinite(seconds) ? Math.max(0, Math.min(duration, seconds)) : 0;
-}
-
-function shareHref(episodeId: string, seconds: number) {
-  const url = new URL(window.location.href);
-  url.searchParams.set('episode', episodeId);
-  url.searchParams.set('t', String(Math.round(seconds)));
-  return `${url.pathname}${url.search}`;
 }

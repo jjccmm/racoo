@@ -26,12 +26,11 @@ uv run --frozen podcast-words schema --output schemas/episode-v2.schema.json
 
 - Root `podcasts.json`, Schema 1: `id`, `name`, `speakers`, `cover`, `dataPath`, `knownEpisodeCount`, `episodeCount`, `lastCheckedAt`, `episodeIds`. Interne Cachepfade werden nicht veröffentlicht.
 - Root `publication.json`, Schema 2: Gesamtstatus `published-corpus` oder `synthetic-fixture`, `episodeCount`, `podcastCount`. Der Pages-Schutz veröffentlicht nur echte nichtleere Korpora.
-- Je `podcasts/<id>/publication.json`, **Schema 2**: `publicationId`, `podcastId`, `state`, `archiveComplete:false`, `episodeCount`, `episodeIds`, `searchIndexId`, `catalogId`, `searchRulesId`, `preparationId`.
+- Je `podcasts/<id>/publication.json`, **Schema 3**: `publicationId`, `podcastId`, `state`, `archiveComplete:false`, `episodeCount`, `episodeIds`, `searchIndexId`, `catalogId`, `preparationId`.
 - Je Podcast `catalog.json`, Schema 2: Veröffentlichung/Hash, Podcast-ID, optionale Quellensnapshotdaten und `episodes` mit stabiler `episodeId`, Titel, Datum, Audiodauer und `timings.downloadSeconds`, `transcriptionSeconds`, `totalSeconds`. Kein Gesamtwort-/Lemmafeld.
-- `search-rules.json`, Schema 1: `publicationId`, `searchRulesId`, `stopwords`, `ignoredWords`. Ursprung ist die gepflegte [Konfiguration](../config/search-rules.json).
 - `search/manifest.json` und `search/<indexId>/episodes.json` binden Index und stabile IDs an dieselbe `publicationId`. Unter dem Index liegen die nativen Pagefind-Dateien und lazy Original-Episoden-JSONs.
 
-`publicationId` bindet Suchindex, Metadatenkatalog, Suchregeln und Vorbereitungsstand gemeinsam. ID-/Metadaten-/Schemaabweichungen sind Fehler. Es gibt keine öffentlichen `stats/`, Vokabulare oder Zählpakete. Der Browser berechnet die [Suchwort-Treffer](search.md) pro Anfrage aus den Indexpositionen.
+`publicationId` bindet Suchindex, Metadatenkatalog und Vorbereitungsstand gemeinsam. ID-/Metadaten-/Schemaabweichungen sind Fehler. Es gibt keine öffentlichen Suchregellisten, `stats/`, Vokabulare oder Zählpakete. Stoppwörter und manuelle Ausschlüsse werden nicht gefiltert. Der Browser berechnet die [Suchwort-Treffer](search.md) pro Anfrage aus den Indexpositionen.
 
 Der sichtbare Nenner umfasst alle bekannten Katalogfolgen einschließlich Quellenlücken; der Zähler ausschließlich die veröffentlichten gültigen Transkripte. `lastCheckedAt` ist der letzte erfolgreiche gespeicherte Feedimport, kein Build-/Transkriptionsdatum. Alte `?episode=…&t=…`-Links werden über die podcastübergreifend eindeutigen IDs aufgelöst.
 

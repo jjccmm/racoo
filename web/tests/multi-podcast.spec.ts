@@ -20,11 +20,11 @@ test('configured directory shows coverage and the successful feed date without l
   expect(requests.some(path => /podcasts\/second-podcast\/search\//.test(path))).toBe(true);
 });
 
-test('legacy episode links locate the correct podcast and keep sharing scoped', async ({ page }) => {
+test('legacy episode links locate the correct podcast after reload', async ({ page }) => {
   await page.goto('./?episode=second-episode&t=7');
   await expect(page.getByRole('heading', { name: 'Zweiter Testpodcast', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Wiedergabe: Nur im zweiten Podcast' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Fundstelle teilen' })).toHaveAttribute('href', /episode=second-episode/);
+  expect(new URL(page.url()).searchParams.get('episode')).toBe('second-episode');
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Wiedergabe: Nur im zweiten Podcast' })).toBeVisible();
 });

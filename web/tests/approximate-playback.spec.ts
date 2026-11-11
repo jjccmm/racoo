@@ -25,9 +25,8 @@ test('advertising may change online duration while shared jumps and player contr
   await expect.poll(() => media.evaluate((e: HTMLAudioElement) => e.duration)).toBe(120);
   await expect.poll(() => media.evaluate((e: HTMLAudioElement) => e.currentTime)).toBe(68);
   expect(await media.evaluate((e: HTMLAudioElement) => e.paused)).toBe(true);
-  await expect(page.getByRole('button', { name: '10 Sekunden vor' })).toBeEnabled();
-  await page.getByRole('button', { name: '10 Sekunden vor' }).click();
-  expect(await media.evaluate((e: HTMLAudioElement) => e.currentTime)).toBe(78);
+  await expect(media).toHaveAttribute('controls', '');
+  await expect(page.getByRole('button', { name: '10 Sekunden vor' })).toHaveCount(0);
   await expect(page.getByRole('region', { name: 'Gemeinsamer Audioplayer' })).toContainText('Werbung');
   await expect(page.locator('input[type="file"]')).toHaveCount(0);
   await expect(page.getByRole('alert')).toHaveCount(0);

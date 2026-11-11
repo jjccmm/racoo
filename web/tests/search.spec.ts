@@ -11,20 +11,19 @@ test('free-text finds the real built transcript and coarse jump', async ({ page 
   await expect(card).toContainText('0:10'); await expect(card).toContainText('1 Suchwort-Treffer');
 });
 
-test('publication, metadata, query rules and search map share one stable identity', async ({ page }) => {
+test('publication, metadata and search map share one stable identity', async ({ page }) => {
   await openExplorer(page);
   const envelope = await page.evaluate(async () => {
     const publication = await (await fetch('publication.json')).json();
     const search = await (await fetch('search/manifest.json')).json();
     const mapping = await (await fetch(`search/${search.indexId}/episodes.json`)).json();
-    const rules = await (await fetch('search-rules.json')).json();
     const catalog = await (await fetch('catalog.json')).json();
-    return { publication, search, mapping, rules, catalog };
+    return { publication, search, mapping, catalog };
   });
-  expect(envelope.publication.schemaVersion).toBe(2);
-  for (const file of [envelope.search, envelope.mapping, envelope.rules, envelope.catalog]) expect(file.publicationId).toBe(envelope.publication.publicationId);
+  expect(envelope.publication.schemaVersion).toBe(3);
+  for (const file of [envelope.search, envelope.mapping, envelope.catalog]) expect(file.publicationId).toBe(envelope.publication.publicationId);
   expect(envelope.catalog.catalogId).toBe(envelope.publication.catalogId);
-  expect(envelope.rules.searchRulesId).toBe(envelope.publication.searchRulesId);
+  expect(envelope.publication.searchRulesId).toBeUndefined();
   expect(envelope.catalog.episodes.map((episode: { episodeId: string }) => episode.episodeId).sort()).toEqual(envelope.publication.episodeIds);
 });
 

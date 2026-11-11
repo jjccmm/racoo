@@ -97,4 +97,4 @@ Der aktive [Suchvertrag](search.md) benötigt nur gespeicherte Transkripte und P
 
 ## Aktuelle Suchgestaltung
 
-[Freitext und helle Minimap](search.md): bis fünf Stichwörter, Pagefind-Positionen als Zählbasis, Top10/Alle, ein vollständiger Leser und gemeinsame Audioaktionen. Auf der Startseite steht eine lokale Freitextdemo. Die frühere Lemmaauswahl, automatische haus-Auswahl und Wortschatzstatistik sind abgelöst.
+[Freitext und helle Minimap](search.md): bis zehn Stichwörter, Pagefind-Positionen als Zählbasis, Top10/Alle, ein vollständiger Leser und gemeinsame Audioaktionen. Auf der Startseite steht eine lokale Freitextdemo. Die frühere Lemmaauswahl, automatische haus-Auswahl und Wortschatzstatistik sind abgelöst.

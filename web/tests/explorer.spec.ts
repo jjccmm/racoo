@@ -48,6 +48,7 @@ for (const width of [320, 390, 1280]) {
     for (const mode of ['Top 10', 'Alle']) {
       await page.getByRole('button', { name: mode, exact: true }).click();
       await expect(chartEpisodes(page)).toHaveCount(mode === 'Alle' ? 17 : 10);
+      await expect(page.locator('.episode-axis-label').first()).toBeVisible();
       expect(await chart.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
       expect(await page.locator('.frequency-chart').evaluate(element => element.getBoundingClientRect().width <= element.parentElement!.clientWidth + 1)).toBe(true);
     }

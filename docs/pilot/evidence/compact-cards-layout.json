@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-11",
+  "episodeCount": 106,
+  "viewportHeight": 844,
+  "episode": "UFO070 Kratzeis",
+  "query": "urlaub kratzeis eis",
+  "layouts": [
+    {
+      "width": 1280,
+      "height": 587.15625,
+      "textHeight": 422,
+      "rankFont": 24.8,
+      "toolbarSharedRow": true,
+      "textInset": 0,
+      "overflow": false,
+      "axisTitles": 8
+    },
+    {
+      "width": 390,
+      "height": 578.15625,
+      "textHeight": 422,
+      "rankFont": 24.8,
+      "toolbarSharedRow": true,
+      "textInset": 0,
+      "overflow": false,
+      "axisTitles": 2
+    },
+    {
+      "width": 320,
+      "height": 603.6875,
+      "textHeight": 422,
+      "rankFont": 24.8,
+      "toolbarSharedRow": true,
+      "textInset": 0,
+      "overflow": false,
+      "axisTitles": 1
+    }
+  ],
+  "tenTermMobileQuery": "haus geld eimer münze wasser auto essen telefon urlaub kleingeld",
+  "formerlyExcludedQuery": "dem",
+  "tenTermsAndCommonWordPassed": true,
+  "note": "Chromium on local desktop; player visual checks use intercepted synthetic WAV, no claim about live audio quality."
+}

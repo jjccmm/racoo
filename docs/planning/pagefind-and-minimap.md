@@ -155,3 +155,10 @@ Zuerst also nachweisen, dass die neue Bedeutung von „Treffer“ zum Nutzungszi
 ## Bestätigter UI-Nachtrag
 
 Der spätere Nutzerwunsch ersetzt Kurzausschnitte/optionalen Einzelleser durch direkt offene Transkriptkarten, entfernt rechte Minimap-Farbspuren und Labels, ergänzt Start-/Schließen-Aktionen und macht Diagramme ohne horizontales Scrollen. [Ticket](../../.scratch/pagefind-minimap/issues/05-open-transcript-cards.md) und [Abnahme](../pilot/open-transcript-cards.md).
+
+
+## Kompakte Karten und alle Suchwörter
+
+Der weitere bestätigte [Nutzerauftrag](../../.scratch/pagefind-minimap/issues/06-compact-cards-unfiltered-search.md) ersetzt die Wortfilterung: bis zehn verschiedene Stichwörter, einschließlich häufiger Funktionswörter, ohne aktive Stopp-/Zusatzlisten. Die absolute Rangfolge bleibt unverändert und kann dadurch von häufigen Wörtern geprägt sein. Die frühere Liste liegt nur noch als [historischer Nachweis](../research/evidence/retired-search-rules.json) vor. Die Podcast-Veröffentlichung verwendet Schema 3 ohne Suchregeldateien; Episoden- und Katalogformate bleiben unverändert.
+
+Karten erhalten größere Ränge, einen Header-Play-Iconknopf, etwa 20 Prozent weniger Texthöhe, links beginnenden Text und Navigation neben der Wortlegende. Der Player zeigt nur Titel, Schließen, Werbehinweis und die native Audioleiste. Alle verwendet wieder einzelne zur Breite passende Achsentitel und kleine Abstände zwischen den Balken.

@@ -1,5 +1,7 @@
 # Direkt offene Transkriptkarten
 
+Die [kompakte Zehnwort-Version](compact-cards-unfiltered-search.md) verfeinert danach Abstände, Playeraktionen, Achsentitel und Anfragefilterung. Dieser Bericht bewahrt die vorherige Abnahme.
+
 Stand: 10. November 2026. Die [Verfeinerung](../../.scratch/pagefind-minimap/issues/05-open-transcript-cards.md) ist auf `feature/pagefind-minimap` umgesetzt. Sie ersetzt die Kurzvorschau mit optional geöffnetem Leser aus der [ersten Minimap-Abnahme](pagefind-minimap.md).
 
 ## Verhalten

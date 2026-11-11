@@ -10,7 +10,7 @@ Podcastfolgen anhand erinnerter Stichwörter wiederfinden. Zunächst DAS PODCAST
 Offizieller RSS-Feed → Katalog + direkte Audio-URLs
 → fehlende Folgen mit Limit lokal herunterladen/transkribieren
 → validierte Episoden-JSONs mit Originaltext, Segmentzeiten und Laufzeiten
-→ statischer Build: Folgenmetadaten + Suchregeln + Pagefind-Index je Podcast
+→ statischer Build: Folgenmetadaten + Pagefind-Index je Podcast
 → GitHub Pages → Freitext → Suchwort-Treffer → Diagramm + Originaltexte + Minimap
 ```
 
@@ -36,19 +36,19 @@ Eine Serie zählt unterschiedliche Pagefind-Positionen für ein Stichwort je Fol
 
 Die Stapelhöhe ist die Summe aller Suchwort-/Positionspaare. Überlappende Begriffe können dieselbe Textposition mehrfach zur Summe beitragen. Der Leser markiert und navigiert die Vereinigung dieser Positionen als eindeutige Fundstellen. Originaltexte unverändert und sicher als Text rendern. Die Zuordnung zum Original muss bei nicht passenden Ankern/Tokenständen einen Fehler anzeigen.
 
-Eine gepflegte [Stopp-/Zusatzliste](config/search-rules.json) filtert die Anfrage, nicht den gespeicherten Text. Ignorierte Wörter sichtbar nennen; ausschließlich ignorierte Eingaben erhalten einen Hilfezustand. Die Begriffe sind normalisierte Schreibweisen, keine automatisch erkannten Lemmata. Regeln, Index und Metadaten gehören zu derselben versionierten Veröffentlichung. Erfolgreich nicht gefundene Kombinationen sind null, Ladefehler niemals.
+Alle eingegebenen Wörter durchsuchen, einschließlich häufiger Funktionswörter. Keine aktiven Stoppwort-/Zusatzlisten. Die Begriffe sind normalisierte Schreibweisen, keine automatisch erkannten Lemmata. Häufige Wörter können die absolute Trefferrangfolge dominieren. Index und Metadaten gehören zu derselben versionierten Veröffentlichung. Erfolgreich nicht gefundene Kombinationen sind null, Ladefehler niemals.
 
 ## Oberfläche
 
 Die Startseite zeigt das große zentrierte Racoo-Logo und ein bearbeitbares Suchfeld mit `Die Podcast Wort Suche`. Der Erklärungstext markiert lokal passende Wörter; keine Podcastdaten für die Demo laden. Eine bearbeitete Eingabe wird beim Auswählen eines Podcasts als `q` übernommen. Der unveränderte Demostartwert ist keine echte Suche. Podcastkarten zeigen Cover, Sprecher und `106/542 Folgen durchsuchbar (Stand 8.11.2026)` als dynamisches Format.
 
-Die Podcastansicht verwendet ein breites Freitextfeld ohne Dropdown oder Pflichtchips. Bis fünf unterschiedliche wirksame Stichwörter; Enter/Suchknopf startet. Keine automatische haus-Vorbelegung. Farben bleiben für Diagramm, Karten und Leser gleich.
+Die Podcastansicht verwendet ein breites Freitextfeld ohne Dropdown oder Pflichtchips. Bis zehn unterschiedliche Stichwörter, Grenzhinweis erst bei Überschreitung; Enter/Suchknopf startet. Keine automatische haus-Vorbelegung. Farben bleiben für Diagramm, Karten und Leser gleich.
 
-Das absolute gestapelte Diagramm bleibt zentral: Top 10 nach Summe absteigend, Gleichstände nach Datum absteigend/ID; Alle chronologisch nach Datum/ID einschließlich Nullfolgen. Das Diagramm passt ohne horizontales Scrollen in die verfügbare Breite; Balken werden bei vielen Folgen dünn und Titel sparsamer. Die zehn Ergebnisfolgen integrieren alle Angaben direkt in offene Transkriptkarten. Nur für diese Folgen Details laden. Eine erfolgreiche Suchinstanz pro aktivem Datenstand wiederverwenden und nach Fehlern bewusst neu starten. Veraltete Antworten dürfen eine neue Anfrage nicht ersetzen.
+Das absolute gestapelte Diagramm bleibt zentral: Top 10 nach Summe absteigend, Gleichstände nach Datum absteigend/ID; Alle chronologisch nach Datum/ID einschließlich Nullfolgen. Das Diagramm passt ohne horizontales Scrollen in die verfügbare Breite; Balken werden bei vielen Folgen dünn, mit kleinem Abstand; Achsentitel werden passend zur Breite ausgedünnt, bleiben auch in Alle sichtbar. Die zehn Ergebnisfolgen integrieren alle Angaben direkt in offene Transkriptkarten. Nur für diese Folgen Details laden. Eine erfolgreiche Suchinstanz pro aktivem Datenstand wiederverwenden und nach Fehlern bewusst neu starten. Veraltete Antworten dürfen eine neue Anfrage nicht ersetzen.
 
 Jede geladene Folge zeigt ihren vollständigen chronologischen Leser direkt offen und springt zur ersten Fundstelle des ersten passenden Suchworts. Rechts eine helle vertikale Minimap mit grauen Textlinien, farbigen Treffern im Miniaturtext und Leserahmen ohne zusätzliche rechte Farbspuren oder Übersicht-/Ende-Texte; mobil als schmale vertikale Leiste. Klick/Ziehen, Tastatur, vorherige/nächste Fundstelle, Fokus und Bewegungsreduktion unterstützen. Text bleibt auswählbar. Mehrere geladene Karten bleiben offen; automatisches Scrollen ändert nur das jeweilige Textfenster und übernimmt nicht den Seitenfokus.
 
-Die Zeitknöpfe im Text starten am Beginn ihres Abschnitts; der Headerknopf spielt die Folge ab 0:00. Der Nutzerbegriff „Segment“ entfällt. Werbeverschiebung am Sprungknopf erklären. Ein schließbarer gemeinsamer Player mit Vor/Zurück, Episodenseite und teilbaren `?episode=…&t=…`-Links; geteilte Links ohne Autoplay. Die Minimap navigiert ausschließlich Text und erfindet keine genaue Audiozeit.
+Die Zeitknöpfe im Text starten am Beginn ihres Abschnitts; der Header-Iconknopf spielt die Folge ab 0:00. Der Nutzerbegriff „Segment“ entfällt. Karten ungefähr 20 Prozent niedriger, Text links, Navigation neben der Wortlegende. Ein schließbarer gemeinsamer Player zeigt Titel, Werbehinweis und native Audioleiste. Zusätzliche Vor-/Zurück-/Teilen-Knöpfe entfallen; bestehende `?episode=…&t=…`-Links funktionieren ohne Autoplay weiter. Die Minimap navigiert ausschließlich Text und erfindet keine genaue Audiozeit.
 
 ## Speicherung, Build und Abnahme
 

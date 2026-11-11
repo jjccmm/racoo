@@ -3,14 +3,12 @@ import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { ResolvedConfig } from 'vite';
 import type { BuildInputs } from './inputs.ts';
-import queryRules from '../../config/search-rules.json' with { type: 'json' };
 
 const digest = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const json = async <T,>(file: string): Promise<T> => JSON.parse(await readFile(file, 'utf8')) as T;
 type Episode = { episode_id: string; podcast_id: string; title: string; published_at: string; audio: { duration_seconds: number }; timings?: { download_seconds: number; transcription_seconds: number; total_seconds: number } };
 type Entry = { episodeId: string; title: string; publishedAt: string; durationSeconds?: number; timings?: unknown };
 type Catalog = { schemaVersion: number; podcastId: string; episodes: Entry[] };
-type Rules = { schemaVersion: number; stopwords: string[]; ignoredWords: string[] };
 
 async function treeSize(directory: string): Promise<number> {
   let total = 0;
@@ -38,22 +36,16 @@ export async function writePublication(_config: ResolvedConfig, inputs: BuildInp
     || JSON.stringify(canonical(catalog.episodes.map(({ episodeId, title, publishedAt, durationSeconds, timings }) => ({ episodeId, title, publishedAt, durationSeconds, timings })))) !== JSON.stringify(canonical(metadata))) throw new Error('Search transcripts and metadata catalog do not match');
   const prepared = inputs.source ? await json<{ schemaVersion: number; generatedBy: string; preparationId: string; podcastId: string; state: string; episodeIds: string[] }>(path.join(inputs.source, 'manifest.json')) : undefined;
   if (prepared && (prepared.schemaVersion !== 2 || prepared.generatedBy !== 'podcast-words publish' || prepared.podcastId !== search.podcastId || prepared.state !== 'published-corpus' || JSON.stringify([...prepared.episodeIds].sort()) !== JSON.stringify(ids))) throw new Error('Invalid prepared publication source');
-  const rules: Rules = queryRules;
-  if (rules.schemaVersion !== 1 || !Array.isArray(rules.stopwords) || !Array.isArray(rules.ignoredWords)) throw new Error('Invalid search rules');
-  for (const words of [rules.stopwords, rules.ignoredWords]) {
-    if (new Set(words).size !== words.length || words.some(word => typeof word !== 'string' || !/^[\p{L}\p{M}]+$/u.test(word) || word !== word.normalize('NFC').toLocaleLowerCase('de-DE'))) throw new Error('Search rules require unique normalized words');
-  }
-  const searchRulesId = digest(rules), catalogId = digest(catalog);
+  const catalogId = digest(catalog);
   const state = prepared ? 'published-corpus' : 'synthetic-fixture';
-  const publicationId = digest({ schemaVersion: 2, podcastId: search.podcastId, state, searchIndexId: search.indexId, catalogId, searchRulesId, preparationId: prepared?.preparationId ?? null });
+  const publicationId = digest({ schemaVersion: 3, podcastId: search.podcastId, state, searchIndexId: search.indexId, catalogId, preparationId: prepared?.preparationId ?? null });
   search.publicationId = mapping.publicationId = publicationId;
   await writeFile(path.join(searchDirectory, 'manifest.json'), JSON.stringify(search));
   await writeFile(mappingPath, JSON.stringify(mapping));
   await writeFile(path.join(dist, 'catalog.json'), JSON.stringify({ ...catalog, publicationId, catalogId }));
-  await writeFile(path.join(dist, 'search-rules.json'), JSON.stringify({ ...rules, publicationId, searchRulesId }));
-  await writeFile(path.join(dist, 'publication.json'), JSON.stringify({ schemaVersion: 2, publicationId, podcastId: search.podcastId,
+  await writeFile(path.join(dist, 'publication.json'), JSON.stringify({ schemaVersion: 3, publicationId, podcastId: search.podcastId,
     state, archiveComplete: false, episodeCount: ids.length, episodeIds: ids, searchIndexId: search.indexId,
-    catalogId, searchRulesId, preparationId: prepared?.preparationId ?? null }));
+    catalogId, preparationId: prepared?.preparationId ?? null }));
   console.log(`Publication ${publicationId.slice(0, 12)}: ${ids.length} episodes, Pagefind only`);
 }
 

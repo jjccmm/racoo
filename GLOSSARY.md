@@ -20,7 +20,7 @@ Die dauerhafte Zuordnung einer Folge unabhängig von wechselnden Titeln, Nummern
 Ein zeitlich begrenzter Abschnitt eines Transkripts mit Originaltext, Start und Ende.
 
 **Stichwort**:
-Ein unterschiedlicher wirksamer Suchbegriff aus einer Freitexteingabe. Unterschiede in Groß-/Kleinschreibung und wiederholte Eingaben erzeugen kein zusätzliches Stichwort.
+Ein unterschiedlicher Suchbegriff aus einer Freitexteingabe, einschließlich häufiger Funktionswörter. Unterschiede in Groß-/Kleinschreibung und wiederholte Eingaben erzeugen kein zusätzliches Stichwort.
 
 **Suchwort-Treffer**:
 Eine Textposition, die zu einem bestimmten Stichwort passt, einschließlich berücksichtigter Wortformen und Wortanfänge. Dieselbe Position kann zu mehreren Stichwörtern passen.
@@ -34,12 +34,6 @@ Eine eindeutige markierte Textposition innerhalb einer Folge, die zu mindestens 
 
 **Suchabdeckung**:
 Die Anzahl unterschiedlicher wirksamer Stichwörter mit Treffern in einer Folge, bezogen auf die Anzahl eingegebener wirksamer Stichwörter.
-
-**Stoppwort**:
-Ein häufiges Funktionswort aus der gepflegten Ausschlussliste, das in der Anfrage ignoriert wird. Der Originaltext bleibt vollständig.
-
-**Zusätzlich ignoriertes Suchwort**:
-Ein manuell ausgeschlossener normalisierter Suchbegriff, der ebenso wie ein Stoppwort aus der Anfrage entfällt.
 
 **Quellenlücke**:
 Eine bekannte historische Folge ohne bestätigte abrufbare Audioquelle, im Unterschied zu einer noch nicht verarbeiteten verfügbaren Folge.

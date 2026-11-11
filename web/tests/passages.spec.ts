@@ -39,7 +39,7 @@ async function search(page: import('@playwright/test').Page, query: string) {
   await expect(page.getByRole('article').first().locator('.transcript-reader').first()).toBeVisible();
 }
 
-test('repeated terms share one coarse jump with an advertising hint and expandable original text', async ({ page }) => {
+test('repeated terms share one coarse jump and original text with a player advertising hint', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.route('**/episodes/coverage-complete.json', coarseEpisode);
   await openExplorer(page);
@@ -47,7 +47,7 @@ test('repeated terms share one coarse jump with an advertising hint and expandab
   const hits = page.getByRole('article').getByRole('button', { name: 'Anhören ab 0:10', exact: true });
   await expect(hits).toHaveCount(1);
   await expect(hits.first()).toHaveAccessibleName('Anhören ab 0:10');
-  await expect(hits.first()).toHaveAccessibleDescription(/Textabschnitts.*Werbung/);
+  await expect(page.locator('.reader-caption')).toHaveCount(0);
   await expect(page.getByRole('region', { name: 'Vollständiger Transkripttext' })).toContainText('Signal');
   await expect(page.getByRole('article').locator('.passage')).toHaveCount(0);
   await search(page, 'laterne katze fenster');
@@ -77,11 +77,8 @@ test('a shared episode/time link loads the player without autoplay and an unknow
   const media = page.locator('audio');
   await expect.poll(() => media.evaluate((element: HTMLAudioElement) => element.currentTime)).toBe(89);
   expect(await media.evaluate((element: HTMLAudioElement) => element.paused)).toBe(true);
-  await expect(page.getByRole('link', { name: 'Fundstelle teilen' })).toHaveAttribute('href', /episode=coverage-complete&t=89/);
-  await page.getByRole('button', { name: '10 Sekunden vor' }).click();
-  expect(await media.evaluate((element: HTMLAudioElement) => element.currentTime)).toBe(90);
-  await page.getByRole('button', { name: '10 Sekunden zurück' }).click();
-  expect(await media.evaluate((element: HTMLAudioElement) => element.currentTime)).toBe(80);
+  await expect(page.getByRole('link', { name: 'Fundstelle teilen' })).toHaveCount(0);
+  await expect(page.getByRole('region', { name: 'Gemeinsamer Audioplayer' }).locator('p').first()).toHaveText('Werbung kann die Zeit in der Online-Audiodatei verschieben.');
   await page.goto('./?episode=missing-episode&t=12');
   await expect(page.getByRole('status').filter({ hasText: 'Episoden-ID' })).toContainText('Episoden-ID ist im aktuellen Suchstand unbekannt');
   await expect(page.locator('audio')).toHaveCount(0);
@@ -98,19 +95,14 @@ test('terms in successive transcript segments remain separate Fundstellen with o
   await expect(result.getByRole('button', { name: 'Anhören ab 1:00', exact: true })).toBeVisible();
 });
 
-test('failed audio shows the original episode source and player controls stay within the duration', async ({ page }) => {
+test('failed audio shows the original episode source in the minimal player', async ({ page }) => {
   await page.route('https://example.org/fixture.mp3', (route) => route.abort());
   await openExplorer(page);
   await search(page, 'fenster');
   await page.getByRole('article').first().getByRole('button', { name: /Anhören ab/ }).first().click();
   await expect(page.getByRole('alert')).toContainText('Audio nicht verfügbar');
   await expect(page.getByRole('link', { name: 'Zur Episodenseite', exact: true })).toHaveAttribute('href', 'https://example.org/coverage-complete');
-  const media = page.locator('audio');
-  await media.evaluate((element: HTMLAudioElement) => { element.currentTime = 89; });
-  await page.getByRole('button', { name: '10 Sekunden vor' }).click();
-  expect(await media.evaluate((element: HTMLAudioElement) => element.currentTime)).toBeLessThanOrEqual(90);
-  await page.getByRole('button', { name: '10 Sekunden zurück' }).click();
-  expect(await media.evaluate((element: HTMLAudioElement) => element.currentTime)).toBeGreaterThanOrEqual(0);
+  await expect(page.getByRole('region', { name: 'Gemeinsamer Audioplayer' }).getByRole('button')).toHaveCount(1);
 });
 
 test('a newer passage playback wins over a pending shared episode link', async ({ page }) => {
@@ -143,7 +135,7 @@ test('a newer passage playback wins over a pending shared episode link', async (
   await expect(page.getByRole('status').filter({ hasText: 'Geteilte Folge wird geladen' })).toHaveCount(0);
   expect(new URL(page.url()).searchParams.get('episode')).toBe('synthetic-episode-001');
   expect(new URL(page.url()).searchParams.get('t')).toBe('10');
-  await expect(player.getByRole('link', { name: 'Fundstelle teilen' })).toHaveAttribute('href', /episode=synthetic-episode-001&t=10/);
+  await expect(player.getByRole('link', { name: 'Fundstelle teilen' })).toHaveCount(0);
   const media = player.locator('audio');
   await expect.poll(() => media.evaluate((element: HTMLAudioElement) => element.currentTime)).toBeGreaterThanOrEqual(10);
   expect(await media.evaluate((element: HTMLAudioElement) => element.currentTime)).toBeLessThan(15);
@@ -154,7 +146,14 @@ test('episode header plays from zero; closing stops, releases and can reopen aud
   await page.route('**/episodes/synthetic-episode-001.json', controlledEpisode);
   await openExplorer(page); await choose(page, 'münze');
   const card = page.getByRole('article'); const start = card.getByRole('button', { name: 'Folge von Anfang abspielen' });
+  await expect(start).toHaveText('');
   await expect(start).toBeEnabled(); await start.click();
+  const closeButton = page.getByRole('button', { name: 'Player schließen' });
+  const centers = await closeButton.evaluate(element => {
+    const button = element.getBoundingClientRect(), icon = element.querySelector('svg')!.getBoundingClientRect();
+    return { x: Math.abs(button.x + button.width / 2 - icon.x - icon.width / 2), y: Math.abs(button.y + button.height / 2 - icon.y - icon.height / 2) };
+  });
+  expect(centers.x).toBeLessThan(1); expect(centers.y).toBeLessThan(1);
   const player = page.getByRole('region', { name: 'Gemeinsamer Audioplayer' });
   await expect.poll(() => player.locator('audio').evaluate((element: HTMLAudioElement) => element.paused)).toBe(false);
   const media = await player.locator('audio').elementHandle();

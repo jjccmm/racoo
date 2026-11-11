@@ -30,7 +30,7 @@ test('mobile visitors can use search, the shared player, and transcript reader a
   expect(dimensions.document).toBeLessThanOrEqual(dimensions.viewport);
   expect(dimensions.body).toBeLessThanOrEqual(dimensions.viewport);
   expect(requests.some((path) => path.includes('/stats/'))).toBe(false);
-  await expect(page.getByRole('link', { name: 'Fundstelle teilen' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Fundstelle teilen' })).toHaveCount(0);
   await page.screenshot({ path: testInfo.outputPath('word-explorer-mobile-integrated.png'), fullPage: true });
 });
 
@@ -46,7 +46,7 @@ test('direct episode/time links and production assets work at the selected deplo
   await expect(page.getByRole('alert')).toContainText(/Audio nicht verfügbar/);
   const basePath = new URL('.', page.url()).pathname;
   const assets = await page.evaluate(async (base) => {
-    const paths = ['publication.json', 'search/manifest.json', 'search-rules.json'];
+    const paths = ['publication.json', 'search/manifest.json'];
     return Promise.all(paths.map(async (path) => {
       const response = await fetch(`${base}${path}`);
       return { path, ok: response.ok };
@@ -55,7 +55,6 @@ test('direct episode/time links and production assets work at the selected deplo
   expect(assets).toEqual([
     { path: 'publication.json', ok: true },
     { path: 'search/manifest.json', ok: true },
-    { path: 'search-rules.json', ok: true },
   ]);
   expect(failed.filter((url) => new URL(url).origin === new URL(page.url()).origin)).toEqual([]);
 });

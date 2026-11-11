@@ -1,5 +1,7 @@
 # Aktuell
 
+- [ ] [Kompakte Karten und ungefilterte Zehnwortsuche](.scratch/pagefind-minimap/issues/06-compact-cards-unfiltered-search.md).
+
 - [x] [Offene Transkriptkarten, Player und flexible Diagramme](.scratch/pagefind-minimap/issues/05-open-transcript-cards.md): `406aa04`, [Abnahme](docs/pilot/open-transcript-cards.md).
 
 - [x] [Pagefind-Freitextsuche und helle Minimap](.scratch/pagefind-minimap/spec.md): [vier Tickets](.scratch/pagefind-minimap/ticket-index.md), Integration auf `feature/pagefind-minimap`; [Abnahme](docs/pilot/pagefind-minimap.md).

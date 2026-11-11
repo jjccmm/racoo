@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useId, useMemo, useRef, useSta
 import type { SearchResult } from './search';
 import { formatPlaybackTime, type StartPlayback } from './playback';
 import { HighlightedText, type ColoredTerm } from './HighlightedText';
+import { wordStyle } from './word-colors';
 import { TranscriptMinimap } from './TranscriptMinimap';
 
 function paragraphs(text: string) {
@@ -13,7 +14,7 @@ function paragraphs(text: string) {
   if (from < text.length) result.push({ from, to: text.length });
   return result;
 }
-export function TranscriptReader({ result, words, onChoose }: { result: SearchResult; words: ColoredTerm[]; onChoose: StartPlayback }) {
+export function TranscriptReader({ result, words, counts, onChoose }: { result: SearchResult; words: ColoredTerm[]; counts: Record<string, number>; onChoose: StartPlayback }) {
   const id = useId(), scroller = useRef<HTMLDivElement>(null), transcript = useRef<HTMLDivElement>(null);
   const highlights = useMemo(() => new Map(result.passages.map(passage => [passage.id, passage.highlights])), [result]);
   const hits = useMemo(() => result.segments.flatMap(segment => (highlights.get(segment.id) ?? []).map(range => ({ id: `${segment.id}:${range.start}`, segment, terms: range.terms }))), [result, highlights]);
@@ -49,7 +50,7 @@ export function TranscriptReader({ result, words, onChoose }: { result: SearchRe
   const index = hits.findIndex(hit => hit.id === active);
   return <section className="transcript-reader" aria-label={`Transkript: ${result.title}`}>
     <div className="reader-toolbar">
-      <span className="muted">Fundstellen</span>
+      <ul className="reader-legend" aria-label="Suchwörter im Transkript">{words.map(word => <li key={word.term} style={wordStyle(word.color)}><i />{word.term}<span>{(counts[word.term] ?? 0).toLocaleString('de-DE')}</span></li>)}</ul>
       <div className="match-navigation"><span role="status" aria-live="polite">{index < 0 ? `${hits.length} Fundstellen` : `${index + 1}/${hits.length}`}</span>
         <button disabled={!hits.length} onClick={() => navigate(-1)} aria-label="Vorherige Fundstelle">↑</button><button disabled={!hits.length} onClick={() => navigate(1)} aria-label="Nächste Fundstelle">↓</button>
       </div>
@@ -60,7 +61,7 @@ export function TranscriptReader({ result, words, onChoose }: { result: SearchRe
           {result.segments.map(segment => {
             const ranges = highlights.get(segment.id) ?? [];
             return <section key={segment.id} className="reader-segment" data-segment-id={segment.id}>
-              <div className="segment-label"><button aria-label={`Anhören ab ${formatPlaybackTime(segment.start_seconds)}`} aria-describedby={`jump-hint-${result.episodeId}`} onClick={() => onChoose(result, segment.start_seconds)}>▶ {formatPlaybackTime(segment.start_seconds)}</button></div>
+              <div className="segment-label"><button aria-label={`Anhören ab ${formatPlaybackTime(segment.start_seconds)}`} onClick={() => onChoose(result, segment.start_seconds)}>▶ {formatPlaybackTime(segment.start_seconds)}</button></div>
               {paragraphs(segment.text).map(({ from, to }) => <p key={from}><HighlightedText text={segment.text} highlights={ranges} words={words} from={from} to={to} segmentId={segment.id} /></p>)}
             </section>;
           })}
@@ -68,6 +69,5 @@ export function TranscriptReader({ result, words, onChoose }: { result: SearchRe
       </div>
       <TranscriptMinimap scroller={scroller} transcript={transcript} words={words} active={active} onHit={select} controls={id} />
     </div>
-    <p className="reader-caption" id={`jump-hint-${result.episodeId}`}>Die Zeitknöpfe starten am Beginn des Textabschnitts. Werbung kann die Zeit in der Online-Audiodatei verschieben.</p>
   </section>;
 }
