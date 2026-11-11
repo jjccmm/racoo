@@ -6,4 +6,4 @@
 - [04: Lokale Integration und Dokumentation](issues/04-validation-cleanup.md) — resolved; Blocked by: 01, 02, 03 (erfüllt)
 
 - [05: Direkt offene Transkriptkarten und kompakte Diagramme](issues/05-open-transcript-cards.md) — resolved; Blocked by: none
-- [06: Kompakte Karten und ungefilterte Zehnwortsuche](issues/06-compact-cards-unfiltered-search.md) — claimed; Blocked by: none
+- [06: Kompakte Karten und ungefilterte Zehnwortsuche](issues/06-compact-cards-unfiltered-search.md) — resolved; Blocked by: none

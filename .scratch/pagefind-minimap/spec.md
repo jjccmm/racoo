@@ -1,6 +1,6 @@
 # Pagefind-Freitextsuche und helle vertikale Minimap
 
-Status: claimed
+Status: resolved
 Blocked by: none
 
 Am 10. November 2026 vom Nutzer zur Umsetzung beauftragt. Grundlage ist der [Plan](../../docs/planning/pagefind-and-minimap.md) samt [API-Nachweis](../../docs/research/pagefind-counting-2026-11-10.md). Integration auf `feature/pagefind-minimap`; Tests lokal, kein automatisches Merge/Deployment.
@@ -34,3 +34,5 @@ Am 10. November 2026 vom Nutzer zur Umsetzung beauftragt. Grundlage ist der [Pla
 Das [fünfte Ticket](issues/05-open-transcript-cards.md) ersetzt Kurzvorschau/optionalen Einzelleser durch direkt offene Karten mit integrierten Angaben und Start-Abspielknopf. Minimap ohne zusätzliche rechte Farbspuren oder Labels, schließbarer Player und Diagramme ohne horizontales Scrollen.
 
 - 2026-11-10: Verfeinerung in `406aa04` auf `feature/pagefind-minimap` integriert. Alle fünf Tickets erfüllt; [Abnahme der offenen Transkriptkarten](../../docs/pilot/open-transcript-cards.md) mit 74 Python-/120 Browserprüfungen und realem 106er-Bestand.
+
+- 2026-11-11: In `d4b7994` auf `feature/pagefind-minimap` integriert. Alle sechs Tickets erfüllt. [Prüfnachweise und Grenzen](../../docs/pilot/compact-cards-unfiltered-search.md); 74 Python-/122 Browserfälle plus elf ergänzende Projektpfadfälle bestanden.

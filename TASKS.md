@@ -1,6 +1,6 @@
 # Aktuell
 
-- [ ] [Kompakte Karten und ungefilterte Zehnwortsuche](.scratch/pagefind-minimap/issues/06-compact-cards-unfiltered-search.md).
+- [x] [Kompakte Karten und ungefilterte Zehnwortsuche](.scratch/pagefind-minimap/issues/06-compact-cards-unfiltered-search.md): `d4b7994`, [Abnahme](docs/pilot/compact-cards-unfiltered-search.md).
 
 - [x] [Offene Transkriptkarten, Player und flexible Diagramme](.scratch/pagefind-minimap/issues/05-open-transcript-cards.md): `406aa04`, [Abnahme](docs/pilot/open-transcript-cards.md).
 

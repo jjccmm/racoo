@@ -1,6 +1,6 @@
 # Kompakte Karten und ungefilterte Zehnwortsuche
 
-Status: claimed
+Status: resolved
 Blocked by: none
 
 ## Acceptance criteria
@@ -18,3 +18,5 @@ Blocked by: none
 - 2026-11-10: Nutzer bestätigt ausdrücklich „Alle eingegebenen Wörter durchsuchen“. Häufige Wörter wirken damit auf die nach absoluten Suchwort-Treffern sortierte Rangfolge.
 
 - 2026-11-11: Alle Kriterien lokal abgenommen: 74 Python-/122 Browserfälle plus elf Layoutfälle, reale 106 Folgen, zehn Referenzsuchen und Desktop/390/320 px. [Abnahme und Grenzen](../../../docs/pilot/compact-cards-unfiltered-search.md).
+
+- 2026-11-11: In `d4b7994` auf `feature/pagefind-minimap` integriert. Alle sechs Tickets erfüllt. [Prüfnachweise und Grenzen](../../../docs/pilot/compact-cards-unfiltered-search.md); 74 Python-/122 Browserfälle plus elf ergänzende Projektpfadfälle bestanden.
