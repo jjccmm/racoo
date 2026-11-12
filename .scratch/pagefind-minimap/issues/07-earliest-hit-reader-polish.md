@@ -1,6 +1,6 @@
 # Früheste Fundstelle und ruhiger Transkriptleser
 
-Status: claimed
+Status: resolved
 Blocked by: none
 
 ## Acceptance criteria
@@ -17,3 +17,5 @@ Blocked by: none
 - 2026-11-12: Repro mit realem UFO070: `node .cache/repro-first-hit.cjs` schlägt fehl. `kratzeis` → `kratzeis urlaub`: aktive Stelle Kratzeis, erste DOM-Fundstelle Urlaub, Originaltranskript-Abrufe vorher/nachher jeweils 1. Neue gewünschte Semantik ersetzt die frühere Auswahl nach Eingabewort-Reihenfolge.
 
 - 2026-11-12: Die chronologische Auswahl behebt den ursprünglichen Repro ohne zusätzlichen Originalabruf. 74 Python-/128 Browserprüfungen, realer 106er-Build, zehn Suchstichproben und Desktop/390/320 px bestanden. [Abnahme und Messgrenzen](../../../docs/pilot/earliest-hit-reader-polish.md).
+
+- 2026-11-12: In `47d8373` auf `feature/pagefind-minimap` integriert. Alle sieben Tickets erfüllt. [Abnahme](../../../docs/pilot/earliest-hit-reader-polish.md) mit 74 Python-/128 Browserprüfungen und realem 106er-Bestand.

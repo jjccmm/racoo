@@ -1,6 +1,6 @@
 # Aktuell
 
-- [ ] [Früheste Fundstelle und ruhiger Transkriptleser](.scratch/pagefind-minimap/issues/07-earliest-hit-reader-polish.md).
+- [x] [Früheste Fundstelle und ruhiger Transkriptleser](.scratch/pagefind-minimap/issues/07-earliest-hit-reader-polish.md): `47d8373`, [Abnahme](docs/pilot/earliest-hit-reader-polish.md).
 
 - [x] [Kompakte Karten und ungefilterte Zehnwortsuche](.scratch/pagefind-minimap/issues/06-compact-cards-unfiltered-search.md): `d4b7994`, [Abnahme](docs/pilot/compact-cards-unfiltered-search.md).
 

@@ -1,6 +1,6 @@
 # Pagefind-Freitextsuche und helle vertikale Minimap
 
-Status: claimed
+Status: resolved
 Blocked by: none
 
 Am 10. November 2026 vom Nutzer zur Umsetzung beauftragt. Grundlage ist der [Plan](../../docs/planning/pagefind-and-minimap.md) samt [API-Nachweis](../../docs/research/pagefind-counting-2026-11-10.md). Integration auf `feature/pagefind-minimap`; Tests lokal, kein automatisches Merge/Deployment.
@@ -22,6 +22,7 @@ Am 10. November 2026 vom Nutzer zur Umsetzung beauftragt. Grundlage ist der [Pla
 4. [Integration, Aufräumen und Abnahme](issues/04-validation-cleanup.md)
 5. [Direkt offene Transkriptkarten und kompakte Diagramme](issues/05-open-transcript-cards.md)
 6. [Kompakte Karten und ungefilterte Zehnwortsuche](issues/06-compact-cards-unfiltered-search.md)
+7. [Früheste Fundstelle und ruhiger Transkriptleser](issues/07-earliest-hit-reader-polish.md)
 
 ## Comments
 
@@ -39,3 +40,5 @@ Das [fünfte Ticket](issues/05-open-transcript-cards.md) ersetzt Kurzvorschau/op
 
 
 Der [weitere UI-Auftrag](issues/07-earliest-hit-reader-polish.md) bestätigt den Sprung zur frühesten Fundstelle über alle Wörter, Rand-Fades, nochmals 15 Prozent weniger Texthöhe, weiße Minimap, kompaktere Abstände, Website-/Quellenlinks und Racoo-Favicon. Laufzeit-/Datendiagnosen entfallen ausschließlich aus der öffentlichen Oberfläche.
+
+- 2026-11-12: In `47d8373` auf `feature/pagefind-minimap` integriert. Alle sieben Tickets erfüllt. [Abnahme](../../docs/pilot/earliest-hit-reader-polish.md) mit 74 Python-/128 Browserprüfungen und realem 106er-Bestand.
