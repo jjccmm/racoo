@@ -1,6 +1,6 @@
 # Pagefind-Freitextsuche und helle vertikale Minimap
 
-Status: resolved
+Status: claimed
 Blocked by: none
 
 Am 10. November 2026 vom Nutzer zur Umsetzung beauftragt. Grundlage ist der [Plan](../../docs/planning/pagefind-and-minimap.md) samt [API-Nachweis](../../docs/research/pagefind-counting-2026-11-10.md). Integration auf `feature/pagefind-minimap`; Tests lokal, kein automatisches Merge/Deployment.
@@ -48,3 +48,6 @@ Der [weitere UI-Auftrag](issues/07-earliest-hit-reader-polish.md) bestätigt den
 Der [achte Auftrag](issues/08-themes-sliding-toggle-faq.md) ergänzt Hell-/Dunkelmodus, einen gleitenden Kapselschalter für Top10/Alle und eine kompakte FAQ. Auf der Podcastseite steht das Logo 10 Pixel weiter rechts und der Kopfbereich hat 20 Pixel mehr Abstand zu den Podcastinfos. Suchsemantik und Daten bleiben unverändert.
 
 - 2026-11-12: In `6e7afe2` auf `feature/pagefind-minimap` integriert. Alle acht Tickets erfüllt. [Abnahme](../../docs/pilot/themes-sliding-toggle-faq.md) mit 74 Python-/136 Browserprüfungen und echtem 106er-Bestand.
+
+
+Der [neunte Auftrag](issues/09-landing-alignment-default-query.md) verschiebt den Startseiten-Modusschalter neben die Suche, vereinheitlicht Podcast-/FAQ-Kartenbreiten, vergrößert die Fades und verwendet Eimer als normale UFO-Einstiegssuche. Suchlinks und bewusst leere Eingaben bleiben erhalten.

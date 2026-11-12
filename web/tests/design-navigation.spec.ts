@@ -15,9 +15,15 @@ test('landing demo is free text, highlights its explanation and loads no podcast
   expect(new URL(page.url()).searchParams.get('q')).toBe('Folge');
 });
 
-test('unmodified demo is not a real query and mobile entry stays within the screen', async ({ page }) => {
+test('normal UFO entry uses Eimer and a deliberately cleared query stays empty on reload', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 720 }); await page.goto('./');
   await page.getByRole('link', { name: /DAS PODCAST UFO/ }).click();
+  await expect(page.getByRole('searchbox', { name: 'Wörter suchen' })).toHaveValue('Eimer');
+  await expect(page.getByRole('article')).toHaveCount(2);
+  await page.getByRole('searchbox', { name: 'Wörter suchen' }).fill('');
+  await page.getByRole('button', { name: 'Suchen', exact: true }).click();
+  await expect(page.getByRole('article')).toHaveCount(0);
+  await page.reload();
   await expect(page.getByRole('searchbox', { name: 'Wörter suchen' })).toHaveValue('');
   await expect(page.getByRole('article')).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);

@@ -31,7 +31,7 @@ export function App() {
   return <main className={explorer ? 'workspace' : 'landing'}>
     <header className="site-header">
       <a className="site-brand" href={home} aria-label="Racoo – Startseite"><img src={logo} width="2172" height="724" alt="Racoo" /></a>
-      <div className="header-actions">{explorer && <a className="back-link" href={home} aria-label="Alle Podcasts" title="Alle Podcasts"><span aria-hidden="true">←</span><span className="back-label">Alle Podcasts</span></a>}<ThemeToggle /></div>
+      {explorer && <div className="header-actions"><a className="back-link" href={home} aria-label="Alle Podcasts" title="Alle Podcasts"><span aria-hidden="true">←</span><span className="back-label">Alle Podcasts</span></a><ThemeToggle /></div>}
     </header>
     {!explorer && <LandingIntro onQuery={setLandingQuery} />}
     {!podcasts && !error && <p role="status">Podcasts werden geladen …</p>}
@@ -43,7 +43,7 @@ export function App() {
         <div><h1>{podcast.name}</h1><p>{podcast.speakers.join(' & ')}{podcast.websiteUrl && <><span className="speaker-separator"> · </span><a href={podcast.websiteUrl} target="_blank" rel="noreferrer">Webseite ↗</a></>}</p><PodcastProgress podcast={podcast} /></div>
       </header>
       {podcast.episodeCount > 0 ? <>
-        <Player key={podcast.id} dataBase={dataBase} podcastId={podcast.id}><Stats dataBase={dataBase} /></Player>
+        <Player key={podcast.id} dataBase={dataBase} podcastId={podcast.id}><Stats dataBase={dataBase} defaultQuery={podcast.id === 'podcast-ufo' && !episode ? 'Eimer' : ''} /></Player>
         <footer className="workspace-footer"><p className="transcript-credit">Inhalte: {podcast.websiteUrl ? <a href={podcast.websiteUrl} target="_blank" rel="noreferrer">{podcast.name}</a> : podcast.name} · Maschinelle Transkripte können Fehler enthalten.</p></footer>
       </> : <p className="notice">Für diesen Podcast sind noch keine Folgen durchsuchbar. Die Verarbeitung läuft lokal; neue Daten erscheinen nach der nächsten Veröffentlichung.</p>}
     </>}
@@ -57,7 +57,6 @@ export function App() {
         </a>)}
       </section>
       <Faq />
-      <footer className="landing-footer">Ein unabhängiges Hobbyprojekt. Finde Folgen anhand ihrer maschinell erstellten Transkripte.</footer>
     </>}
   </main>;
 }

@@ -1,5 +1,7 @@
 # Aktuell
 
+- [ ] [Startsuche, Kartenbreiten und Eimer-Vorbelegung](.scratch/pagefind-minimap/issues/09-landing-alignment-default-query.md).
+
 - [x] [Hell/Dunkel, Diagrammschalter und FAQ](.scratch/pagefind-minimap/issues/08-themes-sliding-toggle-faq.md): `6e7afe2`, [Abnahme](docs/pilot/themes-sliding-toggle-faq.md).
 
 - [x] [Früheste Fundstelle und ruhiger Transkriptleser](.scratch/pagefind-minimap/issues/07-earliest-hit-reader-polish.md): `47d8373`, [Abnahme](docs/pilot/earliest-hit-reader-polish.md).

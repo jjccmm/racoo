@@ -48,7 +48,7 @@ export async function clearWords(page: Page) {
   await page.getByRole('button', { name: 'Suchen', exact: true }).click();
   await expect(page.getByRole('article')).toHaveCount(0);
 }
-export async function openExplorer(page: Page, url = './?podcast=podcast-ufo') {
+export async function openExplorer(page: Page, url = './?podcast=podcast-ufo&q=') {
   await page.goto(url);
   await expect(page.getByRole('searchbox', { name: 'Wörter suchen' })).toBeVisible();
 }

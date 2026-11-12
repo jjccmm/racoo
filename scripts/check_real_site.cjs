@@ -27,7 +27,7 @@ async function main() {
     const context = await browser.newContext({ viewport: { width: 1360, height: 1000 } });
     const page = await context.newPage(); const errors = [];
     page.on('pageerror', error => errors.push(error.message));
-    await page.goto(new URL('?podcast=podcast-ufo', base).href);
+    await page.goto(new URL('?podcast=podcast-ufo&q=', base).href);
     const historic = JSON.parse(await fs.readFile(path.join(root, 'docs/pilot/evidence/browser-root.json'), 'utf8'));
     const cases = historic.queries.filter(item => item.expectedCoverage === 3).map(item => ({ query: item.query, id: item.expectedEpisodeId, segment: item.sourceSegmentId }));
     cases.push(...[
@@ -67,7 +67,7 @@ async function main() {
     });
     const settle = async () => { while (pending.size) await Promise.allSettled([...pending]); };
     const bytes = () => transfers.reduce((sum, transfer) => sum + transfer.bytes, 0);
-    await phone.goto(new URL('?podcast=podcast-ufo', base).href);
+    await phone.goto(new URL('?podcast=podcast-ufo&q=', base).href);
     await expect(phone.getByRole('searchbox')).toBeVisible({ timeout: 20000 }); await settle();
     const beforeSearchBytes = bytes();
     const coldMs = await submit(phone, 'massagesessel hotline massage'); await settle(); const throughFirstResultBytes = bytes();

@@ -27,3 +27,6 @@ Audio wird nach der lokalen Transkription gelöscht. Zeitknöpfe starten am Begi
 
 
 Über das Sonnen-/Mondsymbol zwischen Hell- und Dunkelmodus wechseln; die Wahl bleibt im Browser gespeichert. Top10/Alle verwendet eine gleitende Kapsel. Unter der Podcastauswahl beantwortet die ausklappbare FAQ die häufigsten Fragen.
+
+
+DAS PODCAST UFO startet beim normalen Einstieg mit „Eimer“. Vorhandene Suchlinks und eine bewusst geleerte Suche bleiben erhalten. Auf der Startseite steht der Modusschalter direkt neben der Suche; Podcastkarte und aufgeklappte FAQ verwenden dieselbe Kartenbreite.

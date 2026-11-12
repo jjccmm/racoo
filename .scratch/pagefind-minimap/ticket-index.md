@@ -11,3 +11,5 @@
 - [07: Früheste Fundstelle und ruhiger Transkriptleser](issues/07-earliest-hit-reader-polish.md) — resolved; Blocked by: none
 
 - [08: Hell/Dunkel, Diagrammschalter und FAQ](issues/08-themes-sliding-toggle-faq.md) — resolved; Blocked by: none
+
+- [09: Startsuche, Kartenbreiten und Eimer-Vorbelegung](issues/09-landing-alignment-default-query.md) — claimed; Blocked by: none

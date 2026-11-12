@@ -42,3 +42,8 @@ Top10 und Alle verwenden immer die verfügbare Breite ohne horizontales Scrollen
 Der globale Hell-/Dunkelschalter übernimmt ohne gespeicherte Wahl zunächst die Systemeinstellung. Eine manuelle Wahl wird im Browser gespeichert und vor dem ersten Seitenaufbau angewendet; gesperrter Browserspeicher verhindert das Umschalten nicht. Flächen, Logo, Wortfarben, Diagramm, Minimap und nativer Player passen sich an. Der Wechsel ersetzt keine Suchinstanz und verändert weder Anfrage noch Textposition.
 
 Top10/Alle verwendet eine Kapsel mit gleitender Auswahl und zugänglichen Schaltflächen. Reduzierte Bewegung deaktiviert die Animation. Auf der Startseite öffnet eine native FAQ-Klappe alle sechs kurzen Antworten zu Motivation, Unabhängigkeit, maschinellen Texten, groben Audiomarken, Aktualisierung und Namensherkunft. Die ungefähre Werbeabweichung ist keine Genauigkeitsgarantie.
+
+
+Beim normalen Einstieg in DAS PODCAST UFO ohne `q`-Parameter startet die Suche mit `Eimer`. Ein vorhandener Suchtext und ein ausdrücklich leeres `q=` haben Vorrang. Leeren/Suchen erhält deshalb den leeren Parameter im Link; direkte Folge-/Audiolinks starten keine zusätzliche Beispielsuchanfrage. Andere Podcasts haben keine automatische Vorgabe.
+
+Auf der Startseite steht der Modusschalter neben der Suche. Podcastauswahl und FAQ teilen die gleiche Breite; die FAQ erhält erst geöffnet eine Kartenfläche. Die Scroll-Fades sind 36 Pixel breit und behalten ihre zustandsabhängige Sichtbarkeit.

@@ -16,8 +16,8 @@ function prepare(query: string, id: number): Submission {
   try { return { ...parseQuery(query), id }; }
   catch (error) { return { id, terms: [], error: (error as Error).message }; }
 }
-export function Frequency({ dataBase, data, onChoose }: { dataBase: string; data: SearchData; onChoose: StartPlayback }) {
-  const [query, setQuery] = useState(() => new URLSearchParams(location.search).get('q') ?? '');
+export function Frequency({ dataBase, data, onChoose, defaultQuery = '' }: { dataBase: string; data: SearchData; onChoose: StartPlayback; defaultQuery?: string }) {
+  const [query, setQuery] = useState(() => new URLSearchParams(location.search).get('q') ?? defaultQuery);
   const [submission, setSubmission] = useState(() => prepare(query, 0));
   const [overview, setOverview] = useState<{ id: number; value?: SearchOverview; error?: string }>({ id: -1 });
   const [mode, setMode] = useState<'top' | 'all'>('top');
@@ -47,7 +47,7 @@ export function Frequency({ dataBase, data, onChoose }: { dataBase: string; data
     const next = prepare(query, submission.id + 1);
     setSubmission(next);
     const url = new URL(location.href);
-    if (query.trim()) url.searchParams.set('q', query.trim()); else url.searchParams.delete('q');
+    url.searchParams.set('q', query.trim());
     history.replaceState(null, '', url);
   }
   return <section className="frequency" aria-label="Wörter und Folgen erkunden">
