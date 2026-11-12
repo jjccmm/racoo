@@ -1,6 +1,6 @@
 # Startsuche, Kartenbreiten und Eimer-Vorbelegung
 
-Status: claimed
+Status: resolved
 Blocked by: none
 
 ## Acceptance criteria
@@ -17,3 +17,5 @@ Blocked by: none
 - 2026-11-12: Nutzerauftrag. Keine neue Transkription oder Datenänderung.
 
 - 2026-11-12: Web-Lint, TypeScript, Links und 128 Browserfälle an Root-/Projektpfad bestanden. Echte 106 Folgen, Eimer-Einstieg und beide Themen bei 320/390/1280 px geprüft. [Abnahme](../../../docs/pilot/landing-alignment-default-query.md).
+
+- 2026-11-12: In `0307461` auf `feature/pagefind-minimap` integriert. Alle neun Tickets erfüllt. [Abnahme](../../../docs/pilot/landing-alignment-default-query.md) mit 128 Browserprüfungen und realem 106er-Bestand.

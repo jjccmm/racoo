@@ -1,6 +1,6 @@
 # Aktuell
 
-- [ ] [Startsuche, Kartenbreiten und Eimer-Vorbelegung](.scratch/pagefind-minimap/issues/09-landing-alignment-default-query.md).
+- [x] [Startsuche, Kartenbreiten und Eimer-Vorbelegung](.scratch/pagefind-minimap/issues/09-landing-alignment-default-query.md): `0307461`, [Abnahme](docs/pilot/landing-alignment-default-query.md).
 
 - [x] [Hell/Dunkel, Diagrammschalter und FAQ](.scratch/pagefind-minimap/issues/08-themes-sliding-toggle-faq.md): `6e7afe2`, [Abnahme](docs/pilot/themes-sliding-toggle-faq.md).
 
