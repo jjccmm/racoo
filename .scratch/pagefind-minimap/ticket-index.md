@@ -14,4 +14,4 @@
 
 - [09: Startsuche, Kartenbreiten und Eimer-Vorbelegung](issues/09-landing-alignment-default-query.md) — resolved; Blocked by: none
 
-- [10: Eingegebene Schreibweise in Suchanzeigen](issues/10-query-display-spelling.md) — claimed; Blocked by: none
+- [10: Eingegebene Schreibweise in Suchanzeigen](issues/10-query-display-spelling.md) — resolved; Blocked by: none

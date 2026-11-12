@@ -1,6 +1,6 @@
 # Eingegebene Schreibweise in Suchanzeigen
 
-Status: claimed
+Status: resolved
 Blocked by: none
 
 ## Acceptance criteria
@@ -15,3 +15,5 @@ Blocked by: none
 - 2026-11-12: Nutzerauftrag. Anzeigename getrennt vom normalisierten Suchbegriff halten.
 
 - 2026-11-12: Web-Lint, TypeScript, Links und 130 Browserfälle bestanden. Echter 106er-Bestand: Eimer/EiMeR-Anzeigen, Tooltips und unveränderte Top10-Zahlen geprüft. [Abnahme](../../../docs/pilot/query-display-spelling.md).
+
+- 2026-11-12: In `a814181` auf `feature/pagefind-minimap` integriert. Alle zehn Tickets erfüllt; 130 Browserprüfungen und echte Anzeige-/Zählprüfung bestanden.

@@ -1,6 +1,6 @@
 # Pagefind-Freitextsuche und helle vertikale Minimap
 
-Status: claimed
+Status: resolved
 Blocked by: none
 
 Am 10. November 2026 vom Nutzer zur Umsetzung beauftragt. Grundlage ist der [Plan](../../docs/planning/pagefind-and-minimap.md) samt [API-Nachweis](../../docs/research/pagefind-counting-2026-11-10.md). Integration auf `feature/pagefind-minimap`; Tests lokal, kein automatisches Merge/Deployment.
@@ -25,6 +25,7 @@ Am 10. November 2026 vom Nutzer zur Umsetzung beauftragt. Grundlage ist der [Pla
 7. [Früheste Fundstelle und ruhiger Transkriptleser](issues/07-earliest-hit-reader-polish.md)
 8. [Hell/Dunkel, Diagrammschalter und FAQ](issues/08-themes-sliding-toggle-faq.md)
 9. [Startsuche, Kartenbreiten und Eimer-Vorbelegung](issues/09-landing-alignment-default-query.md)
+10. [Eingegebene Schreibweise in Suchanzeigen](issues/10-query-display-spelling.md)
 
 ## Comments
 
@@ -57,3 +58,5 @@ Der [neunte Auftrag](issues/09-landing-alignment-default-query.md) verschiebt de
 
 
 [Ticket 10](issues/10-query-display-spelling.md) trennt Anzeigenamen in der eingegebenen Schreibweise von den unverändert normalisierten Suchschlüsseln. Dopplungen behalten die erste Schreibweise.
+
+- 2026-11-12: In `a814181` auf `feature/pagefind-minimap` integriert. Alle zehn Tickets erfüllt; 130 Browserprüfungen und echte Anzeige-/Zählprüfung bestanden.
