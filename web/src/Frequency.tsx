@@ -11,10 +11,10 @@ import { TranscriptReader } from './TranscriptReader';
 
 const count = (value: number) => value.toLocaleString('de-DE');
 const order = (a: string, b: string) => a < b ? -1 : a > b ? 1 : 0;
-type Submission = { id: number; terms: string[]; error?: string };
+type Submission = { id: number; terms: string[]; labels: Record<string, string>; error?: string };
 function prepare(query: string, id: number): Submission {
   try { return { ...parseQuery(query), id }; }
-  catch (error) { return { id, terms: [], error: (error as Error).message }; }
+  catch (error) { return { id, terms: [], labels: {}, error: (error as Error).message }; }
 }
 export function Frequency({ dataBase, data, onChoose, defaultQuery = '' }: { dataBase: string; data: SearchData; onChoose: StartPlayback; defaultQuery?: string }) {
   const [query, setQuery] = useState(() => new URLSearchParams(location.search).get('q') ?? defaultQuery);
@@ -22,7 +22,7 @@ export function Frequency({ dataBase, data, onChoose, defaultQuery = '' }: { dat
   const [overview, setOverview] = useState<{ id: number; value?: SearchOverview; error?: string }>({ id: -1 });
   const [mode, setMode] = useState<'top' | 'all'>('top');
   const [chartWidth, setChartWidth] = useState(0);
-  const words = useMemo(() => submission.terms.map((term, index) => ({ term, color: WORD_COLORS[index] })), [submission]);
+  const words = useMemo(() => submission.terms.map((term, index) => ({ term, label: submission.labels[term], color: WORD_COLORS[index] })), [submission]);
   useEffect(() => {
     if (!submission.terms.length) return;
     const controller = new AbortController();
@@ -66,20 +66,20 @@ export function Frequency({ dataBase, data, onChoose, defaultQuery = '' }: { dat
       {!words.length ? <div className="chart-empty"><p>An welche Wörter erinnerst du dich?</p></div>
         : !ready ? <div className="chart-empty"><p>{failed ? 'Die Suche ist noch nicht vollständig.' : 'Das Diagramm wartet auf die Suchergebnisse.'}</p></div>
           : <>
-            <ul className="chart-legend" aria-label="Wörter im Diagramm">{words.map(word => <li key={word.term} style={wordStyle(word.color)}><i />{word.term}</li>)}</ul>
+            <ul className="chart-legend" aria-label="Wörter im Diagramm">{words.map(word => <li key={word.term} style={wordStyle(word.color)}><i />{word.label}</li>)}</ul>
             {!ranked.length && <p role="status">Keine Treffer für diese Stichwörter.</p>}
             <div className="frequency-chart-scroll"><div className="frequency-chart">
               <ResponsiveContainer width="100%" height={370} onResize={width => setChartWidth(width)}><BarChart data={plotted} margin={{ top: 20, right: 16, bottom: 18, left: 0 }} barCategoryGap={mode === 'all' ? '10%' : '18%'} accessibilityLayer>
                 <CartesianGrid vertical={false} stroke="var(--chart-grid)" strokeDasharray="3 4" /><XAxis dataKey="episodeId" interval={0} height={70} axisLine={{ stroke: 'var(--line)' }} tickLine={false} tick={({ x, y, payload }: XAxisTickContentProps) => {
                   const episode = plotted.find(item => item.episodeId === payload.value)!;
-                  const label = `${episode.title}; ${words.map(word => `${word.term}: ${count(counts.get(episode.episodeId)?.counts[word.term] ?? 0)}`).join('; ')}; Summe: ${count(episode.total)}`;
+                  const label = `${episode.title}; ${words.map(word => `${word.label}: ${count(counts.get(episode.episodeId)?.counts[word.term] ?? 0)}`).join('; ')}; Summe: ${count(episode.total)}`;
                   const tickIndex = plotted.indexOf(episode);
                   const stride = Math.max(1, Math.ceil(plotted.length / Math.max(1, Math.floor((chartWidth - 54) / 115))));
                   const showTitle = tickIndex % stride === Math.floor(stride / 2);
                   return <g transform={`translate(${x},${y})`} role="img" aria-label={label}><title>{label}</title>{showTitle && <text className="episode-axis-label" y={12} transform="rotate(-25)" textAnchor="end" fill="var(--muted)" fontSize={11}>{episode.title.length > 18 ? `${episode.title.slice(0, 16)}…` : episode.title}</text>}</g>;
                 }} /><YAxis allowDecimals={false} axisLine={false} tickLine={false} width={38} tick={{ fontSize: 11, fill: 'var(--muted)' }} />
                 <Tooltip cursor={{ fill: 'var(--soft)' }} contentStyle={{ backgroundColor: 'var(--surface)', color: 'var(--ink)', borderRadius: 8, border: '1px solid var(--line)', fontSize: 13 }} itemStyle={{ color: 'var(--ink)' }} labelFormatter={(label, payload) => `${payload[0]?.payload.title ?? label} · Summe ${payload[0]?.payload.total ?? 0}`} />
-                {words.map((word, index) => <Bar key={word.term} dataKey={`series${index}`} name={word.term} stackId="words" fill={`color-mix(in srgb, ${word.color} var(--word-strength), white)`} stroke="none" isAnimationActive={false} maxBarSize={52} />)}
+                {words.map((word, index) => <Bar key={word.term} dataKey={`series${index}`} name={word.label} stackId="words" fill={`color-mix(in srgb, ${word.color} var(--word-strength), white)`} stroke="none" isAnimationActive={false} maxBarSize={52} />)}
               </BarChart></ResponsiveContainer>
             </div></div>
           </>}
@@ -132,7 +132,7 @@ function EpisodeCard({ episode, index, words, counts, dataBase, publicationId, o
         <button className="episode-start" disabled={!result} aria-label="Folge von Anfang abspielen" onClick={() => { if (result) onChoose(result, 0); }} title="Folge von Anfang abspielen"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor" /></svg></button>
       </div>
       <div className="episode-summary"><strong>{count(episode.total)} Suchwort-Treffer</strong><span>{episode.coverage}/{words.length} Suchwörter</span></div>
-      {!result && <ul className="reader-legend" aria-label="Suchwörter im Transkript">{words.map(word => <li key={word.term} style={wordStyle(word.color)}><i />{word.term}<span>{count(counts[word.term] ?? 0)}</span></li>)}</ul>}
+      {!result && <ul className="reader-legend" aria-label="Suchwörter im Transkript">{words.map(word => <li key={word.term} style={wordStyle(word.color)}><i />{word.label}<span>{count(counts[word.term] ?? 0)}</span></li>)}</ul>}
     </header>
     {result ? <TranscriptReader result={result} words={words} counts={counts} onChoose={onChoose} />
       : error ? <div className="reader-placeholder"><p role="alert">Die Originalpassagen konnten nicht geladen werden. Die Suchwort-Zählungen bleiben erhalten.</p><button onClick={() => { setError(false); setAttempt(value => value + 1); }}>Passagen erneut laden</button></div>

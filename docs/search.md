@@ -47,3 +47,6 @@ Top10/Alle verwendet eine Kapsel mit gleitender Auswahl und zugänglichen Schalt
 Beim normalen Einstieg in DAS PODCAST UFO ohne `q`-Parameter startet die Suche mit `Eimer`. Ein vorhandener Suchtext und ein ausdrücklich leeres `q=` haben Vorrang. Leeren/Suchen erhält deshalb den leeren Parameter im Link; direkte Folge-/Audiolinks starten keine zusätzliche Beispielsuchanfrage. Andere Podcasts haben keine automatische Vorgabe.
 
 Auf der Startseite steht der Modusschalter neben der Suche. Podcastauswahl und FAQ teilen die gleiche Breite; die FAQ erhält erst geöffnet eine Kartenfläche. Die Scroll-Fades sind 36 Pixel breit und behalten ihre zustandsabhängige Sichtbarkeit.
+
+
+Suchschlüssel bleiben kleingeschrieben und NFC-normalisiert. Für Legenden, Zählbeschriftungen und Tooltips wird getrennt die eingegebene Schreibweise gespeichert. Bei wiederholten Varianten wie `Eimer EIMER` gewinnt die erste Schreibweise `Eimer`; beide ergeben weiterhin eine Serie. Originaltexte werden dabei nicht umgeschrieben.

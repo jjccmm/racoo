@@ -14,9 +14,9 @@ const families: Record<string, string[]> = {
 };
 export function LandingIntro({ onQuery }: { onQuery(query: string): void }) {
   const [query, setQuery] = useState(DEMO_QUERY);
-  let terms: string[] = [], error = '';
-  try { terms = parseQuery(query).terms; } catch (reason) { error = String((reason as Error).message); }
-  const words = terms.map((term, index) => ({ term, color: WORD_COLORS[index] }));
+  let terms: string[] = [], labels: Record<string, string> = {}, error = '';
+  try { ({ terms, labels } = parseQuery(query)); } catch (reason) { error = String((reason as Error).message); }
+  const words = terms.map((term, index) => ({ term, label: labels[term], color: WORD_COLORS[index] }));
   const highlights = [...INTRO.matchAll(/\p{L}[\p{L}\p{M}]*/gu)].flatMap(match => {
     const form = match[0].toLocaleLowerCase('de-DE');
     const matched = terms.filter(term => (families[term] ?? [term]).includes(form));

@@ -65,7 +65,7 @@ export function TranscriptReader({ result, words, counts, onChoose }: { result: 
   const index = hits.findIndex(hit => hit.id === active);
   return <section className="transcript-reader" aria-label={`Transkript: ${result.title}`}>
     <div className="reader-toolbar">
-      <ul className="reader-legend" aria-label="Suchwörter im Transkript">{words.map(word => <li key={word.term} style={wordStyle(word.color)}><i />{word.term}<span>{(counts[word.term] ?? 0).toLocaleString('de-DE')}</span></li>)}</ul>
+      <ul className="reader-legend" aria-label="Suchwörter im Transkript">{words.map(word => <li key={word.term} style={wordStyle(word.color)}><i />{word.label}<span>{(counts[word.term] ?? 0).toLocaleString('de-DE')}</span></li>)}</ul>
       <div className="match-navigation"><span role="status" aria-live="polite">{index < 0 ? `${hits.length} Fundstellen` : `${index + 1}/${hits.length}`}</span>
         <button disabled={!hits.length} onClick={() => navigate(-1)} aria-label="Vorherige Fundstelle">↑</button><button disabled={!hits.length} onClick={() => navigate(1)} aria-label="Nächste Fundstelle">↓</button>
       </div>

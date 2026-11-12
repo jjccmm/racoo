@@ -18,7 +18,7 @@ test('free text produces complete summed stacks, exact per-term labels and chron
   await expect(page.getByRole('button', { name: 'Alle', exact: true })).toHaveAttribute('aria-pressed', 'true');
   await expect.poll(async () => (await glider.boundingBox())!.x).toBeGreaterThan(start!.x + 50);
   await expect(chartEpisodes(page)).toHaveCount(17);
-  await expect(chartEpisodes(page).filter({ hasText: 'Titelgeheimnis' })).toHaveAccessibleName(/Titelgeheimnis.*; laterne: 0; katzen: 0; fenster: 0; Summe: 0/);
+  await expect(chartEpisodes(page).filter({ hasText: 'Titelgeheimnis' })).toHaveAccessibleName(/Titelgeheimnis.*; Laterne: 0; Katzen: 0; Fenster: 0; Summe: 0/);
   const expected = await page.evaluate(async () => (await (await fetch('catalog.json')).json()).episodes.sort((a: { publishedAt: string; episodeId: string }, b: { publishedAt: string; episodeId: string }) => Date.parse(a.publishedAt) - Date.parse(b.publishedAt) || a.episodeId.localeCompare(b.episodeId)).map((episode: { title: string }) => episode.title));
   expect((await chartEpisodes(page).evaluateAll(nodes => nodes.map(node => node.getAttribute('aria-label')!.split(';')[0])))).toEqual(expected);
   expect(await page.getByRole('article').count()).toBe(10);

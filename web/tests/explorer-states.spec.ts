@@ -3,8 +3,8 @@ import { parseQuery } from '../src/query';
 import { choose, clearWords, openExplorer, chartEpisodes, search } from './helpers';
 
 test('normalization preserves order, handles quotes/commas and rejects excess terms', () => {
-  expect(parseQuery(' "MÜNZEN", Eimer MÜNZEN Café Cafe\u0301 ')).toEqual({ terms: ['münzen', 'eimer', 'café'] });
-  expect(parseQuery('Euro-Münze Wort/Teil')).toEqual({ terms: ['euro-münze', 'wort/teil'] });
+  expect(parseQuery(' "MÜNZEN", Eimer MÜNZEN Café Cafe\u0301 ')).toEqual({ terms: ['münzen', 'eimer', 'café'], labels: { münzen: 'MÜNZEN', eimer: 'Eimer', café: 'Café' } });
+  expect(parseQuery('Euro-Münze Wort/Teil')).toEqual({ terms: ['euro-münze', 'wort/teil'], labels: { 'euro-münze': 'Euro-Münze', 'wort/teil': 'Wort/Teil' } });
   expect(parseQuery('die und ähm').terms).toEqual(['die', 'und', 'ähm']);
   expect(parseQuery('eins zwei drei vier fünf sechs sieben acht neun zehn').terms).toHaveLength(10);
   expect(() => parseQuery('eins zwei drei vier fünf sechs sieben acht neun zehn elf')).toThrow(/höchstens zehn/);
@@ -63,4 +63,27 @@ test('ten terms have colors and only an eleventh term displays the limit hint', 
   await expect(input).toHaveAttribute('aria-invalid', 'true');
   await input.fill(query);
   await expect(page.getByRole('alert')).toHaveCount(0);
+});
+
+
+test('display spelling follows the input while matching and cached counts stay case-insensitive', async ({ page }) => {
+  await openExplorer(page);
+  let originals = 0;
+  page.on('request', request => { if (request.url().endsWith('/episodes/synthetic-episode-001.json')) originals++; });
+  await choose(page, 'MüNzE MÜNZE');
+  await expect(page.locator('.chart-legend li')).toHaveCount(1);
+  await expect(page.locator('.chart-legend li')).toHaveText('MüNzE');
+  const card = page.getByRole('article');
+  await expect(card.locator('.reader-legend')).toContainText('MüNzE');
+  await expect(card.locator('mark')).toHaveAttribute('title', 'MüNzE');
+  await expect(chartEpisodes(page)).toHaveAccessibleName(/; MüNzE: 1; Summe: 1/);
+  await page.locator('.recharts-bar-rectangle').first().hover();
+  await expect(page.locator('.recharts-tooltip-item-name')).toHaveText('MüNzE');
+  const before = originals; expect(before).toBe(1);
+  await page.getByRole('searchbox').fill('münze');
+  await page.getByRole('button', { name: 'Suchen', exact: true }).click();
+  await expect(card.locator('.reader-legend')).toContainText('münze');
+  await expect(card.locator('mark')).toHaveText('Münzen');
+  await expect(chartEpisodes(page)).toHaveAccessibleName(/; münze: 1; Summe: 1/);
+  expect(originals).toBe(before);
 });

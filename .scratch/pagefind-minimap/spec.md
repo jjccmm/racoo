@@ -1,6 +1,6 @@
 # Pagefind-Freitextsuche und helle vertikale Minimap
 
-Status: resolved
+Status: claimed
 Blocked by: none
 
 Am 10. November 2026 vom Nutzer zur Umsetzung beauftragt. Grundlage ist der [Plan](../../docs/planning/pagefind-and-minimap.md) samt [API-Nachweis](../../docs/research/pagefind-counting-2026-11-10.md). Integration auf `feature/pagefind-minimap`; Tests lokal, kein automatisches Merge/Deployment.
@@ -54,3 +54,6 @@ Der [achte Auftrag](issues/08-themes-sliding-toggle-faq.md) ergänzt Hell-/Dunke
 Der [neunte Auftrag](issues/09-landing-alignment-default-query.md) verschiebt den Startseiten-Modusschalter neben die Suche, vereinheitlicht Podcast-/FAQ-Kartenbreiten, vergrößert die Fades und verwendet Eimer als normale UFO-Einstiegssuche. Suchlinks und bewusst leere Eingaben bleiben erhalten.
 
 - 2026-11-12: In `0307461` auf `feature/pagefind-minimap` integriert. Alle neun Tickets erfüllt. [Abnahme](../../docs/pilot/landing-alignment-default-query.md) mit 128 Browserprüfungen und realem 106er-Bestand.
+
+
+[Ticket 10](issues/10-query-display-spelling.md) trennt Anzeigenamen in der eingegebenen Schreibweise von den unverändert normalisierten Suchschlüsseln. Dopplungen behalten die erste Schreibweise.
