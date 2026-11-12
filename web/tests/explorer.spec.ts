@@ -12,7 +12,11 @@ test('free text produces complete summed stacks, exact per-term labels and chron
   const labels = await chartEpisodes(page).evaluateAll(elements => elements.map(element => element.getAttribute('aria-label')!));
   const sums = labels.map(label => Number(/Summe: (\d+)/.exec(label)![1]));
   expect(sums).toEqual([...sums].sort((a, b) => b - a));
+  const glider = page.locator('.view-toggle-glider');
+  const start = await glider.boundingBox();
   await page.getByRole('button', { name: 'Alle', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Alle', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect.poll(async () => (await glider.boundingBox())!.x).toBeGreaterThan(start!.x + 50);
   await expect(chartEpisodes(page)).toHaveCount(17);
   await expect(chartEpisodes(page).filter({ hasText: 'Titelgeheimnis' })).toHaveAccessibleName(/Titelgeheimnis.*; laterne: 0; katzen: 0; fenster: 0; Summe: 0/);
   const expected = await page.evaluate(async () => (await (await fetch('catalog.json')).json()).episodes.sort((a: { publishedAt: string; episodeId: string }, b: { publishedAt: string; episodeId: string }) => Date.parse(a.publishedAt) - Date.parse(b.publishedAt) || a.episodeId.localeCompare(b.episodeId)).map((episode: { title: string }) => episode.title));

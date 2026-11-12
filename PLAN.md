@@ -59,3 +59,6 @@ Tests laufen lokal mit kleinen Fixtures ohne GPU-/Modelldownload. `scripts/check
 Echte Bestände ergänzen die Fixtures: alle 106 Folgen erhalten, bekannte Suchfälle/Originalmarkierungen, Desktop/320/390 px, Zoom, Kalt-/Warmlatenz, Bytes und Cachezustand messen. Ziel auf dokumentiertem Mobilprofil: erste Ergebnisse unter fünf Sekunden, warme Suche unter einer Sekunde, bis zum ersten Ergebnis höchstens 10 MB. Kein vollständiges Transkriptarchiv vor der ersten Suche laden. Die 600-Folgen-Abnahme bleibt bis zum echten entsprechenden Korpus offen. Technische Suchabfragen aus dem Transkript sind keine unabhängige menschliche Qualitätsbewertung.
 
 Der Build behält die bestehende Größenwarnung bei 800 MB und die harte Artefaktgrenze von 1 GB. Früher dokumentierte alphabetische Vokabulardateien oder nach Worthäufigkeit sortierte Zähldateien gehören zur abgelösten Statistikarchitektur und werden nicht mehr umgesetzt. Weitere Optimierung erst anhand gemessener Suchindex-/Browserkosten.
+
+
+Die [weitere UI-Verfeinerung](.scratch/pagefind-minimap/issues/08-themes-sliding-toggle-faq.md) umfasst einen gespeicherten Hell-/Dunkelmodus, gleitenden Top10-/Alle-Kapselschalter und eine zunächst geschlossene FAQ unter der Podcastliste. Keine Änderung an Suchzahlen oder Verarbeitung.

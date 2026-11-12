@@ -24,3 +24,6 @@ Audio wird nach der lokalen Transkription gelöscht. Zeitknöpfe starten am Begi
 - [GitHub Pages](docs/github-pages.md): Der einzige Workflow baut/deployt nach Push/Merge auf `main`; Tests laufen lokal.
 - [Projektplan](PLAN.md), [Fachbegriffe](GLOSSARY.md), [Tickets](.scratch/pagefind-minimap/spec.md)
 - [ASR-Untersuchung](docs/research/asr-investigation.md) und [historischer Fünf-Folgen-Pilot](docs/pilot/local-five-episode-pilot.md)
+
+
+Über das Sonnen-/Mondsymbol zwischen Hell- und Dunkelmodus wechseln; die Wahl bleibt im Browser gespeichert. Top10/Alle verwendet eine gleitende Kapsel. Unter der Podcastauswahl beantwortet die ausklappbare FAQ die häufigsten Fragen.

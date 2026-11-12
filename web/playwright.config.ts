@@ -9,6 +9,7 @@ export default defineConfig({
   use: {
     baseURL: `http://127.0.0.1:${port}${basePath}`,
     trace: 'retain-on-failure',
+    colorScheme: 'light',
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {

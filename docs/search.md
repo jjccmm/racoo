@@ -35,3 +35,10 @@ Nach Umbruch/Resize die Layoutpositionen neu messen und die aktive Fundstelle be
 ## Diagrammbreite
 
 Top10 und Alle verwenden immer die verfügbare Breite ohne horizontales Scrollen. Mehr Folgen ergeben schmalere Balken; weiße Umrandungen dürfen dünne Balken nicht überdecken. Die sichtbaren Titel werden nach verfügbarer Breite ausgedünnt, auch in Alle bleiben passende Titel sichtbar. Ein kleiner Abstand trennt die Balken. Werte und vollständige Folgentitel bleiben im Tooltip und in zugänglichen Beschriftungen verfügbar.
+
+
+## Darstellung und Hilfe
+
+Der globale Hell-/Dunkelschalter übernimmt ohne gespeicherte Wahl zunächst die Systemeinstellung. Eine manuelle Wahl wird im Browser gespeichert und vor dem ersten Seitenaufbau angewendet; gesperrter Browserspeicher verhindert das Umschalten nicht. Flächen, Logo, Wortfarben, Diagramm, Minimap und nativer Player passen sich an. Der Wechsel ersetzt keine Suchinstanz und verändert weder Anfrage noch Textposition.
+
+Top10/Alle verwendet eine Kapsel mit gleitender Auswahl und zugänglichen Schaltflächen. Reduzierte Bewegung deaktiviert die Animation. Auf der Startseite öffnet eine native FAQ-Klappe alle sechs kurzen Antworten zu Motivation, Unabhängigkeit, maschinellen Texten, groben Audiomarken, Aktualisierung und Namensherkunft. Die ungefähre Werbeabweichung ist keine Genauigkeitsgarantie.

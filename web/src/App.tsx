@@ -4,6 +4,8 @@ import { Stats } from './Stats';
 import { LandingIntro, DEMO_QUERY } from './LandingIntro';
 import { loadPodcasts, type Podcast } from './podcasts';
 import { PodcastProgress } from './PodcastProgress';
+import { ThemeToggle } from './ThemeToggle';
+import { Faq } from './Faq';
 
 const home = import.meta.env.BASE_URL;
 const logo = `${home}images/racoo-logo.png`;
@@ -29,7 +31,7 @@ export function App() {
   return <main className={explorer ? 'workspace' : 'landing'}>
     <header className="site-header">
       <a className="site-brand" href={home} aria-label="Racoo – Startseite"><img src={logo} width="2172" height="724" alt="Racoo" /></a>
-      {explorer && <a className="back-link" href={home}><span aria-hidden="true">←</span> Alle Podcasts</a>}
+      <div className="header-actions">{explorer && <a className="back-link" href={home} aria-label="Alle Podcasts" title="Alle Podcasts"><span aria-hidden="true">←</span><span className="back-label">Alle Podcasts</span></a>}<ThemeToggle /></div>
     </header>
     {!explorer && <LandingIntro onQuery={setLandingQuery} />}
     {!podcasts && !error && <p role="status">Podcasts werden geladen …</p>}
@@ -54,6 +56,7 @@ export function App() {
           <span className="card-arrow" aria-hidden="true">→</span>
         </a>)}
       </section>
+      <Faq />
       <footer className="landing-footer">Ein unabhängiges Hobbyprojekt. Finde Folgen anhand ihrer maschinell erstellten Transkripte.</footer>
     </>}
   </main>;

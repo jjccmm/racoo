@@ -39,18 +39,21 @@ export function TranscriptMinimap({ scroller, transcript, words, active, onHit, 
       ctx!.clearRect(0, 0, width, height);
       const scale = height / Math.max(1, scroll!.scrollHeight);
       const textWidth = Math.max(10, width - 10);
-      ctx!.fillStyle = '#617b6c35';
+      const style = getComputedStyle(map!);
+      const strength = parseFloat(style.getPropertyValue('--word-strength')) / 100;
+      const palette = new Map(words.map(word => [word.term, `rgb(${[1, 3, 5].map(start => Math.round(parseInt(word.color.slice(start, start + 2), 16) * strength + 255 * (1 - strength))).join(',')})`]));
+      ctx!.fillStyle = style.getPropertyValue('--minimap-line');
       for (const line of lines) ctx!.fillRect(5, Math.round(line.y * scale), line.width * textWidth, 1);
       for (const hit of hits) {
         const colors = words.filter(word => hit.terms.includes(word.term));
         const y = Math.round(hit.y * scale), markWidth = Math.min(textWidth, Math.max(3, colors.length * 2, hit.width * textWidth));
         const x = Math.min(width - 5 - markWidth, 5 + hit.x * textWidth);
         colors.forEach((word, index) => {
-          ctx!.fillStyle = word.color;
+          ctx!.fillStyle = palette.get(word.term)!;
           ctx!.fillRect(x + index * markWidth / colors.length, y - 1, markWidth / colors.length, 2);
         });
         if (hit.id === active) {
-          ctx!.strokeStyle = '#213e34'; ctx!.lineWidth = 1;
+          ctx!.strokeStyle = style.getPropertyValue('--match-outline'); ctx!.lineWidth = 1;
           ctx!.strokeRect(x - 1.5, y - 2.5, markWidth + 3, 5);
         }
       }
@@ -92,6 +95,8 @@ export function TranscriptMinimap({ scroller, transcript, words, active, onHit, 
       densityQuery.addEventListener('change', densityChanged, { once: true }); queue();
     }
     densityChanged();
+    const themeObserver = new MutationObserver(paint);
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     const point = (event: PointerEvent) => Math.max(0, Math.min(map.clientHeight, event.clientY - map.getBoundingClientRect().top));
     map.addEventListener('pointerdown', event => {
       if (event.button !== 0 || drag) return;
@@ -122,7 +127,7 @@ export function TranscriptMinimap({ scroller, transcript, words, active, onHit, 
       if (Object.hasOwn(targets, event.key)) { event.preventDefault(); scrollTo(targets[event.key], true); }
     }, { signal });
     queue();
-    return () => { events.abort(); observer.disconnect(); densityQuery?.removeEventListener('change', densityChanged); cancelAnimationFrame(frame); cancelAnimationFrame(scrollFrame); };
+    return () => { events.abort(); observer.disconnect(); themeObserver.disconnect(); densityQuery?.removeEventListener('change', densityChanged); cancelAnimationFrame(frame); cancelAnimationFrame(scrollFrame); };
   }, [scroller, transcript, words, active, onHit]);
   return <aside className="transcript-minimap" aria-label="Fundstellenübersicht">
     <div className="map-surface" ref={surface} role="scrollbar" tabIndex={0} aria-label="Position im Transkript" aria-controls={controls} aria-orientation="vertical" aria-valuemin={0} aria-valuemax={100} aria-valuenow={0}>

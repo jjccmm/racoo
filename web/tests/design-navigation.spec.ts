@@ -34,3 +34,19 @@ test('the mascot favicon resolves at the current deployment base', async ({ page
   expect(icon).toContain('viewBox="105 10 700 700"');
   expect(icon).toContain('data:image/png;base64,');
 });
+
+
+test('FAQ is initially collapsed and opens all concise answers using the keyboard', async ({ page }) => {
+  await page.goto('./');
+  const faq = page.locator('.faq');
+  await expect(faq).not.toHaveAttribute('open');
+  await expect(faq.getByText('Warum gibt es Racoo?', { exact: true })).not.toBeVisible();
+  await faq.locator('summary').focus(); await page.keyboard.press('Enter');
+  await expect(faq).toHaveAttribute('open', '');
+  await expect(faq.locator('dt')).toHaveCount(6);
+  await expect(faq).toContainText('unabhängiges Hobbyprojekt');
+  await expect(faq).toContainText('±2 Minuten');
+  await expect(faq).toContainText('Waschbär');
+  await page.keyboard.press('Enter');
+  await expect(faq).not.toHaveAttribute('open');
+});

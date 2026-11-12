@@ -1,5 +1,7 @@
 # Früheste Fundstelle und ruhiger Transkriptleser
 
+Die anschließende [Themen-/FAQ-Verfeinerung](themes-sliding-toggle-faq.md) ergänzt Hell/Dunkel, die Diagrammkapsel und FAQ und verschiebt den Podcastkopf nochmals. Dieser Bericht bewahrt den vorigen Stand.
+
 Stand: 12. November 2026. [Ticket 07](../../.scratch/pagefind-minimap/issues/07-earliest-hit-reader-polish.md) ist auf `feature/pagefind-minimap` umgesetzt und lokal abgenommen.
 
 ## Ursache und Korrektur

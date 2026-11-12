@@ -60,8 +60,8 @@ export function Frequency({ dataBase, data, onChoose }: { dataBase: string; data
     {!!words.length && !ready && !failed && <p role="status">Suchwort-Treffer werden ermittelt …</p>}
     {failed && <div><p role="alert">Die Suche konnte nicht ausgeführt werden. Fehlende Daten sind kein Nullwert. {overview.error}</p><button onClick={() => setSubmission(current => ({ ...current, id: current.id + 1 }))}>Suche erneut laden</button>{overview.error?.includes('Datenstand') && <button onClick={() => location.reload()}>Seite neu laden</button>}</div>}
     <section className="chart-panel" aria-label="Suchwortvergleich">
-      <div className="chart-heading"><div><h2>Suchwort-Treffer je Folge</h2><p className="muted">Absolute Anzahl der passenden Textpositionen je Suchwort</p></div>
-        <div className="view-toggle" aria-label="Folgen im Diagramm"><button aria-pressed={mode === 'top'} onClick={() => setMode('top')}>Top 10</button><button aria-pressed={mode === 'all'} onClick={() => setMode('all')}>Alle</button></div>
+      <div className="chart-heading"><div><h2>Suchwort-Treffer je Folge</h2></div>
+        <div className="view-toggle" role="group" aria-label="Folgen im Diagramm" data-mode={mode}><span className="view-toggle-glider" aria-hidden="true" /><button aria-pressed={mode === 'top'} onClick={() => setMode('top')}>Top 10</button><button aria-pressed={mode === 'all'} onClick={() => setMode('all')}>Alle</button></div>
       </div>
       {!words.length ? <div className="chart-empty"><p>An welche Wörter erinnerst du dich?</p></div>
         : !ready ? <div className="chart-empty"><p>{failed ? 'Die Suche ist noch nicht vollständig.' : 'Das Diagramm wartet auf die Suchergebnisse.'}</p></div>
@@ -70,16 +70,16 @@ export function Frequency({ dataBase, data, onChoose }: { dataBase: string; data
             {!ranked.length && <p role="status">Keine Treffer für diese Stichwörter.</p>}
             <div className="frequency-chart-scroll"><div className="frequency-chart">
               <ResponsiveContainer width="100%" height={370} onResize={width => setChartWidth(width)}><BarChart data={plotted} margin={{ top: 20, right: 16, bottom: 18, left: 0 }} barCategoryGap={mode === 'all' ? '10%' : '18%'} accessibilityLayer>
-                <CartesianGrid vertical={false} stroke="#e7ece9" strokeDasharray="3 4" /><XAxis dataKey="episodeId" interval={0} height={70} axisLine={{ stroke: '#dce4df' }} tickLine={false} tick={({ x, y, payload }: XAxisTickContentProps) => {
+                <CartesianGrid vertical={false} stroke="var(--chart-grid)" strokeDasharray="3 4" /><XAxis dataKey="episodeId" interval={0} height={70} axisLine={{ stroke: 'var(--line)' }} tickLine={false} tick={({ x, y, payload }: XAxisTickContentProps) => {
                   const episode = plotted.find(item => item.episodeId === payload.value)!;
                   const label = `${episode.title}; ${words.map(word => `${word.term}: ${count(counts.get(episode.episodeId)?.counts[word.term] ?? 0)}`).join('; ')}; Summe: ${count(episode.total)}`;
                   const tickIndex = plotted.indexOf(episode);
                   const stride = Math.max(1, Math.ceil(plotted.length / Math.max(1, Math.floor((chartWidth - 54) / 115))));
                   const showTitle = tickIndex % stride === Math.floor(stride / 2);
-                  return <g transform={`translate(${x},${y})`} role="img" aria-label={label}><title>{label}</title>{showTitle && <text className="episode-axis-label" y={12} transform="rotate(-25)" textAnchor="end" fill="#62626b" fontSize={11}>{episode.title.length > 18 ? `${episode.title.slice(0, 16)}…` : episode.title}</text>}</g>;
-                }} /><YAxis allowDecimals={false} axisLine={false} tickLine={false} width={38} tick={{ fontSize: 11, fill: '#62626b' }} />
-                <Tooltip cursor={{ fill: '#f4f6f5' }} contentStyle={{ borderRadius: 8, border: '1px solid #dce4df', fontSize: 13 }} labelFormatter={(label, payload) => `${payload[0]?.payload.title ?? label} · Summe ${payload[0]?.payload.total ?? 0}`} />
-                {words.map((word, index) => <Bar key={word.term} dataKey={`series${index}`} name={word.term} stackId="words" fill={word.color} stroke="none" isAnimationActive={false} maxBarSize={52} />)}
+                  return <g transform={`translate(${x},${y})`} role="img" aria-label={label}><title>{label}</title>{showTitle && <text className="episode-axis-label" y={12} transform="rotate(-25)" textAnchor="end" fill="var(--muted)" fontSize={11}>{episode.title.length > 18 ? `${episode.title.slice(0, 16)}…` : episode.title}</text>}</g>;
+                }} /><YAxis allowDecimals={false} axisLine={false} tickLine={false} width={38} tick={{ fontSize: 11, fill: 'var(--muted)' }} />
+                <Tooltip cursor={{ fill: 'var(--soft)' }} contentStyle={{ backgroundColor: 'var(--surface)', color: 'var(--ink)', borderRadius: 8, border: '1px solid var(--line)', fontSize: 13 }} itemStyle={{ color: 'var(--ink)' }} labelFormatter={(label, payload) => `${payload[0]?.payload.title ?? label} · Summe ${payload[0]?.payload.total ?? 0}`} />
+                {words.map((word, index) => <Bar key={word.term} dataKey={`series${index}`} name={word.term} stackId="words" fill={`color-mix(in srgb, ${word.color} var(--word-strength), white)`} stroke="none" isAnimationActive={false} maxBarSize={52} />)}
               </BarChart></ResponsiveContainer>
             </div></div>
           </>}
