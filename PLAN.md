@@ -62,3 +62,8 @@ Der Build behält die bestehende Größenwarnung bei 800 MB und die harte Artefa
 
 
 Die [weitere UI-Verfeinerung](.scratch/pagefind-minimap/issues/08-themes-sliding-toggle-faq.md) umfasst einen gespeicherten Hell-/Dunkelmodus, gleitenden Top10-/Alle-Kapselschalter und eine zunächst geschlossene FAQ unter der Podcastliste. Keine Änderung an Suchzahlen oder Verarbeitung.
+
+
+## Offener Vorschlag: Suchmodi
+
+Der [Plan für strikte und erweiterte Wortsuche](docs/planning/search-modes.md) untersucht genaue Wörter, Wortanfänge, Wortenden und Wortbestandteile. Die [Recherche vom 12. November](docs/research/search-modes-2026-11-12.md) weist unter anderem eine Suchreihenfolge-Abhängigkeit im aktuellen Pagefind-Index nach. Der Vorschlag ist noch nicht bestätigt; Anwendung und aktiver Suchvertrag sind unverändert.

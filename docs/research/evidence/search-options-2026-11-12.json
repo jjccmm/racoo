@@ -1,0 +1,1005 @@
+{
+  "date": "2026-11-12",
+  "pagefindVersion": "1.5.2",
+  "episodeCount": 106,
+  "indexId": "f376233a66369947c391ece1ddb3fd27ae51344ffdf4b784bef6ef7024c02d3d",
+  "scope": "Read-only real index and provisional offline lexical counter; no production changes.",
+  "nativeQueries": [
+    {
+      "query": "Ei",
+      "episodes": 106,
+      "positions": 33329,
+      "forms": [
+        [
+          "ein",
+          13848
+        ],
+        [
+          "eine",
+          7909
+        ],
+        [
+          "einen",
+          4130
+        ],
+        [
+          "eigentlich",
+          2525
+        ],
+        [
+          "einem",
+          2170
+        ],
+        [
+          "einer",
+          1595
+        ],
+        [
+          "eins",
+          342
+        ],
+        [
+          "eines",
+          181
+        ],
+        [
+          "eigenen",
+          149
+        ],
+        [
+          "eigene",
+          125
+        ],
+        [
+          "eigenes",
+          66
+        ],
+        [
+          "eier",
+          44
+        ],
+        [
+          "eigentliche",
+          28
+        ],
+        [
+          "eimer",
+          24
+        ],
+        [
+          "eigener",
+          15
+        ],
+        [
+          "ei",
+          12
+        ],
+        [
+          "eigentlichen",
+          12
+        ],
+        [
+          "eight",
+          11
+        ],
+        [
+          "eigenschaften",
+          10
+        ],
+        [
+          "eigenschaft",
+          8
+        ],
+        [
+          "eigentum",
+          7
+        ],
+        [
+          "eibe",
+          5
+        ],
+        [
+          "eidechse",
+          5
+        ],
+        [
+          "eignet",
+          4
+        ],
+        [
+          "eighteen",
+          4
+        ],
+        [
+          "eich",
+          4
+        ],
+        [
+          "eichhörnchen",
+          4
+        ],
+        [
+          "eid",
+          3
+        ],
+        [
+          "eiern",
+          3
+        ],
+        [
+          "eigenständig",
+          3
+        ],
+        [
+          "eigenem",
+          3
+        ],
+        [
+          "eifersüchtig",
+          2
+        ],
+        [
+          "eile-cœur",
+          2
+        ],
+        [
+          "eierde",
+          2
+        ],
+        [
+          "eidechsen",
+          2
+        ],
+        [
+          "eiert",
+          2
+        ],
+        [
+          "eiche",
+          2
+        ],
+        [
+          "eigen",
+          2
+        ],
+        [
+          "eignen",
+          2
+        ],
+        [
+          "eifel",
+          2
+        ],
+        [
+          "eigenständiges",
+          2
+        ],
+        [
+          "eids",
+          2
+        ],
+        [
+          "eibeel",
+          1
+        ],
+        [
+          "eiben",
+          1
+        ],
+        [
+          "eieruhr",
+          1
+        ],
+        [
+          "eichwald",
+          1
+        ],
+        [
+          "eierlikörchen",
+          1
+        ],
+        [
+          "eierlikör",
+          1
+        ],
+        [
+          "eilikör",
+          1
+        ],
+        [
+          "eili-cörchen",
+          1
+        ],
+        [
+          "eierlich",
+          1
+        ],
+        [
+          "e-igentlich",
+          1
+        ],
+        [
+          "toppel-eilen-reaktion",
+          1
+        ],
+        [
+          "eigenleistung",
+          1
+        ],
+        [
+          "eifersuchsgeschichte",
+          1
+        ],
+        [
+          "eifersuch",
+          1
+        ],
+        [
+          "eifersuchtsfilm",
+          1
+        ],
+        [
+          "ei-i",
+          1
+        ],
+        [
+          "eidechsenbücher",
+          1
+        ],
+        [
+          "eidechsen-abenteuer",
+          1
+        ],
+        [
+          "eidechnik",
+          1
+        ],
+        [
+          "eimerrad",
+          1
+        ],
+        [
+          "eierschalen",
+          1
+        ],
+        [
+          "eilbern",
+          1
+        ],
+        [
+          "eierförmigen",
+          1
+        ],
+        [
+          "eilung",
+          1
+        ],
+        [
+          "eigenständigen",
+          1
+        ],
+        [
+          "eigentus",
+          1
+        ],
+        [
+          "eigengedanken",
+          1
+        ],
+        [
+          "eifrigen",
+          1
+        ],
+        [
+          "eigness",
+          1
+        ],
+        [
+          "eigennamen",
+          1
+        ],
+        [
+          "eiges",
+          1
+        ],
+        [
+          "eighties",
+          1
+        ],
+        [
+          "eimerst",
+          1
+        ],
+        [
+          "eigenname",
+          1
+        ],
+        [
+          "eigenverantwortlich",
+          1
+        ],
+        [
+          "eigengravitation",
+          1
+        ],
+        [
+          "eimerstraße",
+          1
+        ],
+        [
+          "eigenurin",
+          1
+        ],
+        [
+          "eiffelturm",
+          1
+        ],
+        [
+          "eigenkreation",
+          1
+        ],
+        [
+          "eighteens",
+          1
+        ],
+        [
+          "eichunterhaltung",
+          1
+        ],
+        [
+          "eigentliches",
+          1
+        ],
+        [
+          "eigeninitiative",
+          1
+        ],
+        [
+          "eilmäcke",
+          1
+        ],
+        [
+          "eilem",
+          1
+        ],
+        [
+          "eigenheiten",
+          1
+        ],
+        [
+          "eignungen",
+          1
+        ],
+        [
+          "eilen",
+          1
+        ],
+        [
+          "eichnot",
+          1
+        ],
+        [
+          "eigenartig",
+          1
+        ],
+        [
+          "eignis",
+          1
+        ],
+        [
+          "eieiei",
+          1
+        ],
+        [
+          "eigenständigkeit",
+          1
+        ],
+        [
+          "eigently",
+          1
+        ],
+        [
+          "eilenstein",
+          1
+        ],
+        [
+          "eigenständiger",
+          1
+        ],
+        [
+          "ein-mann-sauna",
+          1
+        ]
+      ]
+    },
+    {
+      "query": "einfach",
+      "episodes": 106,
+      "positions": 8497,
+      "forms": [
+        [
+          "einfach",
+          8395
+        ],
+        [
+          "einfacher",
+          47
+        ],
+        [
+          "einfache",
+          23
+        ],
+        [
+          "einfachste",
+          14
+        ],
+        [
+          "einfachen",
+          6
+        ],
+        [
+          "einfaches",
+          5
+        ],
+        [
+          "einfachsten",
+          4
+        ],
+        [
+          "einfachnadenlos",
+          1
+        ],
+        [
+          "einfachere",
+          1
+        ],
+        [
+          "einfacheres",
+          1
+        ]
+      ]
+    },
+    {
+      "query": "kommen",
+      "episodes": 106,
+      "positions": 3075,
+      "forms": [
+        [
+          "kommt",
+          1393
+        ],
+        [
+          "kommen",
+          718
+        ],
+        [
+          "komm",
+          316
+        ],
+        [
+          "kommst",
+          159
+        ],
+        [
+          "komme",
+          133
+        ],
+        [
+          "kommentare",
+          83
+        ],
+        [
+          "kommentar",
+          57
+        ],
+        [
+          "kommunizieren",
+          26
+        ],
+        [
+          "kommentiert",
+          20
+        ],
+        [
+          "kommentieren",
+          18
+        ],
+        [
+          "kommunikation",
+          18
+        ],
+        [
+          "komma",
+          14
+        ],
+        [
+          "kommentaren",
+          14
+        ],
+        [
+          "kommt's",
+          10
+        ],
+        [
+          "kommunion",
+          6
+        ],
+        [
+          "kommenden",
+          5
+        ],
+        [
+          "kommentarlos",
+          5
+        ],
+        [
+          "kommentatoren",
+          3
+        ],
+        [
+          "kommissar",
+          3
+        ],
+        [
+          "kommentator",
+          3
+        ],
+        [
+          "youtube-kommentaren",
+          3
+        ],
+        [
+          "kommunikationsform",
+          3
+        ],
+        [
+          "top-kommentator",
+          2
+        ],
+        [
+          "kommode",
+          2
+        ],
+        [
+          "kommunistischen",
+          2
+        ],
+        [
+          "wordpress-kommentare",
+          2
+        ],
+        [
+          "kommentarfunktionen",
+          2
+        ],
+        [
+          "kommando",
+          2
+        ],
+        [
+          "kommuniziert",
+          2
+        ],
+        [
+          "kommerzielles",
+          2
+        ],
+        [
+          "kommission",
+          2
+        ],
+        [
+          "spam-kommentare",
+          2
+        ],
+        [
+          "post-kommentiert",
+          1
+        ],
+        [
+          "kommis",
+          1
+        ],
+        [
+          "kommons",
+          1
+        ],
+        [
+          "mega-kommentar",
+          1
+        ],
+        [
+          "kommentarscheiße",
+          1
+        ],
+        [
+          "kommentares",
+          1
+        ],
+        [
+          "kommentasen",
+          1
+        ],
+        [
+          "kommitone",
+          1
+        ],
+        [
+          "kommilitone",
+          1
+        ],
+        [
+          "kommilitonen",
+          1
+        ],
+        [
+          "kommende",
+          1
+        ],
+        [
+          "kommentiers",
+          1
+        ],
+        [
+          "kommentarspalten",
+          1
+        ],
+        [
+          "kommentatorenkabine",
+          1
+        ],
+        [
+          "kommunikationsbachelor",
+          1
+        ],
+        [
+          "kommunik",
+          1
+        ],
+        [
+          "youtube-kommenter",
+          1
+        ],
+        [
+          "kommunikationswert",
+          1
+        ],
+        [
+          "kommunistische",
+          1
+        ],
+        [
+          "kommunikationspartners",
+          1
+        ],
+        [
+          "kommentarspalte",
+          1
+        ],
+        [
+          "kommunikativer",
+          1
+        ],
+        [
+          "kommunikatives",
+          1
+        ],
+        [
+          "kommunen",
+          1
+        ],
+        [
+          "domino-kommentator",
+          1
+        ],
+        [
+          "kommuniziere",
+          1
+        ],
+        [
+          "kommentiere",
+          1
+        ],
+        [
+          "kommunal",
+          1
+        ],
+        [
+          "kommend",
+          1
+        ],
+        [
+          "scheiß-kommentar",
+          1
+        ],
+        [
+          "euch-kommentar",
+          1
+        ],
+        [
+          "kommunikative",
+          1
+        ],
+        [
+          "komma-regeln",
+          1
+        ],
+        [
+          "kommunikationswissenschaft",
+          1
+        ],
+        [
+          "youtube-kommentare",
+          1
+        ],
+        [
+          "auschwitz-kommentar",
+          1
+        ],
+        [
+          "kommunikationen",
+          1
+        ],
+        [
+          "facebook-kommentaren",
+          1
+        ],
+        [
+          "kommunist",
+          1
+        ],
+        [
+          "kommunikationsmittel",
+          1
+        ],
+        [
+          "kommunizierst",
+          1
+        ],
+        [
+          "kommerz",
+          1
+        ],
+        [
+          "kommissarraum",
+          1
+        ],
+        [
+          "kommune",
+          1
+        ],
+        [
+          "massiv-kommerzielle",
+          1
+        ]
+      ]
+    },
+    {
+      "query": "vorkommen",
+      "episodes": 22,
+      "positions": 25,
+      "forms": [
+        [
+          "vorkommen",
+          12
+        ],
+        [
+          "vorkommt",
+          11
+        ],
+        [
+          "vorkommenden",
+          1
+        ],
+        [
+          "vorkomm",
+          1
+        ]
+      ]
+    },
+    {
+      "query": "\"Ei\"",
+      "episodes": 11,
+      "positions": 11,
+      "forms": [
+        [
+          "ei",
+          10
+        ],
+        [
+          "ei-i",
+          1
+        ]
+      ]
+    },
+    {
+      "query": "\"kommen\"",
+      "episodes": 106,
+      "positions": 106,
+      "forms": [
+        [
+          "kommen",
+          62
+        ],
+        [
+          "kommst",
+          19
+        ],
+        [
+          "komm",
+          14
+        ],
+        [
+          "komme",
+          11
+        ]
+      ]
+    }
+  ],
+  "nativeWarming": [
+    [
+      {
+        "query": "Ei",
+        "episodes": 106,
+        "positions": 33329
+      },
+      {
+        "query": "einfach",
+        "episodes": 106,
+        "positions": 8497
+      },
+      {
+        "query": "Ei",
+        "episodes": 106,
+        "positions": 45171
+      }
+    ],
+    [
+      {
+        "query": "kommen",
+        "episodes": 106,
+        "positions": 3075
+      },
+      {
+        "query": "vorkommen",
+        "episodes": 22,
+        "positions": 25
+      },
+      {
+        "query": "kommen",
+        "episodes": 106,
+        "positions": 3075
+      }
+    ]
+  ],
+  "appSearchOrder": [
+    [
+      {
+        "query": "Ei",
+        "episodes": 106,
+        "positions": 33329
+      },
+      {
+        "query": "einfach",
+        "episodes": 106,
+        "positions": 8497
+      },
+      {
+        "query": "Ei",
+        "episodes": 106,
+        "positions": 33329
+      }
+    ],
+    [
+      {
+        "query": "einfach",
+        "episodes": 106,
+        "positions": 8497
+      },
+      {
+        "query": "Ei",
+        "episodes": 106,
+        "positions": 45171
+      }
+    ]
+  ],
+  "provisionalLexicalCounter": {
+    "tokenization": "Current query-token regex, provisional word-boundary policy; NFC+German lowercase, no stemming",
+    "tokens": 1187363,
+    "wordForms": 55060,
+    "wordEpisodePairs": 236490,
+    "vocabularyBytes": 694646,
+    "vocabularyGzipBytes": 198061,
+    "countPairsBytes": 1302391,
+    "countPairsGzipBytes": 350286
+  },
+  "lexicalExamples": {
+    "wholeEi": 12,
+    "wholeEinfach": 8395,
+    "wholeKommen": 718,
+    "wholeVorkommen": 12,
+    "containsKommenForms": 169,
+    "containsKommenOccurrences": 2605,
+    "suffixKommenForms": 121,
+    "suffixKommenOccurrences": 2342,
+    "topContainsForms": [
+      {
+        "word": "kommen",
+        "count": 718
+      },
+      {
+        "word": "bekommen",
+        "count": 565
+      },
+      {
+        "word": "willkommen",
+        "count": 200
+      },
+      {
+        "word": "gekommen",
+        "count": 198
+      },
+      {
+        "word": "kommentare",
+        "count": 83
+      },
+      {
+        "word": "angekommen",
+        "count": 72
+      },
+      {
+        "word": "kommentar",
+        "count": 57
+      },
+      {
+        "word": "mitbekommen",
+        "count": 56
+      },
+      {
+        "word": "ankommen",
+        "count": 36
+      },
+      {
+        "word": "rauskommen",
+        "count": 34
+      },
+      {
+        "word": "reinkommen",
+        "count": 33
+      },
+      {
+        "word": "rausgekommen",
+        "count": 30
+      },
+      {
+        "word": "vollkommen",
+        "count": 24
+      },
+      {
+        "word": "reingekommen",
+        "count": 23
+      },
+      {
+        "word": "kommentiert",
+        "count": 20
+      },
+      {
+        "word": "kommentieren",
+        "count": 18
+      },
+      {
+        "word": "hinkommen",
+        "count": 15
+      },
+      {
+        "word": "hinbekommen",
+        "count": 14
+      }
+    ]
+  },
+  "limits": [
+    "Lexical tokenizer is the existing query-token regex, not a confirmed new word-boundary contract.",
+    "gzip sizes describe two prototype JSON arrays, excluding publication/shard metadata and not a measured Pages transfer.",
+    "Measurements cover 106 episodes, not a 600-episode runtime guarantee."
+  ]
+}
