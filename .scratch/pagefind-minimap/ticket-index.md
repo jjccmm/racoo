@@ -10,4 +10,4 @@
 
 - [07: Früheste Fundstelle und ruhiger Transkriptleser](issues/07-earliest-hit-reader-polish.md) — resolved; Blocked by: none
 
-- [08: Hell/Dunkel, Diagrammschalter und FAQ](issues/08-themes-sliding-toggle-faq.md) — claimed; Blocked by: none
+- [08: Hell/Dunkel, Diagrammschalter und FAQ](issues/08-themes-sliding-toggle-faq.md) — resolved; Blocked by: none

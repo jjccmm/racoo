@@ -1,6 +1,6 @@
 # Hell/Dunkel, gleitender Diagrammschalter und FAQ
 
-Status: claimed
+Status: resolved
 Blocked by: none
 
 ## Acceptance criteria
@@ -17,3 +17,5 @@ Blocked by: none
 - 2026-11-12: Nutzerauftrag. FAQ-Werbeabweichung als grobe Orientierung formulieren; keine Garantie für exakte Audiomarken. Keine zusätzlichen Abhängigkeiten oder Änderungen an Transkription/Suche.
 
 - 2026-11-12: 74 Python-/136 Browserprüfungen bestanden; echter 106er-Bestand in beiden Themen und bei 320/390/1280 px, zehn Referenzsuchen, FAQ, Player und Persistenz abgenommen. [Nachweise und Grenzen](../../../docs/pilot/themes-sliding-toggle-faq.md).
+
+- 2026-11-12: In `6e7afe2` auf `feature/pagefind-minimap` integriert. Alle acht Tickets erfüllt. [Abnahme](../../../docs/pilot/themes-sliding-toggle-faq.md) mit 74 Python-/136 Browserprüfungen und echtem 106er-Bestand.
