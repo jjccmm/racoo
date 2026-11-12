@@ -7,3 +7,5 @@
 
 - [05: Direkt offene Transkriptkarten und kompakte Diagramme](issues/05-open-transcript-cards.md) — resolved; Blocked by: none
 - [06: Kompakte Karten und ungefilterte Zehnwortsuche](issues/06-compact-cards-unfiltered-search.md) — resolved; Blocked by: none
+
+- [07: Früheste Fundstelle und ruhiger Transkriptleser](issues/07-earliest-hit-reader-polish.md) — claimed; Blocked by: none

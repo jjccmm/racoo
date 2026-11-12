@@ -58,6 +58,7 @@ def prepare_site(configuration: Path, output: Path) -> dict:
                 "name": podcast.name,
                 "speakers": podcast.speakers,
                 "cover": podcast.cover,
+                "websiteUrl": str(podcast.website_url) if podcast.website_url else None,
                 "dataPath": f"podcasts/{podcast.id}/",
                 "knownEpisodeCount": len(catalog.episodes),
                 "episodeCount": len(paths),

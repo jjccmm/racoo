@@ -14,6 +14,7 @@ class Podcast(Contract):
     speakers: list[Text] = Field(min_length=1)
     cover: Text
     feed_url: HttpUrl
+    website_url: HttpUrl | None = None
     directory: Text
 
     @field_validator("cover", "directory")

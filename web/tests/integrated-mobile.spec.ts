@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { choose, openExplorer } from './helpers';
 
-test('mobile visitors can use search, the shared player, and transcript reader and metadata without page overflow', async ({ page }, testInfo) => {
+test('mobile visitors can use search, the shared player, transcript reader and source credit without page overflow', async ({ page }, testInfo) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.route('https://example.org/fixture.mp3', (route) => route.abort());
 
@@ -9,8 +9,7 @@ test('mobile visitors can use search, the shared player, and transcript reader a
   page.on('request', (request) => requests.push(new URL(request.url()).pathname));
   await openExplorer(page);
 
-  await page.getByText('Über die Daten', { exact: true }).click();
-  await expect(page.getByLabel('Veröffentlichungsstand')).toContainText('synthetic-podcast');
+  await expect(page.locator('.transcript-credit')).toContainText('Maschinelle Transkripte können Fehler enthalten.');
   await choose(page, 'münze');
   const result = page.getByRole('article').filter({ hasText: 'Synthetische Beispielfolge' });
   await expect(result).toBeVisible();

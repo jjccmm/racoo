@@ -18,7 +18,7 @@ export function TranscriptReader({ result, words, counts, onChoose }: { result: 
   const id = useId(), scroller = useRef<HTMLDivElement>(null), transcript = useRef<HTMLDivElement>(null);
   const highlights = useMemo(() => new Map(result.passages.map(passage => [passage.id, passage.highlights])), [result]);
   const hits = useMemo(() => result.segments.flatMap(segment => (highlights.get(segment.id) ?? []).map(range => ({ id: `${segment.id}:${range.start}`, segment, terms: range.terms }))), [result, highlights]);
-  const first = words.flatMap(word => hits.filter(hit => hit.terms.includes(word.term))).at(0)?.id;
+  const first = hits[0]?.id;
   const [active, setActive] = useState(first);
   const scrollToHit = useCallback((hitId: string, immediate = false) => {
     const mark = transcript.current?.querySelector<HTMLElement>(`[data-hit-id="${CSS.escape(hitId)}"]`), container = scroller.current;
@@ -27,6 +27,21 @@ export function TranscriptReader({ result, words, counts, onChoose }: { result: 
     container.scrollTo({ top, behavior: immediate || matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
   }, []);
   useLayoutEffect(() => { if (first) scrollToHit(first, true); }, [first, scrollToHit]);
+  useLayoutEffect(() => {
+    const container = scroller.current, text = transcript.current;
+    if (!container || !text) return;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      container.dataset.fadeTop = String(container.scrollTop > 1);
+      container.dataset.fadeBottom = String(container.scrollTop + container.clientHeight < container.scrollHeight - 1);
+    };
+    const queue = () => { if (!frame) frame = requestAnimationFrame(update); };
+    container.addEventListener('scroll', queue, { passive: true });
+    const observer = new ResizeObserver(queue); observer.observe(container); observer.observe(text);
+    update();
+    return () => { container.removeEventListener('scroll', queue); observer.disconnect(); cancelAnimationFrame(frame); };
+  }, []);
   useLayoutEffect(() => {
     const container = scroller.current; if (!container) return;
     let width = container.clientWidth;

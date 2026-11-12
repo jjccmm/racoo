@@ -12,3 +12,5 @@ The podcast artwork remains its owner's property; no open license is asserted. T
 ## Racoo
 
 `racoo-logo.png` is the original transparent PNG supplied by the project owner on 8 November 2026 as `Racoo-Logo.png` (2172 × 724 pixels). Copied unchanged for the Racoo site header on both screens. It is separate from the podcast cover artwork above.
+
+`racoo-icon.svg` embeds that same unchanged PNG with a square mascot viewport and a light background for the browser tab. It does not load external assets or redraw the supplied logo.

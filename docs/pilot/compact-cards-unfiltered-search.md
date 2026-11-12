@@ -1,5 +1,7 @@
 # Kompakte Karten und ungefilterte Zehnwortsuche
 
+Die spätere [Verfeinerung von Fundstellensprung und Leser](earliest-hit-reader-polish.md) ersetzt den Start nach Eingabewort-Reihenfolge und ergänzt Fades, Quellenangabe und kompaktere Abstände. Dieser Bericht bewahrt die vorherige Abnahme.
+
 Stand: 11. November 2026. [Ticket 06](../../.scratch/pagefind-minimap/issues/06-compact-cards-unfiltered-search.md) verfeinert die [offenen Transkriptkarten](open-transcript-cards.md) auf `feature/pagefind-minimap`.
 
 ## Ergebnis

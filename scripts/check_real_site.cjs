@@ -91,7 +91,7 @@ async function main() {
     expect(await map.locator('canvas').evaluate(canvas => Math.abs(canvas.width - canvas.clientWidth * devicePixelRatio) <= 1)).toBe(true);
     const mobileOverflow = await phone.evaluate(() => document.documentElement.scrollWidth > innerWidth);
     expect(mobileOverflow).toBe(false); await expect(phone.locator('audio')).toHaveCount(0);
-    const report = { date: '2026-11-11', base, episodeCount: 106, searches, topFiveMatches: searches.filter(item => item.expectedRank > 0 && item.expectedRank <= 5).length,
+    const report = { date: '2026-11-12', base, episodeCount: 106, searches, topFiveMatches: searches.filter(item => item.expectedRank > 0 && item.expectedRank <= 5).length,
       mobile: { viewport: '390x844', deviceScaleFactor: 2, hasTouch: true, cpuSlowdown: 4, rttMs: 150, downloadBytesPerSecond: 200000, uploadBytesPerSecond: 62500,
         cache: 'fresh context, HTTP cache disabled; second query reuses application caches', timing: 'Suchen click until first original passage is rendered', coldMs, warmMs,
         beforeSearchBytes, throughFirstResultBytes, warmAdditionalBytes: afterWarmBytes - throughFirstResultBytes, observedIndexBodyBytes: indexBodyBytes,

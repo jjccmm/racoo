@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Player } from './Player';
 import { Stats } from './Stats';
-import { PublicationState } from './PublicationState';
 import { LandingIntro, DEMO_QUERY } from './LandingIntro';
 import { loadPodcasts, type Podcast } from './podcasts';
 import { PodcastProgress } from './PodcastProgress';
@@ -39,14 +38,11 @@ export function App() {
     {explorer && podcast && <>
       <header className="podcast-header">
         <img src={`${home}${podcast.cover}`} width="64" height="64" alt="" />
-        <div><h1>{podcast.name}</h1><p>{podcast.speakers.join(' & ')}</p><PodcastProgress podcast={podcast} /></div>
+        <div><h1>{podcast.name}</h1><p>{podcast.speakers.join(' & ')}{podcast.websiteUrl && <><span className="speaker-separator"> · </span><a href={podcast.websiteUrl} target="_blank" rel="noreferrer">Webseite ↗</a></>}</p><PodcastProgress podcast={podcast} /></div>
       </header>
       {podcast.episodeCount > 0 ? <>
         <Player key={podcast.id} dataBase={dataBase} podcastId={podcast.id}><Stats dataBase={dataBase} /></Player>
-        <footer className="workspace-footer"><details className="publication-details"><summary>Über die Daten</summary>
-          <PublicationState dataBase={dataBase} />
-          <p className="pilot-note">Maschinelle Transkripte können Fehler enthalten. Sprungzeiten gelten für die verarbeitete Audiofassung; Werbung kann sie verschieben.</p>
-        </details></footer>
+        <footer className="workspace-footer"><p className="transcript-credit">Inhalte: {podcast.websiteUrl ? <a href={podcast.websiteUrl} target="_blank" rel="noreferrer">{podcast.name}</a> : podcast.name} · Maschinelle Transkripte können Fehler enthalten.</p></footer>
       </> : <p className="notice">Für diesen Podcast sind noch keine Folgen durchsuchbar. Die Verarbeitung läuft lokal; neue Daten erscheinen nach der nächsten Veröffentlichung.</p>}
     </>}
     {!explorer && podcasts && <>

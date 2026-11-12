@@ -24,7 +24,7 @@ uv run --frozen podcast-words schema --output schemas/episode-v2.schema.json
 
 ## Öffentliche Dateien
 
-- Root `podcasts.json`, Schema 1: `id`, `name`, `speakers`, `cover`, `dataPath`, `knownEpisodeCount`, `episodeCount`, `lastCheckedAt`, `episodeIds`. Interne Cachepfade werden nicht veröffentlicht.
+- Root `podcasts.json`, Schema 1: `id`, `name`, `speakers`, `cover`, optionales `websiteUrl` (HTTP/HTTPS oder null), `dataPath`, `knownEpisodeCount`, `episodeCount`, `lastCheckedAt`, `episodeIds`. Interne Cachepfade werden nicht veröffentlicht.
 - Root `publication.json`, Schema 2: Gesamtstatus `published-corpus` oder `synthetic-fixture`, `episodeCount`, `podcastCount`. Der Pages-Schutz veröffentlicht nur echte nichtleere Korpora.
 - Je `podcasts/<id>/publication.json`, **Schema 3**: `publicationId`, `podcastId`, `state`, `archiveComplete:false`, `episodeCount`, `episodeIds`, `searchIndexId`, `catalogId`, `preparationId`.
 - Je Podcast `catalog.json`, Schema 2: Veröffentlichung/Hash, Podcast-ID, optionale Quellensnapshotdaten und `episodes` mit stabiler `episodeId`, Titel, Datum, Audiodauer und `timings.downloadSeconds`, `transcriptionSeconds`, `totalSeconds`. Kein Gesamtwort-/Lemmafeld.

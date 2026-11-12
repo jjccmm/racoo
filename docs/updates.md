@@ -79,3 +79,6 @@ Das Cover unter `web/public/images/` ablegen. Pfade sind relativ zur Konfigurati
 ## Umstieg von der Grundformstatistik
 
 Seit dem Pagefind-/Minimap-Umbau entfällt `--extra analysis`; das Extra und der Befehl `analyze` existieren nicht mehr. Vorhandene Transkripte bleiben vollständig erhalten und werden nicht erneut geladen oder transkribiert. `update` erzeugt keine Analyse-JSONs. Der [Suchvertrag](search.md) erklärt die neue Zählbedeutung.
+
+
+Die Podcastkonfiguration unterstützt optional `website_url` als HTTP-/HTTPS-Adresse. Diese erscheint als `websiteUrl` in der öffentlichen Übersicht, als Link neben den Sprechern und in der Quellenangabe. Beispiel: DAS PODCAST UFO verwendet die [offizielle Webseite](https://www.daspodcastufo.com/). Ein fehlender Link erzeugt keine erfundene Adresse.

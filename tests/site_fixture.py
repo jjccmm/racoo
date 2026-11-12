@@ -73,6 +73,7 @@ def create_fixture(output: Path) -> Path:
                 if identity == "podcast-ufo"
                 else ["Testsprecher"],
                 "cover": "images/podcast-ufo.jpg",
+                "website_url": f"https://example.org/{identity}",
                 "feed_url": "https://example.org/feed",
                 "directory": f"data/{identity}",
             }

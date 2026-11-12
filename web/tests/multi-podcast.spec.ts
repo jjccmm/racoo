@@ -14,6 +14,8 @@ test('configured directory shows coverage and the successful feed date without l
   await directory.getByRole('link', { name: /Zweiter Testpodcast/ }).click();
   await expect(page.getByRole('heading', { name: 'Zweiter Testpodcast', exact: true })).toBeVisible();
   await expect(page.getByText('1/1 Folgen durchsuchbar (Stand 8.11.2026)')).toBeVisible();
+  await expect(page.locator('.podcast-header').getByRole('link', { name: 'Webseite' })).toHaveAttribute('href', 'https://example.org/second-podcast');
+  await expect(page.locator('.transcript-credit')).toContainText('Inhalte: Zweiter Testpodcast');
   await choose(page, 'hund');
   await expect(page.getByRole('heading', { name: 'Nur im zweiten Podcast', exact: true })).toBeVisible();
   expect(requests.some(path => /podcasts\/podcast-ufo\/(search|stats)\//.test(path))).toBe(false);

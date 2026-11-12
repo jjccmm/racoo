@@ -10,7 +10,7 @@ for (const width of [1280, 390, 320]) {
     await expect(card.getByRole('button', { name: /Transkript öffnen/ })).toHaveCount(0);
     const reader = card.getByRole('region', { name: /Transkript:/ }); const map = reader.getByRole('scrollbar');
     await expect(map).toHaveAttribute('aria-orientation', 'vertical');
-    expect(await map.evaluate(element => getComputedStyle(element.parentElement!).backgroundColor)).toBe('rgb(237, 241, 238)');
+    expect(await map.evaluate(element => getComputedStyle(element.parentElement!).backgroundColor)).toBe('rgb(255, 255, 255)');
     const text = reader.getByRole('region', { name: 'Vollständiger Transkripttext' });
     await expect(reader.locator('.reader-segment')).toHaveCount(4);
     await reader.getByRole('button', { name: 'Nächste Fundstelle' }).click();
@@ -34,8 +34,8 @@ for (const width of [1280, 390, 320]) {
 }
 
 
-test('initial position follows the first matching input word and never steals search focus', async ({ page }) => {
-  await openExplorer(page); await controlledText(page, true); await choose(page, 'spätfund münze');
+test('initial position and resizing keep the earliest hit visible without stealing search focus', async ({ page }) => {
+  await openExplorer(page); await controlledText(page, true); await choose(page, 'spätfund');
   const reader = page.getByRole('region', { name: /Transkript:/ });
   await expect(reader.locator('mark[data-current=true]')).toHaveText('Spätfund');
   await expect.poll(() => reader.getByRole('region', { name: 'Vollständiger Transkripttext' }).evaluate(element => element.scrollTop)).toBeGreaterThan(0);
@@ -58,4 +58,43 @@ test('several episode transcripts stay open while their cards are read', async (
   await cards.nth(1).scrollIntoViewIfNeeded();
   await expect(cards.nth(1).getByRole('region', { name: /Transkript:/ })).toBeVisible();
   await expect(page.locator('.transcript-reader')).toHaveCount(2);
+});
+
+
+test('extending a query selects the earliest hit in a cached transcript', async ({ page }) => {
+  await openExplorer(page); await controlledText(page, true);
+  let originals = 0;
+  page.on('request', request => { if (request.url().endsWith('/episodes/synthetic-episode-001.json')) originals++; });
+  await choose(page, 'spätfund');
+  const reader = page.getByRole('region', { name: /Transkript:/ });
+  await expect(reader.locator('mark[data-current=true]')).toHaveText('Spätfund');
+  const before = originals; expect(before).toBe(1);
+  await choose(page, 'münze');
+  await expect(reader.locator('mark[data-current=true]')).toHaveText('Münzen');
+  await expect(reader.getByRole('status')).toHaveText('1/6');
+  expect(originals).toBe(before);
+  await expect(page.getByRole('button', { name: 'Suchen', exact: true })).toBeFocused();
+});
+
+
+test('text fades only at overflowing edges and updates after scrolling and resize', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await openExplorer(page); await controlledText(page, true); await choose(page, 'münze');
+  const reader = page.getByRole('region', { name: /Transkript:/ });
+  const text = reader.getByRole('region', { name: 'Vollständiger Transkripttext' });
+  const map = reader.getByRole('scrollbar');
+  await map.focus(); await map.press('Home');
+  await expect(text).toHaveAttribute('data-fade-top', 'false');
+  await expect(text).toHaveAttribute('data-fade-bottom', 'true');
+  expect(await text.evaluate(el => getComputedStyle(el).maskImage)).toContain('linear-gradient');
+  expect(await text.evaluate(el => el.clientHeight)).toBeGreaterThan(357);
+  expect(await text.evaluate(el => el.clientHeight)).toBeLessThan(360);
+  await text.evaluate(el => { el.scrollTop = (el.scrollHeight - el.clientHeight) / 2; });
+  await expect(text).toHaveAttribute('data-fade-top', 'true');
+  await expect(text).toHaveAttribute('data-fade-bottom', 'true');
+  await map.press('End');
+  await expect(text).toHaveAttribute('data-fade-top', 'true');
+  await expect(text).toHaveAttribute('data-fade-bottom', 'false');
+  await page.setViewportSize({ width: 390, height: 720 });
+  await expect(text).toHaveAttribute('data-fade-bottom', 'true');
 });

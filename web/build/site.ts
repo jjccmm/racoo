@@ -6,7 +6,7 @@ import { buildInputs } from './inputs.ts';
 import { writeSearchIndex } from './search-index.ts';
 import { writePublication, checkArtifactBudget } from './publication.ts';
 
-type Podcast = { id: string; name: string; speakers: string[]; cover: string; dataPath: string;
+type Podcast = { id: string; name: string; speakers: string[]; cover: string; websiteUrl?: string | null; dataPath: string;
   knownEpisodeCount: number; episodeCount: number; lastCheckedAt: string | null; episodeIds: string[]; source?: string | null };
 
 export function podcastSite(): Plugin {
@@ -25,7 +25,7 @@ export function podcastSite(): Plugin {
         await writePublication(config, inputs, dist);
         const publication = JSON.parse(await readFile(path.join(dist, 'publication.json'), 'utf8'));
         podcasts = [{ id: 'podcast-ufo', name: 'DAS PODCAST UFO', speakers: ['Florentin Will', 'Stefan Titze'],
-          cover: 'images/podcast-ufo.jpg', dataPath: '', knownEpisodeCount: publication.episodeCount,
+          cover: 'images/podcast-ufo.jpg', websiteUrl: 'https://www.daspodcastufo.com/', dataPath: '', knownEpisodeCount: publication.episodeCount,
           episodeCount: publication.episodeCount, lastCheckedAt: null, episodeIds: publication.episodeIds }];
       } else {
         const output = path.join(root, '.cache/site-publication');
@@ -50,7 +50,7 @@ export function podcastSite(): Plugin {
       }
       // Publish display/status metadata only; private build paths stay out of dist.
       await writeFile(path.join(dist, 'podcasts.json'), JSON.stringify({ schemaVersion: 1,
-        podcasts: podcasts.map(podcast => ({ id: podcast.id, name: podcast.name, speakers: podcast.speakers, cover: podcast.cover, dataPath: podcast.dataPath, knownEpisodeCount: podcast.knownEpisodeCount, episodeCount: podcast.episodeCount, lastCheckedAt: podcast.lastCheckedAt, episodeIds: podcast.episodeIds })) }));
+        podcasts: podcasts.map(podcast => ({ id: podcast.id, name: podcast.name, speakers: podcast.speakers, cover: podcast.cover, websiteUrl: podcast.websiteUrl ?? null, dataPath: podcast.dataPath, knownEpisodeCount: podcast.knownEpisodeCount, episodeCount: podcast.episodeCount, lastCheckedAt: podcast.lastCheckedAt, episodeIds: podcast.episodeIds })) }));
       await checkArtifactBudget(dist);
     },
   };

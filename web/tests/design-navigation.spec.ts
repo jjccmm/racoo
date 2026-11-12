@@ -22,3 +22,15 @@ test('unmodified demo is not a real query and mobile entry stays within the scre
   await expect(page.getByRole('article')).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
+
+
+test('the mascot favicon resolves at the current deployment base', async ({ page }) => {
+  await page.goto('./');
+  const href = await page.locator('link[rel="icon"]').getAttribute('href');
+  const response = await page.request.get(new URL(href!, page.url()).href);
+  expect(response.ok()).toBe(true);
+  expect(response.headers()['content-type']).toContain('image/svg+xml');
+  const icon = await response.text();
+  expect(icon).toContain('viewBox="105 10 700 700"');
+  expect(icon).toContain('data:image/png;base64,');
+});

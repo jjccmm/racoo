@@ -1,5 +1,5 @@
 export type Podcast = {
-  id: string; name: string; speakers: string[]; cover: string; dataPath: string;
+  id: string; name: string; speakers: string[]; cover: string; websiteUrl?: string | null; dataPath: string;
   knownEpisodeCount: number; episodeCount: number; lastCheckedAt: string | null; episodeIds: string[];
 };
 
@@ -15,6 +15,7 @@ export async function loadPodcasts(signal: AbortSignal): Promise<Podcast[]> {
         || typeof podcast.name !== 'string' || !podcast.name.trim()
         || !Array.isArray(podcast.speakers) || !podcast.speakers.length || podcast.speakers.some((name: unknown) => typeof name !== 'string' || !name.trim())
         || typeof podcast.cover !== 'string' || !/^[a-zA-Z0-9_/-]+\.[a-zA-Z0-9]+$/.test(podcast.cover) || podcast.cover.includes('..') || podcast.cover.startsWith('/')
+        || (podcast.websiteUrl != null && !website(podcast.websiteUrl))
         || (podcast.dataPath !== '' && podcast.dataPath !== `podcasts/${podcast.id}/`)
         || !Number.isSafeInteger(podcast.knownEpisodeCount) || !Number.isSafeInteger(podcast.episodeCount)
         || podcast.episodeCount < 0 || podcast.knownEpisodeCount < podcast.episodeCount
@@ -27,4 +28,9 @@ export async function loadPodcasts(signal: AbortSignal): Promise<Podcast[]> {
     }
   }
   return value.podcasts;
+}
+
+function website(value: unknown) {
+  if (typeof value !== 'string') return false;
+  try { return ['http:', 'https:'].includes(new URL(value).protocol); } catch { return false; }
 }

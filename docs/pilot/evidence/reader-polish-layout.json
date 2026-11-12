@@ -1,0 +1,70 @@
+{
+  "date": "2026-11-12",
+  "episodeCount": 106,
+  "viewportHeight": 844,
+  "query": "kratzeis urlaub",
+  "episode": "UFO070 Kratzeis",
+  "cachedQueryRegression": {
+    "firstQuery": "kratzeis",
+    "extendedQuery": "kratzeis urlaub",
+    "beforeFix": {
+      "active": "Kratzeis",
+      "earliest": "Urlaub",
+      "originalRequestsBefore": 1,
+      "originalRequestsAfter": 1
+    },
+    "afterFix": {
+      "active": "Urlaub",
+      "earliest": "Urlaub",
+      "originalRequestsBefore": 1,
+      "originalRequestsAfter": 1
+    }
+  },
+  "layouts": [
+    {
+      "width": 1280,
+      "cardShadow": "rgba(23, 58, 37, 0.063) 0px 3px 22px 0px",
+      "chartShadow": "rgba(23, 58, 37, 0.063) 0px 3px 22px 0px",
+      "textHeight": 359,
+      "minimap": "rgb(255, 255, 255)",
+      "map": "rgb(255, 255, 255)",
+      "chartGap": 16,
+      "overflow": false,
+      "brandX": 62,
+      "brandWidth": 204,
+      "coverX": 76,
+      "mascotAlignmentError": 0.005524861878456022
+    },
+    {
+      "width": 390,
+      "cardShadow": "rgba(23, 58, 37, 0.063) 0px 3px 22px 0px",
+      "chartShadow": "rgba(23, 58, 37, 0.063) 0px 3px 22px 0px",
+      "textHeight": 359,
+      "minimap": "rgb(255, 255, 255)",
+      "map": "rgb(255, 255, 255)",
+      "chartGap": 16,
+      "overflow": false,
+      "brandX": 9,
+      "brandWidth": 156,
+      "coverX": 20,
+      "mascotAlignmentError": 0.2983425414364618
+    },
+    {
+      "width": 320,
+      "cardShadow": "rgba(23, 58, 37, 0.063) 0px 3px 22px 0px",
+      "chartShadow": "rgba(23, 58, 37, 0.063) 0px 3px 22px 0px",
+      "textHeight": 359,
+      "minimap": "rgb(255, 255, 255)",
+      "map": "rgb(255, 255, 255)",
+      "chartGap": 16,
+      "overflow": false,
+      "brandX": 9,
+      "brandWidth": 156,
+      "coverX": 20,
+      "mascotAlignmentError": 0.2983425414364618
+    }
+  ],
+  "fadeEdgesChecked": true,
+  "faviconDecoded": true,
+  "note": "Local Chromium layout checks, not physical mobile hardware."
+}

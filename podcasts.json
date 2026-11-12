@@ -7,7 +7,8 @@
       "speakers": ["Florentin Will", "Stefan Titze"],
       "cover": "images/podcast-ufo.jpg",
       "feed_url": "https://feeds.acast.com/public/shows/podcast-ufo",
-      "directory": "data/podcast-ufo"
+      "directory": "data/podcast-ufo",
+      "website_url": "https://www.daspodcastufo.com/"
     }
   ]
 }
