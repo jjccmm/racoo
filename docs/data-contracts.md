@@ -35,3 +35,6 @@ uv run --frozen podcast-words schema --output schemas/episode-v2.schema.json
 Der sichtbare Nenner umfasst alle bekannten Katalogfolgen einschließlich Quellenlücken; der Zähler ausschließlich die veröffentlichten gültigen Transkripte. `lastCheckedAt` ist der letzte erfolgreiche gespeicherte Feedimport, kein Build-/Transkriptionsdatum. Alte `?episode=…&t=…`-Links werden über die podcastübergreifend eindeutigen IDs aufgelöst.
 
 Explizite Prüfkorpora über `PODCAST_WORDS_EPISODES` behalten eine einzelne synthetische Veröffentlichung am Root; konfigurierte Tests kennzeichnen ihren Gesamtbestand mit `synthetic_fixture:true`. Die gewöhnliche Webseite lädt nur den ausgewählten Podcast.
+
+
+Die zwei Browser-Suchmodi ändern keine veröffentlichten Dateien: Standard verwendet native Positionen, Exakt prüft ausschließlich die zehn Standardkandidaten im gespeicherten Originaltext. Die informative Variantenübersicht lädt höchstens deren native Fragmente. Es gibt keinen globalen Wortpositionsindex und keine Ausschlussliste. Die Detail-/Exaktantwort ist ein interner Worker-/Browservertrag, kein neues Episode- oder Publikationsschema; siehe [Suchoptionen](search.md).

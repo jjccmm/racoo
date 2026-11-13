@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, type XAxisTickContentProps } from 'recharts';
-import { countEpisodes, searchEpisodes, type SearchOverview, type SearchResult } from './search';
+import { countEpisodes, inspectTopEpisodes, searchEpisodes, type SearchOverview, type SearchResult, type TopDetails } from './search';
 import type { SearchData, EpisodeMetadata } from './catalog';
 import { parseQuery } from './query';
 import { SearchIcon } from './SearchIcon';
@@ -8,6 +8,8 @@ import { WORD_COLORS, wordStyle } from './word-colors';
 import { formatPlaybackTime, type StartPlayback } from './playback';
 import { type ColoredTerm } from './HighlightedText';
 import { TranscriptReader } from './TranscriptReader';
+import { SearchOptions, type SearchMode } from './SearchOptions';
+import { SegmentedControl } from './SegmentedControl';
 
 const count = (value: number) => value.toLocaleString('de-DE');
 const order = (a: string, b: string) => a < b ? -1 : a > b ? 1 : 0;
@@ -21,6 +23,10 @@ export function Frequency({ dataBase, data, onChoose, defaultQuery = '' }: { dat
   const [submission, setSubmission] = useState(() => prepare(query, 0));
   const [overview, setOverview] = useState<{ id: number; value?: SearchOverview; error?: string }>({ id: -1 });
   const [mode, setMode] = useState<'top' | 'all'>('top');
+  const [searchMode, setSearchMode] = useState<SearchMode>(() => new URLSearchParams(location.search).get('match') === 'exact' ? 'exact' : 'standard');
+  const [optionsOpen, setOptionsOpen] = useState(false);
+  const [detailAttempt, setDetailAttempt] = useState(0);
+  const [details, setDetails] = useState<{ key: string; value?: TopDetails; error?: string }>({ key: '' });
   const [chartWidth, setChartWidth] = useState(0);
   const words = useMemo(() => submission.terms.map((term, index) => ({ term, label: submission.labels[term], color: WORD_COLORS[index] })), [submission]);
   useEffect(() => {
@@ -32,17 +38,43 @@ export function Frequency({ dataBase, data, onChoose, defaultQuery = '' }: { dat
     return () => controller.abort();
   }, [submission, dataBase, data.publicationId]);
   const inputError = prepare(query, submission.id).error;
-  const ready = !!overview.value && overview.id === submission.id && !!words.length;
-  const failed = overview.id === submission.id && overview.error;
-  const counts = new Map(ready ? overview.value!.episodes.map(episode => [episode.episodeId, episode]) : []);
-  const chronological = data.episodes.map(episode => {
+  const standardReady = !!overview.value && overview.id === submission.id && !!words.length;
+  const baseCounts = new Map(standardReady ? overview.value!.episodes.map(episode => [episode.episodeId, episode]) : []);
+  const baseRanked = data.episodes.filter(episode => baseCounts.has(episode.episodeId)).map(episode => ({ ...episode,
+    total: words.reduce((sum, word) => sum + (baseCounts.get(episode.episodeId)?.counts[word.term] ?? 0), 0),
+  })).filter(episode => episode.total > 0).sort((a, b) => b.total - a.total || Date.parse(b.publishedAt) - Date.parse(a.publishedAt) || order(a.episodeId, b.episodeId)).slice(0, 10);
+  const targetIds = baseRanked.map(episode => episode.episodeId);
+  const targetKey = JSON.stringify(targetIds);
+  const detailKey = JSON.stringify([submission.id, searchMode, targetKey, data.publicationId]);
+  const needsDetails = optionsOpen || searchMode === 'exact';
+  useEffect(() => {
+    if (!standardReady || !needsDetails) return;
+    const controller = new AbortController();
+    inspectTopEpisodes(submission.terms, JSON.parse(targetKey), searchMode === 'exact' ? 'exact' : 'forms', controller.signal, dataBase, data.publicationId).then(value => {
+      if (!controller.signal.aborted) setDetails({ key: detailKey, value });
+    }).catch(error => { if (!controller.signal.aborted) setDetails({ key: detailKey, error: (error as Error).message }); });
+    return () => controller.abort();
+  }, [standardReady, needsDetails, submission, targetKey, searchMode, detailKey, dataBase, data.publicationId, detailAttempt]);
+  const currentDetails = details.key === detailKey ? details : undefined;
+  const ready = standardReady && (searchMode === 'standard' || !!currentDetails?.value?.overview);
+  const failed = overview.id === submission.id && overview.error || (searchMode === 'exact' && currentDetails?.error);
+  const effective = searchMode === 'exact' ? currentDetails?.value?.overview : overview.value;
+  const counts = new Map(ready ? effective!.episodes.map(episode => [episode.episodeId, episode]) : []);
+  const chronological = data.episodes.filter(episode => searchMode === 'standard' || targetIds.includes(episode.episodeId)).map(episode => {
     const found = counts.get(episode.episodeId);
     const values = words.map(word => found?.counts[word.term] ?? 0);
     return { ...episode, total: values.reduce((a, b) => a + b, 0), coverage: values.filter(Boolean).length,
       uniqueCount: found?.uniqueCount ?? 0, ...Object.fromEntries(values.map((value, index) => [`series${index}`, value])) };
   }).sort((a, b) => Date.parse(a.publishedAt) - Date.parse(b.publishedAt) || order(a.episodeId, b.episodeId));
   const ranked = chronological.filter(episode => episode.total > 0).sort((a, b) => b.total - a.total || Date.parse(b.publishedAt) - Date.parse(a.publishedAt) || order(a.episodeId, b.episodeId)).slice(0, 10);
-  const plotted = mode === 'top' ? ranked : chronological;
+  const plotted = mode === 'top' || searchMode === 'exact' ? ranked : chronological;
+  function changeSearchMode(value: SearchMode) {
+    setSearchMode(value);
+    if (value === 'exact') setMode('top');
+    const url = new URL(location.href);
+    if (value === 'exact') url.searchParams.set('match', 'exact'); else url.searchParams.delete('match');
+    history.replaceState(null, '', url);
+  }
   function submit() {
     const next = prepare(query, submission.id + 1);
     setSubmission(next);
@@ -54,14 +86,18 @@ export function Frequency({ dataBase, data, onChoose, defaultQuery = '' }: { dat
     <form role="search" className="query-form" onSubmit={event => { event.preventDefault(); submit(); }}>
       <div className="search-input"><SearchIcon /><label className="visually-hidden" htmlFor="podcast-query">Wörter suchen</label>
         <input type="search" id="podcast-query" value={query} autoComplete="off" maxLength={250} placeholder="Eimer Münzen Kleingeld" aria-describedby={inputError ? "search-help" : undefined} aria-invalid={!!inputError} onChange={event => setQuery(event.target.value)} />
-      </div><button className="search-submit" type="submit">Suchen</button>
+      </div><button className="search-submit" type="submit">Suchen</button><button className="search-options-button" type="button" aria-label="Suchoptionen" title="Suchoptionen" aria-expanded={optionsOpen} aria-controls="search-options" onClick={() => setOptionsOpen(open => !open)}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="M4 6h4m4 0h8M4 12h10m4 0h2M4 18h2m4 0h10" /><circle cx="10" cy="6" r="2" /><circle cx="16" cy="12" r="2" /><circle cx="8" cy="18" r="2" /></svg>
+      </button>
     </form>
+    {optionsOpen && <SearchOptions mode={searchMode} onChange={changeSearchMode} words={words} details={standardReady ? currentDetails?.value : undefined} error={currentDetails?.error} retry={() => setDetailAttempt(attempt => attempt + 1)} />}
+    {searchMode === 'exact' && <p className="exact-notice">Exakt · Nur die zehn führenden Folgen der Standardsuche werden geprüft.</p>}
     {inputError && <p className="selection-note" id="search-help" role="alert">{inputError}</p>}
     {!!words.length && !ready && !failed && <p role="status">Suchwort-Treffer werden ermittelt …</p>}
-    {failed && <div><p role="alert">Die Suche konnte nicht ausgeführt werden. Fehlende Daten sind kein Nullwert. {overview.error}</p><button onClick={() => setSubmission(current => ({ ...current, id: current.id + 1 }))}>Suche erneut laden</button>{overview.error?.includes('Datenstand') && <button onClick={() => location.reload()}>Seite neu laden</button>}</div>}
+    {failed && <div><p role="alert">Die Suche konnte nicht ausgeführt werden. Fehlende Daten sind kein Nullwert. {failed}</p><button onClick={() => setSubmission(current => ({ ...current, id: current.id + 1 }))}>Suche erneut laden</button>{overview.error?.includes('Datenstand') && <button onClick={() => location.reload()}>Seite neu laden</button>}</div>}
     <section className="chart-panel" aria-label="Suchwortvergleich">
       <div className="chart-heading"><div><h2>Suchwort-Treffer je Folge</h2></div>
-        <div className="view-toggle" role="group" aria-label="Folgen im Diagramm" data-mode={mode}><span className="view-toggle-glider" aria-hidden="true" /><button aria-pressed={mode === 'top'} onClick={() => setMode('top')}>Top 10</button><button aria-pressed={mode === 'all'} onClick={() => setMode('all')}>Alle</button></div>
+        <SegmentedControl<'top' | 'all'> label="Folgen im Diagramm" value={mode} onChange={setMode} options={[{ value: 'top', label: 'Top 10' }, { value: 'all', label: 'Alle', disabled: searchMode === 'exact' }]} />
       </div>
       {!words.length ? <div className="chart-empty"><p>An welche Wörter erinnerst du dich?</p></div>
         : !ready ? <div className="chart-empty"><p>{failed ? 'Die Suche ist noch nicht vollständig.' : 'Das Diagramm wartet auf die Suchergebnisse.'}</p></div>
@@ -86,8 +122,8 @@ export function Frequency({ dataBase, data, onChoose, defaultQuery = '' }: { dat
     </section>
     {ready && ranked.length > 0 && <section aria-label="Folgen mit den meisten Treffern" className="episode-results">
       <div className="results-heading"><h2>Top 10 Folgen</h2></div>
-      {ranked.map((episode, index) => <EpisodeCard key={`${episode.episodeId}:${submission.id}`} episode={episode} index={index} words={words}
-        counts={counts.get(episode.episodeId)?.counts ?? {}} dataBase={dataBase} publicationId={data.publicationId}
+      {ranked.map((episode, index) => <EpisodeCard key={`${episode.episodeId}:${submission.id}:${searchMode}`} episode={episode} index={index} words={words}
+        provided={searchMode === 'exact' ? currentDetails?.value?.results.find(result => result.episodeId === episode.episodeId) : undefined} counts={counts.get(episode.episodeId)?.counts ?? {}} dataBase={dataBase} publicationId={data.publicationId}
         onChoose={onChoose} />)}
       <p className="muted">Jedes Suchwort wird einzeln gezählt. Dieselbe Textstelle kann zu mehreren Suchwörtern passen; die Fundstellennavigation fasst solche Überschneidungen zusammen.</p>
     </section>}
@@ -95,13 +131,14 @@ export function Frequency({ dataBase, data, onChoose, defaultQuery = '' }: { dat
 }
 type RankedEpisode = EpisodeMetadata & { total: number; coverage: number; uniqueCount: number };
 /** Counts are global; original passages load when their card approaches the viewport. */
-function EpisodeCard({ episode, index, words, counts, dataBase, publicationId, onChoose }: {
+function EpisodeCard({ episode, index, words, counts, dataBase, publicationId, onChoose, provided }: {
   episode: RankedEpisode; index: number; words: ColoredTerm[]; counts: Record<string, number>; dataBase: string; publicationId: string;
-  onChoose: StartPlayback;
+  onChoose: StartPlayback; provided?: SearchResult;
 }) {
   const element = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(index === 0);
-  const [result, setResult] = useState<SearchResult>();
+  const [loaded, setResult] = useState<SearchResult>();
+  const result = provided ?? loaded;
   const [error, setError] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const shouldLoad = visible, query = words.map(word => word.term).join(' ');
@@ -111,7 +148,7 @@ function EpisodeCard({ episode, index, words, counts, dataBase, publicationId, o
     observer.observe(element.current); return () => observer.disconnect();
   }, [visible]);
   useEffect(() => {
-    if (!shouldLoad) return;
+    if (!shouldLoad || provided) return;
     const controller = new AbortController();
     searchEpisodes(query, controller.signal, { dataBase, publicationId, targetEpisodeIds: [episode.episodeId] }).then(session => {
       const found = session.initial.results[0];
@@ -119,7 +156,7 @@ function EpisodeCard({ episode, index, words, counts, dataBase, publicationId, o
       if (!controller.signal.aborted) setResult(found);
     }).catch(() => { if (!controller.signal.aborted) setError(true); });
     return () => controller.abort();
-  }, [shouldLoad, query, episode.episodeId, dataBase, publicationId, attempt]);
+  }, [shouldLoad, provided, query, episode.episodeId, dataBase, publicationId, attempt]);
   return <article className="episode-card transcript-card" ref={element} aria-labelledby={`episode-heading-${episode.episodeId}`}>
     <header className="transcript-card-header">
       <div className="transcript-card-heading"><span className="rank">{String(index + 1).padStart(2, '0')}</span>

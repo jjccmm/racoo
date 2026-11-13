@@ -1,5 +1,7 @@
 # Aktuell
 
+- [x] [Standard / Exakt und informative Top10-Wortlisten](.scratch/pagefind-minimap/issues/11-search-options.md): [Umsetzung und lokale Abnahme](docs/pilot/search-options.md).
+
 - [x] [Eingegebene Schreibweise in Suchanzeigen](.scratch/pagefind-minimap/issues/10-query-display-spelling.md): `a814181`, [Abnahme](docs/pilot/query-display-spelling.md).
 
 - [x] [Startsuche, Kartenbreiten und Eimer-Vorbelegung](.scratch/pagefind-minimap/issues/09-landing-alignment-default-query.md): `0307461`, [Abnahme](docs/pilot/landing-alignment-default-query.md).

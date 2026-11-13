@@ -7,7 +7,7 @@ export type Highlight = { start: number; end: number; terms: string[] };
 export type Passage = Segment & { terms: string[]; highlights: Highlight[] };
 export type Identity = { episodeId: string; publishedAt: string };
 type SearchIndex = { publicationId: string; moduleUrl: string; episodes: Record<string, Identity> };
-export type SearchRequest = SearchIndex & { terms: string[]; offset: number; targetEpisodeIds?: string[]; mode?: 'counts' };
+export type SearchRequest = SearchIndex & { terms: string[]; offset: number; targetEpisodeIds?: string[]; mode?: 'counts' | 'forms' | 'exact' };
 export type SearchResult = Identity & {
   segments: Segment[];
   searchId: string;
@@ -24,6 +24,8 @@ export type SearchOverview = {
   publicationId: string; terms: string[]; total: number;
   episodes: (Identity & { counts: Record<string, number>; uniqueCount: number })[];
 };
+export type WordVariant = { word: string; count: number };
+export type TopDetails = { variants: Record<string, WordVariant[]>; results: SearchResult[]; overview?: SearchOverview };
 export type SearchPage = { results: SearchResult[]; total: number; terms: string[] };
 export type SearchSession = { initial: SearchPage; loadMore(): Promise<SearchPage> };
 
@@ -110,6 +112,13 @@ async function loadPage<T = SearchPage>(request: SearchRequest, signal: AbortSig
 export async function countEpisodes(terms: string[], signal: AbortSignal, dataBase: string, publicationId?: string): Promise<SearchOverview> {
   const index = await loadIndex(signal, dataBase, publicationId);
   return loadPage<SearchOverview>({ ...index, terms: parseQuery(terms.join(' ')).terms, offset: 0, mode: 'counts' }, signal);
+}
+
+/** Inspect only the fixed standard top ten; never expands the candidate set. */
+export async function inspectTopEpisodes(terms: string[], episodeIds: string[], kind: 'forms' | 'exact', signal: AbortSignal, dataBase: string, publicationId: string): Promise<TopDetails> {
+  if (episodeIds.length > 10 || new Set(episodeIds).size !== episodeIds.length) throw new Error('Ungültige Top10-Auswahl');
+  const index = await loadIndex(signal, dataBase, publicationId);
+  return loadPage<TopDetails>({ ...index, terms: parseQuery(terms.join(' ')).terms, targetEpisodeIds: episodeIds, offset: 0, mode: kind }, signal);
 }
 
 export async function searchEpisodes(query: string, signal: AbortSignal, options: { targetEpisodeIds?: string[]; dataBase?: string; publicationId?: string } = {}): Promise<SearchSession> {

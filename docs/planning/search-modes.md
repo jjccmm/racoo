@@ -1,5 +1,7 @@
 # Suchoptionen mit informativen Top10-Wortlisten
 
+**Bestätigter Implementierungsumfang:** Nur Standard und der auf Standard-Top10 begrenzte Exaktmodus, informative Top10-Listen ohne Deaktivierung sowie kurze FAQ-Hilfe. Erweitert wird ausdrücklich nicht implementiert. Die nachfolgenden Erweitert-Überlegungen bleiben historische Recherche. Maßgeblich für das Verhalten sind [Suchvertrag](../search.md) und [Ticket11](../../.scratch/pagefind-minimap/issues/11-search-options.md).
+
 Stand: 13. November 2026. **Wortlisten und begrenzter Exaktmodus vom Nutzer präzisiert; Erweitert noch in Abstimmung.** Diese Fassung ersetzt den vorherigen Vorschlag globaler ausschließbarer Wortformen und einer vollständigen Positions-/Wortzuordnung. Die laufende Anwendung und der [aktive Suchvertrag](../search.md) sind noch unverändert. Grundlage: [API-Recherche](../research/variant-filter-api-2026-11-13.md), [106er-Größenmessung](../research/variant-filter-traffic-2026-11-13.md), [Präfixbeispiele](../research/evidence/prefix-fallback-2026-11-13.json).
 
 ## Oberfläche und festgelegter Umfang

@@ -1,0 +1,17 @@
+{
+  "episodeCount": 106,
+  "query": "Tisch",
+  "standard": {
+    "top10": 46,
+    "variantCount": 14,
+    "originalsFetched": 1
+  },
+  "exact": {
+    "top10": 26,
+    "cards": 7,
+    "originalsFetched": 10
+  },
+  "exactVisibleMarks": 26,
+  "mobileOverflow": false,
+  "pageErrors": []
+}

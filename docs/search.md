@@ -50,3 +50,16 @@ Auf der Startseite steht der Modusschalter neben der Suche. Podcastauswahl und F
 
 
 Suchschlüssel bleiben kleingeschrieben und NFC-normalisiert. Für Legenden, Zählbeschriftungen und Tooltips wird getrennt die eingegebene Schreibweise gespeichert. Bei wiederholten Varianten wie `Eimer EIMER` gewinnt die erste Schreibweise `Eimer`; beide ergeben weiterhin eine Serie. Originaltexte werden dabei nicht umgeschrieben.
+
+
+## Suchoptionen: Standard und Exakt
+
+Ein runder Schiebereglerknopf neben der Suche öffnet eine Karte im Seitenfluss. Standard bleibt die Vorgabe und die native Pagefind-Suche. Die aufklappbare Hilfe erklärt beide Modi. Die FAQ nennt kurz Grenzen bei kurzen Wörtern wie Ei, Wortstämmen und Transkript-/Bestandslücken. Erweitert wird nicht implementiert.
+
+Je Suchwort zeigt die geöffnete Karte eine rein informative, nach Häufigkeit absteigend/alphabetisch sortierte Liste tatsächlicher Formen der aktuellen Top10. NFC und Groß-/Kleinschreibung gruppieren eine Form; deren häufigste Originalschreibweise ist sichtbar. Kein Anklicken zum Ausschließen. Für die vollständige Übersicht werden nur die fehlenden Top10-Fragmente geladen, keine übrigen Folgen oder globalen Zusatzindizes. Unvollständige oder fehlgeschlagene Übersichten bleiben sichtbar als Ladezustand/Fehler.
+
+Exakt fixiert zuerst die höchstens zehn Folgen mit der größten Gesamtsumme der Standardsuche, dann prüft es deren Originaltexte. Nur vollständige Tokens nach demselben Unicode-Wortmuster wie die Eingabe zählen: innere Bindestriche und Schrägstriche gehören zum Wort (Euro-Münze und Wort/Teil sind jeweils ein Token); Satzzeichen außen trennen. NFC und Kleinschreibung nur für den Vergleich, Originaltexte/UTF-16-Markierungsgrenzen bleiben unverändert. Keine Gleichsetzung von Umlauten, Akzenten oder ß/ss, kein Stemming. Ein mehrfach innerhalb eines nativen Whitespace-Tokens vorkommendes vollständiges Wort kann in Exakt mehrfach zählen; dessen Positions-IDs gehören zum lokalen exakten Wortdurchlauf, nicht zum Pagefind-Index.
+
+Exakte Zählungen, Diagramm, Wortlisten, Leser, Navigation und Minimap stammen aus denselben Originaltreffern. Nur innerhalb der fixierten Kandidaten neu sortieren, Nulltreffer aus den Ergebnis-Karten entfernen, keine Folgen außerhalb nachladen. Deshalb kann Exakt trotz anderer möglicher Archivtreffer leer bleiben. Alle ist in Exakt deaktiviert; die Einschränkung wird dauerhaft unter der Suche und in der Modushilfe genannt. Der Linkparameter match=exact erhält den Modus; ohne diesen Parameter gilt Standard.
+
+Standard lädt Originale weiter sichtbarkeitsabhängig. Exakt muss alle höchstens zehn ausgewählten Originale für die Zählung prüfen und verwendet diese direkt für seine Karten. Der vorhandene begrenzte Originalcache wird gemeinsam genutzt. Publikations-/Identitätsfehler, Abbruch und veraltete Antwortgenerationen bleiben abgesichert; unbekannte Werte sind keine Nullen. Das interne inspectTopEpisodes-Verfahren begrenzt die Kandidaten sowohl vor dem Workeraufruf als auch im Worker auf zehn eindeutige IDs.

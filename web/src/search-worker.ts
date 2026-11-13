@@ -1,4 +1,5 @@
-import type { Identity, SearchPage, SearchRequest, SearchResult, SearchOverview, Segment } from './search';
+import { normalizeWord, wordPattern } from './query';
+import type { Identity, SearchPage, SearchRequest, SearchResult, SearchOverview, TopDetails, WordVariant, Segment } from './search';
 
 type Fragment = {
   content: string; raw_content?: string; word_count: number;
@@ -32,8 +33,65 @@ globalThis.fetch = async (...arguments_: Parameters<typeof fetch>) => {
   }
 };
 
-async function search({ moduleUrl, episodes, terms, offset, targetEpisodeIds, mode, publicationId }: SearchRequest): Promise<SearchPage | SearchOverview> {
+type VariantCounts = Map<string, { count: number; spellings: Map<string, number> }>;
+function addForm(counts: VariantCounts, word: string) {
+  const key = normalizeWord(word);
+  const entry = counts.get(key) ?? { count: 0, spellings: new Map<string, number>() };
+  entry.count++; entry.spellings.set(word, (entry.spellings.get(word) ?? 0) + 1); counts.set(key, entry);
+}
+function variantsOf(forms: Record<string, VariantCounts>): Record<string, WordVariant[]> {
+  return Object.fromEntries(Object.entries(forms).map(([term, counts]) => [term, [...counts].map(([, entry]) => ({
+    word: [...entry.spellings].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'de'))[0][0], count: entry.count,
+  })).sort((a, b) => b.count - a.count || a.word.localeCompare(b.word, 'de'))]));
+}
+async function record(identity: Identity, moduleUrl: string): Promise<Episode> {
+  const episode = records.get(identity.episodeId) ?? await fetch(new URL(`episodes/${encodeURIComponent(identity.episodeId)}.json`, moduleUrl)).then(response => response.json());
+  if (episode.episode_id !== identity.episodeId || episode.published_at !== identity.publishedAt) throw new Error('Suchindex und Folgendetails stimmen nicht überein');
+  records.delete(identity.episodeId);
+  if (records.size >= 20) records.delete(records.keys().next().value!);
+  records.set(identity.episodeId, episode);
+  return episode;
+}
+async function exactDetails(request: SearchRequest): Promise<TopDetails> {
+  const forms: Record<string, VariantCounts> = Object.fromEntries(request.terms.map(term => [term, new Map()]));
+  const results = await Promise.all((request.targetEpisodeIds ?? []).map(async episodeId => {
+    const entry = Object.entries(request.episodes).find(([, identity]) => identity.episodeId === episodeId);
+    if (!entry) throw new Error('Folge fehlt im Suchstand');
+    const [searchId, identity] = entry;
+    const episode = await record(identity, request.moduleUrl);
+    const positionsByTerm: Record<string, number[]> = Object.fromEntries(request.terms.map(term => [term, []]));
+    let position = 0;
+    const passages = episode.segments.flatMap(segment => {
+      const highlights = [];
+      for (const match of segment.text.matchAll(wordPattern)) {
+        const term = normalizeWord(match[0]);
+        if (Object.hasOwn(positionsByTerm, term)) {
+          positionsByTerm[term].push(position);
+          highlights.push({ start: match.index, end: match.index + match[0].length, terms: [term] });
+          addForm(forms[term], match[0]);
+        }
+        position++;
+      }
+      return highlights.length ? [{ ...segment, highlights, terms: [...new Set(highlights.flatMap(hit => hit.terms))] }] : [];
+    });
+    return { ...identity, searchId, title: episode.title, segments: episode.segments, passages, positionsByTerm,
+      matchedTerms: request.terms.filter(term => positionsByTerm[term].length), rankSum: 0,
+      audioUrl: episode.audio.url, durationSeconds: episode.audio.duration_seconds, webpageUrl: episode.webpage_url ?? episode.source.reference_url };
+  }));
+  return { results, variants: variantsOf(forms), overview: { publicationId: request.publicationId, terms: request.terms,
+    total: results.filter(result => result.matchedTerms.length).length,
+    episodes: results.map(result => ({ episodeId: result.episodeId, publishedAt: result.publishedAt,
+      counts: Object.fromEntries(request.terms.map(term => [term, result.positionsByTerm[term].length])),
+      uniqueCount: new Set(Object.values(result.positionsByTerm).flat()).size })) } };
+}
+
+async function search({ moduleUrl, episodes, terms, offset, targetEpisodeIds, mode, publicationId }: SearchRequest): Promise<SearchPage | SearchOverview | TopDetails> {
   fetchFailure = undefined;
+  if (mode === 'forms' || mode === 'exact') {
+    if (!targetEpisodeIds || targetEpisodeIds.length > 10 || new Set(targetEpisodeIds).size !== targetEpisodeIds.length) throw new Error('Ungültige Top10-Auswahl');
+    if (mode === 'exact') return exactDetails({ moduleUrl, episodes, terms, offset, targetEpisodeIds, mode, publicationId });
+    if (!targetEpisodeIds.length) return { results: [], variants: Object.fromEntries(terms.map(term => [term, []])) };
+  }
   if (targetEpisodeIds?.length === 0) return { results: [], total: 0, terms };
   const allowed = targetEpisodeIds === undefined ? undefined : new Set(targetEpisodeIds);
   if (!engine) {
@@ -80,18 +138,29 @@ async function search({ moduleUrl, episodes, terms, offset, targetEpisodeIds, mo
       uniqueCount: new Set(Object.values(positionsByTerm).flat()).size,
     })),
   };
+  if (mode === 'forms') {
+    const forms: Record<string, VariantCounts> = Object.fromEntries(terms.map(term => [term, new Map()]));
+    for (const candidate of candidates) {
+      const fragment = await candidate.result.data();
+      if (fetchFailure) throw fetchFailure;
+      const tokens = fragment.content.split(/[\r\n\s]+/g);
+      for (const [term, positions] of Object.entries(candidate.positionsByTerm)) for (const position of positions) {
+        if (tokens[position] === undefined) throw new Error('Ungültige Suchposition');
+        const word = tokens[position].replace(/^[^\p{L}\p{M}\p{N}]+|[^\p{L}\p{M}\p{N}]+$/gu, '');
+        if (word) addForm(forms[term], word);
+      }
+    }
+    return { results: [], variants: variantsOf(forms) };
+  }
   // Coverage and all global tie-breaks are settled before the first fragment.
   const results: SearchResult[] = await Promise.all(candidates.slice(offset, offset + 10).map(async ({ result, identity, positionsByTerm, rankSum }) => {
     const [fragment, episode]: [Fragment, Episode] = await Promise.all([
       result.data(),
-      records.get(identity.episodeId) ?? fetch(new URL(`episodes/${encodeURIComponent(identity.episodeId)}.json`, moduleUrl)).then((response) => response.json()),
+      record(identity, moduleUrl),
     ]);
     if (episode.episode_id !== identity.episodeId || episode.published_at !== identity.publishedAt) {
       throw new Error('Suchindex und Folgendetails stimmen nicht überein');
     }
-    records.delete(identity.episodeId);
-    if (records.size >= 20) records.delete(records.keys().next().value!);
-    records.set(identity.episodeId, episode);
     const indexedTokens = fragment.content.split(/[\r\n\s]+/g);
     const anchors = [...fragment.anchors].sort((a, b) => a.location - b.location);
     const originalTokens = new Map<string, RegExpExecArray[]>();

@@ -60,3 +60,8 @@ Der [neunte Auftrag](issues/09-landing-alignment-default-query.md) verschiebt de
 [Ticket 10](issues/10-query-display-spelling.md) trennt Anzeigenamen in der eingegebenen Schreibweise von den unverändert normalisierten Suchschlüsseln. Dopplungen behalten die erste Schreibweise.
 
 - 2026-11-12: In `a814181` auf `feature/pagefind-minimap` integriert. Alle zehn Tickets erfüllt; 130 Browserprüfungen und echte Anzeige-/Zählprüfung bestanden.
+
+
+[Ticket11](issues/11-search-options.md) ergänzt bestätigte Standard-/Exakt-Suchoptionen, informative Top10-Wortlisten und kurze FAQ-Hilfe. Erweitert sowie anklickbare Ausschlüsse sind ausdrücklich außerhalb des Auftrags. Exakt darf nur die vorher festgelegten Standard-Top10 prüfen.
+
+- 2026-11-13: Ticket11 integriert und lokal geprüft; [Abnahme](../../docs/pilot/search-options.md). Erweitert bleibt außerhalb des Umfangs.

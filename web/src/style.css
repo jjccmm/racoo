@@ -306,3 +306,26 @@ input::placeholder { color: var(--muted); opacity: .85; }
 
 .intro-search-row { display: flex; align-items: center; gap: 12px; max-width: 672px; margin: 0 auto; }
 .intro-search-row .intro-search { flex: 1; min-width: 0; margin: 0; }
+
+/* Search options stay in the page flow; word variants are informational. */
+.search-options-button { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; flex: 0 0 auto; border-radius: 50%; background: var(--surface); }
+.search-options-button[aria-expanded="true"] { background: var(--soft); color: var(--ink); }
+.search-options { margin: 12px 0; padding: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--card-shadow); }
+.search-options-heading { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
+.search-mode-help { flex: 1; min-width: 32px; }
+.search-mode-help summary { display: grid; place-items: center; width: 30px; height: 30px; margin-top: 4px; border: 1px solid var(--line); border-radius: 50%; cursor: pointer; list-style: none; color: var(--muted); }
+.search-mode-help summary::-webkit-details-marker { display: none; }
+.search-mode-help p { font-size: .84rem; color: var(--muted); line-height: 1.6; max-width: 620px; }
+.variant-caption, .exact-notice { color: var(--muted); font-size: .82rem; }
+.word-variant-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr)); gap: 14px; }
+.word-variants { min-width: 0; }
+.word-variants h3 { display: flex; align-items: center; gap: 8px; font-size: .88rem; margin: 0 0 8px; overflow-wrap: anywhere; }
+.word-variants h3 i { width: 8px; height: 8px; border-radius: 50%; background: var(--word-color); flex-shrink: 0; }
+.word-variants ul { list-style: none; margin: 0; padding: 6px 10px; max-height: 150px; overflow-y: auto; background: var(--soft); border-radius: 12px; scrollbar-width: thin; }
+.word-variants li { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; font-size: .82rem; }
+.word-variants li span:first-child { overflow-wrap: anywhere; min-width: 0; }
+.word-variants li span:last-child { font-variant-numeric: tabular-nums; color: var(--muted); flex-shrink: 0; }
+.view-toggle button:disabled { cursor: not-allowed; opacity: .45; }
+@media (max-width: 480px) { .query-form { gap: 7px; } .search-options { padding: 14px; } .word-variant-grid { grid-template-columns: 1fr; } }
+
+.search-mode-help[open] { flex-basis: 100%; }

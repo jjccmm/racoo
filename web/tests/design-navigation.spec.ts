@@ -49,7 +49,7 @@ test('FAQ is initially collapsed and opens all concise answers using the keyboar
   await expect(faq.getByText('Warum gibt es Racoo?', { exact: true })).not.toBeVisible();
   await faq.locator('summary').focus(); await page.keyboard.press('Enter');
   await expect(faq).toHaveAttribute('open', '');
-  await expect(faq.locator('dt')).toHaveCount(6);
+  await expect(faq.locator('dt')).toHaveCount(7);
   await expect(faq).toContainText('unabhängiges Hobbyprojekt');
   await expect(faq).toContainText('±2 Minuten');
   await expect(faq).toContainText('Waschbär');
