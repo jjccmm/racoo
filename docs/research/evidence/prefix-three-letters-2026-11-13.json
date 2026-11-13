@@ -1,0 +1,7964 @@
+{
+  "date": "2026-11-13",
+  "indexId": "f376233a66369947c391ece1ddb3fd27ae51344ffdf4b784bef6ef7024c02d3d",
+  "method": "106 actual episodes. One fresh browser context/native instance per generated query; raw positions resolved OFFLINE from existing local pf_fragment files, no product or browser surface API added. First3 = Unicode code points, NFC+German lowercase. Native results are the cold observed candidates, not linguistic ground truth.",
+  "roots": [
+    "kommen",
+    "gehen",
+    "stehen",
+    "stellen",
+    "stehlen",
+    "laufen",
+    "lesen",
+    "suchen",
+    "schlafen",
+    "spielen",
+    "sprechen",
+    "nehmen",
+    "fangen",
+    "hören",
+    "Tisch",
+    "Wort",
+    "Eimer",
+    "Ei"
+  ],
+  "prefixes": [
+    "her",
+    "vor",
+    "ver",
+    "an",
+    "auf"
+  ],
+  "queries": [
+    {
+      "root": "kommen",
+      "prefix": "her",
+      "query": "herkommen",
+      "guard": "herkom",
+      "episodes": 20,
+      "rawPositions": 23,
+      "keptPositions": 23,
+      "startsWithPositions": 23,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 27,
+      "keptForms": [
+        [
+          "herkommt",
+          13
+        ],
+        [
+          "herkommen",
+          5
+        ],
+        [
+          "herkomme",
+          5
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "herkommt",
+          13
+        ],
+        [
+          "herkomme",
+          5
+        ],
+        [
+          "herkommen",
+          5
+        ],
+        [
+          "näherkommen",
+          1
+        ],
+        [
+          "näherkommt",
+          1
+        ],
+        [
+          "daherkommt",
+          1
+        ],
+        [
+          "herkomstst",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 23,
+        "forms": [
+          [
+            "herkommt",
+            13
+          ],
+          [
+            "herkommen",
+            5
+          ],
+          [
+            "herkomme",
+            5
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "herkomm",
+        "positions": 23,
+        "forms": [
+          [
+            "herkommt",
+            13
+          ],
+          [
+            "herkommen",
+            5
+          ],
+          [
+            "herkomme",
+            5
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 7
+    },
+    {
+      "root": "kommen",
+      "prefix": "vor",
+      "query": "vorkommen",
+      "guard": "vorkom",
+      "episodes": 22,
+      "rawPositions": 25,
+      "keptPositions": 25,
+      "startsWithPositions": 25,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 25,
+      "keptForms": [
+        [
+          "vorkommen",
+          12
+        ],
+        [
+          "vorkommt",
+          11
+        ],
+        [
+          "vorkommenden",
+          1
+        ],
+        [
+          "vorkomm",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "vorkommen",
+          12
+        ],
+        [
+          "vorkommt",
+          11
+        ],
+        [
+          "vorkomm",
+          1
+        ],
+        [
+          "vorkommenden",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 25,
+        "forms": [
+          [
+            "vorkommen",
+            12
+          ],
+          [
+            "vorkommt",
+            11
+          ],
+          [
+            "vorkommenden",
+            1
+          ],
+          [
+            "vorkomm",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "vorkomm",
+        "positions": 25,
+        "forms": [
+          [
+            "vorkommen",
+            12
+          ],
+          [
+            "vorkommt",
+            11
+          ],
+          [
+            "vorkommenden",
+            1
+          ],
+          [
+            "vorkomm",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 4
+    },
+    {
+      "root": "kommen",
+      "prefix": "ver",
+      "query": "verkommen",
+      "guard": "verkom",
+      "episodes": 5,
+      "rawPositions": 7,
+      "keptPositions": 7,
+      "startsWithPositions": 7,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 7,
+      "keptForms": [
+        [
+          "verkommen",
+          4
+        ],
+        [
+          "verkommene",
+          2
+        ],
+        [
+          "verkommt",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "verkommen",
+          4
+        ],
+        [
+          "verkommene",
+          2
+        ],
+        [
+          "verkommt",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 7,
+        "forms": [
+          [
+            "verkommen",
+            4
+          ],
+          [
+            "verkommene",
+            2
+          ],
+          [
+            "verkommt",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "verkomm",
+        "positions": 7,
+        "forms": [
+          [
+            "verkommen",
+            4
+          ],
+          [
+            "verkommene",
+            2
+          ],
+          [
+            "verkommt",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 3
+    },
+    {
+      "root": "kommen",
+      "prefix": "an",
+      "query": "ankommen",
+      "guard": "ankom",
+      "episodes": 54,
+      "rawPositions": 82,
+      "keptPositions": 82,
+      "startsWithPositions": 82,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 96,
+      "keptForms": [
+        [
+          "ankommt",
+          36
+        ],
+        [
+          "ankommen",
+          36
+        ],
+        [
+          "ankommst",
+          7
+        ],
+        [
+          "ankomme",
+          2
+        ],
+        [
+          "ankommuniziert",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "ankommen",
+          36
+        ],
+        [
+          "ankommt",
+          36
+        ],
+        [
+          "ankommst",
+          7
+        ],
+        [
+          "rankommt",
+          4
+        ],
+        [
+          "drankommen",
+          3
+        ],
+        [
+          "ankomme",
+          2
+        ],
+        [
+          "rankommen",
+          2
+        ],
+        [
+          "drankommt",
+          2
+        ],
+        [
+          "drankomme",
+          1
+        ],
+        [
+          "vorankommt",
+          1
+        ],
+        [
+          "rankomme",
+          1
+        ],
+        [
+          "ankommuniziert",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 82,
+        "forms": [
+          [
+            "ankommt",
+            36
+          ],
+          [
+            "ankommen",
+            36
+          ],
+          [
+            "ankommst",
+            7
+          ],
+          [
+            "ankomme",
+            2
+          ],
+          [
+            "ankommuniziert",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "ankomm",
+        "positions": 82,
+        "forms": [
+          [
+            "ankommt",
+            36
+          ],
+          [
+            "ankommen",
+            36
+          ],
+          [
+            "ankommst",
+            7
+          ],
+          [
+            "ankomme",
+            2
+          ],
+          [
+            "ankommuniziert",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 12
+    },
+    {
+      "root": "kommen",
+      "prefix": "auf",
+      "query": "aufkommen",
+      "guard": "aufkom",
+      "episodes": 6,
+      "rawPositions": 6,
+      "keptPositions": 6,
+      "startsWithPositions": 6,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 7,
+      "keptForms": [
+        [
+          "aufkommen",
+          4
+        ],
+        [
+          "aufkommt",
+          2
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "aufkommen",
+          4
+        ],
+        [
+          "aufkommt",
+          2
+        ],
+        [
+          "raufkommen",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 6,
+        "forms": [
+          [
+            "aufkommen",
+            4
+          ],
+          [
+            "aufkommt",
+            2
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "aufkomm",
+        "positions": 6,
+        "forms": [
+          [
+            "aufkommen",
+            4
+          ],
+          [
+            "aufkommt",
+            2
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 3
+    },
+    {
+      "root": "gehen",
+      "prefix": "her",
+      "query": "hergehen",
+      "guard": "hergeh",
+      "episodes": 3,
+      "rawPositions": 4,
+      "keptPositions": 4,
+      "startsWithPositions": 4,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 5,
+      "keptForms": [
+        [
+          "hergehen",
+          1
+        ],
+        [
+          "hergeht",
+          1
+        ],
+        [
+          "hergehoben",
+          1
+        ],
+        [
+          "hergehabt",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "hinterhergehen",
+          1
+        ],
+        [
+          "hergehabt",
+          1
+        ],
+        [
+          "hergehen",
+          1
+        ],
+        [
+          "hergeht",
+          1
+        ],
+        [
+          "hergehoben",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 4,
+        "forms": [
+          [
+            "hergehen",
+            1
+          ],
+          [
+            "hergeht",
+            1
+          ],
+          [
+            "hergehoben",
+            1
+          ],
+          [
+            "hergehabt",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "hergehe",
+        "positions": 1,
+        "forms": [
+          [
+            "hergehen",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 5
+    },
+    {
+      "root": "gehen",
+      "prefix": "vor",
+      "query": "vorgehen",
+      "guard": "vorgeh",
+      "episodes": 5,
+      "rawPositions": 7,
+      "keptPositions": 7,
+      "startsWithPositions": 7,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 7,
+      "keptForms": [
+        [
+          "vorgeht",
+          3
+        ],
+        [
+          "vorgehen",
+          2
+        ],
+        [
+          "vorgehalten",
+          2
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "vorgeht",
+          3
+        ],
+        [
+          "vorgehalten",
+          2
+        ],
+        [
+          "vorgehen",
+          2
+        ]
+      ],
+      "foldedThree": {
+        "positions": 7,
+        "forms": [
+          [
+            "vorgeht",
+            3
+          ],
+          [
+            "vorgehen",
+            2
+          ],
+          [
+            "vorgehalten",
+            2
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "vorgehe",
+        "positions": 2,
+        "forms": [
+          [
+            "vorgehen",
+            2
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 3
+    },
+    {
+      "root": "gehen",
+      "prefix": "ver",
+      "query": "vergehen",
+      "guard": "vergeh",
+      "episodes": 8,
+      "rawPositions": 12,
+      "keptPositions": 12,
+      "startsWithPositions": 12,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 12,
+      "keptForms": [
+        [
+          "vergeht",
+          9
+        ],
+        [
+          "vergehen",
+          2
+        ],
+        [
+          "vergeh",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "vergeht",
+          9
+        ],
+        [
+          "vergehen",
+          2
+        ],
+        [
+          "vergeh",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 12,
+        "forms": [
+          [
+            "vergeht",
+            9
+          ],
+          [
+            "vergehen",
+            2
+          ],
+          [
+            "vergeh",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "vergehe",
+        "positions": 2,
+        "forms": [
+          [
+            "vergehen",
+            2
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 3
+    },
+    {
+      "root": "gehen",
+      "prefix": "an",
+      "query": "angehen",
+      "guard": "angeh",
+      "episodes": 60,
+      "rawPositions": 108,
+      "keptPositions": 108,
+      "startsWithPositions": 108,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 150,
+      "keptForms": [
+        [
+          "angeht",
+          40
+        ],
+        [
+          "angehört",
+          28
+        ],
+        [
+          "angehalten",
+          12
+        ],
+        [
+          "angehen",
+          9
+        ],
+        [
+          "angehabt",
+          5
+        ],
+        [
+          "angehubt",
+          2
+        ],
+        [
+          "angehaucht",
+          2
+        ],
+        [
+          "angehauchte",
+          2
+        ],
+        [
+          "angehängt",
+          2
+        ],
+        [
+          "angeheiterten",
+          1
+        ],
+        [
+          "angehörigen",
+          1
+        ],
+        [
+          "angehören",
+          1
+        ],
+        [
+          "angehst",
+          1
+        ],
+        [
+          "angehangen",
+          1
+        ],
+        [
+          "angehäuft",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "angeht",
+          40
+        ],
+        [
+          "angehört",
+          28
+        ],
+        [
+          "rangehen",
+          15
+        ],
+        [
+          "angehalten",
+          12
+        ],
+        [
+          "rangeht",
+          9
+        ],
+        [
+          "angehen",
+          9
+        ],
+        [
+          "herangehensweise",
+          6
+        ],
+        [
+          "angehabt",
+          5
+        ],
+        [
+          "angehaucht",
+          2
+        ],
+        [
+          "herangehensweisen",
+          2
+        ],
+        [
+          "rangehst",
+          2
+        ],
+        [
+          "angehauchte",
+          2
+        ]
+      ],
+      "foldedThree": {
+        "positions": 108,
+        "forms": [
+          [
+            "angeht",
+            40
+          ],
+          [
+            "angehört",
+            28
+          ],
+          [
+            "angehalten",
+            12
+          ],
+          [
+            "angehen",
+            9
+          ],
+          [
+            "angehabt",
+            5
+          ],
+          [
+            "angehubt",
+            2
+          ],
+          [
+            "angehaucht",
+            2
+          ],
+          [
+            "angehauchte",
+            2
+          ],
+          [
+            "angehängt",
+            2
+          ],
+          [
+            "angeheiterten",
+            1
+          ],
+          [
+            "angehörigen",
+            1
+          ],
+          [
+            "angehören",
+            1
+          ],
+          [
+            "angehst",
+            1
+          ],
+          [
+            "angehangen",
+            1
+          ],
+          [
+            "angehäuft",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "angehe",
+        "positions": 10,
+        "forms": [
+          [
+            "angehen",
+            9
+          ],
+          [
+            "angeheiterten",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 28
+    },
+    {
+      "root": "gehen",
+      "prefix": "auf",
+      "query": "aufgehen",
+      "guard": "aufgeh",
+      "episodes": 43,
+      "rawPositions": 73,
+      "keptPositions": 73,
+      "startsWithPositions": 73,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 75,
+      "keptForms": [
+        [
+          "aufgehört",
+          37
+        ],
+        [
+          "aufgehalten",
+          7
+        ],
+        [
+          "aufgehoben",
+          7
+        ],
+        [
+          "aufgehen",
+          6
+        ],
+        [
+          "aufgeht",
+          6
+        ],
+        [
+          "aufgehangen",
+          4
+        ],
+        [
+          "aufgehängt",
+          3
+        ],
+        [
+          "aufgehende",
+          1
+        ],
+        [
+          "aufgeheilt",
+          1
+        ],
+        [
+          "aufgeholt",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "aufgehört",
+          37
+        ],
+        [
+          "aufgehoben",
+          7
+        ],
+        [
+          "aufgehalten",
+          7
+        ],
+        [
+          "aufgeht",
+          6
+        ],
+        [
+          "aufgehen",
+          6
+        ],
+        [
+          "aufgehangen",
+          4
+        ],
+        [
+          "aufgehängt",
+          3
+        ],
+        [
+          "aufgehende",
+          1
+        ],
+        [
+          "draufgehoben",
+          1
+        ],
+        [
+          "aufgeheilt",
+          1
+        ],
+        [
+          "draufgehauen",
+          1
+        ],
+        [
+          "aufgeholt",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 73,
+        "forms": [
+          [
+            "aufgehört",
+            37
+          ],
+          [
+            "aufgehalten",
+            7
+          ],
+          [
+            "aufgehoben",
+            7
+          ],
+          [
+            "aufgehen",
+            6
+          ],
+          [
+            "aufgeht",
+            6
+          ],
+          [
+            "aufgehangen",
+            4
+          ],
+          [
+            "aufgehängt",
+            3
+          ],
+          [
+            "aufgehende",
+            1
+          ],
+          [
+            "aufgeheilt",
+            1
+          ],
+          [
+            "aufgeholt",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "aufgehe",
+        "positions": 8,
+        "forms": [
+          [
+            "aufgehen",
+            6
+          ],
+          [
+            "aufgehende",
+            1
+          ],
+          [
+            "aufgeheilt",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 12
+    },
+    {
+      "root": "stehen",
+      "prefix": "her",
+      "query": "herstehen",
+      "guard": "herste",
+      "episodes": 99,
+      "rawPositions": 296,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 296,
+      "corpusGuardPositions": 37,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "her",
+          254
+        ],
+        [
+          "here",
+          39
+        ],
+        [
+          "here's",
+          1
+        ],
+        [
+          "her-bewegung",
+          1
+        ],
+        [
+          "hers",
+          1
+        ]
+      ],
+      "corpusGuardForms": [
+        [
+          "herstellen",
+          9
+        ],
+        [
+          "hersteller",
+          7
+        ],
+        [
+          "herstellt",
+          4
+        ],
+        [
+          "matratzenhersteller",
+          4
+        ],
+        [
+          "sichersten",
+          2
+        ],
+        [
+          "autohersteller",
+          2
+        ],
+        [
+          "kerzenhersteller",
+          1
+        ],
+        [
+          "hinterherstellt",
+          1
+        ],
+        [
+          "unsichersten",
+          1
+        ],
+        [
+          "schuhhersteller",
+          1
+        ],
+        [
+          "sonnenbrillenhersteller",
+          1
+        ],
+        [
+          "kronkorkenhersteller",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "hersteh",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 5,
+      "corpusGuardFormCount": 15
+    },
+    {
+      "root": "stehen",
+      "prefix": "vor",
+      "query": "vorstehen",
+      "guard": "vorste",
+      "episodes": 3,
+      "rawPositions": 4,
+      "keptPositions": 4,
+      "startsWithPositions": 4,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 408,
+      "keptForms": [
+        [
+          "vorstehende",
+          2
+        ],
+        [
+          "vorstehenden",
+          1
+        ],
+        [
+          "vorstehen",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "vorstellen",
+          228
+        ],
+        [
+          "vorstellung",
+          96
+        ],
+        [
+          "vorstellt",
+          21
+        ],
+        [
+          "vorstelle",
+          13
+        ],
+        [
+          "vorstellungen",
+          9
+        ],
+        [
+          "unvorstellbar",
+          6
+        ],
+        [
+          "vorstellungskraft",
+          5
+        ],
+        [
+          "vorstellst",
+          4
+        ],
+        [
+          "vorstellungsgespräche",
+          3
+        ],
+        [
+          "vorstellungsgespräch",
+          3
+        ],
+        [
+          "idealvorstellung",
+          2
+        ],
+        [
+          "vorstellbar",
+          2
+        ]
+      ],
+      "foldedThree": {
+        "positions": 4,
+        "forms": [
+          [
+            "vorstehende",
+            2
+          ],
+          [
+            "vorstehenden",
+            1
+          ],
+          [
+            "vorstehen",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "vorsteh",
+        "positions": 4,
+        "forms": [
+          [
+            "vorstehende",
+            2
+          ],
+          [
+            "vorstehenden",
+            1
+          ],
+          [
+            "vorstehen",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 27
+    },
+    {
+      "root": "stehen",
+      "prefix": "ver",
+      "query": "verstehen",
+      "guard": "verste",
+      "episodes": 101,
+      "rawPositions": 488,
+      "keptPositions": 488,
+      "startsWithPositions": 488,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 591,
+      "keptForms": [
+        [
+          "verstehe",
+          196
+        ],
+        [
+          "verstehen",
+          165
+        ],
+        [
+          "versteht",
+          77
+        ],
+        [
+          "verstehst",
+          41
+        ],
+        [
+          "versteh",
+          3
+        ],
+        [
+          "versteh's",
+          3
+        ],
+        [
+          "verstehung",
+          1
+        ],
+        [
+          "verstehen's",
+          1
+        ],
+        [
+          "verstehenden",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "verstehe",
+          196
+        ],
+        [
+          "verstehen",
+          165
+        ],
+        [
+          "versteht",
+          77
+        ],
+        [
+          "verstehst",
+          41
+        ],
+        [
+          "versteckt",
+          37
+        ],
+        [
+          "verstecken",
+          16
+        ],
+        [
+          "versteckte",
+          10
+        ],
+        [
+          "verstellen",
+          9
+        ],
+        [
+          "versteck",
+          6
+        ],
+        [
+          "verstecke",
+          5
+        ],
+        [
+          "versteh",
+          3
+        ],
+        [
+          "schmugglerversteck",
+          3
+        ]
+      ],
+      "foldedThree": {
+        "positions": 488,
+        "forms": [
+          [
+            "verstehe",
+            196
+          ],
+          [
+            "verstehen",
+            165
+          ],
+          [
+            "versteht",
+            77
+          ],
+          [
+            "verstehst",
+            41
+          ],
+          [
+            "versteh",
+            3
+          ],
+          [
+            "versteh's",
+            3
+          ],
+          [
+            "verstehung",
+            1
+          ],
+          [
+            "verstehen's",
+            1
+          ],
+          [
+            "verstehenden",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "versteh",
+        "positions": 488,
+        "forms": [
+          [
+            "verstehe",
+            196
+          ],
+          [
+            "verstehen",
+            165
+          ],
+          [
+            "versteht",
+            77
+          ],
+          [
+            "verstehst",
+            41
+          ],
+          [
+            "versteh",
+            3
+          ],
+          [
+            "versteh's",
+            3
+          ],
+          [
+            "verstehung",
+            1
+          ],
+          [
+            "verstehen's",
+            1
+          ],
+          [
+            "verstehenden",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 30
+    },
+    {
+      "root": "stehen",
+      "prefix": "an",
+      "query": "anstehen",
+      "guard": "anste",
+      "episodes": 4,
+      "rawPositions": 5,
+      "keptPositions": 5,
+      "startsWithPositions": 5,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 23,
+      "keptForms": [
+        [
+          "anstehen",
+          4
+        ],
+        [
+          "ansteht",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "anstellen",
+          7
+        ],
+        [
+          "anstehen",
+          4
+        ],
+        [
+          "anstellt",
+          3
+        ],
+        [
+          "anstecknadeln",
+          2
+        ],
+        [
+          "lebensanstellung",
+          1
+        ],
+        [
+          "ansteckst",
+          1
+        ],
+        [
+          "ansteht",
+          1
+        ],
+        [
+          "dranstellst",
+          1
+        ],
+        [
+          "anstellung",
+          1
+        ],
+        [
+          "anstelle",
+          1
+        ],
+        [
+          "anstellst",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 5,
+        "forms": [
+          [
+            "anstehen",
+            4
+          ],
+          [
+            "ansteht",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "ansteh",
+        "positions": 5,
+        "forms": [
+          [
+            "anstehen",
+            4
+          ],
+          [
+            "ansteht",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 11
+    },
+    {
+      "root": "stehen",
+      "prefix": "auf",
+      "query": "aufstehen",
+      "guard": "aufste",
+      "episodes": 20,
+      "rawPositions": 41,
+      "keptPositions": 41,
+      "startsWithPositions": 41,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 109,
+      "keptForms": [
+        [
+          "aufstehen",
+          32
+        ],
+        [
+          "aufsteht",
+          6
+        ],
+        [
+          "aufstehungssache",
+          1
+        ],
+        [
+          "aufstehst",
+          1
+        ],
+        [
+          "aufstehe",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "aufstehen",
+          32
+        ],
+        [
+          "draufsteht",
+          25
+        ],
+        [
+          "aufstellen",
+          12
+        ],
+        [
+          "draufstehen",
+          8
+        ],
+        [
+          "aufsteigen",
+          7
+        ],
+        [
+          "aufsteht",
+          6
+        ],
+        [
+          "draufstellen",
+          6
+        ],
+        [
+          "aufsterben",
+          1
+        ],
+        [
+          "aufstehungssache",
+          1
+        ],
+        [
+          "wiederaufstehen",
+          1
+        ],
+        [
+          "lieblingseinkaufstelle",
+          1
+        ],
+        [
+          "laufsteaks",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 41,
+        "forms": [
+          [
+            "aufstehen",
+            32
+          ],
+          [
+            "aufsteht",
+            6
+          ],
+          [
+            "aufstehungssache",
+            1
+          ],
+          [
+            "aufstehst",
+            1
+          ],
+          [
+            "aufstehe",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "aufsteh",
+        "positions": 41,
+        "forms": [
+          [
+            "aufstehen",
+            32
+          ],
+          [
+            "aufsteht",
+            6
+          ],
+          [
+            "aufstehungssache",
+            1
+          ],
+          [
+            "aufstehst",
+            1
+          ],
+          [
+            "aufstehe",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 20
+    },
+    {
+      "root": "stellen",
+      "prefix": "her",
+      "query": "herstellen",
+      "guard": "herste",
+      "episodes": 17,
+      "rawPositions": 22,
+      "keptPositions": 22,
+      "startsWithPositions": 20,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 37,
+      "keptForms": [
+        [
+          "herstellen",
+          9
+        ],
+        [
+          "hersteller",
+          7
+        ],
+        [
+          "herstellt",
+          4
+        ],
+        [
+          "app-hersteller",
+          1
+        ],
+        [
+          "massagesessel-hersteller",
+          1
+        ]
+      ],
+      "containsOnlyForms": [
+        [
+          "app-hersteller",
+          1
+        ],
+        [
+          "massagesessel-hersteller",
+          1
+        ]
+      ],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "herstellen",
+          9
+        ],
+        [
+          "hersteller",
+          7
+        ],
+        [
+          "herstellt",
+          4
+        ],
+        [
+          "matratzenhersteller",
+          4
+        ],
+        [
+          "sichersten",
+          2
+        ],
+        [
+          "autohersteller",
+          2
+        ],
+        [
+          "kerzenhersteller",
+          1
+        ],
+        [
+          "hinterherstellt",
+          1
+        ],
+        [
+          "unsichersten",
+          1
+        ],
+        [
+          "schuhhersteller",
+          1
+        ],
+        [
+          "sonnenbrillenhersteller",
+          1
+        ],
+        [
+          "kronkorkenhersteller",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 22,
+        "forms": [
+          [
+            "herstellen",
+            9
+          ],
+          [
+            "hersteller",
+            7
+          ],
+          [
+            "herstellt",
+            4
+          ],
+          [
+            "app-hersteller",
+            1
+          ],
+          [
+            "massagesessel-hersteller",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "herstel",
+        "positions": 22,
+        "forms": [
+          [
+            "herstellen",
+            9
+          ],
+          [
+            "hersteller",
+            7
+          ],
+          [
+            "herstellt",
+            4
+          ],
+          [
+            "app-hersteller",
+            1
+          ],
+          [
+            "massagesessel-hersteller",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 15
+    },
+    {
+      "root": "stellen",
+      "prefix": "vor",
+      "query": "vorstellen",
+      "guard": "vorste",
+      "episodes": 98,
+      "rawPositions": 391,
+      "keptPositions": 391,
+      "startsWithPositions": 389,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 408,
+      "keptForms": [
+        [
+          "vorstellen",
+          228
+        ],
+        [
+          "vorstellung",
+          96
+        ],
+        [
+          "vorstellt",
+          21
+        ],
+        [
+          "vorstelle",
+          13
+        ],
+        [
+          "vorstellungen",
+          9
+        ],
+        [
+          "vorstellungskraft",
+          5
+        ],
+        [
+          "vorstellst",
+          4
+        ],
+        [
+          "vorstellungsgespräch",
+          3
+        ],
+        [
+          "vorstellungsgespräche",
+          3
+        ],
+        [
+          "vorstellbar",
+          2
+        ],
+        [
+          "vorstellungskräftigen",
+          1
+        ],
+        [
+          "pantomime-vorstellung",
+          1
+        ],
+        [
+          "vorstelling",
+          1
+        ],
+        [
+          "vorstellungsgruppe",
+          1
+        ],
+        [
+          "vorstellungsgespräten",
+          1
+        ],
+        [
+          "premiere-vorstellung",
+          1
+        ],
+        [
+          "vorstellungsvideos",
+          1
+        ]
+      ],
+      "containsOnlyForms": [
+        [
+          "pantomime-vorstellung",
+          1
+        ],
+        [
+          "premiere-vorstellung",
+          1
+        ]
+      ],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "vorstellen",
+          228
+        ],
+        [
+          "vorstellung",
+          96
+        ],
+        [
+          "vorstellt",
+          21
+        ],
+        [
+          "vorstelle",
+          13
+        ],
+        [
+          "vorstellungen",
+          9
+        ],
+        [
+          "unvorstellbar",
+          6
+        ],
+        [
+          "vorstellungskraft",
+          5
+        ],
+        [
+          "vorstellst",
+          4
+        ],
+        [
+          "vorstellungsgespräche",
+          3
+        ],
+        [
+          "vorstellungsgespräch",
+          3
+        ],
+        [
+          "idealvorstellung",
+          2
+        ],
+        [
+          "vorstellbar",
+          2
+        ]
+      ],
+      "foldedThree": {
+        "positions": 391,
+        "forms": [
+          [
+            "vorstellen",
+            228
+          ],
+          [
+            "vorstellung",
+            96
+          ],
+          [
+            "vorstellt",
+            21
+          ],
+          [
+            "vorstelle",
+            13
+          ],
+          [
+            "vorstellungen",
+            9
+          ],
+          [
+            "vorstellungskraft",
+            5
+          ],
+          [
+            "vorstellst",
+            4
+          ],
+          [
+            "vorstellungsgespräch",
+            3
+          ],
+          [
+            "vorstellungsgespräche",
+            3
+          ],
+          [
+            "vorstellbar",
+            2
+          ],
+          [
+            "vorstellungskräftigen",
+            1
+          ],
+          [
+            "pantomime-vorstellung",
+            1
+          ],
+          [
+            "vorstelling",
+            1
+          ],
+          [
+            "vorstellungsgruppe",
+            1
+          ],
+          [
+            "vorstellungsgespräten",
+            1
+          ],
+          [
+            "premiere-vorstellung",
+            1
+          ],
+          [
+            "vorstellungsvideos",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "vorstel",
+        "positions": 391,
+        "forms": [
+          [
+            "vorstellen",
+            228
+          ],
+          [
+            "vorstellung",
+            96
+          ],
+          [
+            "vorstellt",
+            21
+          ],
+          [
+            "vorstelle",
+            13
+          ],
+          [
+            "vorstellungen",
+            9
+          ],
+          [
+            "vorstellungskraft",
+            5
+          ],
+          [
+            "vorstellst",
+            4
+          ],
+          [
+            "vorstellungsgespräch",
+            3
+          ],
+          [
+            "vorstellungsgespräche",
+            3
+          ],
+          [
+            "vorstellbar",
+            2
+          ],
+          [
+            "vorstellungskräftigen",
+            1
+          ],
+          [
+            "pantomime-vorstellung",
+            1
+          ],
+          [
+            "vorstelling",
+            1
+          ],
+          [
+            "vorstellungsgruppe",
+            1
+          ],
+          [
+            "vorstellungsgespräten",
+            1
+          ],
+          [
+            "premiere-vorstellung",
+            1
+          ],
+          [
+            "vorstellungsvideos",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 27
+    },
+    {
+      "root": "stellen",
+      "prefix": "ver",
+      "query": "verstellen",
+      "guard": "verste",
+      "episodes": 7,
+      "rawPositions": 11,
+      "keptPositions": 11,
+      "startsWithPositions": 11,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 591,
+      "keptForms": [
+        [
+          "verstellen",
+          9
+        ],
+        [
+          "verstellst",
+          2
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "verstehe",
+          196
+        ],
+        [
+          "verstehen",
+          165
+        ],
+        [
+          "versteht",
+          77
+        ],
+        [
+          "verstehst",
+          41
+        ],
+        [
+          "versteckt",
+          37
+        ],
+        [
+          "verstecken",
+          16
+        ],
+        [
+          "versteckte",
+          10
+        ],
+        [
+          "verstellen",
+          9
+        ],
+        [
+          "versteck",
+          6
+        ],
+        [
+          "verstecke",
+          5
+        ],
+        [
+          "versteh",
+          3
+        ],
+        [
+          "schmugglerversteck",
+          3
+        ]
+      ],
+      "foldedThree": {
+        "positions": 11,
+        "forms": [
+          [
+            "verstellen",
+            9
+          ],
+          [
+            "verstellst",
+            2
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "verstel",
+        "positions": 11,
+        "forms": [
+          [
+            "verstellen",
+            9
+          ],
+          [
+            "verstellst",
+            2
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 30
+    },
+    {
+      "root": "stellen",
+      "prefix": "an",
+      "query": "anstellen",
+      "guard": "anste",
+      "episodes": 13,
+      "rawPositions": 13,
+      "keptPositions": 13,
+      "startsWithPositions": 13,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 23,
+      "keptForms": [
+        [
+          "anstellen",
+          7
+        ],
+        [
+          "anstellt",
+          3
+        ],
+        [
+          "anstelle",
+          1
+        ],
+        [
+          "anstellst",
+          1
+        ],
+        [
+          "anstellung",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "anstellen",
+          7
+        ],
+        [
+          "anstehen",
+          4
+        ],
+        [
+          "anstellt",
+          3
+        ],
+        [
+          "anstecknadeln",
+          2
+        ],
+        [
+          "lebensanstellung",
+          1
+        ],
+        [
+          "ansteckst",
+          1
+        ],
+        [
+          "ansteht",
+          1
+        ],
+        [
+          "dranstellst",
+          1
+        ],
+        [
+          "anstellung",
+          1
+        ],
+        [
+          "anstelle",
+          1
+        ],
+        [
+          "anstellst",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 13,
+        "forms": [
+          [
+            "anstellen",
+            7
+          ],
+          [
+            "anstellt",
+            3
+          ],
+          [
+            "anstelle",
+            1
+          ],
+          [
+            "anstellst",
+            1
+          ],
+          [
+            "anstellung",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "anstel",
+        "positions": 13,
+        "forms": [
+          [
+            "anstellen",
+            7
+          ],
+          [
+            "anstellt",
+            3
+          ],
+          [
+            "anstelle",
+            1
+          ],
+          [
+            "anstellst",
+            1
+          ],
+          [
+            "anstellung",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 11
+    },
+    {
+      "root": "stellen",
+      "prefix": "auf",
+      "query": "aufstellen",
+      "guard": "aufste",
+      "episodes": 16,
+      "rawPositions": 16,
+      "keptPositions": 16,
+      "startsWithPositions": 14,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 109,
+      "keptForms": [
+        [
+          "aufstellen",
+          12
+        ],
+        [
+          "aufstellung",
+          1
+        ],
+        [
+          "aufstelle",
+          1
+        ],
+        [
+          "pub-aufsteller",
+          1
+        ],
+        [
+          "papp-aufsteller",
+          1
+        ]
+      ],
+      "containsOnlyForms": [
+        [
+          "pub-aufsteller",
+          1
+        ],
+        [
+          "papp-aufsteller",
+          1
+        ]
+      ],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "aufstehen",
+          32
+        ],
+        [
+          "draufsteht",
+          25
+        ],
+        [
+          "aufstellen",
+          12
+        ],
+        [
+          "draufstehen",
+          8
+        ],
+        [
+          "aufsteigen",
+          7
+        ],
+        [
+          "aufsteht",
+          6
+        ],
+        [
+          "draufstellen",
+          6
+        ],
+        [
+          "aufsterben",
+          1
+        ],
+        [
+          "aufstehungssache",
+          1
+        ],
+        [
+          "wiederaufstehen",
+          1
+        ],
+        [
+          "lieblingseinkaufstelle",
+          1
+        ],
+        [
+          "laufsteaks",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 16,
+        "forms": [
+          [
+            "aufstellen",
+            12
+          ],
+          [
+            "aufstellung",
+            1
+          ],
+          [
+            "aufstelle",
+            1
+          ],
+          [
+            "pub-aufsteller",
+            1
+          ],
+          [
+            "papp-aufsteller",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "aufstel",
+        "positions": 16,
+        "forms": [
+          [
+            "aufstellen",
+            12
+          ],
+          [
+            "aufstellung",
+            1
+          ],
+          [
+            "aufstelle",
+            1
+          ],
+          [
+            "pub-aufsteller",
+            1
+          ],
+          [
+            "papp-aufsteller",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 20
+    },
+    {
+      "root": "stehlen",
+      "prefix": "her",
+      "query": "herstehlen",
+      "guard": "herste",
+      "episodes": 99,
+      "rawPositions": 296,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 296,
+      "corpusGuardPositions": 37,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "her",
+          254
+        ],
+        [
+          "here",
+          39
+        ],
+        [
+          "here's",
+          1
+        ],
+        [
+          "her-bewegung",
+          1
+        ],
+        [
+          "hers",
+          1
+        ]
+      ],
+      "corpusGuardForms": [
+        [
+          "herstellen",
+          9
+        ],
+        [
+          "hersteller",
+          7
+        ],
+        [
+          "herstellt",
+          4
+        ],
+        [
+          "matratzenhersteller",
+          4
+        ],
+        [
+          "sichersten",
+          2
+        ],
+        [
+          "autohersteller",
+          2
+        ],
+        [
+          "kerzenhersteller",
+          1
+        ],
+        [
+          "hinterherstellt",
+          1
+        ],
+        [
+          "unsichersten",
+          1
+        ],
+        [
+          "schuhhersteller",
+          1
+        ],
+        [
+          "sonnenbrillenhersteller",
+          1
+        ],
+        [
+          "kronkorkenhersteller",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "hersteh",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 5,
+      "corpusGuardFormCount": 15
+    },
+    {
+      "root": "stehlen",
+      "prefix": "vor",
+      "query": "vorstehlen",
+      "guard": "vorste",
+      "episodes": 3,
+      "rawPositions": 4,
+      "keptPositions": 4,
+      "startsWithPositions": 4,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 408,
+      "keptForms": [
+        [
+          "vorstehende",
+          2
+        ],
+        [
+          "vorstehenden",
+          1
+        ],
+        [
+          "vorstehen",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "vorstellen",
+          228
+        ],
+        [
+          "vorstellung",
+          96
+        ],
+        [
+          "vorstellt",
+          21
+        ],
+        [
+          "vorstelle",
+          13
+        ],
+        [
+          "vorstellungen",
+          9
+        ],
+        [
+          "unvorstellbar",
+          6
+        ],
+        [
+          "vorstellungskraft",
+          5
+        ],
+        [
+          "vorstellst",
+          4
+        ],
+        [
+          "vorstellungsgespräche",
+          3
+        ],
+        [
+          "vorstellungsgespräch",
+          3
+        ],
+        [
+          "idealvorstellung",
+          2
+        ],
+        [
+          "vorstellbar",
+          2
+        ]
+      ],
+      "foldedThree": {
+        "positions": 4,
+        "forms": [
+          [
+            "vorstehende",
+            2
+          ],
+          [
+            "vorstehenden",
+            1
+          ],
+          [
+            "vorstehen",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "vorsteh",
+        "positions": 4,
+        "forms": [
+          [
+            "vorstehende",
+            2
+          ],
+          [
+            "vorstehenden",
+            1
+          ],
+          [
+            "vorstehen",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 27
+    },
+    {
+      "root": "stehlen",
+      "prefix": "ver",
+      "query": "verstehlen",
+      "guard": "verste",
+      "episodes": 101,
+      "rawPositions": 411,
+      "keptPositions": 411,
+      "startsWithPositions": 411,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 591,
+      "keptForms": [
+        [
+          "verstehe",
+          196
+        ],
+        [
+          "verstehen",
+          165
+        ],
+        [
+          "verstehst",
+          41
+        ],
+        [
+          "versteh",
+          3
+        ],
+        [
+          "versteh's",
+          3
+        ],
+        [
+          "verstehen's",
+          1
+        ],
+        [
+          "verstehung",
+          1
+        ],
+        [
+          "verstehenden",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "verstehe",
+          196
+        ],
+        [
+          "verstehen",
+          165
+        ],
+        [
+          "versteht",
+          77
+        ],
+        [
+          "verstehst",
+          41
+        ],
+        [
+          "versteckt",
+          37
+        ],
+        [
+          "verstecken",
+          16
+        ],
+        [
+          "versteckte",
+          10
+        ],
+        [
+          "verstellen",
+          9
+        ],
+        [
+          "versteck",
+          6
+        ],
+        [
+          "verstecke",
+          5
+        ],
+        [
+          "versteh",
+          3
+        ],
+        [
+          "schmugglerversteck",
+          3
+        ]
+      ],
+      "foldedThree": {
+        "positions": 411,
+        "forms": [
+          [
+            "verstehe",
+            196
+          ],
+          [
+            "verstehen",
+            165
+          ],
+          [
+            "verstehst",
+            41
+          ],
+          [
+            "versteh",
+            3
+          ],
+          [
+            "versteh's",
+            3
+          ],
+          [
+            "verstehen's",
+            1
+          ],
+          [
+            "verstehung",
+            1
+          ],
+          [
+            "verstehenden",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "versteh",
+        "positions": 411,
+        "forms": [
+          [
+            "verstehe",
+            196
+          ],
+          [
+            "verstehen",
+            165
+          ],
+          [
+            "verstehst",
+            41
+          ],
+          [
+            "versteh",
+            3
+          ],
+          [
+            "versteh's",
+            3
+          ],
+          [
+            "verstehen's",
+            1
+          ],
+          [
+            "verstehung",
+            1
+          ],
+          [
+            "verstehenden",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 30
+    },
+    {
+      "root": "stehlen",
+      "prefix": "an",
+      "query": "anstehlen",
+      "guard": "anste",
+      "episodes": 3,
+      "rawPositions": 4,
+      "keptPositions": 4,
+      "startsWithPositions": 4,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 23,
+      "keptForms": [
+        [
+          "anstehen",
+          4
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "anstellen",
+          7
+        ],
+        [
+          "anstehen",
+          4
+        ],
+        [
+          "anstellt",
+          3
+        ],
+        [
+          "anstecknadeln",
+          2
+        ],
+        [
+          "lebensanstellung",
+          1
+        ],
+        [
+          "ansteckst",
+          1
+        ],
+        [
+          "ansteht",
+          1
+        ],
+        [
+          "dranstellst",
+          1
+        ],
+        [
+          "anstellung",
+          1
+        ],
+        [
+          "anstelle",
+          1
+        ],
+        [
+          "anstellst",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 4,
+        "forms": [
+          [
+            "anstehen",
+            4
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "ansteh",
+        "positions": 4,
+        "forms": [
+          [
+            "anstehen",
+            4
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 11
+    },
+    {
+      "root": "stehlen",
+      "prefix": "auf",
+      "query": "aufstehlen",
+      "guard": "aufste",
+      "episodes": 17,
+      "rawPositions": 34,
+      "keptPositions": 34,
+      "startsWithPositions": 34,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 109,
+      "keptForms": [
+        [
+          "aufstehen",
+          32
+        ],
+        [
+          "aufstehst",
+          1
+        ],
+        [
+          "aufstehe",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "aufstehen",
+          32
+        ],
+        [
+          "draufsteht",
+          25
+        ],
+        [
+          "aufstellen",
+          12
+        ],
+        [
+          "draufstehen",
+          8
+        ],
+        [
+          "aufsteigen",
+          7
+        ],
+        [
+          "aufsteht",
+          6
+        ],
+        [
+          "draufstellen",
+          6
+        ],
+        [
+          "aufsterben",
+          1
+        ],
+        [
+          "aufstehungssache",
+          1
+        ],
+        [
+          "wiederaufstehen",
+          1
+        ],
+        [
+          "lieblingseinkaufstelle",
+          1
+        ],
+        [
+          "laufsteaks",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 34,
+        "forms": [
+          [
+            "aufstehen",
+            32
+          ],
+          [
+            "aufstehst",
+            1
+          ],
+          [
+            "aufstehe",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "aufsteh",
+        "positions": 34,
+        "forms": [
+          [
+            "aufstehen",
+            32
+          ],
+          [
+            "aufstehst",
+            1
+          ],
+          [
+            "aufstehe",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 20
+    },
+    {
+      "root": "laufen",
+      "prefix": "her",
+      "query": "herlaufen",
+      "guard": "herlau",
+      "episodes": 2,
+      "rawPositions": 2,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 2,
+      "corpusGuardPositions": 3,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "herläuft",
+          2
+        ]
+      ],
+      "corpusGuardForms": [
+        [
+          "hinterherlaufen",
+          3
+        ]
+      ],
+      "foldedThree": {
+        "positions": 2,
+        "forms": [
+          [
+            "herläuft",
+            2
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "herlauf",
+        "positions": 2,
+        "forms": [
+          [
+            "herläuft",
+            2
+          ]
+        ]
+      },
+      "rejectedFormCount": 1,
+      "corpusGuardFormCount": 1
+    },
+    {
+      "root": "laufen",
+      "prefix": "vor",
+      "query": "vorlaufen",
+      "guard": "vorlau",
+      "episodes": 2,
+      "rawPositions": 2,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 2,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "vorläuft",
+          1
+        ],
+        [
+          "vorläufige",
+          1
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 2,
+        "forms": [
+          [
+            "vorläuft",
+            1
+          ],
+          [
+            "vorläufige",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "vorlauf",
+        "positions": 2,
+        "forms": [
+          [
+            "vorläuft",
+            1
+          ],
+          [
+            "vorläufige",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 2,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "laufen",
+      "prefix": "ver",
+      "query": "verlaufen",
+      "guard": "verlau",
+      "episodes": 17,
+      "rawPositions": 19,
+      "keptPositions": 17,
+      "startsWithPositions": 17,
+      "rejectedPositions": 2,
+      "corpusGuardPositions": 22,
+      "keptForms": [
+        [
+          "verlauf",
+          9
+        ],
+        [
+          "verlaufen",
+          5
+        ],
+        [
+          "verlaufe",
+          1
+        ],
+        [
+          "verlaufskurven",
+          1
+        ],
+        [
+          "verlaufbahn",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "verläuft",
+          2
+        ]
+      ],
+      "corpusGuardForms": [
+        [
+          "verlauf",
+          9
+        ],
+        [
+          "verlaufen",
+          5
+        ],
+        [
+          "verlaufskurven",
+          1
+        ],
+        [
+          "chatverlauf",
+          1
+        ],
+        [
+          "verlauten",
+          1
+        ],
+        [
+          "farbverlauf",
+          1
+        ],
+        [
+          "browserverlauf",
+          1
+        ],
+        [
+          "verlaufe",
+          1
+        ],
+        [
+          "verlaufbahn",
+          1
+        ],
+        [
+          "verlausten",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 19,
+        "forms": [
+          [
+            "verlauf",
+            9
+          ],
+          [
+            "verlaufen",
+            5
+          ],
+          [
+            "verläuft",
+            2
+          ],
+          [
+            "verlaufe",
+            1
+          ],
+          [
+            "verlaufskurven",
+            1
+          ],
+          [
+            "verlaufbahn",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "verlauf",
+        "positions": 19,
+        "forms": [
+          [
+            "verlauf",
+            9
+          ],
+          [
+            "verlaufen",
+            5
+          ],
+          [
+            "verläuft",
+            2
+          ],
+          [
+            "verlaufe",
+            1
+          ],
+          [
+            "verlaufskurven",
+            1
+          ],
+          [
+            "verlaufbahn",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 1,
+      "corpusGuardFormCount": 10
+    },
+    {
+      "root": "laufen",
+      "prefix": "an",
+      "query": "anlaufen",
+      "guard": "anlau",
+      "episodes": 8,
+      "rawPositions": 8,
+      "keptPositions": 5,
+      "startsWithPositions": 5,
+      "rejectedPositions": 3,
+      "corpusGuardPositions": 8,
+      "keptForms": [
+        [
+          "anlauf",
+          3
+        ],
+        [
+          "anlaufen",
+          1
+        ],
+        [
+          "anlaufpunkte",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "anläufe",
+          2
+        ],
+        [
+          "anläufen",
+          1
+        ]
+      ],
+      "corpusGuardForms": [
+        [
+          "anlauf",
+          3
+        ],
+        [
+          "lebensanlauf",
+          3
+        ],
+        [
+          "anlaufen",
+          1
+        ],
+        [
+          "anlaufpunkte",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 8,
+        "forms": [
+          [
+            "anlauf",
+            3
+          ],
+          [
+            "anläufe",
+            2
+          ],
+          [
+            "anlaufen",
+            1
+          ],
+          [
+            "anläufen",
+            1
+          ],
+          [
+            "anlaufpunkte",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "anlauf",
+        "positions": 8,
+        "forms": [
+          [
+            "anlauf",
+            3
+          ],
+          [
+            "anläufe",
+            2
+          ],
+          [
+            "anlaufen",
+            1
+          ],
+          [
+            "anläufen",
+            1
+          ],
+          [
+            "anlaufpunkte",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 2,
+      "corpusGuardFormCount": 4
+    },
+    {
+      "root": "laufen",
+      "prefix": "auf",
+      "query": "auflaufen",
+      "guard": "auflau",
+      "episodes": 3,
+      "rawPositions": 6,
+      "keptPositions": 5,
+      "startsWithPositions": 5,
+      "rejectedPositions": 1,
+      "corpusGuardPositions": 6,
+      "keptForms": [
+        [
+          "auflaufen",
+          5
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "aufläuft",
+          1
+        ]
+      ],
+      "corpusGuardForms": [
+        [
+          "auflaufen",
+          5
+        ],
+        [
+          "fitnesslauflaufbänder",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 6,
+        "forms": [
+          [
+            "auflaufen",
+            5
+          ],
+          [
+            "aufläuft",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "auflauf",
+        "positions": 6,
+        "forms": [
+          [
+            "auflaufen",
+            5
+          ],
+          [
+            "aufläuft",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 1,
+      "corpusGuardFormCount": 2
+    },
+    {
+      "root": "lesen",
+      "prefix": "her",
+      "query": "herlesen",
+      "guard": "herles",
+      "episodes": 99,
+      "rawPositions": 296,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 296,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "her",
+          254
+        ],
+        [
+          "here",
+          39
+        ],
+        [
+          "here's",
+          1
+        ],
+        [
+          "her-bewegung",
+          1
+        ],
+        [
+          "hers",
+          1
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "herlese",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 5,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "lesen",
+      "prefix": "vor",
+      "query": "vorlesen",
+      "guard": "vorles",
+      "episodes": 32,
+      "rawPositions": 61,
+      "keptPositions": 61,
+      "startsWithPositions": 61,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 62,
+      "keptForms": [
+        [
+          "vorlesen",
+          48
+        ],
+        [
+          "vorlesung",
+          6
+        ],
+        [
+          "vorlesungen",
+          5
+        ],
+        [
+          "vorlesungssälen",
+          1
+        ],
+        [
+          "vorlese",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "vorlesen",
+          48
+        ],
+        [
+          "vorlesung",
+          6
+        ],
+        [
+          "vorlesungen",
+          5
+        ],
+        [
+          "vorlesungssälen",
+          1
+        ],
+        [
+          "ethikvorlesung",
+          1
+        ],
+        [
+          "vorlese",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 61,
+        "forms": [
+          [
+            "vorlesen",
+            48
+          ],
+          [
+            "vorlesung",
+            6
+          ],
+          [
+            "vorlesungen",
+            5
+          ],
+          [
+            "vorlesungssälen",
+            1
+          ],
+          [
+            "vorlese",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "vorlese",
+        "positions": 49,
+        "forms": [
+          [
+            "vorlesen",
+            48
+          ],
+          [
+            "vorlese",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 6
+    },
+    {
+      "root": "lesen",
+      "prefix": "ver",
+      "query": "verlesen",
+      "guard": "verles",
+      "episodes": 2,
+      "rawPositions": 2,
+      "keptPositions": 2,
+      "startsWithPositions": 2,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 2,
+      "keptForms": [
+        [
+          "verlesen",
+          2
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "verlesen",
+          2
+        ]
+      ],
+      "foldedThree": {
+        "positions": 2,
+        "forms": [
+          [
+            "verlesen",
+            2
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "verlese",
+        "positions": 2,
+        "forms": [
+          [
+            "verlesen",
+            2
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 1
+    },
+    {
+      "root": "lesen",
+      "prefix": "an",
+      "query": "anlesen",
+      "guard": "anles",
+      "episodes": 2,
+      "rawPositions": 2,
+      "keptPositions": 2,
+      "startsWithPositions": 2,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 2,
+      "keptForms": [
+        [
+          "anlesen",
+          2
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "anlesen",
+          2
+        ]
+      ],
+      "foldedThree": {
+        "positions": 2,
+        "forms": [
+          [
+            "anlesen",
+            2
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "anlese",
+        "positions": 2,
+        "forms": [
+          [
+            "anlesen",
+            2
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 1
+    },
+    {
+      "root": "lesen",
+      "prefix": "auf",
+      "query": "auflesen",
+      "guard": "aufles",
+      "episodes": 106,
+      "rawPositions": 6703,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 6703,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "auf",
+          6587
+        ],
+        [
+          "aufs",
+          116
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "auflese",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 2,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "suchen",
+      "prefix": "her",
+      "query": "hersuchen",
+      "guard": "hersuc",
+      "episodes": 99,
+      "rawPositions": 296,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 296,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "her",
+          254
+        ],
+        [
+          "here",
+          39
+        ],
+        [
+          "here's",
+          1
+        ],
+        [
+          "her-bewegung",
+          1
+        ],
+        [
+          "hers",
+          1
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "hersuch",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 5,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "suchen",
+      "prefix": "vor",
+      "query": "vorsuchen",
+      "guard": "vorsuc",
+      "episodes": 0,
+      "rawPositions": 0,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "vorsuch",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "suchen",
+      "prefix": "ver",
+      "query": "versuchen",
+      "guard": "versuc",
+      "episodes": 103,
+      "rawPositions": 658,
+      "keptPositions": 658,
+      "startsWithPositions": 657,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 669,
+      "keptForms": [
+        [
+          "versucht",
+          254
+        ],
+        [
+          "versuchen",
+          155
+        ],
+        [
+          "versuche",
+          125
+        ],
+        [
+          "versuchst",
+          58
+        ],
+        [
+          "versuch",
+          44
+        ],
+        [
+          "versuch's",
+          12
+        ],
+        [
+          "versuchte",
+          3
+        ],
+        [
+          "versuchung",
+          2
+        ],
+        [
+          "versucht's",
+          1
+        ],
+        [
+          "versuchs",
+          1
+        ],
+        [
+          "versuches",
+          1
+        ],
+        [
+          "flirt-versuch",
+          1
+        ],
+        [
+          "versuchenamo",
+          1
+        ]
+      ],
+      "containsOnlyForms": [
+        [
+          "flirt-versuch",
+          1
+        ]
+      ],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "versucht",
+          254
+        ],
+        [
+          "versuchen",
+          155
+        ],
+        [
+          "versuche",
+          125
+        ],
+        [
+          "versuchst",
+          58
+        ],
+        [
+          "versuch",
+          44
+        ],
+        [
+          "versuch's",
+          12
+        ],
+        [
+          "versuchte",
+          3
+        ],
+        [
+          "versuchung",
+          2
+        ],
+        [
+          "putschversuch",
+          2
+        ],
+        [
+          "pumpversuch",
+          1
+        ],
+        [
+          "feldversuch",
+          1
+        ],
+        [
+          "annäherungsversuch",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 658,
+        "forms": [
+          [
+            "versucht",
+            254
+          ],
+          [
+            "versuchen",
+            155
+          ],
+          [
+            "versuche",
+            125
+          ],
+          [
+            "versuchst",
+            58
+          ],
+          [
+            "versuch",
+            44
+          ],
+          [
+            "versuch's",
+            12
+          ],
+          [
+            "versuchte",
+            3
+          ],
+          [
+            "versuchung",
+            2
+          ],
+          [
+            "versucht's",
+            1
+          ],
+          [
+            "versuchs",
+            1
+          ],
+          [
+            "versuches",
+            1
+          ],
+          [
+            "flirt-versuch",
+            1
+          ],
+          [
+            "versuchenamo",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "versuch",
+        "positions": 658,
+        "forms": [
+          [
+            "versucht",
+            254
+          ],
+          [
+            "versuchen",
+            155
+          ],
+          [
+            "versuche",
+            125
+          ],
+          [
+            "versuchst",
+            58
+          ],
+          [
+            "versuch",
+            44
+          ],
+          [
+            "versuch's",
+            12
+          ],
+          [
+            "versuchte",
+            3
+          ],
+          [
+            "versuchung",
+            2
+          ],
+          [
+            "versucht's",
+            1
+          ],
+          [
+            "versuchs",
+            1
+          ],
+          [
+            "versuches",
+            1
+          ],
+          [
+            "flirt-versuch",
+            1
+          ],
+          [
+            "versuchenamo",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 23
+    },
+    {
+      "root": "suchen",
+      "prefix": "an",
+      "query": "ansuchen",
+      "guard": "ansuc",
+      "episodes": 37,
+      "rawPositions": 52,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 52,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "ans",
+          52
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "ansuch",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 1,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "suchen",
+      "prefix": "auf",
+      "query": "aufsuchen",
+      "guard": "aufsuc",
+      "episodes": 1,
+      "rawPositions": 1,
+      "keptPositions": 1,
+      "startsWithPositions": 1,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 2,
+      "keptForms": [
+        [
+          "aufsuche",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "kaufsucht",
+          1
+        ],
+        [
+          "aufsuche",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 1,
+        "forms": [
+          [
+            "aufsuche",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "aufsuch",
+        "positions": 1,
+        "forms": [
+          [
+            "aufsuche",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 2
+    },
+    {
+      "root": "schlafen",
+      "prefix": "her",
+      "query": "herschlafen",
+      "guard": "hersch",
+      "episodes": 99,
+      "rawPositions": 296,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 296,
+      "corpusGuardPositions": 2,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "her",
+          254
+        ],
+        [
+          "here",
+          39
+        ],
+        [
+          "here's",
+          1
+        ],
+        [
+          "her-bewegung",
+          1
+        ],
+        [
+          "hers",
+          1
+        ]
+      ],
+      "corpusGuardForms": [
+        [
+          "verbraucherschutzorganisation",
+          1
+        ],
+        [
+          "herscharen",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "herschl",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 5,
+      "corpusGuardFormCount": 2
+    },
+    {
+      "root": "schlafen",
+      "prefix": "vor",
+      "query": "vorschlafen",
+      "guard": "vorsch",
+      "episodes": 0,
+      "rawPositions": 0,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 74,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "vorschläge",
+          14
+        ],
+        [
+          "vorschlag",
+          12
+        ],
+        [
+          "vorschlagen",
+          7
+        ],
+        [
+          "themenvorschlag",
+          7
+        ],
+        [
+          "themenvorschläge",
+          7
+        ],
+        [
+          "vorschreibt",
+          4
+        ],
+        [
+          "verbesserungsvorschläge",
+          3
+        ],
+        [
+          "vorschau",
+          3
+        ],
+        [
+          "serviervorschlag",
+          2
+        ],
+        [
+          "vorschrift",
+          1
+        ],
+        [
+          "serviervorschläge",
+          1
+        ],
+        [
+          "designvorschläge",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "vorschl",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 24
+    },
+    {
+      "root": "schlafen",
+      "prefix": "ver",
+      "query": "verschlafen",
+      "guard": "versch",
+      "episodes": 6,
+      "rawPositions": 6,
+      "keptPositions": 6,
+      "startsWithPositions": 6,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 505,
+      "keptForms": [
+        [
+          "verschlafen",
+          5
+        ],
+        [
+          "verschläft",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "verschiedene",
+          175
+        ],
+        [
+          "verschiedenen",
+          62
+        ],
+        [
+          "verschwinden",
+          17
+        ],
+        [
+          "verschwindet",
+          16
+        ],
+        [
+          "verschoben",
+          11
+        ],
+        [
+          "verschwörungstheorie",
+          9
+        ],
+        [
+          "verschicken",
+          9
+        ],
+        [
+          "verschieben",
+          9
+        ],
+        [
+          "verschwunden",
+          9
+        ],
+        [
+          "klettverschluss",
+          9
+        ],
+        [
+          "verschluckt",
+          7
+        ],
+        [
+          "verschenken",
+          6
+        ]
+      ],
+      "foldedThree": {
+        "positions": 6,
+        "forms": [
+          [
+            "verschlafen",
+            5
+          ],
+          [
+            "verschläft",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "verschl",
+        "positions": 6,
+        "forms": [
+          [
+            "verschlafen",
+            5
+          ],
+          [
+            "verschläft",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 122
+    },
+    {
+      "root": "schlafen",
+      "prefix": "an",
+      "query": "anschlafen",
+      "guard": "ansch",
+      "episodes": 1,
+      "rawPositions": 1,
+      "keptPositions": 1,
+      "startsWithPositions": 1,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 329,
+      "keptForms": [
+        [
+          "ansch",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "anscheinend",
+          147
+        ],
+        [
+          "anschauen",
+          65
+        ],
+        [
+          "anschaut",
+          20
+        ],
+        [
+          "anschaust",
+          8
+        ],
+        [
+          "anschlag",
+          7
+        ],
+        [
+          "anschnallen",
+          5
+        ],
+        [
+          "anschluss",
+          5
+        ],
+        [
+          "anschreiben",
+          5
+        ],
+        [
+          "anschaue",
+          5
+        ],
+        [
+          "anschließen",
+          4
+        ],
+        [
+          "anschaffen",
+          4
+        ],
+        [
+          "anschmeißen",
+          3
+        ]
+      ],
+      "foldedThree": {
+        "positions": 1,
+        "forms": [
+          [
+            "ansch",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "anschl",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 52
+    },
+    {
+      "root": "schlafen",
+      "prefix": "auf",
+      "query": "aufschlafen",
+      "guard": "aufsch",
+      "episodes": 1,
+      "rawPositions": 1,
+      "keptPositions": 1,
+      "startsWithPositions": 1,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 83,
+      "keptForms": [
+        [
+          "aufschlafen",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "aufschieben",
+          14
+        ],
+        [
+          "aufschreiben",
+          12
+        ],
+        [
+          "aufschlag",
+          7
+        ],
+        [
+          "draufschreiben",
+          5
+        ],
+        [
+          "aufschreibt",
+          3
+        ],
+        [
+          "aufschauen",
+          3
+        ],
+        [
+          "aufschlagen",
+          3
+        ],
+        [
+          "draufschreibt",
+          2
+        ],
+        [
+          "aufschreibe",
+          2
+        ],
+        [
+          "aufschiebt",
+          2
+        ],
+        [
+          "aufschnittkäse",
+          2
+        ],
+        [
+          "aufschlägt",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 1,
+        "forms": [
+          [
+            "aufschlafen",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "aufschl",
+        "positions": 1,
+        "forms": [
+          [
+            "aufschlafen",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 39
+    },
+    {
+      "root": "spielen",
+      "prefix": "her",
+      "query": "herspielen",
+      "guard": "herspi",
+      "episodes": 99,
+      "rawPositions": 296,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 296,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "her",
+          254
+        ],
+        [
+          "here",
+          39
+        ],
+        [
+          "here's",
+          1
+        ],
+        [
+          "her-bewegung",
+          1
+        ],
+        [
+          "hers",
+          1
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "herspie",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 5,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "spielen",
+      "prefix": "vor",
+      "query": "vorspielen",
+      "guard": "vorspi",
+      "episodes": 5,
+      "rawPositions": 7,
+      "keptPositions": 7,
+      "startsWithPositions": 7,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 7,
+      "keptForms": [
+        [
+          "vorspielen",
+          5
+        ],
+        [
+          "vorspielabende",
+          2
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "vorspielen",
+          5
+        ],
+        [
+          "vorspielabende",
+          2
+        ]
+      ],
+      "foldedThree": {
+        "positions": 7,
+        "forms": [
+          [
+            "vorspielen",
+            5
+          ],
+          [
+            "vorspielabende",
+            2
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "vorspie",
+        "positions": 7,
+        "forms": [
+          [
+            "vorspielen",
+            5
+          ],
+          [
+            "vorspielabende",
+            2
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 2
+    },
+    {
+      "root": "spielen",
+      "prefix": "ver",
+      "query": "verspielen",
+      "guard": "verspi",
+      "episodes": 3,
+      "rawPositions": 3,
+      "keptPositions": 3,
+      "startsWithPositions": 3,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 3,
+      "keptForms": [
+        [
+          "verspielt",
+          2
+        ],
+        [
+          "verspieler",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "verspielt",
+          2
+        ],
+        [
+          "verspieler",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 3,
+        "forms": [
+          [
+            "verspielt",
+            2
+          ],
+          [
+            "verspieler",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "verspie",
+        "positions": 3,
+        "forms": [
+          [
+            "verspielt",
+            2
+          ],
+          [
+            "verspieler",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 2
+    },
+    {
+      "root": "spielen",
+      "prefix": "an",
+      "query": "anspielen",
+      "guard": "anspi",
+      "episodes": 8,
+      "rawPositions": 10,
+      "keptPositions": 10,
+      "startsWithPositions": 10,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 12,
+      "keptForms": [
+        [
+          "anspielungen",
+          4
+        ],
+        [
+          "anspielen",
+          3
+        ],
+        [
+          "anspielung",
+          2
+        ],
+        [
+          "anspielst",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "anspielungen",
+          4
+        ],
+        [
+          "anspielen",
+          3
+        ],
+        [
+          "anspielung",
+          2
+        ],
+        [
+          "anspielst",
+          1
+        ],
+        [
+          "planspiele",
+          1
+        ],
+        [
+          "anspitzer",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 10,
+        "forms": [
+          [
+            "anspielungen",
+            4
+          ],
+          [
+            "anspielen",
+            3
+          ],
+          [
+            "anspielung",
+            2
+          ],
+          [
+            "anspielst",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "anspie",
+        "positions": 10,
+        "forms": [
+          [
+            "anspielungen",
+            4
+          ],
+          [
+            "anspielen",
+            3
+          ],
+          [
+            "anspielung",
+            2
+          ],
+          [
+            "anspielst",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 6
+    },
+    {
+      "root": "spielen",
+      "prefix": "auf",
+      "query": "aufspielen",
+      "guard": "aufspi",
+      "episodes": 106,
+      "rawPositions": 6703,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 6703,
+      "corpusGuardPositions": 2,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "auf",
+          6587
+        ],
+        [
+          "aufs",
+          116
+        ]
+      ],
+      "corpusGuardForms": [
+        [
+          "aufspießt",
+          2
+        ]
+      ],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "aufspie",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 2,
+      "corpusGuardFormCount": 1
+    },
+    {
+      "root": "sprechen",
+      "prefix": "her",
+      "query": "hersprechen",
+      "guard": "herspr",
+      "episodes": 99,
+      "rawPositions": 296,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 296,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "her",
+          254
+        ],
+        [
+          "here",
+          39
+        ],
+        [
+          "here's",
+          1
+        ],
+        [
+          "her-bewegung",
+          1
+        ],
+        [
+          "hers",
+          1
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "herspre",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 5,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "sprechen",
+      "prefix": "vor",
+      "query": "vorsprechen",
+      "guard": "vorspr",
+      "episodes": 0,
+      "rawPositions": 0,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 3,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "vorsprung",
+          1
+        ],
+        [
+          "bevorsprechen",
+          1
+        ],
+        [
+          "vorspricht",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "vorspre",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 3
+    },
+    {
+      "root": "sprechen",
+      "prefix": "ver",
+      "query": "versprechen",
+      "guard": "verspr",
+      "episodes": 21,
+      "rawPositions": 26,
+      "keptPositions": 26,
+      "startsWithPositions": 26,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 51,
+      "keptForms": [
+        [
+          "versprecher",
+          12
+        ],
+        [
+          "versprechen",
+          9
+        ],
+        [
+          "verspreche",
+          3
+        ],
+        [
+          "versprech",
+          1
+        ],
+        [
+          "versprechern",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "versprochen",
+          13
+        ],
+        [
+          "versprecher",
+          12
+        ],
+        [
+          "versprechen",
+          9
+        ],
+        [
+          "verspricht",
+          5
+        ],
+        [
+          "verspreche",
+          3
+        ],
+        [
+          "versprechern",
+          1
+        ],
+        [
+          "freudscherversprecher",
+          1
+        ],
+        [
+          "versprüht",
+          1
+        ],
+        [
+          "versprech",
+          1
+        ],
+        [
+          "versprach",
+          1
+        ],
+        [
+          "anversprechen",
+          1
+        ],
+        [
+          "vielversprechend",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 26,
+        "forms": [
+          [
+            "versprecher",
+            12
+          ],
+          [
+            "versprechen",
+            9
+          ],
+          [
+            "verspreche",
+            3
+          ],
+          [
+            "versprech",
+            1
+          ],
+          [
+            "versprechern",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "verspre",
+        "positions": 26,
+        "forms": [
+          [
+            "versprecher",
+            12
+          ],
+          [
+            "versprechen",
+            9
+          ],
+          [
+            "verspreche",
+            3
+          ],
+          [
+            "versprech",
+            1
+          ],
+          [
+            "versprechern",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 14
+    },
+    {
+      "root": "sprechen",
+      "prefix": "an",
+      "query": "ansprechen",
+      "guard": "anspr",
+      "episodes": 36,
+      "rawPositions": 45,
+      "keptPositions": 45,
+      "startsWithPositions": 45,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 98,
+      "keptForms": [
+        [
+          "ansprechen",
+          36
+        ],
+        [
+          "ansprechpartner",
+          3
+        ],
+        [
+          "anspreche",
+          2
+        ],
+        [
+          "ansprechbar",
+          2
+        ],
+        [
+          "ansprecht",
+          2
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "ansprechen",
+          36
+        ],
+        [
+          "anspruch",
+          12
+        ],
+        [
+          "anspruchsvoll",
+          8
+        ],
+        [
+          "anspricht",
+          7
+        ],
+        [
+          "anspringt",
+          4
+        ],
+        [
+          "ansprichst",
+          4
+        ],
+        [
+          "anspruchsvoller",
+          3
+        ],
+        [
+          "ansprechpartner",
+          3
+        ],
+        [
+          "ansprechbar",
+          2
+        ],
+        [
+          "ansprecht",
+          2
+        ],
+        [
+          "ansprüche",
+          2
+        ],
+        [
+          "anspruchsvolles",
+          2
+        ]
+      ],
+      "foldedThree": {
+        "positions": 45,
+        "forms": [
+          [
+            "ansprechen",
+            36
+          ],
+          [
+            "ansprechpartner",
+            3
+          ],
+          [
+            "anspreche",
+            2
+          ],
+          [
+            "ansprechbar",
+            2
+          ],
+          [
+            "ansprecht",
+            2
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "anspre",
+        "positions": 45,
+        "forms": [
+          [
+            "ansprechen",
+            36
+          ],
+          [
+            "ansprechpartner",
+            3
+          ],
+          [
+            "anspreche",
+            2
+          ],
+          [
+            "ansprechbar",
+            2
+          ],
+          [
+            "ansprecht",
+            2
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 23
+    },
+    {
+      "root": "sprechen",
+      "prefix": "auf",
+      "query": "aufsprechen",
+      "guard": "aufspr",
+      "episodes": 106,
+      "rawPositions": 6703,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 6703,
+      "corpusGuardPositions": 5,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "auf",
+          6587
+        ],
+        [
+          "aufs",
+          116
+        ]
+      ],
+      "corpusGuardForms": [
+        [
+          "aufspringt",
+          1
+        ],
+        [
+          "aufspritzen",
+          1
+        ],
+        [
+          "aufsprung",
+          1
+        ],
+        [
+          "draufspringen",
+          1
+        ],
+        [
+          "aufspringen",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "aufspre",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 2,
+      "corpusGuardFormCount": 5
+    },
+    {
+      "root": "nehmen",
+      "prefix": "her",
+      "query": "hernehmen",
+      "guard": "herneh",
+      "episodes": 1,
+      "rawPositions": 1,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 1,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "herne",
+          1
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "hernehm",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 1,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "nehmen",
+      "prefix": "vor",
+      "query": "vornehmen",
+      "guard": "vorneh",
+      "episodes": 5,
+      "rawPositions": 5,
+      "keptPositions": 5,
+      "startsWithPositions": 5,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 5,
+      "keptForms": [
+        [
+          "vornehmlich",
+          2
+        ],
+        [
+          "vornehmen",
+          2
+        ],
+        [
+          "vornehme",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "vornehmen",
+          2
+        ],
+        [
+          "vornehmlich",
+          2
+        ],
+        [
+          "vornehme",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 5,
+        "forms": [
+          [
+            "vornehmlich",
+            2
+          ],
+          [
+            "vornehmen",
+            2
+          ],
+          [
+            "vornehme",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "vornehm",
+        "positions": 5,
+        "forms": [
+          [
+            "vornehmlich",
+            2
+          ],
+          [
+            "vornehmen",
+            2
+          ],
+          [
+            "vornehme",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 3
+    },
+    {
+      "root": "nehmen",
+      "prefix": "ver",
+      "query": "vernehmen",
+      "guard": "verneh",
+      "episodes": 1,
+      "rawPositions": 1,
+      "keptPositions": 1,
+      "startsWithPositions": 1,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 1,
+      "keptForms": [
+        [
+          "vernehme",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "vernehme",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 1,
+        "forms": [
+          [
+            "vernehme",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "vernehm",
+        "positions": 1,
+        "forms": [
+          [
+            "vernehme",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 1
+    },
+    {
+      "root": "nehmen",
+      "prefix": "an",
+      "query": "annehmen",
+      "guard": "anneh",
+      "episodes": 15,
+      "rawPositions": 15,
+      "keptPositions": 15,
+      "startsWithPositions": 15,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 16,
+      "keptForms": [
+        [
+          "annehmen",
+          15
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "annehmen",
+          15
+        ],
+        [
+          "rannehmen",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 15,
+        "forms": [
+          [
+            "annehmen",
+            15
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "annehm",
+        "positions": 15,
+        "forms": [
+          [
+            "annehmen",
+            15
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 2
+    },
+    {
+      "root": "nehmen",
+      "prefix": "auf",
+      "query": "aufnehmen",
+      "guard": "aufneh",
+      "episodes": 56,
+      "rawPositions": 91,
+      "keptPositions": 91,
+      "startsWithPositions": 91,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 91,
+      "keptForms": [
+        [
+          "aufnehmen",
+          85
+        ],
+        [
+          "aufnehme",
+          3
+        ],
+        [
+          "aufnehmekabinchen",
+          1
+        ],
+        [
+          "aufnehmungsituation",
+          1
+        ],
+        [
+          "aufnehmt",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "aufnehmen",
+          85
+        ],
+        [
+          "aufnehme",
+          3
+        ],
+        [
+          "aufnehmungsituation",
+          1
+        ],
+        [
+          "aufnehmekabinchen",
+          1
+        ],
+        [
+          "aufnehmt",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 91,
+        "forms": [
+          [
+            "aufnehmen",
+            85
+          ],
+          [
+            "aufnehme",
+            3
+          ],
+          [
+            "aufnehmekabinchen",
+            1
+          ],
+          [
+            "aufnehmungsituation",
+            1
+          ],
+          [
+            "aufnehmt",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "aufnehm",
+        "positions": 91,
+        "forms": [
+          [
+            "aufnehmen",
+            85
+          ],
+          [
+            "aufnehme",
+            3
+          ],
+          [
+            "aufnehmekabinchen",
+            1
+          ],
+          [
+            "aufnehmungsituation",
+            1
+          ],
+          [
+            "aufnehmt",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 5
+    },
+    {
+      "root": "fangen",
+      "prefix": "her",
+      "query": "herfangen",
+      "guard": "herfan",
+      "episodes": 99,
+      "rawPositions": 296,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 296,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "her",
+          254
+        ],
+        [
+          "here",
+          39
+        ],
+        [
+          "here's",
+          1
+        ],
+        [
+          "her-bewegung",
+          1
+        ],
+        [
+          "hers",
+          1
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "herfang",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 5,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "fangen",
+      "prefix": "vor",
+      "query": "vorfangen",
+      "guard": "vorfan",
+      "episodes": 0,
+      "rawPositions": 0,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "vorfang",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "fangen",
+      "prefix": "ver",
+      "query": "verfangen",
+      "guard": "verfan",
+      "episodes": 4,
+      "rawPositions": 4,
+      "keptPositions": 4,
+      "startsWithPositions": 4,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 4,
+      "keptForms": [
+        [
+          "verfangen",
+          4
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "verfangen",
+          4
+        ]
+      ],
+      "foldedThree": {
+        "positions": 4,
+        "forms": [
+          [
+            "verfangen",
+            4
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "verfang",
+        "positions": 4,
+        "forms": [
+          [
+            "verfangen",
+            4
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 1
+    },
+    {
+      "root": "fangen",
+      "prefix": "an",
+      "query": "anfangen",
+      "guard": "anfan",
+      "episodes": 102,
+      "rawPositions": 551,
+      "keptPositions": 450,
+      "startsWithPositions": 448,
+      "rejectedPositions": 101,
+      "corpusGuardPositions": 461,
+      "keptForms": [
+        [
+          "anfang",
+          239
+        ],
+        [
+          "anfangen",
+          180
+        ],
+        [
+          "anfange",
+          12
+        ],
+        [
+          "anfangs",
+          7
+        ],
+        [
+          "anfangsbuchstaben",
+          1
+        ],
+        [
+          "anfangsbestaben",
+          1
+        ],
+        [
+          "anfangsschlacht",
+          1
+        ],
+        [
+          "anfangsteilen",
+          1
+        ],
+        [
+          "anfangsbuchstabe",
+          1
+        ],
+        [
+          "anfangswort",
+          1
+        ],
+        [
+          "anfangsriesenhype",
+          1
+        ],
+        [
+          "anfangsdonat",
+          1
+        ],
+        [
+          "breakup-anfang",
+          1
+        ],
+        [
+          "nazi-anfangszeit",
+          1
+        ],
+        [
+          "anfangspunkt",
+          1
+        ],
+        [
+          "anfangt",
+          1
+        ]
+      ],
+      "containsOnlyForms": [
+        [
+          "breakup-anfang",
+          1
+        ],
+        [
+          "nazi-anfangszeit",
+          1
+        ]
+      ],
+      "rejectedForms": [
+        [
+          "anfängt",
+          58
+        ],
+        [
+          "anfängst",
+          19
+        ],
+        [
+          "anfänger",
+          12
+        ],
+        [
+          "anfänge",
+          6
+        ],
+        [
+          "anfängerfehler",
+          3
+        ],
+        [
+          "anfängerkurs",
+          2
+        ],
+        [
+          "anfängerfehl",
+          1
+        ]
+      ],
+      "corpusGuardForms": [
+        [
+          "anfang",
+          239
+        ],
+        [
+          "anfangen",
+          180
+        ],
+        [
+          "anfange",
+          12
+        ],
+        [
+          "anfangs",
+          7
+        ],
+        [
+          "neuanfang",
+          3
+        ],
+        [
+          "filmanfang",
+          2
+        ],
+        [
+          "anfangsriesenhype",
+          1
+        ],
+        [
+          "monatsanfang",
+          1
+        ],
+        [
+          "anfangsbuchstaben",
+          1
+        ],
+        [
+          "anfangsbestaben",
+          1
+        ],
+        [
+          "breakup-anfang",
+          1
+        ],
+        [
+          "anfangsteilen",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 551,
+        "forms": [
+          [
+            "anfang",
+            239
+          ],
+          [
+            "anfangen",
+            180
+          ],
+          [
+            "anfängt",
+            58
+          ],
+          [
+            "anfängst",
+            19
+          ],
+          [
+            "anfange",
+            12
+          ],
+          [
+            "anfänger",
+            12
+          ],
+          [
+            "anfangs",
+            7
+          ],
+          [
+            "anfänge",
+            6
+          ],
+          [
+            "anfängerfehler",
+            3
+          ],
+          [
+            "anfängerkurs",
+            2
+          ],
+          [
+            "anfangsbuchstaben",
+            1
+          ],
+          [
+            "anfangsbestaben",
+            1
+          ],
+          [
+            "anfangsschlacht",
+            1
+          ],
+          [
+            "anfangsteilen",
+            1
+          ],
+          [
+            "anfangsbuchstabe",
+            1
+          ],
+          [
+            "anfangswort",
+            1
+          ],
+          [
+            "anfängerfehl",
+            1
+          ],
+          [
+            "anfangsriesenhype",
+            1
+          ],
+          [
+            "anfangsdonat",
+            1
+          ],
+          [
+            "breakup-anfang",
+            1
+          ],
+          [
+            "nazi-anfangszeit",
+            1
+          ],
+          [
+            "anfangspunkt",
+            1
+          ],
+          [
+            "anfangt",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "anfang",
+        "positions": 551,
+        "forms": [
+          [
+            "anfang",
+            239
+          ],
+          [
+            "anfangen",
+            180
+          ],
+          [
+            "anfängt",
+            58
+          ],
+          [
+            "anfängst",
+            19
+          ],
+          [
+            "anfange",
+            12
+          ],
+          [
+            "anfänger",
+            12
+          ],
+          [
+            "anfangs",
+            7
+          ],
+          [
+            "anfänge",
+            6
+          ],
+          [
+            "anfängerfehler",
+            3
+          ],
+          [
+            "anfängerkurs",
+            2
+          ],
+          [
+            "anfangsbuchstaben",
+            1
+          ],
+          [
+            "anfangsbestaben",
+            1
+          ],
+          [
+            "anfangsschlacht",
+            1
+          ],
+          [
+            "anfangsteilen",
+            1
+          ],
+          [
+            "anfangsbuchstabe",
+            1
+          ],
+          [
+            "anfangswort",
+            1
+          ],
+          [
+            "anfängerfehl",
+            1
+          ],
+          [
+            "anfangsriesenhype",
+            1
+          ],
+          [
+            "anfangsdonat",
+            1
+          ],
+          [
+            "breakup-anfang",
+            1
+          ],
+          [
+            "nazi-anfangszeit",
+            1
+          ],
+          [
+            "anfangspunkt",
+            1
+          ],
+          [
+            "anfangt",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 7,
+      "corpusGuardFormCount": 24
+    },
+    {
+      "root": "fangen",
+      "prefix": "auf",
+      "query": "auffangen",
+      "guard": "auffan",
+      "episodes": 5,
+      "rawPositions": 5,
+      "keptPositions": 4,
+      "startsWithPositions": 4,
+      "rejectedPositions": 1,
+      "corpusGuardPositions": 5,
+      "keptForms": [
+        [
+          "auffangen",
+          2
+        ],
+        [
+          "auffangnetz",
+          1
+        ],
+        [
+          "auffangprozess",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "auffängt",
+          1
+        ]
+      ],
+      "corpusGuardForms": [
+        [
+          "auffangen",
+          2
+        ],
+        [
+          "auffangprozess",
+          1
+        ],
+        [
+          "auffangnetz",
+          1
+        ],
+        [
+          "auffand",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 5,
+        "forms": [
+          [
+            "auffangen",
+            2
+          ],
+          [
+            "auffängt",
+            1
+          ],
+          [
+            "auffangnetz",
+            1
+          ],
+          [
+            "auffangprozess",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "auffang",
+        "positions": 5,
+        "forms": [
+          [
+            "auffangen",
+            2
+          ],
+          [
+            "auffängt",
+            1
+          ],
+          [
+            "auffangnetz",
+            1
+          ],
+          [
+            "auffangprozess",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 1,
+      "corpusGuardFormCount": 4
+    },
+    {
+      "root": "hören",
+      "prefix": "her",
+      "query": "herhören",
+      "guard": "herhör",
+      "episodes": 99,
+      "rawPositions": 296,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 296,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "her",
+          254
+        ],
+        [
+          "here",
+          39
+        ],
+        [
+          "here's",
+          1
+        ],
+        [
+          "her-bewegung",
+          1
+        ],
+        [
+          "hers",
+          1
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "herhore",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 5,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "hören",
+      "prefix": "vor",
+      "query": "vorhören",
+      "guard": "vorhör",
+      "episodes": 76,
+      "rawPositions": 157,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 157,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "vorher",
+          157
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "vorhore",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 1,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "hören",
+      "prefix": "ver",
+      "query": "verhören",
+      "guard": "verhör",
+      "episodes": 2,
+      "rawPositions": 2,
+      "keptPositions": 2,
+      "startsWithPositions": 1,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 4,
+      "keptForms": [
+        [
+          "verhört",
+          1
+        ],
+        [
+          "podcast-u-verhörer",
+          1
+        ]
+      ],
+      "containsOnlyForms": [
+        [
+          "podcast-u-verhörer",
+          1
+        ]
+      ],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "kreuzverhörmäßig",
+          1
+        ],
+        [
+          "podcast-u-verhörer",
+          1
+        ],
+        [
+          "verhört",
+          1
+        ],
+        [
+          "overhören",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 2,
+        "forms": [
+          [
+            "verhört",
+            1
+          ],
+          [
+            "podcast-u-verhörer",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "verhore",
+        "positions": 1,
+        "forms": [
+          [
+            "podcast-u-verhörer",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 4
+    },
+    {
+      "root": "hören",
+      "prefix": "an",
+      "query": "anhören",
+      "guard": "anhör",
+      "episodes": 42,
+      "rawPositions": 74,
+      "keptPositions": 74,
+      "startsWithPositions": 74,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 74,
+      "keptForms": [
+        [
+          "anhören",
+          52
+        ],
+        [
+          "anhört",
+          15
+        ],
+        [
+          "anhörst",
+          3
+        ],
+        [
+          "anhöre",
+          3
+        ],
+        [
+          "anhörte",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "anhören",
+          52
+        ],
+        [
+          "anhört",
+          15
+        ],
+        [
+          "anhöre",
+          3
+        ],
+        [
+          "anhörst",
+          3
+        ],
+        [
+          "anhörte",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 74,
+        "forms": [
+          [
+            "anhören",
+            52
+          ],
+          [
+            "anhört",
+            15
+          ],
+          [
+            "anhörst",
+            3
+          ],
+          [
+            "anhöre",
+            3
+          ],
+          [
+            "anhörte",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "anhore",
+        "positions": 55,
+        "forms": [
+          [
+            "anhören",
+            52
+          ],
+          [
+            "anhöre",
+            3
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 5
+    },
+    {
+      "root": "hören",
+      "prefix": "auf",
+      "query": "aufhören",
+      "guard": "aufhör",
+      "episodes": 60,
+      "rawPositions": 100,
+      "keptPositions": 100,
+      "startsWithPositions": 100,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 100,
+      "keptForms": [
+        [
+          "aufhören",
+          59
+        ],
+        [
+          "aufhört",
+          32
+        ],
+        [
+          "aufhörst",
+          7
+        ],
+        [
+          "aufhöre",
+          2
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "aufhören",
+          59
+        ],
+        [
+          "aufhört",
+          32
+        ],
+        [
+          "aufhörst",
+          7
+        ],
+        [
+          "aufhöre",
+          2
+        ]
+      ],
+      "foldedThree": {
+        "positions": 100,
+        "forms": [
+          [
+            "aufhören",
+            59
+          ],
+          [
+            "aufhört",
+            32
+          ],
+          [
+            "aufhörst",
+            7
+          ],
+          [
+            "aufhöre",
+            2
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "aufhore",
+        "positions": 61,
+        "forms": [
+          [
+            "aufhören",
+            59
+          ],
+          [
+            "aufhöre",
+            2
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 4
+    },
+    {
+      "root": "Tisch",
+      "prefix": "her",
+      "query": "hertisch",
+      "guard": "hertis",
+      "episodes": 99,
+      "rawPositions": 296,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 296,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "her",
+          254
+        ],
+        [
+          "here",
+          39
+        ],
+        [
+          "here's",
+          1
+        ],
+        [
+          "her-bewegung",
+          1
+        ],
+        [
+          "hers",
+          1
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "hertisc",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 5,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "Tisch",
+      "prefix": "vor",
+      "query": "vortisch",
+      "guard": "vortis",
+      "episodes": 0,
+      "rawPositions": 0,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "vortisc",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "Tisch",
+      "prefix": "ver",
+      "query": "vertisch",
+      "guard": "vertis",
+      "episodes": 0,
+      "rawPositions": 0,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "vertisc",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "Tisch",
+      "prefix": "an",
+      "query": "antisch",
+      "guard": "antis",
+      "episodes": 16,
+      "rawPositions": 22,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 22,
+      "corpusGuardPositions": 65,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "anti",
+          5
+        ],
+        [
+          "anti-chat",
+          2
+        ],
+        [
+          "anti-babypille",
+          1
+        ],
+        [
+          "anti-hype",
+          1
+        ],
+        [
+          "anti-agressionstraining",
+          1
+        ],
+        [
+          "anti-agrgressionstrainer",
+          1
+        ],
+        [
+          "anti-retro",
+          1
+        ],
+        [
+          "anti-nostalgischen",
+          1
+        ],
+        [
+          "anti-hobby",
+          1
+        ],
+        [
+          "anti-nazi",
+          1
+        ],
+        [
+          "anti-haltung",
+          1
+        ],
+        [
+          "anti-proportional",
+          1
+        ]
+      ],
+      "corpusGuardForms": [
+        [
+          "romantische",
+          17
+        ],
+        [
+          "romantisch",
+          10
+        ],
+        [
+          "romantischen",
+          5
+        ],
+        [
+          "gigantischen",
+          4
+        ],
+        [
+          "romantisiert",
+          4
+        ],
+        [
+          "romantisches",
+          4
+        ],
+        [
+          "romantischer",
+          3
+        ],
+        [
+          "komödiantische",
+          2
+        ],
+        [
+          "atlantis",
+          2
+        ],
+        [
+          "komödiantisch",
+          2
+        ],
+        [
+          "antisemitischen",
+          1
+        ],
+        [
+          "antisemiten",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "antisc",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 17,
+      "corpusGuardFormCount": 22
+    },
+    {
+      "root": "Tisch",
+      "prefix": "auf",
+      "query": "auftisch",
+      "guard": "auftis",
+      "episodes": 1,
+      "rawPositions": 1,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 1,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "auften",
+          1
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "auftisc",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 1,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "Wort",
+      "prefix": "her",
+      "query": "herwort",
+      "guard": "herwor",
+      "episodes": 99,
+      "rawPositions": 296,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 296,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "her",
+          254
+        ],
+        [
+          "here",
+          39
+        ],
+        [
+          "here's",
+          1
+        ],
+        [
+          "her-bewegung",
+          1
+        ],
+        [
+          "hers",
+          1
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "herwort",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 5,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "Wort",
+      "prefix": "vor",
+      "query": "vorwort",
+      "guard": "vorwor",
+      "episodes": 1,
+      "rawPositions": 2,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 2,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "vorw-gol",
+          2
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "vorwort",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 1,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "Wort",
+      "prefix": "ver",
+      "query": "verwort",
+      "guard": "verwor",
+      "episodes": 1,
+      "rawPositions": 1,
+      "keptPositions": 1,
+      "startsWithPositions": 1,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 7,
+      "keptForms": [
+        [
+          "verwort",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "verworfenen",
+          2
+        ],
+        [
+          "verworfen",
+          2
+        ],
+        [
+          "verworren",
+          2
+        ],
+        [
+          "verwort",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 1,
+        "forms": [
+          [
+            "verwort",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "verwort",
+        "positions": 1,
+        "forms": [
+          [
+            "verwort",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 4
+    },
+    {
+      "root": "Wort",
+      "prefix": "an",
+      "query": "anwort",
+      "guard": "anwor",
+      "episodes": 0,
+      "rawPositions": 0,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "anwort",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "Wort",
+      "prefix": "auf",
+      "query": "aufwort",
+      "guard": "aufwor",
+      "episodes": 106,
+      "rawPositions": 6703,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 6703,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "auf",
+          6587
+        ],
+        [
+          "aufs",
+          116
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "aufwort",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 2,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "Eimer",
+      "prefix": "her",
+      "query": "hereimer",
+      "guard": "hereim",
+      "episodes": 99,
+      "rawPositions": 296,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 296,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "her",
+          254
+        ],
+        [
+          "here",
+          39
+        ],
+        [
+          "here's",
+          1
+        ],
+        [
+          "her-bewegung",
+          1
+        ],
+        [
+          "hers",
+          1
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "hereime",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 5,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "Eimer",
+      "prefix": "vor",
+      "query": "voreimer",
+      "guard": "voreim",
+      "episodes": 0,
+      "rawPositions": 0,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "voreime",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "Eimer",
+      "prefix": "ver",
+      "query": "vereimer",
+      "guard": "vereim",
+      "episodes": 11,
+      "rawPositions": 11,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 11,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "ver",
+          10
+        ],
+        [
+          "vers",
+          1
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "vereime",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 2,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "Eimer",
+      "prefix": "an",
+      "query": "aneimer",
+      "guard": "aneim",
+      "episodes": 0,
+      "rawPositions": 0,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "aneime",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "Eimer",
+      "prefix": "auf",
+      "query": "aufeimer",
+      "guard": "aufeim",
+      "episodes": 106,
+      "rawPositions": 6703,
+      "keptPositions": 0,
+      "startsWithPositions": 0,
+      "rejectedPositions": 6703,
+      "corpusGuardPositions": 0,
+      "keptForms": [],
+      "containsOnlyForms": [],
+      "rejectedForms": [
+        [
+          "auf",
+          6587
+        ],
+        [
+          "aufs",
+          116
+        ]
+      ],
+      "corpusGuardForms": [],
+      "foldedThree": {
+        "positions": 0,
+        "forms": []
+      },
+      "foldedFour": {
+        "guard": "aufeime",
+        "positions": 0,
+        "forms": []
+      },
+      "rejectedFormCount": 2,
+      "corpusGuardFormCount": 0
+    },
+    {
+      "root": "Ei",
+      "prefix": "her",
+      "query": "herei",
+      "guard": "herei",
+      "episodes": 10,
+      "rawPositions": 10,
+      "keptPositions": 10,
+      "startsWithPositions": 10,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 30,
+      "keptForms": [
+        [
+          "herein",
+          8
+        ],
+        [
+          "hereinkippen",
+          1
+        ],
+        [
+          "hereinbringt",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "vornherein",
+          10
+        ],
+        [
+          "herein",
+          8
+        ],
+        [
+          "wäscherei",
+          2
+        ],
+        [
+          "teppichwäscherei",
+          2
+        ],
+        [
+          "geldmacherei",
+          1
+        ],
+        [
+          "hereinbringt",
+          1
+        ],
+        [
+          "geldwäscherei",
+          1
+        ],
+        [
+          "löchereien",
+          1
+        ],
+        [
+          "autoreifenwäscherei",
+          1
+        ],
+        [
+          "türenwäscherei",
+          1
+        ],
+        [
+          "gardinenwäscherei",
+          1
+        ],
+        [
+          "hereinkippen",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 10,
+        "forms": [
+          [
+            "herein",
+            8
+          ],
+          [
+            "hereinkippen",
+            1
+          ],
+          [
+            "hereinbringt",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "herei",
+        "positions": 10,
+        "forms": [
+          [
+            "herein",
+            8
+          ],
+          [
+            "hereinkippen",
+            1
+          ],
+          [
+            "hereinbringt",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 12
+    },
+    {
+      "root": "Ei",
+      "prefix": "vor",
+      "query": "vorei",
+      "guard": "vorei",
+      "episodes": 1,
+      "rawPositions": 1,
+      "keptPositions": 1,
+      "startsWithPositions": 1,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 1,
+      "keptForms": [
+        [
+          "vorein",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "vorein",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 1,
+        "forms": [
+          [
+            "vorein",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "vorei",
+        "positions": 1,
+        "forms": [
+          [
+            "vorein",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 1
+    },
+    {
+      "root": "Ei",
+      "prefix": "ver",
+      "query": "verei",
+      "guard": "verei",
+      "episodes": 26,
+      "rawPositions": 40,
+      "keptPositions": 40,
+      "startsWithPositions": 39,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 54,
+      "keptForms": [
+        [
+          "verein",
+          14
+        ],
+        [
+          "vereinfacht",
+          5
+        ],
+        [
+          "vereinbaren",
+          3
+        ],
+        [
+          "vereist",
+          3
+        ],
+        [
+          "vereinbart",
+          2
+        ],
+        [
+          "vereinigung",
+          2
+        ],
+        [
+          "vereinbar",
+          2
+        ],
+        [
+          "vereinswappen",
+          1
+        ],
+        [
+          "vereinsterwappens",
+          1
+        ],
+        [
+          "vereinslogos",
+          1
+        ],
+        [
+          "waterbonding-verein",
+          1
+        ],
+        [
+          "vereine",
+          1
+        ],
+        [
+          "vereinigt",
+          1
+        ],
+        [
+          "vereinfachen",
+          1
+        ],
+        [
+          "vereinfache",
+          1
+        ],
+        [
+          "vereinsgebühren",
+          1
+        ]
+      ],
+      "containsOnlyForms": [
+        [
+          "waterbonding-verein",
+          1
+        ]
+      ],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "verein",
+          14
+        ],
+        [
+          "vereinfacht",
+          5
+        ],
+        [
+          "sklaverei",
+          4
+        ],
+        [
+          "vereinbaren",
+          3
+        ],
+        [
+          "vereist",
+          3
+        ],
+        [
+          "vereinigung",
+          2
+        ],
+        [
+          "vereinbart",
+          2
+        ],
+        [
+          "fußballverein",
+          2
+        ],
+        [
+          "vereinbar",
+          2
+        ],
+        [
+          "bürgervereinigungen",
+          1
+        ],
+        [
+          "karateverein",
+          1
+        ],
+        [
+          "fußballvereine",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 40,
+        "forms": [
+          [
+            "verein",
+            14
+          ],
+          [
+            "vereinfacht",
+            5
+          ],
+          [
+            "vereinbaren",
+            3
+          ],
+          [
+            "vereist",
+            3
+          ],
+          [
+            "vereinbart",
+            2
+          ],
+          [
+            "vereinigung",
+            2
+          ],
+          [
+            "vereinbar",
+            2
+          ],
+          [
+            "vereinswappen",
+            1
+          ],
+          [
+            "vereinsterwappens",
+            1
+          ],
+          [
+            "vereinslogos",
+            1
+          ],
+          [
+            "waterbonding-verein",
+            1
+          ],
+          [
+            "vereine",
+            1
+          ],
+          [
+            "vereinigt",
+            1
+          ],
+          [
+            "vereinfachen",
+            1
+          ],
+          [
+            "vereinfache",
+            1
+          ],
+          [
+            "vereinsgebühren",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "verei",
+        "positions": 40,
+        "forms": [
+          [
+            "verein",
+            14
+          ],
+          [
+            "vereinfacht",
+            5
+          ],
+          [
+            "vereinbaren",
+            3
+          ],
+          [
+            "vereist",
+            3
+          ],
+          [
+            "vereinbart",
+            2
+          ],
+          [
+            "vereinigung",
+            2
+          ],
+          [
+            "vereinbar",
+            2
+          ],
+          [
+            "vereinswappen",
+            1
+          ],
+          [
+            "vereinsterwappens",
+            1
+          ],
+          [
+            "vereinslogos",
+            1
+          ],
+          [
+            "waterbonding-verein",
+            1
+          ],
+          [
+            "vereine",
+            1
+          ],
+          [
+            "vereinigt",
+            1
+          ],
+          [
+            "vereinfachen",
+            1
+          ],
+          [
+            "vereinfache",
+            1
+          ],
+          [
+            "vereinsgebühren",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 26
+    },
+    {
+      "root": "Ei",
+      "prefix": "an",
+      "query": "anei",
+      "guard": "anei",
+      "episodes": 19,
+      "rawPositions": 22,
+      "keptPositions": 22,
+      "startsWithPositions": 22,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 22,
+      "keptForms": [
+        [
+          "aneinander",
+          18
+        ],
+        [
+          "aneinanderdrücken",
+          1
+        ],
+        [
+          "aneinanderschneiden",
+          1
+        ],
+        [
+          "aneinandersetzen",
+          1
+        ],
+        [
+          "aneinanderreihung",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "aneinander",
+          18
+        ],
+        [
+          "aneinanderreihung",
+          1
+        ],
+        [
+          "aneinanderdrücken",
+          1
+        ],
+        [
+          "aneinandersetzen",
+          1
+        ],
+        [
+          "aneinanderschneiden",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 22,
+        "forms": [
+          [
+            "aneinander",
+            18
+          ],
+          [
+            "aneinanderdrücken",
+            1
+          ],
+          [
+            "aneinanderschneiden",
+            1
+          ],
+          [
+            "aneinandersetzen",
+            1
+          ],
+          [
+            "aneinanderreihung",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "anei",
+        "positions": 22,
+        "forms": [
+          [
+            "aneinander",
+            18
+          ],
+          [
+            "aneinanderdrücken",
+            1
+          ],
+          [
+            "aneinanderschneiden",
+            1
+          ],
+          [
+            "aneinandersetzen",
+            1
+          ],
+          [
+            "aneinanderreihung",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 5
+    },
+    {
+      "root": "Ei",
+      "prefix": "auf",
+      "query": "aufei",
+      "guard": "aufei",
+      "episodes": 21,
+      "rawPositions": 26,
+      "keptPositions": 26,
+      "startsWithPositions": 26,
+      "rejectedPositions": 0,
+      "corpusGuardPositions": 26,
+      "keptForms": [
+        [
+          "aufeinander",
+          22
+        ],
+        [
+          "aufeinanderhalten",
+          1
+        ],
+        [
+          "aufeinandertreffen",
+          1
+        ],
+        [
+          "aufeinandertreffens",
+          1
+        ],
+        [
+          "aufeinandersetzen",
+          1
+        ]
+      ],
+      "containsOnlyForms": [],
+      "rejectedForms": [],
+      "corpusGuardForms": [
+        [
+          "aufeinander",
+          22
+        ],
+        [
+          "aufeinandersetzen",
+          1
+        ],
+        [
+          "aufeinandertreffens",
+          1
+        ],
+        [
+          "aufeinandertreffen",
+          1
+        ],
+        [
+          "aufeinanderhalten",
+          1
+        ]
+      ],
+      "foldedThree": {
+        "positions": 26,
+        "forms": [
+          [
+            "aufeinander",
+            22
+          ],
+          [
+            "aufeinanderhalten",
+            1
+          ],
+          [
+            "aufeinandertreffen",
+            1
+          ],
+          [
+            "aufeinandertreffens",
+            1
+          ],
+          [
+            "aufeinandersetzen",
+            1
+          ]
+        ]
+      },
+      "foldedFour": {
+        "guard": "aufei",
+        "positions": 26,
+        "forms": [
+          [
+            "aufeinander",
+            22
+          ],
+          [
+            "aufeinanderhalten",
+            1
+          ],
+          [
+            "aufeinandertreffen",
+            1
+          ],
+          [
+            "aufeinandertreffens",
+            1
+          ],
+          [
+            "aufeinandersetzen",
+            1
+          ]
+        ]
+      },
+      "rejectedFormCount": 0,
+      "corpusGuardFormCount": 5
+    }
+  ],
+  "summary": {
+    "queryCount": 90,
+    "rootCount": 18,
+    "rawQueryPositionPairs": 40912,
+    "keptQueryPositionPairs": 3487,
+    "foldedThreeQueryPositionPairs": 3599,
+    "foldedFourQueryPositionPairs": 3346,
+    "restoredByUmlautFold": 112,
+    "note": "Sums overlap between separate queries and are not unique spoken words or an accuracy metric."
+  }
+}

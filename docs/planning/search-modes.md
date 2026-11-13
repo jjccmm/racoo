@@ -83,3 +83,8 @@ Das Voranstellen bleibt eine technische Heuristik: kommen/bekommen, suchen/versu
 4. Echtes 106er-Beispiel mit geöffneter Wortübersicht messen; Caches, neue Suchtexte, leere exakte Top10, beide Themen und Handybreiten prüfen. Keine gesamten Archivtexte oder globale Positionsdatei vorladen.
 
 Diese Präzisierung ändert Dokumentation und Entscheidungsstand, noch keinen Anwendungscode. Keine neue Transkription, kein Backend und kein spaCy-Modell nötig.
+
+
+## Nachprüfung: drei Buchstaben nach dem Präfix
+
+Die [90-Abfragen-Probe](../research/prefix-three-letters-2026-11-13.md) untersucht die neue Nutzeridee prefix + erste drei Buchstaben als zusammenhängenden Teil des tatsächlichen Trefferworts. Sie entfernt hertisch → her/here und erhält herkommen → herkommt. Sie lässt jedoch verstehlen → verstehen und aufgehen → aufgehört durch und verliert ohne Umlautfaltung passende Formen wie verläuft/anfängt. Als zusätzliche Heuristik brauchbar; weder globale Korrektheit noch sprachliche Familienerkennung sind damit belegt. Die Prüfung tatsächlicher Formen benötigt trotz einfacher Vergleichsregel zusätzliche Daten für globale Erweitert-Zahlen. Die vereinbarte Top10-Beschränkung für informative Listen und Exakt bleibt unverändert; die konkrete Erweitert-Regel ist weiter offen.
