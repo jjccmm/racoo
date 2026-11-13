@@ -1,84 +1,85 @@
-# Vorschlag: Suchoptionen und ausschließbare Wortvarianten
+# Suchoptionen mit informativen Top10-Wortlisten
 
-Stand: 13. November 2026. **Bewertung und Plan, noch nicht zur Umsetzung bestätigt.** Diese Konkretisierung ersetzt die vorherige Empfehlung eines eigenen Standard-Matchers. Die laufende Seite und der [aktive Suchvertrag](../search.md) bleiben unverändert. Grundlage: [API-Recherche](../research/variant-filter-api-2026-11-13.md), [lokale Datenmessung](../research/variant-filter-traffic-2026-11-13.md), [bisherige Untersuchung](../research/search-modes-2026-11-12.md).
+Stand: 13. November 2026. **Wortlisten und begrenzter Exaktmodus vom Nutzer präzisiert; Erweitert noch in Abstimmung.** Diese Fassung ersetzt den vorherigen Vorschlag globaler ausschließbarer Wortformen und einer vollständigen Positions-/Wortzuordnung. Die laufende Anwendung und der [aktive Suchvertrag](../search.md) sind noch unverändert. Grundlage: [API-Recherche](../research/variant-filter-api-2026-11-13.md), [106er-Größenmessung](../research/variant-filter-traffic-2026-11-13.md), [Präfixbeispiele](../research/evidence/prefix-fallback-2026-11-13.json).
 
-## Bewertung und empfohlene Oberfläche
+## Oberfläche und festgelegter Umfang
 
-Der Nutzervorschlag ist sinnvoll und statisch umsetzbar. Er bewahrt die einfache normale Suche und legt fortgeschrittene Steuerung in eine aufklappbare Karte. Empfohlen: rundes Schieberegler-Icon rechts neben der Suche, darunter im Seitenfluss die Suchoptionen zwischen Suchzeile und Diagramm. Die Karte verändert keine Ergebnisse allein durch Öffnen oder Schließen. Bei aktivem Sondermodus/Ausschluss bleibt neben dem Icon ein kleiner sichtbarer Status stehen, damit geschlossene Optionen keine unerklärlich abweichenden Zahlen verursachen.
+Rundes Schieberegler-Icon rechts neben der Suche. Klick öffnet die Suchoptionen als Karte zwischen Suche und Diagramm. Die bestehende Top10/Alle-Kapsel auf drei Auswahlmöglichkeiten Exakt / Standard / Erweitert übertragen; daneben per Klick/Tastatur eine kurze Erklärung mit Beispielen öffnen. Standard ist beim normalen Einstieg die bisherige native Pagefind-Suche mit Wortformen und Wortanfängen. Für einen aktiven Sondermodus bei geschlossener Karte einen kleinen sichtbaren Status vorsehen.
 
-Die vorhandene Top10/Alle-Kapsel ist eigenes React/CSS und lässt sich ohne zusätzliche UI-Bibliothek auf drei Segmente übertragen. Ein neuer gemeinsamer Baustein kann beide Varianten mit zwei/drei Einträgen, gleitender Fläche, Tastaturbedienung und reduzierter Bewegung abdecken. Die drei Sucharten sind eine eigene Auswahl neben der unveränderten Diagrammauswahl.
+Unter der Modusauswahl je Suchbegriff eine informative Wortliste im Raster zeigen. Die Überschrift verwendet die eingegebene Schreibweise und die Serienfarbe. Die Liste zählt ausschließlich die tatsächlich gefundenen Stellen in den **Top10 dieses Suchergebnisses**, unabhängig davon, ob das Diagramm Top10 oder Alle zeigt. Häufigkeiten je normalisierter Schreibweise zusammenfassen, absteigend sortieren, Gleichstände alphabetisch. Beschriftung beispielsweise Gefundene Wörter in den Top 10. Kleine eigene Scrollbereiche; mobile Anordnung ohne zehn schmale Spalten.
 
-Ein kleines Fragezeichen öffnet per Klick/Tastatur eine kurze Erklärung; nicht ausschließlich als Hover-Tooltip. Vorgeschlagener Inhalt:
+**Keine Deaktivierung oder Auswahl durch Klick, keine Ausschlussliste und keine Änderung der Suche durch die Wortlisten.** Es gibt keinen Filterzustand, kein Durchstreichen, keinen Ausschlusszähler und keine daraus folgende Nachladeschleife für andere Folgen. Solange nicht alle benötigten Top10-Texte vorliegen, einen Ladezustand oder ausdrücklich unvollständigen Zwischenstand zeigen; Teilzahlen dürfen nicht als fertige Summen erscheinen.
 
-| Modus | Erklärung | Beispiel |
-| --- | --- | --- |
-| Exakt | Nur vollständige gleich geschriebene Wörter, ohne Unterschied der Groß-/Kleinschreibung | Ei zählt Ei, aber nicht eine; Tisch zählt nicht Tische/Tischtennis |
-| Standard, Vorgabe | Die bisherige Pagefind-Suche: Wortformen und Wortanfänge können passen | Tisch findet Tische und Tischtennis; Wort findet Wörter |
-| Erweitert | Standard plus kontrolliert zugelassene deutsche Voranstellungen | kommen soll auch vorkommen und herkommen finden |
+Die natürliche Anzeige einer zusammengefassten Form, etwa Tisch statt tisch, anhand der häufigsten Originalschreibweise festlegen. Die eingegebenen Stichwörter behalten wie bisher ihre ursprüngliche Schreibweise für Legenden und Überschriften.
 
-**Standard bleibt die aktuelle native Pagefind-Suche und die Vorgabe beim Einstieg.** Die vorher vorgeschlagene Stammgleichheit ohne Präfixe ist dafür nicht der Vertrag. Auch ein Austausch von Pagefind gehört nicht zu diesem Entwurf. Seine bekannten Reihenfolge-/Chunk-Grenzen bleiben dokumentiert; eine separate Korrektur ist nicht stillschweigend eingeschlossen.
+## Modus Standard
 
-## Listen tatsächlich gefundener Formen
+Die bisherigen unabhängigen nativen Pagefind-Suchen über den ganzen veröffentlichten Podcastbestand bleiben unverändert. Alle Rohpositionen zählen, danach Top10 bestimmen. Die Wortlisten erklären lediglich die in diesen zehn Folgen tatsächlich vorkommenden getroffenen Formen, beispielsweise Tisch/Tische/Tischtennis. Sie ändern keine globalen Diagrammwerte oder Leserstellen.
 
-Für jedes akzeptierte Stichwort eine kompakte Liste mit eingegebener Schreibweise als Überschrift und derselben Serienfarbe anzeigen. Darin die tatsächlich getroffenen Oberflächenformen, nicht nur Wörter mit ähnlicher Bedeutung, nach ihrer gesamten nativen Trefferzahl über **alle Trefferfolgen** sortieren. Bei Gleichstand alphabetisch. Groß-/Kleinschreibung einer Form zusammenfassen; natürliche Anzeige etwa anhand ihrer häufigsten Originalschreibweise wäre zu definieren. Die Positionen aus der gemessenen Zusatzdatei sind normalisierte IDs; Anzeigenamen sind noch nicht vermessen.
+Die bekannten Chunk-/Reihenfolgegrenzen bleiben dokumentiert; der neue Modusname verspricht keine Korrektur dieser Enginegrenzen. Zusätzliche Erweitert-Abfragen können den nativen Ladezustand verändern. Einen Wechsel von Erweitert zurück zu Standard deshalb ohne versteckte Zusatzqueries ausführen; getrennte Instanzen/Caches sind als Schutz gegen neu eingeführte Vermischung zu prüfen.
 
-Bei zehn Stichwörtern kein dauerhaftes Zehnspaltenlayout: auf breiten Ansichten ein Raster, auf kleinen Ansichten einzelne aufklappbare Wortlisten. Jede geöffnete Liste hat eine begrenzte Höhe und bei Bedarf ihren eigenen Scrollbereich. Bei vielen Formen optional eine lokale Filterzeile ergänzen, falls die Benutzung das rechtfertigt.
+## Modus Exakt: bewusst auf zehn Kandidaten begrenzt
 
-Ein Klick schaltet genau die ausgewählte Form aus oder wieder ein. Grau plus Durchstreichen und ein klarer Auswahlzustand machen dies sichtbar. Die Zeile bleibt mit ihrer ursprünglichen Häufigkeit stehen, damit sie wieder einschaltbar ist und die Liste nicht bei jedem Klick umsortiert. Beispielsweise Tischtennis ausschließen betrifft diese Form, nicht automatisch Tischtennisball. Ein sichtbarer Ausschlusszähler und Alle zurücksetzen verhindern versteckte Filter.
+Festgelegter Ablauf:
 
-Vorschlag entsprechend „in der Suche ignoriert“: Ausschlüsse gelten für alle Folgen und alle Stichwortserien **dieser aktuellen Suche**, unabhängig von der gerade angezeigten Top10. Dieselbe Form in mehreren Wortlisten zeigt denselben Zustand. Alle markierten Formen sind in Zählung, Diagramm, Leser, Navigation und Minimap ausgeschlossen. Eine Stelle darf nicht über eine andere Suchserie sichtbar bleiben, wenn die Form global ausgeschlossen wurde. Neue Suchbegriffe/Moduswechsel und geteilte Links brauchen einen festgelegten Umgang mit dem Filterzustand; keine ungefragte dauerhafte globale Ausschlussliste im Browser einführen.
+1. Dieselbe Standardsuche ausführen und deren höchstens zehn führende Folgen anhand der bestehenden Gesamtsumme und Gleichstände bestimmen. Diese Kandidatenmenge vor dem wörtlichen Filter fixieren.
+2. Nur die Texte dieser Folgen wörtlich untersuchen. Vollständige Wörter nach NFC vergleichen, Groß-/Kleinschreibung ignorieren. Kein Stemming, keine Umlautgleichsetzung und keine Präfixerweiterung. Wortgrenzen, Bindestriche und Schrägstriche vor der Implementierung mit Beispielen festlegen.
+3. Nur die exakten Stellen zählen und hervorheben. Innerhalb der fixierten Kandidaten darf nach der exakten Summe neu sortiert werden. Folgen ohne exakte Treffer können entfallen; keine Ersatzfolgen von Rang11 oder dahinter nachladen. Das Ergebnis darf weniger als zehn Folgen oder leer sein.
+4. Wortlisten und Leser zeigen dieselben exakten Fundstellen. Abbruch-/Ladefehler bleiben Fehler; unbekannte Werte sind nicht null.
 
-## Warum die Listen nicht auf Top10 beschränken
+Vorgeschlagener Hilfetext:
 
-Die vorgeschlagene Nachladeschleife liefert ohne weitere Nachweise keine vollständige Wortliste oder sichere neue Rangfolge. Eine bislang außerhalb liegende Folge kann nach Ausschlüssen führend werden. Auch ihre Formen und bereinigten Zahlen wären dann zunächst unbekannt. Im schlimmsten Fall müssen alle bisherigen Kandidaten geprüft werden. Außerdem benötigt die Ansicht Alle ohnehin bereinigte globale Werte.
+> Exakt prüft nur die zehn Folgen mit den meisten Treffern der Standardsuche. Darin werden ausschließlich vollständige Wörter gezählt; Groß- und Kleinschreibung spielen keine Rolle. Weitere Folgen werden nicht geprüft.
 
-Deshalb erst die vollständigen Trefferpositionen aller Kandidaten mit ihren Formen bestimmen, dann Ausschlüsse anwenden und die Folgen neu sortieren. Erst danach werden die nun sichtbaren Lesertexte geladen. Nur die neue Karte benötigt eventuell einen noch fehlenden Text; die globale Rangberechnung darf darauf nicht warten.
+Bewusste Grenze: Eine Folge außerhalb der Standard-Top10 kann mehr exakte Treffer besitzen und trotzdem fehlen. Dies wird vom Nutzer für die Vereinfachung akzeptiert und darf nicht als globale exakte Suche bezeichnet werden.
 
-## Datenbedarf und bevorzugter Ansatz
+**Diagrammentscheidung noch als Vorschlag:** In Exakt die Auswahl Alle deaktivieren bzw. nur die geprüften Kandidaten anbieten. Nicht geprüfte Folgen dürfen nicht als Nulltreffer erscheinen. Standard und Erweitert behalten die globale Top10/Alle-Auswahl. Keine Mischung globaler Standardzahlen und eingeschränkter exakter Markierungen unter derselben Modusbezeichnung.
 
-Pagefind gibt `result.words` als Positionen zurück; die Oberflächenformen stehen erst im vollständigen `result.data().content`. Die heutige API würde daher die **Pagefind-Textfragmente aller passenden Folgen** brauchen. Die separaten Original-JSONs aller Folgen müssen dafür nicht zusätzlich geladen werden. Die [versionsgebundene Recherche](../research/variant-filter-api-2026-11-13.md) erklärt, warum Playground-Stämme und reine Wörterhäufigkeiten diese Lücke nicht schließen.
+## Datenfluss und geringerer Traffic
 
-Bevorzugter Machbarkeitsnachweis: Pagefind behalten und beim Build eine **kompakte Zuordnung Position → Wort-ID** mit gemeinsamem Oberflächenlexikon erzeugen. Das sind Suchpositionen, keine Audio-Wortzeitstempel; die Episoden-JSONs und groben Audiozeiten ändern sich nicht.
+Eine vollständige globale Surface-/Positionsdatei ist für diese Wortlisten und den eingeschränkten Exaktmodus **nicht mehr erforderlich**. Die frühere Empfehlung von rund 1,91 MB gzip für alle 106 Folgen ist damit für diesen Funktionsumfang entfallen.
 
-1. Der normale Standardweg ohne Optionen/Filter startet wie bisher allein mit dem nativen Suchindex. Ein Öffnen der Optionen lädt die zusätzliche Zuordnung für diesen Podcast/Datenstand, soweit nicht bereits gecacht. Bereits aktive Sondermodi/Filter lösen den nötigen Abruf auch bei geschlossener Karte aus.
-2. Für jede native Trefferposition die Wort-ID nachschlagen. Dadurch erhält Standard seine tatsächlichen Formen samt globalen Häufigkeiten, ohne alle Texte zu laden und ohne weitere native Erweiterungsqueries auszuführen.
-3. Ausgeschlossene IDs aus den nativen Positionsmengen entfernen. Pro Serie neu zählen, Nullfolgen erhalten und Top10/Alle neu sortieren. Die ungefilterten Basismengen und Variantenhäufigkeiten bleiben für Rücknahme im Cache.
-4. Leser verwenden die gefilterten Positionen. Bisherige Fragment-/Originaltext-Prüfungen, lazy Karten, Abbruch und Fehlerzustände beibehalten. Nur fehlende Details nun sichtbarer Folgen nachladen.
-5. Exakt/Erweitert können dieselbe Zuordnung verwenden, benötigen jedoch ausdrücklich definierte Regeln und gegebenenfalls Komponenteninformationen. Eigene Wortformen für Erweitert dürfen die native Standardinstanz nicht durch heimliche Zusatzqueries erwärmen.
+- Standard ermittelt zuerst wie bisher globale Zahlen aus Rohpositionen. Erst beim Öffnen der Wortlisten die fehlenden Pagefind-Fragmente der Top10 laden. Diese enthalten die zu den Positionen gehörenden Schreibweisen. Bereits geladene Leserfragmente wiederverwenden; keine Texte der übrigen Folgen laden.
+- Für Exakt die Texte der fixierten zehn Standardkandidaten laden. Ob der exakte Matcher direkt die Original-JSONs oder den geprüften Fragmenttext verwendet, bei der Implementierung anhand der Wortgrenzen/Originalzuordnung festlegen. Ein zusätzlicher eigener globaler Index ist dafür nicht nötig.
+- Originaltranskripte für Leser bleiben im Standardmodus sichtbarkeitsabhängig. Eine geöffnete vollständige Wortübersicht braucht zwar die Fragmente aller zehn Kandidaten, aber nicht automatisch alle zugehörigen Original-JSONs.
+- Nach einer neuen Suche nur die neue Kandidatenmenge berücksichtigen; passende Cacheeinträge verwenden. Die Grenze von zehn geladenen Kandidaten skaliert unabhängig von der gesamten Folgenzahl, die Dateigröße hängt aber von deren Länge ab.
 
-Ein-ID-je-Whitespace-Position ist ein Größenprototyp, noch kein abschließender Wortgrenzenvertrag. Insbesondere Euro-Münze, Wort/Teil und direkt aneinanderstehende Wörter ohne Leerzeichen benötigen Beispiele. Soll Exakt einzelne Komponenten unterscheiden oder mehrfach innerhalb derselben nativen Position zählen, braucht der Entwurf zusätzliche Informationen. Diese Entscheidung geht dem Produktionsschema voraus.
+Die bestehende lokale Messung ergab für **sämtliche Top10-Fragmente** je Anfrage etwa 0,48 bis 0,70 MB, statt 2,76 bis 5,20 MB für sämtliche Trefferfolgen. Native kalte Zählung zusätzlich etwa 0,20 bis 0,22 MB. Alle zehn Original-JSONs lagen je nach Anfrage bei 0,68 bis 0,99 MB unkomprimiert; diese sind nicht pauschal als Zusatzbedarf der informativen Liste zu addieren. Bereits geladene Dateien sparen weitere Abrufe. Das sind lokale Body-Größen aus dem bestehenden 106er-Bestand, keine Pages- oder Mobil-Latenzgarantie.
 
-## Gemessener Traffic im 106er-Bestand
+## Erweitert: Kombinationen und blinde Anfragen
 
-| Eingabe | Trefferfolgen / Formen | Native Counts-Dateien | Vollständige Textfragmente für Varianten ohne Zusatzzuordnung |
-| --- | ---: | ---: | ---: |
-| Tisch | 53 / 20 | 0,20 MB | 2,76 MB |
-| Wort | 99 / 45 | 0,20 MB | 4,90 MB |
-| kommen | 106 / 77 | 0,21 MB | 5,20 MB |
+Vorläufiger begrenzter Kandidatengenerator:
 
-Gemessen sind lokale Response-Bodies, ohne App-Shell/HTTP-Header. Fragmente sind intern komprimiert. Bereits für sichtbare Karten geladene Fragmente müssen nicht noch einmal übertragen werden. Das ist keine Pages-Netzwerkmessung.
+1. Ursprünglichen Begriff immer einschließen.
+2. Genau eine Voranstellung aus einer kurzen Liste erzeugen, beispielsweise ab-, an-, auf-, aus-, ein-, her-, hin-, mit-, nach-, vor-, zu-, zurück-. Keine rekursiven Mehrfachkombinationen. Die Liste und der Umgang mit sehr kurzen Eingaben bleiben festzulegen.
+3. Die Wörter einzeln suchen; eine gemeinsame Eingabe mehrerer Varianten wäre im nativen Pagefind-Pfad keine sichere Oder-Vereinigung. Die Ergebnisse der Varianten zu **einem ursprünglichen Stichwort** zusammenführen, nicht als neue farbige Stichwörter behandeln.
+4. Pro Folge und ursprünglichem Stichwort die Vereinigung der akzeptierten Positionen zählen. Dieselbe Position darf bei mehreren Varianten nicht doppelt zählen. Danach die globalen erweiterten Top10 bestimmen; nur für diese zehn die informativen Wortlisten und Texte laden.
 
-Der Zusatzdatei-Prototyp für **alle 106 Folgen** umfasst rund **4,80 MB JSON beziehungsweise 1,91 MB offline gzip**, inklusive Vokabular und ohne fertige Metadaten/Runtime. Eine optionale Binärkodierung spart komprimiert nur etwa 0,21 MB und ist zunächst nicht erforderlich. Die ältere 0,55-MB-Probe reiner Zählpaare erfüllt den jetzt ausdrücklich gewünschten Erhalt beliebiger nativer Standardpositionen nicht.
+Blinde Kombinationen sind technisch möglich. **Ungeprüfte Treffer dürfen aber nicht einfach addiert werden:** Pagefind kann bei fehlenden Erweiterungen auf einen kürzeren geladenen Indexpräfix zurückfallen. Das ist ein expliziter Pfad im [gesperrten Suchcode](https://github.com/Pagefind/pagefind/blob/v1.5.2/pagefind_web/src/search.rs).
 
-Komprimierte Auslieferung und Paketierung müssen bewusst gewählt und geprüft werden; sonst fallen die größeren Rohgrößen an. Eine geladene Zuordnung pro Datenstand wiederverwenden. Weitere Ausschlüsse brauchen dann keine neuen Dateien für globale Formen/Zahlen, neu sichtbare Karten eventuell schon. Bei 600 Folgen ist eine vollständige neue Messung nötig; ein bloß lineares Vergleichsszenario liegt bei etwa 29 MB Fragmenten bzw. 11 MB gzip-Zuordnung und ist keine belastbare Prognose. Deshalb Zusatzdaten nicht ungefragt beim normalen Einstieg laden und Pakete nach gemessenem Bedarf wählen. Die Aufteilung in wenige Pakete kann unabhängig vom endgültigen internen Format erfolgen; feste 64 Teile sind keine Vorgabe.
+Frische native Instanzen auf dem echten Index ergaben:
 
-## Erweitert: Präfixvorschlag bewerten
+| Erzeugte Anfrage | Positionen | Beobachtete tatsächliche Formen |
+| --- | ---: | --- |
+| vorkommen |25| vorkommen (12), vorkommt (11), vorkomm (1), vorkommenden (1) |
+| herkommen |23| herkommt (13), herkomme (5), herkommen (5) |
+| hertisch |296| her (254), here (39) sowie drei weitere Formen; kein hertisch |
+| vereimer |11| ver (10), vers (1); kein vereimer |
+| vortisch |0| keine |
 
-Eine kurze, explizite Liste wie an-, her-, hin-, vor-, zurück-, mit- ist ein sinnvoller begrenzter Einstieg. Sie bleibt technische Erweiterung, keine vollständige deutsche Sprachfamilie. Vorschlag zur Machbarkeit:
+Die Unterschiede zeigen auch: Nicht jede erfundene Anfrage produziert einen Fallback. Die [Rohbeobachtungen](../research/evidence/prefix-fallback-2026-11-13.json) gelten für diesen Datenstand und Ablauf, nicht für jeden Suchindex.
 
-- Nur Kombinationen zulassen, die im tatsächlichen Podcastvokabular vorkommen. Erfundenen Suchwörtern keine nativen Queries geben, die über Pagefind-Fallbacks unerwartete kürzere Wörter treffen können.
-- Standardpositionen stets erhalten und zusätzliche akzeptierte Formen vereinigen; dieselbe Position je Stichwort nur einmal zählen. Die Formliste macht die Erweiterung sichtbar und korrigierbar.
-- Zusammenspiel von Präfix, Eingabestamm und Wortanfang anhand echter Beispiele entscheiden. Ein Stemmer gleicher Bezeichnung garantiert keine identische Implementierung; die Fassung festlegen und prüfen.
-- Bedeutungsänderungen sind zu erwarten: bekommen ist nicht dasselbe wie kommen, versuchen nicht dasselbe wie suchen, aufhören nicht dasselbe wie hören. kam sowie getrennte Verbteile werden damit nicht automatisch vollständig erkannt.
+Empfehlung für eine kontrollierte globale Erweiterung: Ein **kleines buildseitiges Verzeichnis vorhandener Wörter oder Suchstämme** zur Kandidatenprüfung erproben. Eingabe/erzeugte Anfrage und Korpusschlüssel müssen dieselbe geprüfte Stammbehandlung verwenden, damit bestehende Formen wie herkommt nicht durch einen zu wörtlichen Vortest verlorengehen. Nur Kandidaten mit passender tatsächlicher Form/Stammerweiterung an Pagefind geben. Diese Variante benötigt kein globales Positionsmapping; Größe, Stemmerkompatibilität und Browserkosten sind getrennt nachzuweisen. Die frühere reine Vokabularprobe von etwa 0,20 MB gzip ist lediglich eine Größenreferenz, noch kein fertiges passendes Verzeichnis.
 
-Viele zusätzliche Enginequeries sind technisch möglich, erhöhen aber Aufrufe und können den nativen Chunkzustand verändern. Bevorzugt ist deshalb eine ausdrücklich corpusbegrenzte Auswahl anhand des Zusatzlexikons mit anschließendem Positionsvergleich. Die genaue Präfixliste und Vergleichsregel bleiben vor einem Ticket für Erweitert offen.
+Alternative ohne Verzeichnis: Die erzeugten Queries blind ausführen, danach jede getroffene Position auf die erwartete Formfamilie prüfen. Für globale korrekte Zahlen bräuchte dieser Nachfilter unter Umständen wieder alle passenden Fragmente. Nur die ausgewählten zehn Folgen nachzufiltern könnte zwar eine zusätzliche bewusst eingeschränkte Suchart sein, ist für Erweitert aber noch nicht vereinbart. Reines Ranking hilft nicht, weil Racoo die Positionen zählt.
 
-## Vorgehen nach Bestätigung
+Das Voranstellen bleibt eine technische Heuristik: kommen/bekommen, suchen/versuchen und hören/aufhören sind unterschiedliche Bedeutungen. kam sowie getrennte Verbteile oder mehrere Präfixe werden nicht automatisch vollständig erfasst. Da die neuen Wortlisten rein informativ sind, dienen sie nun der Erklärung und nicht der Korrektur per Ausschluss. Die konkrete Erweitert-Regel ist daher noch offen.
 
-1. Wortgrenzen, globale Ausschlusssemantik, Filterzustand bei neuen Suchen/Links und Extended-Beispielmatrix festlegen.
-2. Kleine echte Pagefind-Fixture mit Standard/Exakt, Komponenten und überlappenden Stichwörtern; kompakte Zuordnung samt Fehler-/Versionsbindung erproben. Bestehende Standardpositionen müssen für dieselbe native Abfragefolge unverändert bleiben.
-3. Auf dem 106er-Bestand native Formenlisten, Ausschluss-Neuranking und Leser-Markierungen gegen die vollständige Fragmentreferenz prüfen. Counts und echte markierte Stellen müssen gemeinsam stimmen, einschließlich eines Top10-Wechsels.
-4. Komprimierte Veröffentlichung, Paketanzahl, Browsercache, kalte/warme Bytes, Arbeitsspeicher und Ausschluss-Reaktionszeit messen; anschließend UI-Karte, dreiteilige Kapsel und Hilfe integrieren.
-5. Erweitert erst nach bestätigter Kandidatenregel integrieren; anschließend Handyansichten, beide Themen, Tastatur, Suchlinks und einen neuen Publikationsstand prüfen. Vorhandene Transkripte wiederverwenden.
+## Nächste Schritte
 
-Kein neuer Backenddienst, kein spaCy-Modell und keine neue Transkription erforderlich. Die Umsetzung ist durch diese Bewertung noch nicht begonnen; der Plan dient der nächsten Entscheidung.
+1. Die eingeschränkte Exaktsemantik und den vorgeschlagenen Umgang mit Alle als konkrete Abnahmefälle festhalten; Wortgrenzen definieren.
+2. Vor einer Umsetzung von Erweitert die Kandidatenvalidierung samt kompatibler Stammbehandlung und kleinem Verzeichnis an echten Beispielen erproben. Blinde Anfragen dürfen keine fremden kürzeren Präfixe als Trefferfamilie einschleusen.
+3. Danach UI, Top10-Detailaggregation und Exakt auf kleinen echten Pagefind-Fixtures implementieren. Zahlen, Listen, Diagramm, Markierungen und Navigation müssen denselben Modus zeigen. Keine Deaktivierungs-/Ausschlusslogik bauen.
+4. Echtes 106er-Beispiel mit geöffneter Wortübersicht messen; Caches, neue Suchtexte, leere exakte Top10, beide Themen und Handybreiten prüfen. Keine gesamten Archivtexte oder globale Positionsdatei vorladen.
+
+Diese Präzisierung ändert Dokumentation und Entscheidungsstand, noch keinen Anwendungscode. Keine neue Transkription, kein Backend und kein spaCy-Modell nötig.

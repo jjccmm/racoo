@@ -1,5 +1,7 @@
 # Variantenfilter mit nativem Pagefind-Standard
 
+**Spätere Umfangsänderung vom 13. November:** Der Nutzer hat informative Wortlisten nur für Top10 ohne Ausschlüsse und einen auf diese Kandidaten begrenzten Exaktmodus gewählt. Der folgende Bericht untersucht den vorherigen globalen Entwurf; dessen Positionsdatei ist für den neuen Umfang nicht mehr erforderlich. Maßgeblich ist der [aktuelle Plan](../planning/search-modes.md). Die Messwerte bleiben historische Vergleichswerte.
+
 Stand: 13. November 2026. **Recherche zu einem unbestätigten Vorschlag.** Untersucht sind Exakt, Standard als bisherige native Pagefind-Suche und Erweitert sowie eine nach Häufigkeit sortierte Liste tatsächlich getroffener Schreibweisen mit globalem Ausschluss. Diese Notiz ändert weder Anwendung noch aktiven Suchvertrag, Datenverträge oder bestätigten Plan. Ausgangspunkte sind [Suchvertrag](../search.md), [Veröffentlichungsverträge](../data-contracts.md), [bestehende Suchmodi-Recherche](search-modes-2026-11-12.md) und [offener Suchmodi-Plan](../planning/search-modes.md).
 
 ## Ergebnis

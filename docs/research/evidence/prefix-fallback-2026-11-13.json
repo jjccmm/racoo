@@ -1,0 +1,107 @@
+{
+  "date": "2026-11-13",
+  "method": "Fresh browser context and native Pagefind1.5.2 instance per query; all native raw positions grouped using complete returned fragments, read-only.",
+  "queries": [
+    {
+      "indexId": "f376233a66369947c391ece1ddb3fd27ae51344ffdf4b784bef6ef7024c02d3d",
+      "query": "vorkommen",
+      "episodes": 22,
+      "positions": 25,
+      "exactSurfacePositions": 12,
+      "forms": [
+        [
+          "vorkommen",
+          12
+        ],
+        [
+          "vorkommt",
+          11
+        ],
+        [
+          "vorkomm",
+          1
+        ],
+        [
+          "vorkommenden",
+          1
+        ]
+      ]
+    },
+    {
+      "indexId": "f376233a66369947c391ece1ddb3fd27ae51344ffdf4b784bef6ef7024c02d3d",
+      "query": "herkommen",
+      "episodes": 20,
+      "positions": 23,
+      "exactSurfacePositions": 5,
+      "forms": [
+        [
+          "herkommt",
+          13
+        ],
+        [
+          "herkomme",
+          5
+        ],
+        [
+          "herkommen",
+          5
+        ]
+      ]
+    },
+    {
+      "indexId": "f376233a66369947c391ece1ddb3fd27ae51344ffdf4b784bef6ef7024c02d3d",
+      "query": "hertisch",
+      "episodes": 99,
+      "positions": 296,
+      "exactSurfacePositions": 0,
+      "forms": [
+        [
+          "her",
+          254
+        ],
+        [
+          "here",
+          39
+        ],
+        [
+          "her-bewegung",
+          1
+        ],
+        [
+          "here's",
+          1
+        ],
+        [
+          "hers",
+          1
+        ]
+      ]
+    },
+    {
+      "indexId": "f376233a66369947c391ece1ddb3fd27ae51344ffdf4b784bef6ef7024c02d3d",
+      "query": "vortisch",
+      "episodes": 0,
+      "positions": 0,
+      "exactSurfacePositions": 0,
+      "forms": []
+    },
+    {
+      "indexId": "f376233a66369947c391ece1ddb3fd27ae51344ffdf4b784bef6ef7024c02d3d",
+      "query": "vereimer",
+      "episodes": 11,
+      "positions": 11,
+      "exactSurfacePositions": 0,
+      "forms": [
+        [
+          "ver",
+          10
+        ],
+        [
+          "vers",
+          1
+        ]
+      ]
+    }
+  ],
+  "indexId": "f376233a66369947c391ece1ddb3fd27ae51344ffdf4b784bef6ef7024c02d3d"
+}

@@ -1,5 +1,7 @@
 # Datenbedarf für Suchoptionen und Wortvarianten
 
+**Spätere Umfangsänderung vom 13. November:** Der Nutzer hat informative Wortlisten nur für Top10 ohne Ausschlüsse und einen auf diese Kandidaten begrenzten Exaktmodus gewählt. Der folgende Bericht untersucht den vorherigen globalen Entwurf; dessen Positionsdatei ist für den neuen Umfang nicht mehr erforderlich. Maßgeblich ist der [aktuelle Plan](../planning/search-modes.md). Die Messwerte bleiben historische Vergleichswerte.
+
 Stand: 13. November 2026. **Messung für einen unbestätigten Vorschlag, keine Anwendungserweiterung.** Die [API-Recherche](variant-filter-api-2026-11-13.md) erklärt den Datenbedarf. Der [Produktplan](../planning/search-modes.md) verbindet ihn mit dem vorgeschlagenen Bedienablauf. [Kompakte Messdaten](evidence/variant-filter-traffic-2026-11-13.json)
 
 ## Methode
