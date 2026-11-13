@@ -1,91 +1,84 @@
-# Vorschlag: klare Suchmodi für Racoo
+# Vorschlag: Suchoptionen und ausschließbare Wortvarianten
 
-Stand: 13. November 2026. **Plan zur Entscheidung, noch nicht umgesetzt.** Die laufende Seite und der [aktive Suchvertrag](../search.md) bleiben unverändert. Grundlage sind [Primärquellen und Engineproben](../research/search-modes-2026-11-12.md) sowie die [Messdaten](../research/evidence/search-options-2026-11-12.json).
+Stand: 13. November 2026. **Bewertung und Plan, noch nicht zur Umsetzung bestätigt.** Diese Konkretisierung ersetzt die vorherige Empfehlung eines eigenen Standard-Matchers. Die laufende Seite und der [aktive Suchvertrag](../search.md) bleiben unverändert. Grundlage: [API-Recherche](../research/variant-filter-api-2026-11-13.md), [lokale Datenmessung](../research/variant-filter-traffic-2026-11-13.md), [bisherige Untersuchung](../research/search-modes-2026-11-12.md).
 
-## Empfehlung
+## Bewertung und empfohlene Oberfläche
 
-Die erste Empfehlung ausschließlich wörtlicher Zeichenvergleiche war zu eng: Sie würde die bereits nützliche Zusammenführung von `Wort` und `Wörter` verlieren. **Stemming gehört deshalb von Anfang an in den Machbarkeitsnachweis.** Eine Suchengine-Ablösung ist erst nach einem Vergleich mit dieser Fähigkeit zu entscheiden; Pagefind bleibt bis dahin der aktive Weg.
+Der Nutzervorschlag ist sinnvoll und statisch umsetzbar. Er bewahrt die einfache normale Suche und legt fortgeschrittene Steuerung in eine aufklappbare Karte. Empfohlen: rundes Schieberegler-Icon rechts neben der Suche, darunter im Seitenfluss die Suchoptionen zwischen Suchzeile und Diagramm. Die Karte verändert keine Ergebnisse allein durch Öffnen oder Schließen. Bei aktivem Sondermodus/Ausschluss bleibt neben dem Icon ein kleiner sichtbarer Status stehen, damit geschlossene Optionen keine unerklärlich abweichenden Zahlen verursachen.
 
-Für die Oberfläche sind drei verständliche Stufen der neue Vorschlag:
+Die vorhandene Top10/Alle-Kapsel ist eigenes React/CSS und lässt sich ohne zusätzliche UI-Bibliothek auf drei Segmente übertragen. Ein neuer gemeinsamer Baustein kann beide Varianten mit zwei/drei Einträgen, gleitender Fläche, Tastaturbedienung und reduzierter Bewegung abdecken. Die drei Sucharten sind eine eigene Auswahl neben der unveränderten Diagrammauswahl.
 
-| Stufe | Zielregel | Beispiel / Grenze |
+Ein kleines Fragezeichen öffnet per Klick/Tastatur eine kurze Erklärung; nicht ausschließlich als Hover-Tooltip. Vorgeschlagener Inhalt:
+
+| Modus | Erklärung | Beispiel |
 | --- | --- | --- |
-| Exakt | Vollständiges Wort nach NFC und Kleinschreibung | `Wort` trifft Wort, nicht Wörter; `Ei` trifft nicht eine |
-| Wortformen, vorgeschlagene Vorgabe | Gleicher technischer Wortstamm, ohne automatische Präfixerweiterung | `Wort` und `Wörter` gehören zusammen; ein Stemmer garantiert nicht kommen/kommt/kam |
-| Erweitert | Wortformen plus ausdrücklich definierte Wortbestandteile | Zielbeispiele sind Wort → Schlüsselwörter und kommen → vorkommen; keine allgemeine Bedeutungs- oder Kompositumerkennung |
+| Exakt | Nur vollständige gleich geschriebene Wörter, ohne Unterschied der Groß-/Kleinschreibung | Ei zählt Ei, aber nicht eine; Tisch zählt nicht Tische/Tischtennis |
+| Standard, Vorgabe | Die bisherige Pagefind-Suche: Wortformen und Wortanfänge können passen | Tisch findet Tische und Tischtennis; Wort findet Wörter |
+| Erweitert | Standard plus kontrolliert zugelassene deutsche Voranstellungen | kommen soll auch vorkommen und herkommen finden |
 
-Für Erweitert sind die folgenden Zeichenregeln zunächst technische Bausteine zur Bewertung, keine vier zusätzlichen Pflichtschalter. Ein Kandidat ist Gleichheit oder Wortende **nach** Stemming: `wort` passt dann zum Ende von `schlusselwort`, `komm` zum Ende von `vorkomm`. Das muss mit der konkret gewählten Stemmerfassung geprüft werden. Auch diese Näherung trifft falsche Verwandtschaften, beispielsweise Wort → Antwort. Beliebige Teilwörter auf Stämmen wären noch breiter und können kommen → Kommentar treffen. Welches dieser Verhalten gewünscht ist, bleibt offen und muss in der Beispielmatrix sichtbar entschieden werden.
+**Standard bleibt die aktuelle native Pagefind-Suche und die Vorgabe beim Einstieg.** Die vorher vorgeschlagene Stammgleichheit ohne Präfixe ist dafür nicht der Vertrag. Auch ein Austausch von Pagefind gehört nicht zu diesem Entwurf. Seine bekannten Reihenfolge-/Chunk-Grenzen bleiben dokumentiert; eine separate Korrektur ist nicht stillschweigend eingeschlossen.
 
-Dafür braucht es kein spaCy-Modell, kein Backend und keine neue Transkription: Ein kompakter, versionierter deutscher Stemmer ist grundsätzlich eine andere Größenordnung als eine vollständige NLP-Pipeline. Die bisherige reine Wortlisten-Größenprobe enthält jedoch noch keine Stemmerintegration.
+## Listen tatsächlich gefundener Formen
 
-## Vergleichsregeln als technische Bausteine
+Für jedes akzeptierte Stichwort eine kompakte Liste mit eingegebener Schreibweise als Überschrift und derselben Serienfarbe anzeigen. Darin die tatsächlich getroffenen Oberflächenformen, nicht nur Wörter mit ähnlicher Bedeutung, nach ihrer gesamten nativen Trefferzahl über **alle Trefferfolgen** sortieren. Bei Gleichstand alphabetisch. Groß-/Kleinschreibung einer Form zusammenfassen; natürliche Anzeige etwa anhand ihrer häufigsten Originalschreibweise wäre zu definieren. Die Positionen aus der gemessenen Zusatzdatei sind normalisierte IDs; Anzeigenamen sind noch nicht vermessen.
 
-Die Muster in der zweiten Spalte erläutern die Regel. Sternchensyntax ist zunächst ein optionaler späterer Shortcut, noch kein beschlossener Eingabevertrag.
+Bei zehn Stichwörtern kein dauerhaftes Zehnspaltenlayout: auf breiten Ansichten ein Raster, auf kleinen Ansichten einzelne aufklappbare Wortlisten. Jede geöffnete Liste hat eine begrenzte Höhe und bei Bedarf ihren eigenen Scrollbereich. Bei vielen Formen optional eine lokale Filterzeile ergänzen, falls die Benutzung das rechtfertigt.
 
-| Suchart | Anschauliches Muster | Zählt beispielsweise | Zählt dabei nicht |
-| --- | --- | --- | --- |
-| Ganzes Wort | `Ei`, `kommen` | Ei beziehungsweise kommen | eine, eigentlich, einfach; vorkommen, kommt |
-| Wortanfang | `Ei*` | Ei, Eier, eine, einfach | leider |
-| Wortende | `*kommen` | kommen, vorkommen, angekommen, bekommen | Kommentar, vorkommenden, kommt |
-| Wortbestandteil | `*kommen*` | kommen, vorkommen, gekommen, vorkommenden, Kommentar | kommt, vorkommt, kam |
-| Technische Wortstämme, von Anfang an prüfen | stem(Wort) = stem(Wörter) | Wort, Wörter, Worten | keine Garantie für kommt/kam oder Schlüsselwörter |
-| Vollständige sprachliche Formen, später | sprachliche Formen von kommen | mit passender Ressource auch kommt, kam | nicht automatisch das andere Verb vorkommen |
-| Tippfehler, später | Vorschlag zu Eimre | möglicher Vorschlag Eimer | keine Bedeutungs-/Synonymgarantie |
-| Bedeutung/Synonyme, separat | Geldstück → Münze | ähnliche Inhalte | keine exakte Wortzählung aus Ähnlichkeitsscores |
+Ein Klick schaltet genau die ausgewählte Form aus oder wieder ein. Grau plus Durchstreichen und ein klarer Auswahlzustand machen dies sichtbar. Die Zeile bleibt mit ihrer ursprünglichen Häufigkeit stehen, damit sie wieder einschaltbar ist und die Liste nicht bei jedem Klick umsortiert. Beispielsweise Tischtennis ausschließen betrifft diese Form, nicht automatisch Tischtennisball. Ein sichtbarer Ausschlusszähler und Alle zurücksetzen verhindern versteckte Filter.
 
-Groß-/Kleinschreibung bleibt für den Vergleich unerheblich, die eingegebene Schreibweise bleibt sichtbar. NFC wird normalisiert. Nur für Exakt zunächst keine Akzente, Umlaute oder ß stillschweigend gleichsetzen. Im Wortformen-Modus sind solche Zusammenführungen dagegen ein erklärter Teil des gewählten Stemmers. Echte Lemmatisierung und technische Wortstämme sind unterschiedliche Regeln: Ein Snowball-Stamm garantiert weder kommen/kommt noch unregelmäßige Formen wie kam. Das Lemma vorkommen ist außerdem ein anderes als kommen. Ein sprachliches Familienverfahren wäre eigener zusätzlicher Umfang.
+Vorschlag entsprechend „in der Suche ignoriert“: Ausschlüsse gelten für alle Folgen und alle Stichwortserien **dieser aktuellen Suche**, unabhängig von der gerade angezeigten Top10. Dieselbe Form in mehreren Wortlisten zeigt denselben Zustand. Alle markierten Formen sind in Zählung, Diagramm, Leser, Navigation und Minimap ausgeschlossen. Eine Stelle darf nicht über eine andere Suchserie sichtbar bleiben, wenn die Form global ausgeschlossen wurde. Neue Suchbegriffe/Moduswechsel und geteilte Links brauchen einen festgelegten Umgang mit dem Filterzustand; keine ungefragte dauerhafte globale Ausschlussliste im Browser einführen.
 
-Eine einfache Wortteilsuche kann sehr breite oder unpassende Ergebnisse liefern. Bei kurzen Teilwörtern einen sichtbaren Hinweis vorsehen und die tatsächlich mitgezählten Schreibweisen anzeigen. Eine Mindestlänge von drei Zeichen für beliebige Bestandteile ist eine mögliche Entscheidung; eine Einschränkung darf niemals stillschweigend Treffer abschneiden.
+## Warum die Listen nicht auf Top10 beschränken
 
-## Nachprüfung: Wort, Wörter und die Startdemo
+Die vorgeschlagene Nachladeschleife liefert ohne weitere Nachweise keine vollständige Wortliste oder sichere neue Rangfolge. Eine bislang außerhalb liegende Folge kann nach Ausschlüssen führend werden. Auch ihre Formen und bereinigten Zahlen wären dann zunächst unbekannt. Im schlimmsten Fall müssen alle bisherigen Kandidaten geprüft werden. Außerdem benötigt die Ansicht Alle ohnehin bereinigte globale Werte.
 
-Am 13. November lieferte die native Suche im bestehenden 106er-Index für Wort und Wörter jeweils 588 Positionen in 99 Folgen. Darunter waren sowohl Wort als auch Wörter und Wortanfänge wie Wortspiel. Stemming ist damit ein realer Nutzen, der beim Vergleich erhalten bleiben soll.
+Deshalb erst die vollständigen Trefferpositionen aller Kandidaten mit ihren Formen bestimmen, dann Ausschlüsse anwenden und die Folgen neu sortieren. Erst danach werden die nun sichtbaren Lesertexte geladen. Nur die neue Karte benötigt eventuell einen noch fehlenden Text; die globale Rangberechnung darf darauf nicht warten.
 
-Die Markierung von Schlüsselwörter auf der Startseite entsteht dagegen aus der expliziten Wortfamilie in [LandingIntro.tsx](../../web/src/LandingIntro.tsx). Diese Demo verwendet keine Pagefind-Suche. Im überprüften echten Wort-Ergebnis kam Schlüsselwörter nicht vor. Normales Snowball-Stemming zerlegt zusammengesetzte Wörter nicht automatisch in ihre Bestandteile. Falls andere reale Fundstellen beobachtet werden, müssen deren Originalschreibweise und Position separat geprüft werden; insbesondere können Bindestriche/Schrägstriche zusätzliche Komponenten erzeugen. Die [versionierte Evidenz](../research/evidence/search-options-2026-11-12.json) enthält die Nachprüfung.
+## Datenbedarf und bevorzugter Ansatz
 
-## Warum reine Pagefind-Einstellungen nicht genügen
+Pagefind gibt `result.words` als Positionen zurück; die Oberflächenformen stehen erst im vollständigen `result.data().content`. Die heutige API würde daher die **Pagefind-Textfragmente aller passenden Folgen** brauchen. Die separaten Original-JSONs aller Folgen müssen dafür nicht zusätzlich geladen werden. Die [versionsgebundene Recherche](../research/variant-filter-api-2026-11-13.md) erklärt, warum Playground-Stämme und reine Wörterhäufigkeiten diese Lücke nicht schließen.
 
-Die gesperrte Version 1.5.2 mischt Stammverarbeitung und Präfixerweiterung. Wortformen wie Kommentar und Komma sind deshalb mögliche Treffer für kommen. Für Ei wurde der fehlende einfach-Treffer am echten Index reproduziert.
+Bevorzugter Machbarkeitsnachweis: Pagefind behalten und beim Build eine **kompakte Zuordnung Position → Wort-ID** mit gemeinsamem Oberflächenlexikon erzeugen. Das sind Suchpositionen, keine Audio-Wortzeitstempel; die Episoden-JSONs und groben Audiozeiten ändern sich nicht.
 
-Die Treffer hängen zusätzlich vom geladenen Wortbestand ab: Die native Engine liefert Ei zunächst mit 33.329 Positionen, nach einer Suche nach einfach mit 45.171. Im Anwendungsadapter bleibt die zuerst gecachte Ei-Menge erhalten; sucht man in einer frischen Instanz zuerst einfach, erhält die erste Ei-Suche ebenfalls 45.171. Das erklärt das beobachtete Verhalten besser als eine sprachliche Unterscheidung zwischen eine und einfach. Es ist ein Korrektheitsnachweis für diesen Index, keine Behauptung über jede denkbare Pagefind-Abfrage.
+1. Der normale Standardweg ohne Optionen/Filter startet wie bisher allein mit dem nativen Suchindex. Ein Öffnen der Optionen lädt die zusätzliche Zuordnung für diesen Podcast/Datenstand, soweit nicht bereits gecacht. Bereits aktive Sondermodi/Filter lösen den nötigen Abruf auch bei geschlossener Karte aus.
+2. Für jede native Trefferposition die Wort-ID nachschlagen. Dadurch erhält Standard seine tatsächlichen Formen samt globalen Häufigkeiten, ohne alle Texte zu laden und ohne weitere native Erweiterungsqueries auszuführen.
+3. Ausgeschlossene IDs aus den nativen Positionsmengen entfernen. Pro Serie neu zählen, Nullfolgen erhalten und Top10/Alle neu sortieren. Die ungefilterten Basismengen und Variantenhäufigkeiten bleiben für Rücknahme im Cache.
+4. Leser verwenden die gefilterten Positionen. Bisherige Fragment-/Originaltext-Prüfungen, lazy Karten, Abbruch und Fehlerzustände beibehalten. Nur fehlende Details nun sichtbarer Folgen nachladen.
+5. Exakt/Erweitert können dieselbe Zuordnung verwenden, benötigen jedoch ausdrücklich definierte Regeln und gegebenenfalls Komponenteninformationen. Eigene Wortformen für Erweitert dürfen die native Standardinstanz nicht durch heimliche Zusatzqueries erwärmen.
 
-Rankingparameter steuern den Score und entfernen keine Wortpositionen. Racoo sortiert seine Balken nach eigenen absoluten Zählungen; ein höheres termSimilarity stellt keine strikte Zählung her. Anführungszeichen sind ebenfalls kein Fix: Die App behandelt sie bislang als Trennzeichen. Der native Phrasenpfad stemmt weiterhin und liefert im untersuchten Fall nur die erste zusammenhängende Stelle pro Folge. Quell- und Versionsnachweise stehen in der verlinkten Recherche. Auch die reine Quelltextprüfung von 1.6.0 belegt keinen fertigen Schalter für die gewünschten Regeln.
+Ein-ID-je-Whitespace-Position ist ein Größenprototyp, noch kein abschließender Wortgrenzenvertrag. Insbesondere Euro-Münze, Wort/Teil und direkt aneinanderstehende Wörter ohne Leerzeichen benötigen Beispiele. Soll Exakt einzelne Komponenten unterscheiden oder mehrfach innerhalb derselben nativen Position zählen, braucht der Entwurf zusätzliche Informationen. Diese Entscheidung geht dem Produktionsschema voraus.
 
-## Technische Optionen
+## Gemessener Traffic im 106er-Bestand
 
-| Variante | Vorteile | Nachteile / Grenzen |
-| --- | --- | --- |
-| Pagefind behalten, zurückgelieferte Wörter nachfiltern | Kleiner Einstieg für strengere Prüfungen | Kann falsche Positionen entfernen, aber fehlende Kandidaten nicht zuverlässig ergänzen. Für breite Begriffe müssen zusätzliche Texte geladen werden, bevor globale Zahlen feststehen. |
-| Alle Transkripte im Browser durchsuchen | Sehr einfacher Matcher, eindeutige Regeln | Kalt müssen alle Texte geladen werden. Als Prüfreferenz gut; als Standardpfad im wachsenden Archiv ungünstig für das vorhandene Lazy-Loading-Ziel. |
-| Vollständiges Wortverzeichnis + kompakte Zählpaare | Klare, vollständige Wortwahl für alle vier lexikalischen Modi; schnelle globale Zahlen; Texte bleiben lazy | Eigener kleiner Build-/Ladevertrag und explizite Wortgrenzen erforderlich. Das ist wieder ein eigener Zählindex, jedoch ohne Sprachmodell. |
-| Andere Suchbibliothek oder Pagefind-Fork | Zusätzliche Steuerungsmöglichkeiten | Upgrade-/Integrationsaufwand; korrekte globale Häufigkeiten und Textbereiche entstehen nicht automatisch. |
+| Eingabe | Trefferfolgen / Formen | Native Counts-Dateien | Vollständige Textfragmente für Varianten ohne Zusatzzuordnung |
+| --- | ---: | ---: | ---: |
+| Tisch | 53 / 20 | 0,20 MB | 2,76 MB |
+| Wort | 99 / 45 | 0,20 MB | 4,90 MB |
+| kommen | 106 / 77 | 0,21 MB | 5,20 MB |
 
-Die dritte Variante bleibt der bevorzugte Machbarkeitsnachweis, jetzt mit versioniertem Stemmer und gemeinsamem Matcher. Eine Ablösung von Pagefind ist noch nicht entschieden: Zuerst die nützliche Wortformabdeckung und die vollständigen Zahlen gegenprüfen. Bei einer später bestätigten Ablösung ist keine dauerhafte doppelte Zählquelle erforderlich. Die Anwendung behält ihre Oberfläche, Originaltranskripte, groben Zeiten, Podcastkonfiguration und das statische Hosting auf GitHub Pages.
+Gemessen sind lokale Response-Bodies, ohne App-Shell/HTTP-Header. Fragmente sind intern komprimiert. Bereits für sichtbare Karten geladene Fragmente müssen nicht noch einmal übertragen werden. Das ist keine Pages-Netzwerkmessung.
 
-## Datenfluss der bevorzugten Variante
+Der Zusatzdatei-Prototyp für **alle 106 Folgen** umfasst rund **4,80 MB JSON beziehungsweise 1,91 MB offline gzip**, inklusive Vokabular und ohne fertige Metadaten/Runtime. Eine optionale Binärkodierung spart komprimiert nur etwa 0,21 MB und ist zunächst nicht erforderlich. Die ältere 0,55-MB-Probe reiner Zählpaare erfüllt den jetzt ausdrücklich gewünschten Erhalt beliebiger nativer Standardpositionen nicht.
 
-1. Beim Build die gespeicherten Episoden mit einem gemeinsamen Wortzerleger erfassen. Wörter erhalten einen normalisierten Schlüssel und optional zusätzlich einen deterministischen Stammschlüssel. Die Häufigkeiten bleiben an den unterschiedlichen Originalschreibweisen. Pro Wort nur nichtleere Paare `[Folgenindex, Anzahl]` speichern; keine Wortzeitstempel und zunächst keine globalen Positionslisten.
-2. Im Browser das vollständige Wortverzeichnis des ausgewählten Podcasts laden. Je Modus die normalisierte Schreibweise oder den Stammschlüssel vergleichen. Für Wortformen nur Stammgleichheit; die erweiterte Vergleichsregel erst nach der Beispielprüfung festlegen. Build und Browser verwenden dieselbe versionierte Stemmerfassung. Benötigte Zählpakete laden und cachen; keine zufällige Abhängigkeit von zuvor geladenen Wortbereichen.
-3. Für jeden eingegebenen Begriff die Anzahlpaare aller passenden Wörter addieren, Nullfolgen ergänzen und dann Top10/Alle wie bisher sortieren. Eine Form nur einmal je Suchbegriff auswählen.
-4. Nur die sichtbaren Ergebnisfolgen als vorhandenes Episoden-JSON laden. Derselbe Wortzerleger und Matcher erzeugt dort die UTF-16-Markierungsbereiche. Fundstellennavigation, Minimap und Audio verwenden diese Bereiche und die vorhandenen groben Zeiten.
-5. Modus und Publikationsstand gehören in Cache-/Linkidentität. Zahlen, Rangfolge und Markierungen wechseln gemeinsam. Die bestehende Behandlung von Abbruch, veralteten Antworten und Ladefehlern erhalten.
+Komprimierte Auslieferung und Paketierung müssen bewusst gewählt und geprüft werden; sonst fallen die größeren Rohgrößen an. Eine geladene Zuordnung pro Datenstand wiederverwenden. Weitere Ausschlüsse brauchen dann keine neuen Dateien für globale Formen/Zahlen, neu sichtbare Karten eventuell schon. Bei 600 Folgen ist eine vollständige neue Messung nötig; ein bloß lineares Vergleichsszenario liegt bei etwa 29 MB Fragmenten bzw. 11 MB gzip-Zuordnung und ist keine belastbare Prognose. Deshalb Zusatzdaten nicht ungefragt beim normalen Einstieg laden und Pakete nach gemessenem Bedarf wählen. Die Aufteilung in wenige Pakete kann unabhängig vom endgültigen internen Format erfolgen; feste 64 Teile sind keine Vorgabe.
 
-Ein vorhandener Worttoken bekommt zunächst genau einen Zähleintrag; der Stammschlüssel ist nur ein zusätzliches Auswahlmerkmal, keine zweite Zählkopie. So können Zählpaare addiert werden, ohne Komponentenalias-Treffer doppelt zu zählen. Der Größenprobe liegt das aktuelle Suchwortmuster zugrunde, das innere Bindestriche/Schrägstriche erhält. Ob Euro-Münze und Wort/Teil künftig als ein Ganzes oder getrennte Komponenten gelten sollen, ist vor Umsetzung anhand konkreter Beispiele zu bestätigen. Bei Komponentenaliasen müsste zusätzlich die Deduplizierung derselben Textstelle gelöst werden.
+## Erweitert: Präfixvorschlag bewerten
 
-Bei mehreren Suchbegriffen bleibt die bisherige Serienregel bestehen: Eine Stelle kann zu zwei verschiedenen Anfragen gehören und in beiden Balkenserien zählen. Im Leser wird sie zu einer markierten Stelle mit den passenden Farben zusammengeführt.
+Eine kurze, explizite Liste wie an-, her-, hin-, vor-, zurück-, mit- ist ein sinnvoller begrenzter Einstieg. Sie bleibt technische Erweiterung, keine vollständige deutsche Sprachfamilie. Vorschlag zur Machbarkeit:
 
-## Größenprobe und Skalierung
+- Nur Kombinationen zulassen, die im tatsächlichen Podcastvokabular vorkommen. Erfundenen Suchwörtern keine nativen Queries geben, die über Pagefind-Fallbacks unerwartete kürzere Wörter treffen können.
+- Standardpositionen stets erhalten und zusätzliche akzeptierte Formen vereinigen; dieselbe Position je Stichwort nur einmal zählen. Die Formliste macht die Erweiterung sichtbar und korrigierbar.
+- Zusammenspiel von Präfix, Eingabestamm und Wortanfang anhand echter Beispiele entscheiden. Ein Stemmer gleicher Bezeichnung garantiert keine identische Implementierung; die Fassung festlegen und prüfen.
+- Bedeutungsänderungen sind zu erwarten: bekommen ist nicht dasselbe wie kommen, versuchen nicht dasselbe wie suchen, aufhören nicht dasselbe wie hören. kam sowie getrennte Verbteile werden damit nicht automatisch vollständig erkannt.
 
-Im vorhandenen 106er-Bestand wurden mit dem vorläufigen Wortmuster 55.060 verschiedene normalisierte Schreibweisen und 236.490 nichtleere Wort/Folge-Paare gezählt. Die Wortliste umfasste rund 0,69 MB JSON und 0,20 MB gzip; flache Zählpaare rund 1,30 MB JSON und 0,35 MB gzip. Zusammen also etwa 0,55 MB gzip, ohne fertige Publikationshülle, Paketmetadaten, Stammschlüssel oder Stemmercode. Der ergänzte Wortformen-Entwurf ist damit noch nicht vollständig vermessen.
+Viele zusätzliche Enginequeries sind technisch möglich, erhöhen aber Aufrufe und können den nativen Chunkzustand verändern. Bevorzugt ist deshalb eine ausdrücklich corpusbegrenzte Auswahl anhand des Zusatzlexikons mit anschließendem Positionsvergleich. Die genaue Präfixliste und Vergleichsregel bleiben vor einem Ticket für Erweitert offen.
 
-Das zeigt eine brauchbare Größenordnung für einen Prototyp, keine gemessene Netzwerk-/Laufzeitgarantie. Dateipaketierung und tatsächliche Auslieferung müssen im Pages-/Browserpfad geprüft werden. Das Wachstum hängt auch von Wortvielfalt ab. Mit 600 echten Folgen erneut kalte/warme Bytes, Speicher und Suchzeit messen; keine vorschnelle lineare Garantie aus 106 Folgen ableiten. Ein N-Gramm-Index oder gespeicherte Positionspostings sind erst bei gemessenem Bedarf sinnvoll.
+## Vorgehen nach Bestätigung
 
-## Umsetzungsreihenfolge nach Bestätigung
+1. Wortgrenzen, globale Ausschlusssemantik, Filterzustand bei neuen Suchen/Links und Extended-Beispielmatrix festlegen.
+2. Kleine echte Pagefind-Fixture mit Standard/Exakt, Komponenten und überlappenden Stichwörtern; kompakte Zuordnung samt Fehler-/Versionsbindung erproben. Bestehende Standardpositionen müssen für dieselbe native Abfragefolge unverändert bleiben.
+3. Auf dem 106er-Bestand native Formenlisten, Ausschluss-Neuranking und Leser-Markierungen gegen die vollständige Fragmentreferenz prüfen. Counts und echte markierte Stellen müssen gemeinsam stimmen, einschließlich eines Top10-Wechsels.
+4. Komprimierte Veröffentlichung, Paketanzahl, Browsercache, kalte/warme Bytes, Arbeitsspeicher und Ausschluss-Reaktionszeit messen; anschließend UI-Karte, dreiteilige Kapsel und Hilfe integrieren.
+5. Erweitert erst nach bestätigter Kandidatenregel integrieren; anschließend Handyansichten, beide Themen, Tastatur, Suchlinks und einen neuen Publikationsstand prüfen. Vorhandene Transkripte wiederverwenden.
 
-1. **Suchvertrag festlegen.** Exakt, Stammgleichheit und die gewünschte erweiterte Regel, Wortgrenzen, Kurzbegriff-Hinweis, Zähleinheit und Mehrwortüberschneidungen als kleine Beispielmatrix festhalten. Technisches Stemming gehört dazu; vollständige Lemmatisierung, Tippfehler und Bedeutung bleiben zunächst außerhalb.
-2. **Kleinen Machbarkeitsnachweis bauen.** Gemeinsamer Tokenizer, versionierter deutscher Stemmer, Wortverzeichnis/Zählpaare und direkte Originaltext-Referenzzählung. Wort/Wörter/Worten/Schlüsselwörter/Antwort sowie Ei/eine/eigentlich/einem/einfach und kommen/kommt/kam/vorkommen/vorkommt/gekommen/Kommentar/Komma/willkommen prüfen. Stamm- und Teilwortregel voneinander trennen.
-3. **Echte 106 Folgen vergleichen.** Nicht die heutige Pagefind-Menge als Sollwert nehmen, sondern den bestätigten direkten Wortvergleich. Kalte/warme Anfragen und unterschiedliche Suchreihenfolgen müssen exakt dieselben Zählungen liefern.
-4. **Adapter und Suchoptionen integrieren.** Vorschlag: Wortformen als Vorgabe und eine kleine Auswahl Exakt / Wortformen / Erweitert, sobald die erweiterte Regel feststeht. Angezeigte Wörter/Farben erhalten; mitgezählte Formen auf Wunsch aufklappbar zeigen. Sternchen-Shortcuts später nur bei Bedarf.
-5. **Veröffentlichen und aufräumen.** Wortzahlen, Highlights, Top10/Alle, beide Themen, Handybreite, Links und neu hinzukommende Folgen prüfen. Eine Ablösung des bisherigen Pagefind-Zählwegs erst nach bestätigter Entscheidung und Abnahme vornehmen. Die Demo darf keine unerklärte größere Wortfamilie als die echte Suche versprechen. Vorhandene Transkripte werden wiederverwendet, ohne Audio-Download oder Neutranskription.
-
-Die bisherigen Anwendungen und der laufende Preview wurden für diese Planung nicht verändert. Dieser Plan ist die Grundlage für eine nächste Entscheidung und anschließend konkrete Tickets.
+Kein neuer Backenddienst, kein spaCy-Modell und keine neue Transkription erforderlich. Die Umsetzung ist durch diese Bewertung noch nicht begonnen; der Plan dient der nächsten Entscheidung.

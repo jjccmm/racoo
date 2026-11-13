@@ -1,0 +1,1120 @@
+{
+  "date": "2026-11-13",
+  "indexId": "f376233a66369947c391ece1ddb3fd27ae51344ffdf4b784bef6ef7024c02d3d",
+  "method": "Read-only Chromium native1.5.2 API on local Vite preview; fresh browser context/query. Counts loads engine/index only. Top10 deliberately opens all10 fragments+JSONs (UI actually lazy visible cards). RemainingFragments calls data() for every other matching result; no remaining original JSON fetches. Body bytes exclude HTTP headers/app shell and are not Pages cold-wire guarantee; Pagefind binary files internally gzipped, episode JSON not HTTP-compressed locally. Separate gzip estimates are offline.",
+  "offline": {
+    "episodeCount": 106,
+    "fragmentCount": 106,
+    "allFragmentFileBytes": 5200635,
+    "allOriginalJsonBytes": 7412244,
+    "allOriginalJsonGzipEstimateBytes": 2840444,
+    "surfacePositionPrototype": {
+      "rule": "Pagefind fragment.content whitespace positions; strip outer punctuation, NFC and German lowercase; keep internal punctuation/components as current reader does; frequency-ranked vocabulary IDs; no runtime integration",
+      "tokenPositions": 1184373,
+      "wordCountMismatches": 0,
+      "wordForms": 55452,
+      "vocabularyBytes": 698875,
+      "vocabularyGzipBytes": 233406,
+      "perEpisodeJsonIdArraysBytes": 4098826,
+      "perEpisodeJsonIdArraysGzipBytes": 1675230,
+      "perEpisodeVarintBytes": 1695442,
+      "perEpisodeVarintGzipBytes": 1469486,
+      "allJsonGzipWithVocabularyBytes": 1908636,
+      "allVarintGzipWithVocabularyBytes": 1702892
+    }
+  },
+  "queries": [
+    {
+      "query": "Tisch",
+      "episodes": 53,
+      "positions": 114,
+      "variantCount": 20,
+      "forms": [
+        [
+          "tisch",
+          80
+        ],
+        [
+          "tische",
+          6
+        ],
+        [
+          "tischtennis",
+          4
+        ],
+        [
+          "tischtennisball",
+          3
+        ],
+        [
+          "tischtennisschläger",
+          3
+        ],
+        [
+          "lounge-tisch",
+          2
+        ],
+        [
+          "tischen",
+          2
+        ],
+        [
+          "tischverteilung",
+          2
+        ],
+        [
+          "slytherin-tisch",
+          1
+        ],
+        [
+          "tischkicker",
+          1
+        ],
+        [
+          "tischplatte",
+          1
+        ],
+        [
+          "tischseite",
+          1
+        ],
+        [
+          "tischstelltplatte",
+          1
+        ],
+        [
+          "tischstilzplatte",
+          1
+        ],
+        [
+          "tischtennis-profi",
+          1
+        ],
+        [
+          "tischtennisblatte",
+          1
+        ],
+        [
+          "tischtennischrist",
+          1
+        ],
+        [
+          "tischtennisplatte",
+          1
+        ],
+        [
+          "tischtennisverein",
+          1
+        ],
+        [
+          "yin-yang-tisch",
+          1
+        ]
+      ],
+      "stages": {
+        "counts": {
+          "requests": 6,
+          "bodyBytes": 203191,
+          "fragmentBytes": 0,
+          "originalJsonBytes": 0
+        },
+        "top10": {
+          "requests": 20,
+          "bodyBytes": 1162198,
+          "fragmentBytes": 478631,
+          "originalJsonBytes": 683567
+        },
+        "remainingFragments": {
+          "requests": 43,
+          "bodyBytes": 2277721,
+          "fragmentBytes": 2277721,
+          "originalJsonBytes": 0
+        }
+      },
+      "completeFragmentBytes": 2756352
+    },
+    {
+      "query": "Wort",
+      "episodes": 99,
+      "positions": 588,
+      "variantCount": 45,
+      "forms": [
+        [
+          "wort",
+          303
+        ],
+        [
+          "worte",
+          86
+        ],
+        [
+          "wörter",
+          85
+        ],
+        [
+          "worten",
+          22
+        ],
+        [
+          "wortspiel",
+          22
+        ],
+        [
+          "wortspiele",
+          9
+        ],
+        [
+          "wörtlich",
+          6
+        ],
+        [
+          "wortes",
+          5
+        ],
+        [
+          "wörtern",
+          4
+        ],
+        [
+          "wortwörtlich",
+          4
+        ],
+        [
+          "wörtliche",
+          3
+        ],
+        [
+          "f-wort",
+          2
+        ],
+        [
+          "wortgag",
+          2
+        ],
+        [
+          "wortradio",
+          2
+        ],
+        [
+          "wortreihenfolge",
+          2
+        ],
+        [
+          "wortschatz",
+          2
+        ],
+        [
+          "200-wörter",
+          1
+        ],
+        [
+          "dora-wortspiel",
+          1
+        ],
+        [
+          "ember-wortspiel",
+          1
+        ],
+        [
+          "wort-momente",
+          1
+        ],
+        [
+          "wort-wörtlich",
+          1
+        ],
+        [
+          "wortbildungsstörungen",
+          1
+        ],
+        [
+          "wörtchen",
+          1
+        ],
+        [
+          "worter",
+          1
+        ],
+        [
+          "wortfilm",
+          1
+        ],
+        [
+          "wortfilter",
+          1
+        ],
+        [
+          "wortfindungsstörungen",
+          1
+        ],
+        [
+          "worth",
+          1
+        ],
+        [
+          "wortklang",
+          1
+        ],
+        [
+          "wortkommaneste",
+          1
+        ],
+        [
+          "wortlaut",
+          1
+        ],
+        [
+          "wörtlicher",
+          1
+        ],
+        [
+          "wortmeldung",
+          1
+        ],
+        [
+          "wortneuschöpfungen",
+          1
+        ],
+        [
+          "wortpaare",
+          1
+        ],
+        [
+          "wortsendung",
+          1
+        ],
+        [
+          "wortskala",
+          1
+        ],
+        [
+          "wortstand",
+          1
+        ],
+        [
+          "wortveränderung",
+          1
+        ],
+        [
+          "wortwahl",
+          1
+        ],
+        [
+          "wortwillig",
+          1
+        ],
+        [
+          "wortwitz",
+          1
+        ],
+        [
+          "wortwitze",
+          1
+        ],
+        [
+          "wortwitzen",
+          1
+        ],
+        [
+          "wortzeichen",
+          1
+        ]
+      ],
+      "stages": {
+        "counts": {
+          "requests": 6,
+          "bodyBytes": 196150,
+          "fragmentBytes": 0,
+          "originalJsonBytes": 0
+        },
+        "top10": {
+          "requests": 20,
+          "bodyBytes": 1335946,
+          "fragmentBytes": 554303,
+          "originalJsonBytes": 781643
+        },
+        "remainingFragments": {
+          "requests": 89,
+          "bodyBytes": 4341171,
+          "fragmentBytes": 4341171,
+          "originalJsonBytes": 0
+        }
+      },
+      "completeFragmentBytes": 4895474
+    },
+    {
+      "query": "kommen",
+      "episodes": 106,
+      "positions": 3075,
+      "variantCount": 77,
+      "forms": [
+        [
+          "kommt",
+          1393
+        ],
+        [
+          "kommen",
+          718
+        ],
+        [
+          "komm",
+          316
+        ],
+        [
+          "kommst",
+          159
+        ],
+        [
+          "komme",
+          133
+        ],
+        [
+          "kommentare",
+          83
+        ],
+        [
+          "kommentar",
+          57
+        ],
+        [
+          "kommunizieren",
+          26
+        ],
+        [
+          "kommentiert",
+          20
+        ],
+        [
+          "kommentieren",
+          18
+        ],
+        [
+          "kommunikation",
+          18
+        ],
+        [
+          "komma",
+          14
+        ],
+        [
+          "kommentaren",
+          14
+        ],
+        [
+          "kommt's",
+          10
+        ],
+        [
+          "kommunion",
+          6
+        ],
+        [
+          "kommenden",
+          5
+        ],
+        [
+          "kommentarlos",
+          5
+        ],
+        [
+          "kommentator",
+          3
+        ],
+        [
+          "kommentatoren",
+          3
+        ],
+        [
+          "kommissar",
+          3
+        ],
+        [
+          "kommunikationsform",
+          3
+        ],
+        [
+          "youtube-kommentaren",
+          3
+        ],
+        [
+          "kommando",
+          2
+        ],
+        [
+          "kommentarfunktionen",
+          2
+        ],
+        [
+          "kommerzielles",
+          2
+        ],
+        [
+          "kommission",
+          2
+        ],
+        [
+          "kommode",
+          2
+        ],
+        [
+          "kommunistischen",
+          2
+        ],
+        [
+          "kommuniziert",
+          2
+        ],
+        [
+          "spam-kommentare",
+          2
+        ],
+        [
+          "top-kommentator",
+          2
+        ],
+        [
+          "wordpress-kommentare",
+          2
+        ],
+        [
+          "auschwitz-kommentar",
+          1
+        ],
+        [
+          "domino-kommentator",
+          1
+        ],
+        [
+          "euch-kommentar",
+          1
+        ],
+        [
+          "facebook-kommentaren",
+          1
+        ],
+        [
+          "komma-regeln",
+          1
+        ],
+        [
+          "kommend",
+          1
+        ],
+        [
+          "kommende",
+          1
+        ],
+        [
+          "kommentares",
+          1
+        ],
+        [
+          "kommentarscheiße",
+          1
+        ],
+        [
+          "kommentarspalte",
+          1
+        ],
+        [
+          "kommentarspalten",
+          1
+        ],
+        [
+          "kommentasen",
+          1
+        ],
+        [
+          "kommentatorenkabine",
+          1
+        ],
+        [
+          "kommentiere",
+          1
+        ],
+        [
+          "kommentiers",
+          1
+        ],
+        [
+          "kommerz",
+          1
+        ],
+        [
+          "kommilitone",
+          1
+        ],
+        [
+          "kommilitonen",
+          1
+        ],
+        [
+          "kommis",
+          1
+        ],
+        [
+          "kommissarraum",
+          1
+        ],
+        [
+          "kommitone",
+          1
+        ],
+        [
+          "kommons",
+          1
+        ],
+        [
+          "kommunal",
+          1
+        ],
+        [
+          "kommune",
+          1
+        ],
+        [
+          "kommunen",
+          1
+        ],
+        [
+          "kommunik",
+          1
+        ],
+        [
+          "kommunikationen",
+          1
+        ],
+        [
+          "kommunikationsbachelor",
+          1
+        ],
+        [
+          "kommunikationsmittel",
+          1
+        ],
+        [
+          "kommunikationspartners",
+          1
+        ],
+        [
+          "kommunikationswert",
+          1
+        ],
+        [
+          "kommunikationswissenschaft",
+          1
+        ],
+        [
+          "kommunikative",
+          1
+        ],
+        [
+          "kommunikativer",
+          1
+        ],
+        [
+          "kommunikatives",
+          1
+        ],
+        [
+          "kommunist",
+          1
+        ],
+        [
+          "kommunistische",
+          1
+        ],
+        [
+          "kommuniziere",
+          1
+        ],
+        [
+          "kommunizierst",
+          1
+        ],
+        [
+          "massiv-kommerzielle",
+          1
+        ],
+        [
+          "mega-kommentar",
+          1
+        ],
+        [
+          "post-kommentiert",
+          1
+        ],
+        [
+          "scheiß-kommentar",
+          1
+        ],
+        [
+          "youtube-kommentare",
+          1
+        ],
+        [
+          "youtube-kommenter",
+          1
+        ]
+      ],
+      "stages": {
+        "counts": {
+          "requests": 6,
+          "bodyBytes": 212052,
+          "fragmentBytes": 0,
+          "originalJsonBytes": 0
+        },
+        "top10": {
+          "requests": 20,
+          "bodyBytes": 1627450,
+          "fragmentBytes": 673696,
+          "originalJsonBytes": 953754
+        },
+        "remainingFragments": {
+          "requests": 96,
+          "bodyBytes": 4526939,
+          "fragmentBytes": 4526939,
+          "originalJsonBytes": 0
+        }
+      },
+      "completeFragmentBytes": 5200635
+    },
+    {
+      "query": "Ei",
+      "episodes": 106,
+      "positions": 33329,
+      "variantCount": 100,
+      "forms": [
+        [
+          "ein",
+          13848
+        ],
+        [
+          "eine",
+          7909
+        ],
+        [
+          "einen",
+          4130
+        ],
+        [
+          "eigentlich",
+          2525
+        ],
+        [
+          "einem",
+          2170
+        ],
+        [
+          "einer",
+          1595
+        ],
+        [
+          "eins",
+          342
+        ],
+        [
+          "eines",
+          181
+        ],
+        [
+          "eigenen",
+          149
+        ],
+        [
+          "eigene",
+          125
+        ],
+        [
+          "eigenes",
+          66
+        ],
+        [
+          "eier",
+          44
+        ],
+        [
+          "eigentliche",
+          28
+        ],
+        [
+          "eimer",
+          24
+        ],
+        [
+          "eigener",
+          15
+        ],
+        [
+          "ei",
+          12
+        ],
+        [
+          "eigentlichen",
+          12
+        ],
+        [
+          "eight",
+          11
+        ],
+        [
+          "eigenschaften",
+          10
+        ],
+        [
+          "eigenschaft",
+          8
+        ],
+        [
+          "eigentum",
+          7
+        ],
+        [
+          "eibe",
+          5
+        ],
+        [
+          "eidechse",
+          5
+        ],
+        [
+          "eich",
+          4
+        ],
+        [
+          "eichhörnchen",
+          4
+        ],
+        [
+          "eighteen",
+          4
+        ],
+        [
+          "eignet",
+          4
+        ],
+        [
+          "eid",
+          3
+        ],
+        [
+          "eiern",
+          3
+        ],
+        [
+          "eigenem",
+          3
+        ],
+        [
+          "eigenständig",
+          3
+        ],
+        [
+          "eiche",
+          2
+        ],
+        [
+          "eidechsen",
+          2
+        ],
+        [
+          "eids",
+          2
+        ],
+        [
+          "eierde",
+          2
+        ],
+        [
+          "eiert",
+          2
+        ],
+        [
+          "eifel",
+          2
+        ],
+        [
+          "eifersüchtig",
+          2
+        ],
+        [
+          "eigen",
+          2
+        ],
+        [
+          "eigenständiges",
+          2
+        ],
+        [
+          "eignen",
+          2
+        ],
+        [
+          "eile-cœur",
+          2
+        ],
+        [
+          "e-igentlich",
+          1
+        ],
+        [
+          "ei-i",
+          1
+        ],
+        [
+          "eibeel",
+          1
+        ],
+        [
+          "eiben",
+          1
+        ],
+        [
+          "eichnot",
+          1
+        ],
+        [
+          "eichunterhaltung",
+          1
+        ],
+        [
+          "eichwald",
+          1
+        ],
+        [
+          "eidechnik",
+          1
+        ],
+        [
+          "eidechsen-abenteuer",
+          1
+        ],
+        [
+          "eidechsenbücher",
+          1
+        ],
+        [
+          "eieiei",
+          1
+        ],
+        [
+          "eierförmigen",
+          1
+        ],
+        [
+          "eierlich",
+          1
+        ],
+        [
+          "eierlikör",
+          1
+        ],
+        [
+          "eierlikörchen",
+          1
+        ],
+        [
+          "eierschalen",
+          1
+        ],
+        [
+          "eieruhr",
+          1
+        ],
+        [
+          "eifersuch",
+          1
+        ],
+        [
+          "eifersuchsgeschichte",
+          1
+        ],
+        [
+          "eifersuchtsfilm",
+          1
+        ],
+        [
+          "eiffelturm",
+          1
+        ],
+        [
+          "eifrigen",
+          1
+        ],
+        [
+          "eigenartig",
+          1
+        ],
+        [
+          "eigengedanken",
+          1
+        ],
+        [
+          "eigengravitation",
+          1
+        ],
+        [
+          "eigenheiten",
+          1
+        ],
+        [
+          "eigeninitiative",
+          1
+        ],
+        [
+          "eigenkreation",
+          1
+        ],
+        [
+          "eigenleistung",
+          1
+        ],
+        [
+          "eigenname",
+          1
+        ],
+        [
+          "eigennamen",
+          1
+        ],
+        [
+          "eigenständigen",
+          1
+        ],
+        [
+          "eigenständiger",
+          1
+        ],
+        [
+          "eigenständigkeit",
+          1
+        ],
+        [
+          "eigentliches",
+          1
+        ],
+        [
+          "eigently",
+          1
+        ],
+        [
+          "eigentus",
+          1
+        ],
+        [
+          "eigenurin",
+          1
+        ],
+        [
+          "eigenverantwortlich",
+          1
+        ],
+        [
+          "eiges",
+          1
+        ],
+        [
+          "eighteens",
+          1
+        ],
+        [
+          "eighties",
+          1
+        ],
+        [
+          "eigness",
+          1
+        ],
+        [
+          "eignis",
+          1
+        ],
+        [
+          "eignungen",
+          1
+        ],
+        [
+          "eilbern",
+          1
+        ],
+        [
+          "eilem",
+          1
+        ],
+        [
+          "eilen",
+          1
+        ],
+        [
+          "eilenstein",
+          1
+        ],
+        [
+          "eili-cörchen",
+          1
+        ],
+        [
+          "eilikör",
+          1
+        ],
+        [
+          "eilmäcke",
+          1
+        ],
+        [
+          "eilung",
+          1
+        ],
+        [
+          "eimerrad",
+          1
+        ],
+        [
+          "eimerst",
+          1
+        ],
+        [
+          "eimerstraße",
+          1
+        ],
+        [
+          "ein-mann-sauna",
+          1
+        ],
+        [
+          "toppel-eilen-reaktion",
+          1
+        ]
+      ],
+      "stages": {
+        "counts": {
+          "requests": 6,
+          "bodyBytes": 220655,
+          "fragmentBytes": 0,
+          "originalJsonBytes": 0
+        },
+        "top10": {
+          "requests": 20,
+          "bodyBytes": 1691808,
+          "fragmentBytes": 700566,
+          "originalJsonBytes": 991242
+        },
+        "remainingFragments": {
+          "requests": 96,
+          "bodyBytes": 4500069,
+          "fragmentBytes": 4500069,
+          "originalJsonBytes": 0
+        }
+      },
+      "completeFragmentBytes": 5200635
+    }
+  ],
+  "limits": [
+    "Fresh Chromium context per query, local Vite preview, body bytes only; app shell, metadata outside search directory and HTTP headers excluded.",
+    "The top10 phase deliberately loads all10 fragments plus originals; the actual UI loads visible cards lazily.",
+    "Original JSON is not HTTP-compressed locally. Pagefind pf_fragment files are already internally gzipped.",
+    "Position-map compression was measured offline per episode, including vocabulary, without production envelope, lookup metadata, runtime code or stemmer.",
+    "One ID describes a whole current reader whitespace token after outer punctuation removal; compound/component exactness is still a product decision.",
+    "The real600-episode corpus, deployed GitHub Pages transfer encoding, mobile latency, runtime filtering and cache behavior were not tested."
+  ]
+}
