@@ -2,7 +2,9 @@
 
 Stand: 12. November 2026. **Recherche und Planungsvorschlag; keine Änderung des aktiven Suchvertrags.** Untersucht wurden die gesperrte Pagefind-Version 1.5.2, ihr veröffentlichter Quelltext und der vorhandene 106-Folgen-Index. Anwendung, Transkripte, Produktionsindex und Abhängigkeiten wurden nicht geändert. Ausgangspunkte: [Suchvertrag](../search.md), [bisherige Versionsuntersuchung](pagefind-counting-2026-11-10.md), [Projektplan](../../PLAN.md).
 
-## Ergebnis für die Entscheidung
+## Ursprüngliche Bewertung vom 12. November
+
+Der Nachtrag vom 13. November ergänzt diese erste Bewertung: Stemming soll von Anfang an im Entwurf berücksichtigt werden; die aktuelle Empfehlung steht im [Produktplan](../planning/search-modes.md).
 
 Zwei verständliche Modi lassen sich vollständig statisch und ohne spaCy umsetzen:
 
@@ -102,3 +104,14 @@ Tippfehler- und Bedeutungssuche später getrennt beurteilen: editierdistanzbasie
 
 
 Die maßgeblichen Rohbeobachtungen und Größenwerte sind zusätzlich als [versionierte kompakte Evidenz](evidence/search-options-2026-11-12.json) gespeichert. Der gesonderte [Produkt-/Umsetzungsplan](../planning/search-modes.md) vergleicht vier rein lexikalische Modi sowie spätere sprachliche Erweiterungen; er ist weiterhin unbestätigt.
+
+
+## Nachtrag vom 13. November: Stemming erhalten
+
+Der Nutzer weist zu Recht auf Wort → Wörter hin. Die erste reine Zeichenregel-Empfehlung würde diese Fähigkeit verlieren und ist deshalb im [aktuellen Vorschlag](../planning/search-modes.md) um technische Stammgleichheit von Anfang an ergänzt. Die alten Zahlen der wörtlichen Größenprobe bleiben gültig; sie messen noch keinen Stammindex oder Stemmercode.
+
+Eine native Folgeprobe auf demselben echten 106er-Index lieferte für Wort und Wörter jeweils 588 Positionen in 99 Folgen, darunter Wort (303), Worte (86), Wörter (85), Worten (22) sowie weitere Präfixe. Das belegt nützliche Wortformabdeckung, aber keine sprachlich exakte Lemmasuche. Schlüsselwörter war in der geprüften Wort-Treffermenge nicht enthalten. Die getrennten Suchen nach Schlüsselwörter und Schlüsselwort zeigten jeweils 39 Schlüssel-Positionen und eine Klumpen-Schlüssel-Position. Diese Rückgabe ist mit dem bekannten Präfix-Fallback vereinbar; sie belegt keine Erkennung von Wort als Kompositumbestandteil.
+
+Die sichtbare Startdemo ist separat: [LandingIntro.tsx](../../web/src/LandingIntro.tsx) ordnet Schlüsselwort, Schlüsselwörter und Schlüsselwörtern ausdrücklich per Liste dem Eingabewort Wort zu. Dafür wird keine Pagefind-Instanz verwendet. Das beobachtete Highlight im Erklärungstext beweist deshalb keine entsprechende Enginefähigkeit. Snowball unterscheidet außerdem Umlaut-/Endungsnormalisierung von Kompositumzerlegung; Letztere wird nicht allgemein versucht. [Snowball-Design: Umlaute und zusammengesetzte Wörter](https://snowballstem.org/algorithms/german/stemmer.html)
+
+Die eigenen vollständigen Formmengen sind in der [kompakten Evidenz](evidence/search-options-2026-11-12.json) unter `stemmingFollowup` gespeichert. Es wurden keine App-, Index-, Transkript- oder Abhängigkeitsänderungen vorgenommen.

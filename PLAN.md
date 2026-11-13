@@ -66,4 +66,4 @@ Die [weitere UI-Verfeinerung](.scratch/pagefind-minimap/issues/08-themes-sliding
 
 ## Offener Vorschlag: Suchmodi
 
-Der [Plan für strikte und erweiterte Wortsuche](docs/planning/search-modes.md) untersucht genaue Wörter, Wortanfänge, Wortenden und Wortbestandteile. Die [Recherche vom 12. November](docs/research/search-modes-2026-11-12.md) weist unter anderem eine Suchreihenfolge-Abhängigkeit im aktuellen Pagefind-Index nach. Der Vorschlag ist noch nicht bestätigt; Anwendung und aktiver Suchvertrag sind unverändert.
+Der [Plan für strikte und erweiterte Wortsuche](docs/planning/search-modes.md) untersucht Exakt, technische Wortformen und erweiterte Wortbestandteile. Der Nachtrag vom 13. November ergänzt Stemming von Anfang an; die reine Zeichenregel-Empfehlung war dafür zu eng. Die [Recherche vom 12. November](docs/research/search-modes-2026-11-12.md) weist unter anderem eine Suchreihenfolge-Abhängigkeit im aktuellen Pagefind-Index nach. Der Vorschlag ist noch nicht bestätigt; Anwendung und aktiver Suchvertrag sind unverändert.
