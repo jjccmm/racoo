@@ -45,4 +45,3 @@ export async function controlledText(page: Page, extraPassages = false) {
   } finally { await pagefind.close(); }
   return segments;
 }
-
