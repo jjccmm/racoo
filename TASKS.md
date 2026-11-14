@@ -1,5 +1,7 @@
 # Aktuell
 
+- [x] [FAQ und schließbares Suchhilfe-Popup](.scratch/pagefind-minimap/issues/12-faq-help-popup.md): überarbeitete Erklärungen, SVG-Icon und native Dialoghilfe.
+
 - [x] [Standard / Exakt und informative Top10-Wortlisten](.scratch/pagefind-minimap/issues/11-search-options.md): [Umsetzung und lokale Abnahme](docs/pilot/search-options.md).
 
 - [x] [Eingegebene Schreibweise in Suchanzeigen](.scratch/pagefind-minimap/issues/10-query-display-spelling.md): `a814181`, [Abnahme](docs/pilot/query-display-spelling.md).

@@ -25,3 +25,8 @@ Der normale echte Build wurde nach den Fixturechecks wiederhergestellt: 106 Folg
 ## Grenzen
 
 Exakt ist ausdrücklich keine globale genaue Archivsuche: Außerhalb der Standard-Top10 liegende passende Folgen bleiben ungeprüft. Die bekannten nativen Stemming-/Präfix-/Chunkgrenzen von Standard bestehen fort. Die lokale Sicht-/Funktionsprüfung ersetzt keine gemessene GitHub-Pages-Netzwerklatenz, keinen echten Mobilgeräteversuch und keinen 600-Folgen-Nachweis. Neue Wortzeitstempel, Backend oder Sprachmodelle wurden nicht eingeführt.
+
+
+## Verfeinerung vom 14. November
+
+FAQ mit acht Antworten: Suchprobleme anhand von kommen/kommt/Kommentar und Ei erläutert, Exakt-Top10-Grenze und Transkriptionsfehler genannt, markante Nomen als Schlüsselwörter empfohlen, Herkunft als Inhaltszuordnung statt Eigentumsbehauptung formuliert. SVG-Fragezeichen öffnet eine kleine native Dialoghilfe. Schließen-Icon, Escape, Hintergrundklick und Fokusrückgabe; beide Themen und mobile Breite unterstützt. Die Hilfe spricht von exakten Übereinstimmungen. Lint, TypeScript/Build und je 13 betroffene Browserfälle an / und /racoo/ geprüft. Keine Suchlogik geändert; [Ticket12](../../.scratch/pagefind-minimap/issues/12-faq-help-popup.md).

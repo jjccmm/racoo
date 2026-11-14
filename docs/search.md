@@ -41,7 +41,7 @@ Top10 und Alle verwenden immer die verfügbare Breite ohne horizontales Scrollen
 
 Der globale Hell-/Dunkelschalter übernimmt ohne gespeicherte Wahl zunächst die Systemeinstellung. Eine manuelle Wahl wird im Browser gespeichert und vor dem ersten Seitenaufbau angewendet; gesperrter Browserspeicher verhindert das Umschalten nicht. Flächen, Logo, Wortfarben, Diagramm, Minimap und nativer Player passen sich an. Der Wechsel ersetzt keine Suchinstanz und verändert weder Anfrage noch Textposition.
 
-Top10/Alle verwendet eine Kapsel mit gleitender Auswahl und zugänglichen Schaltflächen. Reduzierte Bewegung deaktiviert die Animation. Auf der Startseite öffnet eine native FAQ-Klappe alle sechs kurzen Antworten zu Motivation, Unabhängigkeit, maschinellen Texten, groben Audiomarken, Aktualisierung und Namensherkunft. Die ungefähre Werbeabweichung ist keine Genauigkeitsgarantie.
+Top10/Alle verwendet eine Kapsel mit gleitender Auswahl und zugänglichen Schaltflächen. Reduzierte Bewegung deaktiviert die Animation. Auf der Startseite öffnet eine native FAQ-Klappe die kurzen Antworten zu Motivation, Unabhängigkeit, Textquellen, Suchproblemen, passenden Schlüsselwörtern, Audiomarken, Aktualisierung und Namensherkunft. Die ungefähre Werbeabweichung ist keine Genauigkeitsgarantie.
 
 
 Beim normalen Einstieg in DAS PODCAST UFO ohne `q`-Parameter startet die Suche mit `Eimer`. Ein vorhandener Suchtext und ein ausdrücklich leeres `q=` haben Vorrang. Leeren/Suchen erhält deshalb den leeren Parameter im Link; direkte Folge-/Audiolinks starten keine zusätzliche Beispielsuchanfrage. Andere Podcasts haben keine automatische Vorgabe.
@@ -54,7 +54,7 @@ Suchschlüssel bleiben kleingeschrieben und NFC-normalisiert. Für Legenden, Zä
 
 ## Suchoptionen: Standard und Exakt
 
-Ein runder Schiebereglerknopf neben der Suche öffnet eine Karte im Seitenfluss. Standard bleibt die Vorgabe und die native Pagefind-Suche. Die aufklappbare Hilfe erklärt beide Modi. Die FAQ nennt kurz Grenzen bei kurzen Wörtern wie Ei, Wortstämmen und Transkript-/Bestandslücken. Erweitert wird nicht implementiert.
+Ein runder Schiebereglerknopf neben der Suche öffnet eine Karte im Seitenfluss. Standard bleibt die Vorgabe und die native Pagefind-Suche. Ein SVG-Fragezeichen öffnet ein kleines modales Hilfe-Popup mit beiden Modi. Schließen-Icon, Escape und ein Klick außerhalb schließen es; der Fokus kehrt zum Auslöser zurück. Exakt wird als Prüfung auf exakte Übereinstimmungen innerhalb der Standard-Top10 erklärt. Die FAQ nennt kurz Grenzen bei kurzen Wörtern wie Ei, Wortstämmen und Transkript-/Bestandslücken. Erweitert wird nicht implementiert.
 
 Je Suchwort zeigt die geöffnete Karte eine rein informative, nach Häufigkeit absteigend/alphabetisch sortierte Liste tatsächlicher Formen der aktuellen Top10. NFC und Groß-/Kleinschreibung gruppieren eine Form; deren häufigste Originalschreibweise ist sichtbar. Kein Anklicken zum Ausschließen. Für die vollständige Übersicht werden nur die fehlenden Top10-Fragmente geladen, keine übrigen Folgen oder globalen Zusatzindizes. Unvollständige oder fehlgeschlagene Übersichten bleiben sichtbar als Ladezustand/Fehler.
 

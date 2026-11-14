@@ -15,7 +15,13 @@ test('options explain native top-ten forms without changing standard counts, the
   await expect(variants.getByRole('button')).toHaveCount(0);
   await expect(card).toContainText('3 Suchwort-Treffer');
   await options.getByLabel('Suchmodi erklärt').click();
-  await expect(options).toContainText('Weitere Folgen werden nicht geprüft');
+  const popup = page.getByRole('dialog', { name: 'Die Suchmodi' });
+  await expect(popup).toBeVisible();
+  await expect(popup).toContainText('exakte Übereinstimmungen');
+  await expect(popup).not.toContainText('vollständige Wörter');
+  await page.keyboard.press('Escape');
+  await expect(popup).not.toBeVisible();
+  await expect(options.getByLabel('Suchmodi erklärt')).toBeFocused();
   await options.getByRole('button', { name: 'Exakt', exact: true }).click();
   await expect(card).toContainText('1 Suchwort-Treffer');
   await expect(card.locator('mark')).toHaveText(['Münze']);
@@ -58,8 +64,14 @@ test('exact empty state and Unicode word boundaries retain the input spelling', 
   await expect(page.getByRole('region', { name: 'Gefundene Wörter: MÜNZE' })).toBeVisible();
   await page.setViewportSize({ width: 320, height: 900 });
   await page.getByLabel('Suchmodi erklärt').click();
-  expect((await page.locator('.search-mode-help p').first().boundingBox())!.width).toBeGreaterThan(180);
+  const popup = page.getByRole('dialog', { name: 'Die Suchmodi' });
+  expect((await popup.locator('p').first().boundingBox())!.width).toBeGreaterThan(180);
+  await popup.getByRole('button', { name: 'Erklärung schließen' }).click();
+  await expect(popup).not.toBeVisible();
   await page.getByRole('button', { name: 'Dunkelmodus einschalten' }).click();
+  await page.getByLabel('Suchmodi erklärt').click();
+  await expect(popup).toBeVisible();
+  await page.keyboard.press('Escape');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 
   await page.getByRole('searchbox', { name: 'Wörter suchen' }).fill('Wort');

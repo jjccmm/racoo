@@ -312,10 +312,6 @@ input::placeholder { color: var(--muted); opacity: .85; }
 .search-options-button[aria-expanded="true"] { background: var(--soft); color: var(--ink); }
 .search-options { margin: 12px 0; padding: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--card-shadow); }
 .search-options-heading { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
-.search-mode-help { flex: 1; min-width: 32px; }
-.search-mode-help summary { display: grid; place-items: center; width: 30px; height: 30px; margin-top: 4px; border: 1px solid var(--line); border-radius: 50%; cursor: pointer; list-style: none; color: var(--muted); }
-.search-mode-help summary::-webkit-details-marker { display: none; }
-.search-mode-help p { font-size: .84rem; color: var(--muted); line-height: 1.6; max-width: 620px; }
 .variant-caption, .exact-notice { color: var(--muted); font-size: .82rem; }
 .word-variant-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr)); gap: 14px; }
 .word-variants { min-width: 0; }
@@ -328,4 +324,13 @@ input::placeholder { color: var(--muted); opacity: .85; }
 .view-toggle button:disabled { cursor: not-allowed; opacity: .45; }
 @media (max-width: 480px) { .query-form { gap: 7px; } .search-options { padding: 14px; } .word-variant-grid { grid-template-columns: 1fr; } }
 
-.search-mode-help[open] { flex-basis: 100%; }
+
+.search-mode-help { display: flex; align-items: center; align-self: center; }
+.search-help-button, .help-close { display: grid; place-items: center; padding: 0; width: 36px; height: 36px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); }
+.search-help-button:hover, .help-close:hover { background: var(--soft); color: var(--ink); }
+.search-help-popup { width: min(440px, calc(100vw - 40px)); max-height: calc(100dvh - 48px); overflow: auto; padding: 22px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); color: var(--ink); box-shadow: var(--card-shadow); }
+.search-help-popup::backdrop { background: #071a1459; }
+.search-help-popup header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.search-help-popup h2 { margin: 0; font-size: 1.05rem; }
+.search-help-popup p { margin: 18px 0 0; color: var(--copy); font-size: .9rem; line-height: 1.65; }
+.search-help-popup strong { color: var(--ink); }

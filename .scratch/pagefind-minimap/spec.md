@@ -65,3 +65,5 @@ Der [neunte Auftrag](issues/09-landing-alignment-default-query.md) verschiebt de
 [Ticket11](issues/11-search-options.md) ergänzt bestätigte Standard-/Exakt-Suchoptionen, informative Top10-Wortlisten und kurze FAQ-Hilfe. Erweitert sowie anklickbare Ausschlüsse sind ausdrücklich außerhalb des Auftrags. Exakt darf nur die vorher festgelegten Standard-Top10 prüfen.
 
 - 2026-11-13: Ticket11 integriert und lokal geprüft; [Abnahme](../../docs/pilot/search-options.md). Erweitert bleibt außerhalb des Umfangs.
+
+- 2026-11-14: [Ticket12](issues/12-faq-help-popup.md) überarbeitet FAQ-Texte und ersetzt die Inlinehilfe durch ein schließbares modales Popup. Suchsemantik unverändert.
