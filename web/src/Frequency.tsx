@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, type XAxisTickContentProps } from 'recharts';
+import { Bar, BarChart, CartesianGrid, Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis, type BarShapeProps, type XAxisTickContentProps } from 'recharts';
 import { countEpisodes, inspectTopEpisodes, searchEpisodes, type SearchOverview, type SearchResult, type TopDetails } from './search';
 import type { SearchData, EpisodeMetadata } from './catalog';
 import { parseQuery } from './query';
@@ -75,6 +75,11 @@ export function Frequency({ dataBase, data, onChoose, defaultQuery = '' }: { dat
     if (value === 'exact') url.searchParams.set('match', 'exact'); else url.searchParams.delete('match');
     history.replaceState(null, '', url);
   }
+  function jumpToEpisode(episodeId: string) {
+    const card = document.getElementById(`episode-card-${episodeId}`);
+    card?.focus({ preventScroll: true });
+    card?.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+  }
   function submit() {
     const next = prepare(query, submission.id + 1);
     setSubmission(next);
@@ -115,7 +120,14 @@ export function Frequency({ dataBase, data, onChoose, defaultQuery = '' }: { dat
                   return <g transform={`translate(${x},${y})`} role="img" aria-label={label}><title>{label}</title>{showTitle && <text className="episode-axis-label" y={12} transform="rotate(-25)" textAnchor="end" fill="var(--muted)" fontSize={11}>{episode.title.length > 18 ? `${episode.title.slice(0, 16)}…` : episode.title}</text>}</g>;
                 }} /><YAxis allowDecimals={false} axisLine={false} tickLine={false} width={38} tick={{ fontSize: 11, fill: 'var(--muted)' }} />
                 <Tooltip cursor={{ fill: 'var(--soft)' }} contentStyle={{ backgroundColor: 'var(--surface)', color: 'var(--ink)', borderRadius: 8, border: '1px solid var(--line)', fontSize: 13 }} itemStyle={{ color: 'var(--ink)' }} labelFormatter={(label, payload) => `${payload[0]?.payload.title ?? label} · Summe ${payload[0]?.payload.total ?? 0}`} />
-                {words.map((word, index) => <Bar key={word.term} dataKey={`series${index}`} name={word.label} stackId="words" fill={`color-mix(in srgb, ${word.color} var(--word-strength), white)`} stroke="none" isAnimationActive={false} maxBarSize={52} />)}
+                {words.map((word, index) => <Bar key={word.term} dataKey={`series${index}`} name={word.label} stackId="words" fill={`color-mix(in srgb, ${word.color} var(--word-strength), white)`} stroke="none" isAnimationActive={false} maxBarSize={52} shape={(props: BarShapeProps) => {
+                  const episode = plotted[props.index];
+                  const interactive = mode === 'top' && props.height > 0;
+                  return <Rectangle {...props} role={interactive ? 'button' : undefined} tabIndex={interactive ? 0 : undefined}
+                    aria-label={interactive ? `Zur Folge ${episode.title} · ${word.label}` : undefined} className={interactive ? 'episode-bar-link' : undefined}
+                    onClick={interactive ? () => jumpToEpisode(episode.episodeId) : undefined}
+                    onKeyDown={interactive ? event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.stopPropagation(); jumpToEpisode(episode.episodeId); } } : undefined} />;
+                }} />)}
               </BarChart></ResponsiveContainer>
             </div></div>
           </>}
@@ -125,7 +137,6 @@ export function Frequency({ dataBase, data, onChoose, defaultQuery = '' }: { dat
       {ranked.map((episode, index) => <EpisodeCard key={`${episode.episodeId}:${submission.id}:${searchMode}`} episode={episode} index={index} words={words}
         provided={searchMode === 'exact' ? currentDetails?.value?.results.find(result => result.episodeId === episode.episodeId) : undefined} counts={counts.get(episode.episodeId)?.counts ?? {}} dataBase={dataBase} publicationId={data.publicationId}
         onChoose={onChoose} />)}
-      <p className="muted">Jedes Suchwort wird einzeln gezählt. Dieselbe Textstelle kann zu mehreren Suchwörtern passen; die Fundstellennavigation fasst solche Überschneidungen zusammen.</p>
     </section>}
   </section>;
 }
@@ -157,7 +168,7 @@ function EpisodeCard({ episode, index, words, counts, dataBase, publicationId, o
     }).catch(() => { if (!controller.signal.aborted) setError(true); });
     return () => controller.abort();
   }, [shouldLoad, provided, query, episode.episodeId, dataBase, publicationId, attempt]);
-  return <article className="episode-card transcript-card" ref={element} aria-labelledby={`episode-heading-${episode.episodeId}`}>
+  return <article id={`episode-card-${episode.episodeId}`} className="episode-card transcript-card" tabIndex={-1} ref={element} aria-labelledby={`episode-heading-${episode.episodeId}`}>
     <header className="transcript-card-header">
       <div className="transcript-card-heading"><span className="rank">{String(index + 1).padStart(2, '0')}</span>
         <div><h3 id={`episode-heading-${episode.episodeId}`}>{episode.title}</h3>

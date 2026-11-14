@@ -1,5 +1,7 @@
 # Aktuell
 
+- [x] [Balkennavigation, Startwörter und Umami](.scratch/pagefind-minimap/issues/13-chart-navigation-tracking.md): Top10-Sprung, Eimer/Münze und Nach-oben-Button; 36 Browserprüfungen bestanden.
+
 - [x] [FAQ und schließbares Suchhilfe-Popup](.scratch/pagefind-minimap/issues/12-faq-help-popup.md): überarbeitete Erklärungen, SVG-Icon und native Dialoghilfe.
 
 - [x] [Standard / Exakt und informative Top10-Wortlisten](.scratch/pagefind-minimap/issues/11-search-options.md): [Umsetzung und lokale Abnahme](docs/pilot/search-options.md).

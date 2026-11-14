@@ -15,10 +15,10 @@ test('landing demo is free text, highlights its explanation and loads no podcast
   expect(new URL(page.url()).searchParams.get('q')).toBe('Folge');
 });
 
-test('normal UFO entry uses Eimer and a deliberately cleared query stays empty on reload', async ({ page }) => {
+test('normal UFO entry uses Eimer and Münze and a deliberately cleared query stays empty on reload', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 720 }); await page.goto('./');
   await page.getByRole('link', { name: /DAS PODCAST UFO/ }).click();
-  await expect(page.getByRole('searchbox', { name: 'Wörter suchen' })).toHaveValue('Eimer');
+  await expect(page.getByRole('searchbox', { name: 'Wörter suchen' })).toHaveValue('Eimer Münze');
   await expect(page.getByRole('article')).toHaveCount(2);
   await page.getByRole('searchbox', { name: 'Wörter suchen' }).fill('');
   await page.getByRole('button', { name: 'Suchen', exact: true }).click();

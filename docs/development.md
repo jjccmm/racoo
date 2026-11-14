@@ -98,3 +98,8 @@ Der aktive [Suchvertrag](search.md) benötigt nur gespeicherte Transkripte und P
 ## Aktuelle Suchgestaltung
 
 [Freitext und helle Minimap](search.md): bis zehn Stichwörter, Pagefind-Positionen als Zählbasis, Top10/Alle, ein vollständiger Leser und gemeinsame Audioaktionen. Auf der Startseite steht eine lokale Freitextdemo. Die frühere Lemmaauswahl, automatische haus-Auswahl und Wortschatzstatistik sind abgelöst.
+
+
+## Besuchsstatistik
+
+`web/index.html` bindet den vom Projektinhaber bereitgestellten Umami-Cloud-Code mit `defer` und Website-ID `8b14f323-fb03-47ba-b65a-0807ffdf3032` ein. Der externe Abruf ist unabhängig vom lokalen Pagefind-Suchindex; ohne das Skript bleibt die Suche benutzbar. Die dedizierten Navigationstests blockieren den Umami-Abruf und prüfen die HTML-Einbindung, keine tatsächliche Erfassung im externen Dashboard.

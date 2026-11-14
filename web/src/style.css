@@ -334,3 +334,10 @@ input::placeholder { color: var(--muted); opacity: .85; }
 .search-help-popup h2 { margin: 0; font-size: 1.05rem; }
 .search-help-popup p { margin: 18px 0 0; color: var(--copy); font-size: .9rem; line-height: 1.65; }
 .search-help-popup strong { color: var(--ink); }
+
+
+.episode-bar-link { cursor: pointer; }
+.transcript-card { scroll-margin-top: 20px; }
+.back-to-top { position: fixed; right: max(18px, env(safe-area-inset-right)); bottom: max(18px, env(safe-area-inset-bottom)); z-index: 4; display: grid; place-items: center; width: 46px; height: 46px; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--ink); box-shadow: var(--card-shadow); }
+main:has(.player) .back-to-top { bottom: 184px; }
+@media (max-width: 600px) { main:has(.player) .back-to-top { bottom: 214px; } }

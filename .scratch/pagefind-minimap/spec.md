@@ -67,3 +67,5 @@ Der [neunte Auftrag](issues/09-landing-alignment-default-query.md) verschiebt de
 - 2026-11-13: Ticket11 integriert und lokal geprüft; [Abnahme](../../docs/pilot/search-options.md). Erweitert bleibt außerhalb des Umfangs.
 
 - 2026-11-14: [Ticket12](issues/12-faq-help-popup.md) überarbeitet FAQ-Texte und ersetzt die Inlinehilfe durch ein schließbares modales Popup. Suchsemantik unverändert.
+
+- 2026-11-14: [Ticket13](issues/13-chart-navigation-tracking.md) ergänzt Top10-Balkennavigation, Eimer/Münze-Vorgabe, Nach-oben-Button und beauftragtes Umami-Tracking. Der technische Überlappungshinweis entfällt aus der Oberfläche.

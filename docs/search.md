@@ -16,7 +16,9 @@ Jeden Begriff einzeln suchen. Pro Folge/Begriff die unterschiedlichen Rohpositio
 
 Die Stapelserien zählen unabhängig. `Haus Häuser` kann dieselbe Stelle zweimal zur Stapelsumme beitragen lassen; diese Summe heißt Suchwort-Treffer. Markierungen und Leser-Navigation führen dieselbe Textposition dagegen zu einer eindeutigen Fundstelle mit mehreren Farben zusammen. Pagefind trifft auch Wortformen/Präfixe, beispielsweise `Münze` → `Münzfach`. Keine Gleichsetzung mit sprachlich exakten Grundform- oder Gesamtwortzahlen.
 
-Top 10 nach Gesamtsumme absteigend, dann Datum absteigend und ID. Alle nach Datum/ID aufsteigend, einschließlich Nullen. Die zehn Top-Folgen erhalten ihre globalen Zählungen sofort; Fragmente und Originaltranskripte werden erst für die erste oder gerade sichtbar werdende Karte geladen. Ein langsamer Textabruf blockiert die anderen Karten nicht. Der Browser hält die erfolgreiche Indexbindung je aktivem Datenstand. Der Suchworker behält erfolgreiche Pagefind-/Begriffscaches und höchstens zwanzig Originaltranskripte je Index bei; Aufrufe serialisieren. Abbruch, Anfragegenerationen und Kopien der Rohpositionen schützen neuere Suchen. Nach Ladefehlern die Instanz verwerfen und auf bewusste Wiederholung warten.
+Top 10 nach Gesamtsumme absteigend, dann Datum absteigend und ID. Alle nach Datum/ID aufsteigend, einschließlich Nullen. Ein Klick auf ein farbiges Balkenstück im Top10-Diagramm führt zur zugehörigen Transkriptkarte und fokussiert sie. Enter und Leertaste sind ebenfalls möglich. Im Alle-Diagramm gibt es keine Verlinkung, da nur die zehn Top-Folgen als Karten erscheinen. Nach mehr als 160 Pixeln Seitenscrollen erscheint ein schwebender Nach-oben-Button. Bei aktivem Player sitzt er oberhalb des Players.
+
+Die zehn Top-Folgen erhalten ihre globalen Zählungen sofort; Fragmente und Originaltranskripte werden erst für die erste oder gerade sichtbar werdende Karte geladen. Ein langsamer Textabruf blockiert die anderen Karten nicht. Der Browser hält die erfolgreiche Indexbindung je aktivem Datenstand. Der Suchworker behält erfolgreiche Pagefind-/Begriffscaches und höchstens zwanzig Originaltranskripte je Index bei; Aufrufe serialisieren. Abbruch, Anfragegenerationen und Kopien der Rohpositionen schützen neuere Suchen. Nach Ladefehlern die Instanz verwerfen und auf bewusste Wiederholung warten.
 
 ## Leser und Minimap
 
@@ -44,7 +46,7 @@ Der globale Hell-/Dunkelschalter übernimmt ohne gespeicherte Wahl zunächst die
 Top10/Alle verwendet eine Kapsel mit gleitender Auswahl und zugänglichen Schaltflächen. Reduzierte Bewegung deaktiviert die Animation. Auf der Startseite öffnet eine native FAQ-Klappe die kurzen Antworten zu Motivation, Unabhängigkeit, Textquellen, Suchproblemen, passenden Schlüsselwörtern, Audiomarken, Aktualisierung und Namensherkunft. Die ungefähre Werbeabweichung ist keine Genauigkeitsgarantie.
 
 
-Beim normalen Einstieg in DAS PODCAST UFO ohne `q`-Parameter startet die Suche mit `Eimer`. Ein vorhandener Suchtext und ein ausdrücklich leeres `q=` haben Vorrang. Leeren/Suchen erhält deshalb den leeren Parameter im Link; direkte Folge-/Audiolinks starten keine zusätzliche Beispielsuchanfrage. Andere Podcasts haben keine automatische Vorgabe.
+Beim normalen Einstieg in DAS PODCAST UFO ohne `q`-Parameter startet die Suche mit `Eimer Münze`. Ein vorhandener Suchtext und ein ausdrücklich leeres `q=` haben Vorrang. Leeren/Suchen erhält deshalb den leeren Parameter im Link; direkte Folge-/Audiolinks starten keine zusätzliche Beispielsuchanfrage. Andere Podcasts haben keine automatische Vorgabe.
 
 Auf der Startseite steht der Modusschalter neben der Suche. Podcastauswahl und FAQ teilen die gleiche Breite; die FAQ erhält erst geöffnet eine Kartenfläche. Die Scroll-Fades sind 36 Pixel breit und behalten ihre zustandsabhängige Sichtbarkeit.
 
