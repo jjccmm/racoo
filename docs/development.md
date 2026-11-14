@@ -103,3 +103,17 @@ Der aktive [Suchvertrag](search.md) benötigt nur gespeicherte Transkripte und P
 ## Besuchsstatistik
 
 `web/index.html` bindet den vom Projektinhaber bereitgestellten Umami-Cloud-Code mit `defer` und Website-ID `8b14f323-fb03-47ba-b65a-0807ffdf3032` ein. Der externe Abruf ist unabhängig vom lokalen Pagefind-Suchindex; ohne das Skript bleibt die Suche benutzbar. Die dedizierten Navigationstests blockieren den Umami-Abruf und prüfen die HTML-Einbindung, keine tatsächliche Erfassung im externen Dashboard.
+
+
+Beim bewussten Absenden einer gültigen, nicht leeren Podcast-Suche (Suchen oder Enter) sendet `analytics.ts`:
+
+| Event | Eigenschaften | Bedeutung |
+| --- | --- | --- |
+| `search` | `query`, `podcast`, `mode` | Gesamte eingegebene Anfrage, außen getrimmt; Podcast-ID und standard/exact. |
+| `search-word` | `word`, `podcast`, `mode` | Ein Event pro unterschiedlichem Suchwort; NFC-normalisiert und kleingeschrieben wie die Suchschlüssel. |
+
+Beispiel Eimer EIMER Münze: ein search und zwei search-word mit eimer und münze. Jede bewusst erneut abgeschickte Suche zählt erneut. Automatische Vorgaben/URL-Suchen, die Startdemo, reine Texteingaben, Moduswechsel und interne Wiederholungen nach Ladefehlern senden keine eigenen Suchevents. Leere oder ungültige Anfragen werden ebenfalls nicht erfasst. Ein späterer Suchfehler nimmt eine bereits erfasste bewusste Anfrage nicht zurück.
+
+Die Anzeige behält die eingegebene Schreibweise. Tracking wird nicht abgewartet und nicht nachgeliefert: Fehlt Umami oder schlägt ein Aufruf synchron/asynchron fehl, bleibt die Suche benutzbar. Umamis automatische Seitenaufrufe und URL-Erfassung bleiben davon unberührt.
+
+Auswertung: Events → search → Properties → query für Anfragen; Events → search-word → Properties → word für Worthäufigkeiten. Podcast und Modus dienen zum Filtern. API und Auswertung nach [Tracker functions](https://docs.umami.is/docs/tracker-functions) und [Event data](https://docs.umami.is/docs/event-data), geprüft am 14. November 2026. Lokale Browsertests ersetzen das externe Skript durch einen simulierten Tracker und prüfen die gesendeten Werte ohne echte Cloud-Testevents; das externe Dashboard wurde nicht geprüft.

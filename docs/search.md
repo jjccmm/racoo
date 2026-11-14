@@ -65,3 +65,8 @@ Exakt fixiert zuerst die höchstens zehn Folgen mit der größten Gesamtsumme de
 Exakte Zählungen, Diagramm, Wortlisten, Leser, Navigation und Minimap stammen aus denselben Originaltreffern. Nur innerhalb der fixierten Kandidaten neu sortieren, Nulltreffer aus den Ergebnis-Karten entfernen, keine Folgen außerhalb nachladen. Deshalb kann Exakt trotz anderer möglicher Archivtreffer leer bleiben. Alle ist in Exakt deaktiviert; die Einschränkung wird dauerhaft unter der Suche und in der Modushilfe genannt. Der Linkparameter match=exact erhält den Modus; ohne diesen Parameter gilt Standard.
 
 Standard lädt Originale weiter sichtbarkeitsabhängig. Exakt muss alle höchstens zehn ausgewählten Originale für die Zählung prüfen und verwendet diese direkt für seine Karten. Der vorhandene begrenzte Originalcache wird gemeinsam genutzt. Publikations-/Identitätsfehler, Abbruch und veraltete Antwortgenerationen bleiben abgesichert; unbekannte Werte sind keine Nullen. Das interne inspectTopEpisodes-Verfahren begrenzt die Kandidaten sowohl vor dem Workeraufruf als auch im Worker auf zehn eindeutige IDs.
+
+
+## Suchstatistik
+
+Bewusst abgeschickte gültige, nicht leere Podcast-Suchen erzeugen ein Umami-Event für die gesamte Anfrage und je ein Event für jedes unterschiedliche normalisierte Suchwort. Automatische Suchen sowie Texteingaben ohne Absenden zählen nicht als eigene Suchevents. [Eventfelder, Grenzen und Auswertung](development.md#besuchsstatistik). Die Suchverarbeitung hängt nicht vom Tracking ab.

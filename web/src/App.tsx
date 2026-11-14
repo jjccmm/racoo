@@ -44,7 +44,7 @@ export function App() {
         <div><h1>{podcast.name}</h1><p>{podcast.speakers.join(' & ')}{podcast.websiteUrl && <><span className="speaker-separator"> · </span><a href={podcast.websiteUrl} target="_blank" rel="noreferrer">Webseite ↗</a></>}</p><PodcastProgress podcast={podcast} /></div>
       </header>
       {podcast.episodeCount > 0 ? <>
-        <Player key={podcast.id} dataBase={dataBase} podcastId={podcast.id}><Stats dataBase={dataBase} defaultQuery={podcast.id === 'podcast-ufo' && !episode ? 'Eimer Münze' : ''} /></Player>
+        <Player key={podcast.id} dataBase={dataBase} podcastId={podcast.id}><Stats podcastId={podcast.id} dataBase={dataBase} defaultQuery={podcast.id === 'podcast-ufo' && !episode ? 'Eimer Münze' : ''} /></Player>
         <footer className="workspace-footer"><p className="transcript-credit">Inhalte: {podcast.websiteUrl ? <a href={podcast.websiteUrl} target="_blank" rel="noreferrer">{podcast.name}</a> : podcast.name} · Maschinelle Transkripte können Fehler enthalten.</p></footer>
       </> : <p className="notice">Für diesen Podcast sind noch keine Folgen durchsuchbar. Die Verarbeitung läuft lokal; neue Daten erscheinen nach der nächsten Veröffentlichung.</p>}
     </>}

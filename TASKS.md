@@ -1,5 +1,7 @@
 # Aktuell
 
+- [x] [Umami-Suchstatistik](.scratch/pagefind-minimap/issues/14-search-analytics.md): Gesamtsuche und deduplizierte Suchwörter beim Absenden; 36 betroffene Browserprüfungen bestanden.
+
 - [x] [Balkennavigation, Startwörter und Umami](.scratch/pagefind-minimap/issues/13-chart-navigation-tracking.md): Top10-Sprung, Eimer/Münze und Nach-oben-Button; 36 Browserprüfungen bestanden.
 
 - [x] [FAQ und schließbares Suchhilfe-Popup](.scratch/pagefind-minimap/issues/12-faq-help-popup.md): überarbeitete Erklärungen, SVG-Icon und native Dialoghilfe.

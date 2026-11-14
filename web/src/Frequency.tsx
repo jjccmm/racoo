@@ -3,6 +3,7 @@ import { Bar, BarChart, CartesianGrid, Rectangle, ResponsiveContainer, Tooltip, 
 import { countEpisodes, inspectTopEpisodes, searchEpisodes, type SearchOverview, type SearchResult, type TopDetails } from './search';
 import type { SearchData, EpisodeMetadata } from './catalog';
 import { parseQuery } from './query';
+import { trackSearch } from './analytics';
 import { SearchIcon } from './SearchIcon';
 import { WORD_COLORS, wordStyle } from './word-colors';
 import { formatPlaybackTime, type StartPlayback } from './playback';
@@ -18,7 +19,7 @@ function prepare(query: string, id: number): Submission {
   try { return { ...parseQuery(query), id }; }
   catch (error) { return { id, terms: [], labels: {}, error: (error as Error).message }; }
 }
-export function Frequency({ dataBase, data, onChoose, defaultQuery = '' }: { dataBase: string; data: SearchData; onChoose: StartPlayback; defaultQuery?: string }) {
+export function Frequency({ podcastId, dataBase, data, onChoose, defaultQuery = '' }: { podcastId: string; dataBase: string; data: SearchData; onChoose: StartPlayback; defaultQuery?: string }) {
   const [query, setQuery] = useState(() => new URLSearchParams(location.search).get('q') ?? defaultQuery);
   const [submission, setSubmission] = useState(() => prepare(query, 0));
   const [overview, setOverview] = useState<{ id: number; value?: SearchOverview; error?: string }>({ id: -1 });
@@ -86,6 +87,7 @@ export function Frequency({ dataBase, data, onChoose, defaultQuery = '' }: { dat
     const url = new URL(location.href);
     url.searchParams.set('q', query.trim());
     history.replaceState(null, '', url);
+    if (!next.error && next.terms.length) trackSearch(query.trim(), next.terms, podcastId, searchMode);
   }
   return <section className="frequency" aria-label="Wörter und Folgen erkunden">
     <form role="search" className="query-form" onSubmit={event => { event.preventDefault(); submit(); }}>
